@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'Page not found — Evo Meals' }) %>
+</head>
+<body>
+<div class="notfound-shell">
+  <div class="notfound-card" data-reveal>
+    <a href="/" class="notfound-logo"><span>Evo <span class="dot">Meals</span></span></a>
+    <div class="notfound-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 8.5a8 8 0 0 1 12 0M8.5 11a4.5 4.5 0 0 1 7 0M12 14v.01"/></svg>
+    </div>
+    <h1>This reader didn't recognize that page.</h1>
+    <p>The link might be old, or the address might be off by a character. Either way, nothing tapped — let's get you back to somewhere real.</p>
+    <div class="notfound-actions">
+      <% if (typeof parentId !== 'undefined' && parentId) { %>
+        <a href="/dashboard" class="btn btn-primary">Back to your dashboard</a>
+      <% } else { %>
+        <a href="/" class="btn btn-primary">Back to the homepage</a>
+      <% } %>
+      <a href="/login" class="btn btn-ghost">Log in</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

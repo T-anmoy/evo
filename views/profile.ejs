@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'Profile — Evo Meals' }) %>
+</head>
+<body>
+<%- include('partials/appnav', { active: 'profile' }) %>
+
+<div class="page" style="max-width:560px;">
+  <div class="page-head">
+    <span class="eyebrow">Your account</span>
+    <h1>Profile</h1>
+    <p>Civil ID: <strong><%= maskCivilId(parent.civilId) %></strong> (masked, cannot be changed here)</p>
+  </div>
+
+  <% if (success) { %><div class="alert alert-success"><%- include('partials/success-icon') %><span>Saved — your profile is up to date.</span></div><% } %>
+
+  <div class="card" data-reveal>
+    <form method="POST" action="/profile">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="field">
+        <label for="profileName">Full name</label>
+        <input type="text" id="profileName" name="name" value="<%= parent.name %>" required>
+      </div>
+      <div class="field">
+        <label for="profileEmail">Email</label>
+        <input type="email" id="profileEmail" name="email" inputmode="email" value="<%= parent.email %>">
+      </div>
+      <div class="field">
+        <label for="profilePhone">Mobile number</label>
+        <input type="tel" id="profilePhone" name="phone" inputmode="tel" value="<%= parent.phone %>">
+      </div>
+      <button type="submit" class="btn btn-primary">Save changes</button>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

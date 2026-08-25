@@ -1,0 +1,115 @@
+{
+  "parents": [
+    {
+      "id": 1,
+      "civilId": "111111111111",
+      "name": "Layla Ahmad",
+      "email": "layla.ahmad@example.com",
+      "phone": "+965 9944 1122",
+      "passwordHash": "$2a$10$e.Y.lFPNoIb76uOhwThcTON7PDJWHzsV4nF.vUSOlvGtUyumsXIBe",
+      "createdAt": "2026-06-01T08:00:00.000Z"
+    }
+  ],
+  "students": [
+    {
+      "id": 1,
+      "parentId": 1,
+      "name": "Ahmed",
+      "civilId": "289011234567",
+      "school": "Kuwait English School",
+      "class": "Grade 3",
+      "section": "B",
+      "gender": "Male",
+      "mealType": "Regular Meal",
+      "allergies": ""
+    },
+    {
+      "id": 2,
+      "parentId": 1,
+      "name": "Sara",
+      "civilId": "295042198765",
+      "school": "American Creativity Academy",
+      "class": "Grade 1",
+      "section": "A",
+      "gender": "Female",
+      "mealType": "Regular Meal",
+      "allergies": "Peanuts"
+    }
+  ],
+  "menuItems": [
+    {
+      "id": 1,
+      "name": "Arabiatta Chicken Pasta",
+      "tag": "Kid · Regular Meal",
+      "calories": 420,
+      "protein": 28,
+      "allergenFree": ["nut", "shellfish", "sesame", "soy"]
+    },
+    {
+      "id": 2,
+      "name": "Balsamic Chicken & Beans",
+      "tag": "Kid · Regular Meal",
+      "calories": 380,
+      "protein": 26,
+      "allergenFree": ["nut", "shellfish", "sesame", "soy"]
+    },
+    {
+      "id": 3,
+      "name": "BBQ Beef Burger",
+      "tag": "Kid · Regular Meal",
+      "calories": 460,
+      "protein": 24,
+      "allergenFree": ["nut", "shellfish", "sesame", "soy"]
+    },
+    {
+      "id": 4,
+      "name": "BBQ Chicken & Sweet Potato",
+      "tag": "Kid · Regular Meal",
+      "calories": 410,
+      "protein": 27,
+      "allergenFree": ["nut", "shellfish", "sesame", "soy"]
+    },
+    {
+      "id": 5,
+      "name": "Seasonal Fruit Cup",
+      "tag": "Kid · Dessert",
+      "calories": 90,
+      "protein": 1,
+      "allergenFree": ["nut", "shellfish", "sesame", "soy"]
+    }
+  ],
+  "wallets": [
+    { "parentId": 1, "balanceKWD": 8.4 }
+  ],
+  "walletTransactions": [
+    { "id": 1, "parentId": 1, "type": "credit", "amountKWD": 30, "note": "Wallet top-up via KNET", "createdAt": "2026-08-01T09:12:00.000Z" },
+    { "id": 2, "parentId": 1, "type": "debit", "amountKWD": -24, "note": "Monthly plan — Ahmed, Kuwait English School", "createdAt": "2026-08-01T09:15:00.000Z" },
+    { "id": 3, "parentId": 1, "type": "debit", "amountKWD": -1, "note": "Sara — BBQ Chicken & Sweet Potato, single day", "createdAt": "2026-08-10T07:40:00.000Z" },
+    { "id": 4, "parentId": 1, "type": "credit", "amountKWD": 3.4, "note": "Wallet top-up via KNET", "createdAt": "2026-08-18T10:02:00.000Z" }
+  ],
+  "bookings": [
+    {
+      "id": 1,
+      "studentId": 1,
+      "menuItemId": 3,
+      "planType": "monthly",
+      "startDate": "__TODAY__",
+      "days": 22,
+      "totalKWD": 24,
+      "status": "collected",
+      "collectedAt": "__TODAY_1214__"
+    },
+    {
+      "id": 2,
+      "studentId": 2,
+      "menuItemId": 4,
+      "planType": "single",
+      "startDate": "2026-08-10",
+      "days": 1,
+      "totalKWD": 1,
+      "status": "collected",
+      "collectedAt": "2026-08-10T12:05:00.000Z"
+    }
+  ],
+  "staffBookings": []
+}

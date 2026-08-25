@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'Booking History — Evo Meals' }) %>
+</head>
+<body>
+<%- include('partials/appnav', { active: 'history' }) %>
+
+<div class="page">
+  <div class="page-head">
+    <span class="eyebrow">Order history</span>
+    <h1>Bookings &amp; meal history</h1>
+    <p>Every booking is listed here — with a real cancellation option, fixing a policy gap flagged in the earlier system.</p>
+  </div>
+
+  <div class="card" data-reveal>
+    <% if (bookings.length === 0) { %>
+      <div class="empty-state">
+        <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></div>
+        <p><strong>No bookings yet</strong>Once you book a meal, it'll show up here — with a one-tap cancel and refund if plans change.</p>
+        <a href="/booking" class="btn btn-primary btn-sm" style="margin-top:16px;">Book your first meal</a>
+      </div>
+    <% } else { %>
+      <div class="data-table-view">
+        <table>
+          <thead>
+            <tr><th>Student</th><th>Meal</th><th>Plan</th><th>Date</th><th>Total</th><th>Status</th><th></th></tr>
+          </thead>
+          <tbody>
+            <% bookings.forEach(b => { %>
+              <tr>
+                <td><%= b.student ? b.student.name : '—' %></td>
+                <td><%= b.menuItem ? b.menuItem.name : '—' %></td>
+                <td><%= b.planType === 'monthly' ? 'Monthly' : b.days + ' day(s)' %></td>
+                <td class="data-num"><%= fmtDate(b.startDate) %></td>
+                <td class="data-num"><%= fmtKWD(b.totalKWD) %></td>
+                <td>
+                  <% if (b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> Collected <span class="data-num"><%= b.collectedAt ? fmtTime(b.collectedAt) : '' %></span></span>
+                  <% } else if (b.status === 'cancelled') { %><span class="badge badge-cancelled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg> Cancelled</span>
+                  <% } else { %><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> Upcoming</span><% } %>
+                </td>
+                <td>
+                  <% if (b.status === 'upcoming') { %>
+                    <form method="POST" action="/history/<%= b.id %>/cancel" onsubmit="return confirm('Cancel this booking for <%= b.student ? b.student.name : "this student" %>?\n\nKWD <%= b.totalKWD.toFixed(3) %> will be refunded to your wallet immediately. This can\'t be undone — you\'ll need to book again if you change your mind.');">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <button type="submit" class="btn btn-danger">Cancel booking</button>
+                    </form>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="data-card-view">
+        <% bookings.forEach(b => { %>
+          <div class="data-card">
+            <div class="data-card-head">
+              <div>
+                <strong><%= b.student ? b.student.name : '—' %></strong>
+                <span><%= b.menuItem ? b.menuItem.name : '—' %></span>
+              </div>
+              <% if (b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> Collected</span>
+              <% } else if (b.status === 'cancelled') { %><span class="badge badge-cancelled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg> Cancelled</span>
+              <% } else { %><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> Upcoming</span><% } %>
+            </div>
+            <div class="data-card-row"><span class="k">Plan</span><span class="v"><%= b.planType === 'monthly' ? 'Monthly' : b.days + ' day(s)' %></span></div>
+            <div class="data-card-row"><span class="k">Date</span><span class="v data-num"><%= fmtDate(b.startDate) %></span></div>
+            <div class="data-card-row"><span class="k">Total</span><span class="v data-num"><%= fmtKWD(b.totalKWD) %></span></div>
+            <% if (b.status === 'collected' && b.collectedAt) { %>
+              <div class="data-card-row"><span class="k">Collected</span><span class="v data-num"><%= fmtTime(b.collectedAt) %></span></div>
+            <% } %>
+            <% if (b.status === 'upcoming') { %>
+              <form method="POST" action="/history/<%= b.id %>/cancel" onsubmit="return confirm('Cancel this booking for <%= b.student ? b.student.name : "this student" %>?\n\nKWD <%= b.totalKWD.toFixed(3) %> will be refunded to your wallet immediately. This can\'t be undone — you\'ll need to book again if you change your mind.');">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" class="btn btn-danger">Cancel booking</button>
+              </form>
+            <% } %>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+</body>
+</html>

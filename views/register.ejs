@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'Sign up — Evo Meals' }) %>
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="auth-card" style="max-width:460px;">
+      <div class="logo"><span>Evo <span class="dot">Meals</span></span></div>
+      <h1>Create your account</h1>
+      <p class="sub">Register once, then add your children and start booking.</p>
+
+      <% if (error) { %>
+        <div class="alert alert-error"><%= error %></div>
+      <% } %>
+
+      <form method="POST" action="/register">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="field">
+          <label for="name">Full name</label>
+          <input type="text" id="name" name="name" placeholder="Your name" required autofocus>
+        </div>
+        <div class="field">
+          <label for="civilId">Civil ID</label>
+          <input type="text" id="civilId" name="civilId" placeholder="e.g. 987654321098" inputmode="numeric" maxlength="12" pattern="\d{12}" data-validate="civilid" required aria-describedby="civilIdHint">
+          <div class="hint" id="civilIdHint">Your 12-digit government-issued ID number. It's masked everywhere it's shown in Evo Meals, including to you.</div>
+          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span>Civil ID should be exactly 12 digits.</span></div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com">
+          </div>
+          <div class="field">
+            <label for="phone">Mobile number</label>
+            <input type="tel" id="phone" name="phone" inputmode="tel" placeholder="+965 ...">
+          </div>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="At least 8 characters" required minlength="6">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Create Account</button>
+      </form>
+      <div class="auth-foot">Already have an account? <a href="/login" style="color:var(--lime-700); font-weight:600;">Log in</a></div>
+    </div>
+  </div>
+</body>
+</html>

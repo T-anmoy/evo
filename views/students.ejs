@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'Students — Evo Meals' }) %>
+</head>
+<body>
+<%- include('partials/appnav', { active: 'students' }) %>
+
+<div class="page">
+  <div class="page-head">
+    <span class="eyebrow">Manage children</span>
+    <h1>Registered students</h1>
+    <p>Civil ID numbers are masked here by default — this fixes an exposure issue found in the earlier version of this system.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3 style="font-size:15px; margin-bottom:16px;"><%= editing ? 'Edit student' : 'Add a student' %></h3>
+      <form method="POST" action="/students">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <% if (editing) { %><input type="hidden" name="id" value="<%= editing.id %>"><% } %>
+        <div class="form-row">
+          <div class="field">
+            <label>Full name</label>
+            <input type="text" name="name" value="<%= editing ? editing.name : '' %>" required>
+          </div>
+          <div class="field">
+            <label for="studentCivilId">Civil ID</label>
+            <% if (editing) { %>
+              <input type="text" id="studentCivilId" value="<%= maskCivilId(editing.civilId) %>" disabled>
+              <div class="hint">Their 12-digit government ID. Masked here, and everywhere else it's shown — it can't be changed once added.</div>
+            <% } else { %>
+              <input type="text" id="studentCivilId" name="civilId" value="" placeholder="e.g. 987654321098" inputmode="numeric" maxlength="12" pattern="\d{12}" data-validate="civilid" required aria-describedby="studentCivilIdHint">
+              <div class="hint" id="studentCivilIdHint">Their 12-digit government ID. It'll be masked everywhere it's shown from now on.</div>
+              <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span>Civil ID should be exactly 12 digits.</span></div>
+            <% } %>
+          </div>
+        </div>
+        <div class="field">
+          <label>School</label>
+          <select name="school" required>
+            <% ['Kuwait English School','American Creativity Academy','The English School'].forEach(s => { %>
+              <option value="<%= s %>" <%= editing && editing.school === s ? 'selected' : '' %>><%= s %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label>Class</label>
+            <input type="text" name="class" value="<%= editing ? editing.class : '' %>" placeholder="e.g. Grade 3">
+          </div>
+          <div class="field">
+            <label>Section</label>
+            <input type="text" name="section" value="<%= editing ? editing.section : '' %>" placeholder="e.g. B">
+          </div>
+        </div>
+        <div class="field">
+          <label>Gender</label>
+          <select name="gender">
+            <option <%= editing && editing.gender === 'Male' ? 'selected' : '' %>>Male</option>
+            <option <%= editing && editing.gender === 'Female' ? 'selected' : '' %>>Female</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Allergies (optional)</label>
+          <input type="text" name="allergies" value="<%= editing ? editing.allergies : '' %>" placeholder="e.g. Peanuts, Shellfish">
+          <div class="hint">Every meal is checked against this automatically.</div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;"><%= editing ? 'Save changes' : 'Add student' %></button>
+        <% if (editing) { %><a href="/students" class="btn btn-ghost" style="width:100%; margin-top:8px;">Cancel</a><% } %>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3 style="font-size:15px; margin-bottom:16px;">All students</h3>
+      <% if (students.length === 0) { %>
+        <div class="empty-state">
+          <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"/></svg></div>
+          <p><strong>No students registered yet</strong>Add your first child using the form on the left.</p>
+        </div>
+      <% } else { %>
+        <% students.forEach(s => { %>
+          <div class="student-row">
+            <div class="avatar"><%= s.name.charAt(0) %></div>
+            <div class="student-meta">
+              <strong><%= s.name %></strong>
+              <span><%= s.school %> · <%= s.class %><%= s.section ? '-' + s.section : '' %> · ID <%= maskCivilId(s.civilId) %></span>
+            </div>
+            <a href="/students/<%= s.id %>/edit" class="btn btn-outline btn-sm">Edit</a>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

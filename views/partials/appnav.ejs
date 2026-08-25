@@ -1,0 +1,33 @@
+<header class="app-header">
+  <div class="wrap app-nav">
+    <a href="/dashboard" class="app-logo"><span>Evo <span class="dot">Meals</span></span></a>
+    <nav class="app-links">
+      <a href="/dashboard" class="<%= active === 'dashboard' ? 'active' : '' %>">Dashboard</a>
+      <a href="/students" class="<%= active === 'students' ? 'active' : '' %>">Students</a>
+      <a href="/booking" class="<%= active === 'booking' ? 'active' : '' %>">Book a Meal</a>
+      <a href="/menu" class="<%= active === 'menu' ? 'active' : '' %>">Menu</a>
+      <a href="/history" class="<%= active === 'history' ? 'active' : '' %>">History</a>
+      <a href="/wallet" class="<%= active === 'wallet' ? 'active' : '' %>">Wallet</a>
+      <a href="/staff" class="<%= active === 'staff' ? 'active' : '' %>">Staff</a>
+    </nav>
+    <div class="app-user">
+      <a href="/profile" class="profile-link">Profile</a>
+      <a href="/logout" class="btn btn-sm" style="background:rgba(255,255,255,0.1); color:#fff;">Log out</a>
+      <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="appLinksMobile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <span>Menu</span>
+      </button>
+    </div>
+  </div>
+  <nav class="app-links-mobile" id="appLinksMobile">
+    <a href="/dashboard" class="<%= active === 'dashboard' ? 'active' : '' %>">Dashboard</a>
+    <a href="/students" class="<%= active === 'students' ? 'active' : '' %>">Students</a>
+    <a href="/booking" class="<%= active === 'booking' ? 'active' : '' %>">Book a Meal</a>
+    <a href="/menu" class="<%= active === 'menu' ? 'active' : '' %>">Menu</a>
+    <a href="/history" class="<%= active === 'history' ? 'active' : '' %>">History</a>
+    <a href="/wallet" class="<%= active === 'wallet' ? 'active' : '' %>">Wallet</a>
+    <a href="/staff" class="<%= active === 'staff' ? 'active' : '' %>">Staff</a>
+    <a href="/profile" class="<%= active === 'profile' ? 'active' : '' %>">Profile</a>
+  </nav>
+</header>
+<script src="/js/nav.js" defer></script>

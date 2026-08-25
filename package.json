@@ -1,0 +1,26 @@
+{
+  "name": "evo360-demo-system",
+  "version": "1.0.0",
+  "description": "Working multi-page demo of the redesigned Evo360 school meal system — real login, real booking logic, real wallet. Built by Highline Works.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "migrate": "node db/migrate.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^13.0.3",
+    "compression": "^1.8.1",
+    "csrf-sync": "^4.2.1",
+    "dotenv": "^17.4.2",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-rate-limit": "^8.6.2",
+    "express-session": "^1.18.0",
+    "helmet": "^8.3.0",
+    "pino": "^10.3.1",
+    "pino-http": "^11.0.0"
+  }
+}

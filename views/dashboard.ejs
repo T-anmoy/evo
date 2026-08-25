@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'Dashboard — Evo Meals' }) %>
+</head>
+<body>
+<%- include('partials/appnav', { active: 'dashboard' }) %>
+
+<div class="page">
+  <div class="page-head">
+    <span class="eyebrow">Welcome back</span>
+    <h1><%= parent.name %></h1>
+    <p>Here's what's happening with your children today.</p>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:28px;">
+    <div class="stat lime" data-reveal data-reveal-group="stats">
+      <div class="label">Wallet balance</div>
+      <div class="value lime data-num" data-countup="<%= wallet.balanceKWD.toFixed(3) %>">0.000</div>
+    </div>
+    <div class="stat" data-reveal data-reveal-group="stats">
+      <div class="label">Children registered</div>
+      <div class="value data-num" data-countup="<%= students.length %>">0</div>
+    </div>
+    <div class="stat" data-reveal data-reveal-group="stats">
+      <div class="label">Active bookings</div>
+      <div class="value data-num" data-countup="<%= activeBookingCount %>">0</div>
+    </div>
+  </div>
+
+  <div class="card" data-reveal>
+    <h3 style="font-size:15px; margin-bottom:16px;">Today's status</h3>
+    <% if (studentStatus.length === 0) { %>
+      <div class="empty-state">
+        <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"/></svg></div>
+        <p><strong>No children registered yet</strong>Add your first child to start booking meals and seeing when they've eaten.</p>
+        <a href="/students" class="btn btn-primary btn-sm" style="margin-top:16px;">Add your first child</a>
+      </div>
+    <% } else { %>
+      <% studentStatus.forEach(({student, booking}) => { %>
+        <div class="student-row">
+          <div class="avatar"><%= student.name.charAt(0) %></div>
+          <div class="student-meta">
+            <strong><%= student.name %></strong>
+            <span><%= student.school %> · <%= student.class %></span>
+          </div>
+          <% if (booking && booking.status === 'collected') { %>
+            <span class="status-line ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> Collected at <span class="data-num"><%= fmtTime(booking.collectedAt) %></span></span>
+          <% } else if (booking && booking.status === 'upcoming') { %>
+            <span class="status-line pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> Booked — awaiting collection</span>
+          <% } else { %>
+            <span class="status-line none">No meal booked today</span>
+          <% } %>
+        </div>
+      <% }) %>
+    <% } %>
+  </div>
+
+  <div class="grid-2" style="margin-top:24px;">
+    <% if (typeof lastBooking !== 'undefined' && lastBooking) { %>
+      <div class="card" data-reveal>
+        <h3 style="font-size:15px; margin-bottom:10px;">Quick rebook</h3>
+        <p style="font-size:13.5px; color:var(--muted); margin-bottom:16px;">Book <%= lastBooking.mealName %> for <%= lastBooking.studentName %> again — same choices, prefilled for you.</p>
+        <a href="/booking?rebook=<%= lastBooking.id %>" class="btn btn-primary btn-sm">Book it again</a>
+      </div>
+    <% } else { %>
+      <div class="card" data-reveal>
+        <h3 style="font-size:15px; margin-bottom:10px;">Book a meal</h3>
+        <p style="font-size:13.5px; color:var(--muted); margin-bottom:16px;">Pick a student, a meal, and a plan — total calculates automatically.</p>
+        <a href="/booking" class="btn btn-primary btn-sm">Book now</a>
+      </div>
+    <% } %>
+    <div class="card" data-reveal>
+      <h3 style="font-size:15px; margin-bottom:10px;">Top up your wallet</h3>
+      <p style="font-size:13.5px; color:var(--muted); margin-bottom:16px;">Add funds so bookings never fail at checkout.</p>
+      <a href="/wallet" class="btn btn-outline btn-sm">Go to wallet</a>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'Menu — Evo Meals' }) %>
+</head>
+<body>
+<%- include('partials/appnav', { active: 'menu' }) %>
+
+<div class="page">
+  <div class="page-head">
+    <span class="eyebrow">This week's menu</span>
+    <h1>Real meals, real nutrition</h1>
+    <p>Every dish shows full nutrition info — this fixes a content gap flagged in the earlier system, where menu tabs existed but were never populated.</p>
+  </div>
+
+  <div class="allergen-row">
+    <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Nut-free available</span>
+    <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Shellfish-free available</span>
+    <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Sesame-free available</span>
+    <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Soy-free available</span>
+  </div>
+
+  <div class="grid-4">
+    <% menuItems.forEach(m => { %>
+      <div class="menu-card">
+        <div class="menu-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v6M8 8h8l-1 12H9L8 8Z"/></svg>
+        </div>
+        <div class="menu-card-body">
+          <span class="tag"><%= m.tag %></span>
+          <h3><%= m.name %></h3>
+          <div class="menu-nutri"><span class="data-num"><%= m.calories %> kcal</span><span>·</span><span class="data-num"><%= m.protein %>g protein</span></div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+</body>
+</html>

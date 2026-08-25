@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'Book a Meal — Evo Meals' }) %>
+</head>
+<body>
+<%- include('partials/appnav', { active: 'booking' }) %>
+
+<div class="page" style="max-width:680px;">
+  <div class="page-head">
+    <span class="eyebrow">Book a meal</span>
+    <h1>Book &amp; pay</h1>
+    <p>The total always calculates correctly — this is the direct fix for the KWD 0.00 issue found in the earlier system.</p>
+  </div>
+
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+  <% if (success) { %><div class="alert alert-success"><%- include('partials/success-icon') %><span><%= success %></span></div><% } %>
+  <% if (typeof rebook !== 'undefined' && rebook) { %>
+    <div class="alert alert-info">Prefilled from your last booking — check the details below, then confirm.</div>
+  <% } %>
+
+  <div class="card">
+    <% if (students.length === 0) { %>
+      <div class="empty-state">
+        <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"/></svg></div>
+        <p><strong>Add a student to book a meal</strong>Bookings are tied to a registered child, so start there first.</p>
+        <a href="/students" class="btn btn-primary btn-sm" style="margin-top:16px;">Add a student</a>
+      </div>
+    <% } else { %>
+      <% const rebookStudentId = (typeof rebook !== 'undefined' && rebook) ? rebook.studentId : null; %>
+      <% const rebookMenuId = (typeof rebook !== 'undefined' && rebook) ? rebook.menuItemId : (menuItems[0] && menuItems[0].id); %>
+      <% const rebookPlan = (typeof rebook !== 'undefined' && rebook) ? rebook.planType : 'monthly'; %>
+      <form method="POST" action="/booking" id="bookingForm">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <div class="field">
+          <label for="studentSelect">Student</label>
+          <select name="studentId" id="studentSelect" required>
+            <% students.forEach(s => { %>
+              <option value="<%= s.id %>" <%= s.id === rebookStudentId ? 'selected' : '' %>><%= s.name %> — <%= s.school %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Meal <span style="font-weight:400; color:var(--muted);">— tap a card to choose</span></label>
+          <div class="picker-grid">
+            <% menuItems.forEach((m, i) => { %>
+              <div class="picker-card">
+                <input type="radio" name="menuItemId" id="meal-<%= m.id %>" value="<%= m.id %>" <%= m.id === rebookMenuId ? 'checked' : '' %> required>
+                <label for="meal-<%= m.id %>">
+                  <span class="picker-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v6M8 8h8l-1 12H9L8 8Z"/></svg></span>
+                  <span class="picker-body">
+                    <strong><%= m.name %></strong>
+                    <span class="picker-meta"><%= m.calories %> kcal · <%= m.protein %>g protein</span>
+                  </span>
+                  <span class="check-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                </label>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Plan</label>
+          <div class="picker-grid plan-picker">
+            <div class="picker-card">
+              <input type="radio" name="planType" id="plan-single" value="single" <%= rebookPlan === 'single' ? 'checked' : '' %>>
+              <label for="plan-single">
+                <span class="picker-body">
+                  <strong>Pay as you go</strong>
+                  <span class="picker-meta data-num">KWD 1.000 / day</span>
+                </span>
+                <span class="check-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+              </label>
+            </div>
+            <div class="picker-card">
+              <input type="radio" name="planType" id="plan-monthly" value="monthly" <%= rebookPlan === 'monthly' ? 'checked' : '' %>>
+              <label for="plan-monthly">
+                <span class="popular-tag">Most parents choose this</span>
+                <span class="picker-body">
+                  <strong>Monthly plan</strong>
+                  <span class="picker-meta data-num">KWD 24.000 flat</span>
+                </span>
+                <span class="check-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="startDate">Start date</label>
+            <input type="date" name="startDate" id="startDate" value="<%= new Date().toISOString().split('T')[0] %>" required>
+          </div>
+          <div class="field" id="daysField">
+            <label for="daysInput">Number of days</label>
+            <input type="number" name="days" id="daysInput" inputmode="numeric" value="5" min="1" max="30">
+          </div>
+        </div>
+
+        <div class="confirm-bar" id="confirmBar">
+          <div id="totalBox" style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="color:rgba(255,255,255,0.65); font-size:13px; font-weight:500;">Total due</span>
+            <strong id="totalAmt" class="data-num" style="color:var(--lime-500); font-size:20px;">KWD 5.000</strong>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;">Confirm &amp; Pay from Wallet</button>
+        </div>
+      </form>
+
+      <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-size:13px; color:var(--muted);">
+        <span>Current wallet balance</span>
+        <strong class="data-num" style="color:var(--navy-950); font-size:13px;"><%= fmtKWD(wallet.balanceKWD) %></strong>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  function recalc(){
+    var planEl = document.querySelector('input[name="planType"]:checked');
+    var plan = planEl ? planEl.value : 'single';
+    var days = document.getElementById('daysField');
+    var daysInput = document.getElementById('daysInput');
+    if (plan === 'monthly') {
+      days.style.display = 'none';
+      document.getElementById('totalAmt').textContent = 'KWD 24.000';
+    } else {
+      days.style.display = 'block';
+      var d = Math.max(1, parseInt(daysInput.value, 10) || 1);
+      document.getElementById('totalAmt').textContent = 'KWD ' + d.toFixed(3);
+    }
+  }
+  document.querySelectorAll('input[name="planType"]').forEach(function(el){ el.addEventListener('change', recalc); });
+  var daysInputEl = document.getElementById('daysInput');
+  if (daysInputEl) daysInputEl.addEventListener('input', recalc);
+  document.addEventListener('DOMContentLoaded', recalc);
+</script>
+
+</body>
+</html>
