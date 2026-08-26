@@ -168,10 +168,71 @@
     });
   }
 
+  // ---------- generic required / email / minlength validation ----------
+  // Used by the Schools and Caterers lead-capture forms: real inline
+  // feedback as the parent types or leaves a field, plus a submit-time
+  // pass that stops the post and focuses the first problem instead of
+  // relying on the browser's default (inconsistent, unstyled) bubble.
+  function validateGenericField(input) {
+    var field = input.closest('.field');
+    if (!field) return true;
+    var rule = input.getAttribute('data-validate');
+    var value = input.value.trim();
+    var valid = true;
+    if (rule === 'required') valid = value.length > 0;
+    else if (rule === 'email') valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    else if (rule && rule.indexOf('minlength:') === 0) {
+      var min = parseInt(rule.split(':')[1], 10) || 0;
+      valid = value.length >= min;
+    }
+    if (value.length === 0 && rule !== 'required') {
+      field.classList.remove('invalid', 'valid');
+      return true;
+    }
+    field.classList.toggle('invalid', !valid);
+    field.classList.toggle('valid', valid);
+    return valid;
+  }
+
+  function initGenericValidation() {
+    document.querySelectorAll('form[novalidate]').forEach(function (form) {
+      var fields = form.querySelectorAll('[data-validate]:not([data-validate="civilid"])');
+      fields.forEach(function (input) {
+        input.addEventListener('blur', function () { validateGenericField(input); });
+        input.addEventListener('input', function () {
+          var field = input.closest('.field');
+          if (field && field.classList.contains('invalid')) validateGenericField(input);
+        });
+      });
+      form.addEventListener('submit', function (e) {
+        var allValid = true;
+        var firstInvalid = null;
+        fields.forEach(function (input) {
+          var ok = validateGenericField(input);
+          if (!ok && !firstInvalid) firstInvalid = input;
+          allValid = allValid && ok;
+        });
+        if (!allValid) {
+          e.preventDefault();
+          if (firstInvalid) firstInvalid.focus();
+          return;
+        }
+        var submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn && !submitBtn.disabled) {
+          submitBtn.dataset.originalText = submitBtn.textContent;
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Sending…';
+          submitBtn.classList.add('btn-loading');
+        }
+      });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initReveal();
     initCountUp();
     initFaq();
     initFieldValidation();
+    initGenericValidation();
   });
 })();

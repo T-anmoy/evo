@@ -14,6 +14,7 @@
   </div>
 
   <% if (success) { %><div class="alert alert-success"><%- include('partials/success-icon') %><span>Topped up — your new balance is ready to book with.</span></div><% } %>
+  <% if (lowbalance) { %><div class="alert alert-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span>Your balance isn't enough to renew that plan — top up below, then try renewing again from your dashboard.</span></div><% } %>
 
   <div class="grid-2" style="align-items:start;">
     <div class="card" style="text-align:center;" data-reveal>

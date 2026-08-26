@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'For Parents — Evo Meals' }) %>
+<meta name="description" content="Book school meals, manage subscriptions, and know the moment your child collects lunch — all from the Evo Meals parent account. Real-time notifications, allergen-checked menus, and a KNET wallet.">
+</head>
+<body>
+
+<%- include('partials/sitenav', { active: 'parents' }) %>
+
+<section class="hero hero-inner-page">
+  <div class="wrap-wide hero-inner">
+    <div class="hero-copy" data-reveal>
+      <span class="eyebrow on-dark">For Parents</span>
+      <h1>Know they ate.<br>Know what they ate.<br><em>Never have to ask.</em></h1>
+      <p class="lede">One account for every child, every meal. Book a plan, top up the wallet, and see the exact moment they've collected lunch — dish, time, done.</p>
+      <div class="hero-actions">
+        <a href="/register" class="btn btn-primary">Create your account</a>
+        <a href="/login" class="btn btn-ghost">Log in</a>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="tap-demo">
+        <div class="tap-card">
+          <div class="chip"></div>
+          <div class="card-name">Ahmed A.</div>
+        </div>
+        <div class="tap-reader pulse">
+          <div class="ripple"></div>
+          <div class="ripple delay"></div>
+          <div class="reader-ring">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8.5a8 8 0 0 1 12 0M8.5 11a4.5 4.5 0 0 1 7 0M12 14v.01"/></svg>
+          </div>
+          <div class="reader-label">MEAL READER · GATE 2</div>
+        </div>
+        <div class="tap-toast">
+          <div class="toast-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <div>
+            <div class="toast-title">Ahmed tapped in — lunch collected</div>
+            <div class="toast-sub">12:14 PM · Arabiatta Chicken Pasta</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section on-tint">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">How it works for you</span>
+      <h2>Four steps, once a term.</h2>
+      <p>Set it up once. From then on, lunch just happens — and you find out about it, instead of wondering.</p>
+    </div>
+
+    <ul class="value-checklist" data-reveal>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Convenience</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Transparent menus</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Easy subscriptions</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Digital payments</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Notifications</li>
+    </ul>
+
+    <div class="steps">
+      <div class="step" data-reveal data-reveal-group="psteps">
+        <div class="step-num">Book</div>
+        <h3>Pick a plan</h3>
+        <p>Choose a meal, pay-as-you-go or a flat monthly plan, and the total is calculated and shown before you confirm — never a surprise charge.</p>
+      </div>
+      <div class="step" data-reveal data-reveal-group="psteps">
+        <div class="step-num">Wallet</div>
+        <h3>Top up once</h3>
+        <p>Fund the wallet with KNET. Bookings draw from balance automatically — no cash, no forgotten lunch money, ever.</p>
+      </div>
+      <div class="step" data-reveal data-reveal-group="psteps">
+        <div class="step-num">Tap</div>
+        <h3>Your child taps in</h3>
+        <p>At the meal counter, their card taps the reader. No PIN, no queue for cash — just a two-second tap they can do themselves.</p>
+      </div>
+      <div class="step" data-reveal data-reveal-group="psteps">
+        <div class="step-num">Notified</div>
+        <h3>You see it happen</h3>
+        <p>The moment they tap, your dashboard updates: which meal, and the exact time they collected it.</p>
+      </div>
+    </div>
+
+    <div class="journey-block" data-reveal>
+      <span class="journey-label">Your complete parent journey — not just booking</span>
+      <ul class="journey-pills">
+        <li>View the menu</li>
+        <li>Check nutritional info</li>
+        <li>Subscribe to a plan</li>
+        <li>Select meals</li>
+        <li>Pay securely</li>
+        <li>Track orders</li>
+        <li>Get notifications</li>
+        <li class="journey-pill-emphasis">Manage multiple children</li>
+        <li class="journey-pill-emphasis">Renew your subscription</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="pricing">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Pricing</span>
+      <h2>One price, shown before you pay.</h2>
+      <p>This is the exact total the booking screen calculates — nothing hidden, nothing left blank.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card" data-reveal data-reveal-group="ppricing">
+        <div class="price-tag">Pay as you go</div>
+        <div class="price-amt">KWD <%= (plans.single ? plans.single.rateKWD : 1).toFixed(3) %><span>/day</span></div>
+        <p>Book single days whenever you need to — school trips, half terms, or just trying it out.</p>
+        <a href="/register" class="btn btn-outline" style="width:100%;">Start booking</a>
+      </div>
+      <div class="price-card featured" data-reveal data-reveal-group="ppricing">
+        <span class="badge-save">Most parents choose this</span>
+        <div class="price-tag">Monthly plan</div>
+        <div class="price-amt">KWD <%= (plans.monthly ? plans.monthly.rateKWD : 24).toFixed(3) %><span>/month</span></div>
+        <p><%= plans.monthly ? plans.monthly.monthlyDays : 22 %> school days covered, booked once.</p>
+        <a href="/register" class="btn btn-primary" style="width:100%;">Start with the monthly plan</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section on-tint" id="menu">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">This week's menu</span>
+      <h2>Real meals, real nutrition, on the record.</h2>
+      <p>Every dish is checked against your child's allergy profile before it's ever offered as an option.</p>
+    </div>
+    <div class="allergen-row" style="justify-content:center;">
+      <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Nut-free available</span>
+      <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Shellfish-free available</span>
+      <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Sesame-free available</span>
+      <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Soy-free available</span>
+    </div>
+    <div class="grid-4">
+      <% menuItems.forEach(m => { %>
+        <div class="menu-card" data-reveal data-reveal-group="pmenu">
+          <div class="menu-thumb">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v6M8 8h8l-1 12H9L8 8Z"/></svg>
+          </div>
+          <div class="menu-card-body">
+            <span class="tag"><%= m.tag %></span>
+            <h3><%= m.name %></h3>
+            <div class="menu-nutri"><span><%= m.calories %> kcal</span><span>·</span><span><%= m.protein %>g protein</span></div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="wrap" style="text-align:center;">
+    <span class="eyebrow on-dark" style="justify-content:center;">Ready when you are</span>
+    <h2 style="margin-top:16px;">Set it up before the next school run.</h2>
+    <p style="margin:14px auto 28px;">Takes about two minutes — add a child, top up the wallet, book the first meal.</p>
+    <a href="/register" class="btn btn-primary">Create your account</a>
+  </div>
+</section>
+
+<%- include('partials/sitefoot') %>
+
+</body>
+</html>

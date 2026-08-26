@@ -64,9 +64,22 @@ app.locals.maskCivilId = maskCivilId;
 app.locals.fmtKWD = (n) => `KWD ${Number(n).toFixed(3)}`;
 app.locals.fmtDate = (iso) => new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 app.locals.fmtTime = (iso) => new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+app.locals.timeAgo = (iso) => {
+  const diffMs = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+  return app.locals.fmtDate(iso);
+};
 
 function requireAuth(req, res, next) {
   if (!req.session.parentId) return res.redirect('/login');
+  res.locals.headerNotifications = db.getNotificationsForParent(req.session.parentId, 6);
+  res.locals.unreadNotificationCount = db.getUnreadNotificationCount(req.session.parentId);
   next();
 }
 
@@ -95,6 +108,130 @@ app.get('/', (req, res) => {
     menuItems: db.getMenuItems(),
     plans: db.getPlans()
   });
+});
+
+app.get('/schools', (req, res) => {
+  res.render('schools', { parentId: req.session.parentId, success: req.query.success || null, errors: null, formData: null });
+});
+
+app.post('/schools/inquiry', (req, res) => {
+  const { organizationName, contactName, contactRole, email, phone, scaleInfo, currentArrangement, message } = req.body;
+  const errors = {};
+  if (!organizationName || !organizationName.trim()) errors.organizationName = 'School name is required.';
+  if (!contactName || !contactName.trim()) errors.contactName = 'Contact person is required.';
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errors.email = 'A valid email address is required.';
+  if (!message || message.trim().length < 10) errors.message = 'Tell us a little more — at least 10 characters.';
+
+  if (Object.keys(errors).length) {
+    return res.render('schools', { parentId: req.session.parentId, success: null, errors, formData: req.body });
+  }
+
+  db.createInquiry({
+    type: 'school', organizationName: organizationName.trim(), contactName: contactName.trim(),
+    contactRole: (contactRole || '').trim(), email: email.trim(), phone: (phone || '').trim(),
+    scaleInfo: (scaleInfo || '').trim(), currentArrangement: (currentArrangement || '').trim(), message: message.trim()
+  });
+  logger.info({ organizationName }, 'school partnership inquiry received');
+  res.redirect('/schools?success=1');
+});
+
+app.get('/parents', (req, res) => {
+  res.render('parents', {
+    parentId: req.session.parentId,
+    menuItems: db.getMenuItems(),
+    plans: db.getPlans()
+  });
+});
+
+app.get('/caterers', (req, res) => {
+  res.render('caterers', { parentId: req.session.parentId, success: req.query.success || null, errors: null, formData: null });
+});
+
+app.post('/caterers/inquiry', (req, res) => {
+  const { organizationName, contactName, email, phone, scaleInfo, message } = req.body;
+  const errors = {};
+  if (!organizationName || !organizationName.trim()) errors.organizationName = 'Company name is required.';
+  if (!contactName || !contactName.trim()) errors.contactName = 'Contact person is required.';
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errors.email = 'A valid email address is required.';
+  if (!message || message.trim().length < 10) errors.message = 'Tell us a little more — at least 10 characters.';
+
+  if (Object.keys(errors).length) {
+    return res.render('caterers', { parentId: req.session.parentId, success: null, errors, formData: req.body });
+  }
+
+  db.createInquiry({
+    type: 'caterer', organizationName: organizationName.trim(), contactName: contactName.trim(),
+    contactRole: '', email: email.trim(), phone: (phone || '').trim(),
+    scaleInfo: (scaleInfo || '').trim(), currentArrangement: '', message: message.trim()
+  });
+  logger.info({ organizationName }, 'caterer application received');
+  res.redirect('/caterers?success=1');
+});
+
+app.get('/about', (req, res) => {
+  res.render('about', { parentId: req.session.parentId });
+});
+
+app.get('/privacy', (req, res) => {
+  res.render('privacy', { parentId: req.session.parentId });
+});
+
+app.get('/terms', (req, res) => {
+  res.render('terms', { parentId: req.session.parentId });
+});
+
+app.get('/contact', (req, res) => {
+  res.render('contact', { parentId: req.session.parentId, success: req.query.success || null, error: null });
+});
+
+app.post('/contact', (req, res) => {
+  const { name, email, role, message } = req.body;
+  if (!name || !email || !message) {
+    return res.render('contact', {
+      parentId: req.session.parentId, success: null,
+      error: 'Name, email, and a short message are required.'
+    });
+  }
+  // Demo only — no email/CRM integration wired up yet. In production this
+  // would notify the partnerships team (see the note in views/contact.ejs).
+  logger.info({ name, email, role }, 'contact form submission (demo — not sent anywhere)');
+  res.redirect('/contact?success=1');
+});
+
+app.get('/sitemap.xml', (req, res) => {
+  const base = `${req.protocol}://${req.get('host')}`;
+  const pages = ['/', '/schools', '/parents', '/caterers', '/about', '/contact', '/privacy', '/terms', '/login', '/register'];
+  const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages
+    .map(p => `  <url><loc>${base}${p}</loc></url>`)
+    .join('\n')}\n</urlset>`;
+  res.type('application/xml').send(body);
+});
+
+app.get('/robots.txt', (req, res) => {
+  const base = `${req.protocol}://${req.get('host')}`;
+  res.type('text/plain').send(
+`User-agent: *
+Allow: /
+Allow: /schools
+Allow: /parents
+Allow: /caterers
+Allow: /about
+Allow: /contact
+Allow: /privacy
+Allow: /terms
+Disallow: /dashboard
+Disallow: /students
+Disallow: /booking
+Disallow: /history
+Disallow: /wallet
+Disallow: /profile
+Disallow: /staff
+Disallow: /menu
+Disallow: /school-admin/
+Disallow: /notifications
+
+Sitemap: ${base}/sitemap.xml
+`);
 });
 
 app.get('/login', (req, res) => {
@@ -138,6 +275,78 @@ app.get('/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/'));
 });
 
+// ---------- school admin auth (separate, lightweight login) ----------
+function requireSchoolAdmin(req, res, next) {
+  if (!req.session.schoolAdminId) return res.redirect('/school-admin/login');
+  next();
+}
+function currentSchoolAdmin(req) {
+  return db.findSchoolAdminById(req.session.schoolAdminId);
+}
+
+app.get('/school-admin/login', (req, res) => {
+  res.render('school-admin-login', { error: null, parentId: req.session.parentId });
+});
+
+app.post('/school-admin/login', loginLimiter, (req, res) => {
+  const { email, password } = req.body;
+  const admin = db.findSchoolAdminByEmail((email || '').trim().toLowerCase());
+  if (!admin || !bcrypt.compareSync(password || '', admin.passwordHash)) {
+    return res.render('school-admin-login', { error: 'Email or password is incorrect. Try the demo login shown below.', parentId: req.session.parentId });
+  }
+  req.session.schoolAdminId = admin.id;
+  res.redirect('/school-admin/dashboard');
+});
+
+app.get('/school-admin/logout', (req, res) => {
+  req.session.destroy(() => res.redirect('/school-admin/login'));
+});
+
+app.get('/school-admin/dashboard', requireSchoolAdmin, (req, res) => {
+  const admin = currentSchoolAdmin(req);
+  const students = db.getStudentsBySchool(admin.school);
+  const bookings = db.getBookingsForSchool(admin.school);
+  const todayISO = new Date().toISOString().split('T')[0];
+
+  const isActiveToday = (b) => {
+    if (b.status === 'cancelled') return false;
+    if (b.planType === 'monthly') {
+      const start = new Date(b.startDate);
+      const windowEnd = new Date(start);
+      windowEnd.setDate(windowEnd.getDate() + 30);
+      return b.startDate <= todayISO && todayISO <= windowEnd.toISOString().split('T')[0];
+    }
+    return b.startDate === todayISO;
+  };
+
+  const activeSubscriptions = bookings.filter(b => b.planType === 'monthly' && b.status !== 'cancelled' && isActiveToday(b)).length;
+  const todaysMeals = bookings.filter(isActiveToday).length;
+  const pendingOrders = bookings.filter(b => b.status === 'upcoming').length;
+
+  // 14-day trend: bookings grouped by start date, real counts from real rows.
+  const TREND_DAYS = 14;
+  const trend = [];
+  for (let i = TREND_DAYS - 1; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const iso = d.toISOString().split('T')[0];
+    const count = bookings.filter(b => b.startDate === iso && b.status !== 'cancelled').length;
+    trend.push({ date: iso, count });
+  }
+  const trendMax = Math.max(1, ...trend.map(t => t.count));
+
+  const recentActivity = bookings.slice(0, 10).map(b => ({
+    ...b,
+    student: students.find(s => s.id === b.studentId),
+    menuItem: db.findMenuItem(b.menuItemId)
+  }));
+
+  res.render('school-admin-dashboard', {
+    admin, students, bookings, activeSubscriptions, todaysMeals, pendingOrders,
+    recentActivity, trend, trendMax, parentId: req.session.parentId
+  });
+});
+
 // ---------- protected pages ----------
 app.get('/dashboard', requireAuth, (req, res) => {
   const parent = currentParent(req);
@@ -173,7 +382,85 @@ app.get('/dashboard', requireAuth, (req, res) => {
     mealName: (db.findMenuItem(lastBooking.menuItemId) || {}).name || 'that meal'
   } : null;
 
-  res.render('dashboard', { parent, students, wallet, studentStatus, activeBookingCount, lastBooking: lastBookingView, parentId: parent.id });
+  // Renewal: a monthly plan within 7 days of the end of its 30-day window
+  // gets a real one-tap "Renew" action instead of sending the parent
+  // through the booking flow again from scratch.
+  const RENEWAL_WINDOW_DAYS = 7;
+  const renewalCandidates = bookings
+    .filter(b => b.planType === 'monthly' && b.status !== 'cancelled')
+    // Skip a plan once it's already been renewed — a newer monthly booking
+    // for the same student means this one has been superseded, even though
+    // its own row is still technically "upcoming"/"collected".
+    .filter(b => !bookings.some(other =>
+      other.studentId === b.studentId && other.planType === 'monthly' &&
+      other.status !== 'cancelled' && other.startDate > b.startDate
+    ))
+    .map(b => {
+      const start = new Date(b.startDate);
+      const windowEnd = new Date(start);
+      windowEnd.setDate(windowEnd.getDate() + 30);
+      const daysLeft = Math.ceil((windowEnd - new Date()) / (1000 * 60 * 60 * 24));
+      return { booking: b, daysLeft };
+    })
+    .filter(({ daysLeft }) => daysLeft >= 0 && daysLeft <= RENEWAL_WINDOW_DAYS)
+    .map(({ booking, daysLeft }) => {
+      const student = students.find(s => s.id === booking.studentId);
+      const menuItem = db.findMenuItem(booking.menuItemId);
+      db.ensureRenewalNotification({
+        parentId: parent.id, bookingId: booking.id,
+        message: `${student ? student.name : 'Your child'}'s monthly plan ends in ${daysLeft} day${daysLeft === 1 ? '' : 's'} — renew to keep meals booked without a gap.`
+      });
+      return {
+        bookingId: booking.id, daysLeft,
+        studentName: student ? student.name : 'your child',
+        mealName: menuItem ? menuItem.name : 'their meal plan'
+      };
+    });
+
+  const notifications = db.getNotificationsForParent(parent.id, 12);
+  const unreadNotificationCount = db.getUnreadNotificationCount(parent.id);
+
+  res.render('dashboard', {
+    parent, students, wallet, studentStatus, activeBookingCount, lastBooking: lastBookingView,
+    renewalCandidates, notifications, unreadNotificationCount, parentId: parent.id,
+    renewed: req.query.renewed === '1'
+  });
+});
+
+app.post('/notifications/:id/read', requireAuth, (req, res) => {
+  const parent = currentParent(req);
+  db.markNotificationRead(Number(req.params.id), parent.id);
+  res.redirect('/dashboard');
+});
+
+app.post('/notifications/read-all', requireAuth, (req, res) => {
+  const parent = currentParent(req);
+  db.markAllNotificationsRead(parent.id);
+  res.redirect('/dashboard');
+});
+
+app.post('/booking/:id/renew', requireAuth, (req, res) => {
+  const parent = currentParent(req);
+  const original = db.findBookingById(Number(req.params.id));
+  const student = original ? db.findStudentById(original.studentId) : null;
+  if (!original || !student || student.parentId !== parent.id) return res.redirect('/dashboard');
+
+  const plans = db.getPlans();
+  const wallet = db.getWallet(parent.id);
+  const { total, days } = calculateBookingTotal({ planType: original.planType, days: original.days, plans });
+
+  if (!canAfford(total, wallet.balanceKWD)) {
+    return res.redirect('/wallet?lowbalance=1');
+  }
+
+  const menuItem = db.findMenuItem(original.menuItemId);
+  const newStartDate = new Date().toISOString().split('T')[0];
+  db.bookAndCharge({
+    studentId: student.id, menuItemId: original.menuItemId, planType: original.planType,
+    startDate: newStartDate, days, totalKWD: total, parentId: parent.id,
+    note: `${student.name} — ${menuItem ? menuItem.name : 'Meal plan'}, renewed monthly plan`
+  });
+  res.redirect('/dashboard?renewed=1');
 });
 
 app.get('/students', requireAuth, (req, res) => {
@@ -304,7 +591,7 @@ app.get('/wallet', requireAuth, (req, res) => {
   const parent = currentParent(req);
   const wallet = db.getWallet(parent.id);
   const transactions = db.getWalletTransactions(parent.id);
-  res.render('wallet', { wallet, transactions, parentId: parent.id, success: req.query.success || null });
+  res.render('wallet', { wallet, transactions, parentId: parent.id, success: req.query.success || null, lowbalance: req.query.lowbalance === '1' });
 });
 
 // Real KNET/Bookey integration slots in here once sandbox credentials are

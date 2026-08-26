@@ -42,6 +42,7 @@ function mapMenuItem(r) {
   if (!r) return undefined;
   return {
     id: r.id, name: r.name, tag: r.tag, calories: r.calories, protein: r.protein,
+    carbs: r.carbs, fat: r.fat, ingredients: r.ingredients,
     allergenFree: JSON.parse(r.allergen_free || '[]')
   };
 }
@@ -82,9 +83,16 @@ function seedIfEmpty() {
   const todayISODate = today.toISOString().split('T')[0];
   const todayCollected = new Date(today);
   todayCollected.setHours(12, 14, 0, 0);
+  const minus25 = new Date(today);
+  minus25.setDate(minus25.getDate() - 25);
+  const minus25ISODate = minus25.toISOString().split('T')[0];
   seed.bookings.forEach(b => {
     if (b.startDate === '__TODAY__') b.startDate = todayISODate;
+    if (b.startDate === '__TODAY_MINUS_25__') b.startDate = minus25ISODate;
     if (b.collectedAt === '__TODAY_1214__') b.collectedAt = todayCollected.toISOString();
+  });
+  (seed.notifications || []).forEach(n => {
+    if (n.createdAt === '__TODAY_1214__') n.createdAt = todayCollected.toISOString();
   });
 
   const insertAll = db.transaction(() => {
@@ -101,8 +109,8 @@ function seedIfEmpty() {
     seed.students.forEach(s => insertStudent.run(s));
 
     const insertMenuItem = db.prepare(`
-      INSERT INTO menu_items (id, name, tag, calories, protein, allergen_free)
-      VALUES (@id, @name, @tag, @calories, @protein, @allergenFree)
+      INSERT INTO menu_items (id, name, tag, calories, protein, carbs, fat, ingredients, allergen_free)
+      VALUES (@id, @name, @tag, @calories, @protein, @carbs, @fat, @ingredients, @allergenFree)
     `);
     seed.menuItems.forEach(m => insertMenuItem.run({ ...m, allergenFree: JSON.stringify(m.allergenFree || []) }));
 
@@ -134,6 +142,18 @@ function seedIfEmpty() {
       .run('single', 'Single Day', 1.000, 1);
     db.prepare('INSERT OR REPLACE INTO plans (code, label, rate_kwd, monthly_days) VALUES (?, ?, ?, ?)')
       .run('monthly', 'Monthly Plan', 24.000, 22);
+
+    const insertSchoolAdmin = db.prepare(`
+      INSERT INTO school_admins (id, school, name, email, password_hash, created_at)
+      VALUES (@id, @school, @name, @email, @passwordHash, @createdAt)
+    `);
+    (seed.schoolAdmins || []).forEach(a => insertSchoolAdmin.run(a));
+
+    const insertNotification = db.prepare(`
+      INSERT INTO notifications (id, parent_id, type, message, related_id, read, created_at)
+      VALUES (@id, @parentId, @type, @message, @relatedId, @read, @createdAt)
+    `);
+    (seed.notifications || []).forEach(n => insertNotification.run(n));
   });
   insertAll();
 }
@@ -149,6 +169,9 @@ function resetToSeed() {
       DELETE FROM parents;
       DELETE FROM menu_items;
       DELETE FROM plans;
+      DELETE FROM school_admins;
+      DELETE FROM notifications;
+      DELETE FROM inquiries;
     `);
   });
   wipe();
@@ -286,26 +309,76 @@ function findBookingById(id) {
   return mapBooking(db.prepare('SELECT * FROM bookings WHERE id = ?').get(id));
 }
 
-// Atomic: create the booking and debit the wallet in one transaction, so a
-// crash between the two writes can never leave a charge with no booking (or
-// a booking with no charge).
+const LOW_BALANCE_THRESHOLD_KWD = 3.000;
+
+function insertNotification({ parentId, type, message, relatedId }) {
+  db.prepare(`
+    INSERT INTO notifications (parent_id, type, message, related_id, read, created_at)
+    VALUES (?, ?, ?, ?, 0, ?)
+  `).run(parentId, type, message, relatedId || null, new Date().toISOString());
+}
+
+// Atomic: create the booking, debit the wallet, and log the resulting
+// notification(s) in one transaction — a crash partway through can never
+// leave a charge with no booking, a booking with no charge, or a wallet
+// change with no notification trail.
 function bookAndCharge({ studentId, menuItemId, planType, startDate, days, totalKWD, parentId, note }) {
   return db.transaction(() => {
     const booking = createBooking({ studentId, menuItemId, planType, startDate, days, totalKWD });
-    adjustWallet(parentId, -totalKWD, 'debit', note);
+    const wallet = adjustWallet(parentId, -totalKWD, 'debit', note);
+    insertNotification({
+      parentId, type: 'booking_confirmed', relatedId: booking.id,
+      message: `Booking confirmed — ${note}, KWD ${totalKWD.toFixed(3)} deducted.`
+    });
+    if (wallet.balanceKWD < LOW_BALANCE_THRESHOLD_KWD) {
+      insertNotification({
+        parentId, type: 'low_balance', relatedId: null,
+        message: `Your wallet balance is low — KWD ${wallet.balanceKWD.toFixed(3)} left. Top up to avoid a booking failing.`
+      });
+    }
     return booking;
   })();
 }
 
-// Atomic: cancel the booking and refund the wallet in one transaction.
+// Atomic: cancel the booking, refund the wallet, and log the notification.
 function cancelAndRefund({ bookingId, parentId }) {
   return db.transaction(() => {
     const booking = findBookingById(bookingId);
     if (!booking || booking.status !== 'upcoming') return null;
     updateBooking(bookingId, { status: 'cancelled' });
     adjustWallet(parentId, booking.totalKWD, 'credit', `Refund — booking #${booking.id} cancelled`);
+    insertNotification({
+      parentId, type: 'booking_cancelled', relatedId: booking.id,
+      message: `Booking cancelled — KWD ${booking.totalKWD.toFixed(3)} refunded to your wallet.`
+    });
     return findBookingById(bookingId);
   })();
+}
+
+// ---------- Notifications ----------
+function getNotificationsForParent(parentId, limit) {
+  const rows = db.prepare('SELECT * FROM notifications WHERE parent_id = ? ORDER BY created_at DESC, id DESC LIMIT ?')
+    .all(parentId, limit || 20);
+  return rows.map(r => ({
+    id: r.id, parentId: r.parent_id, type: r.type, message: r.message,
+    relatedId: r.related_id, read: !!r.read, createdAt: r.created_at
+  }));
+}
+function getUnreadNotificationCount(parentId) {
+  return db.prepare('SELECT COUNT(*) AS c FROM notifications WHERE parent_id = ? AND read = 0').get(parentId).c;
+}
+function markNotificationRead(id, parentId) {
+  db.prepare('UPDATE notifications SET read = 1 WHERE id = ? AND parent_id = ?').run(id, parentId);
+}
+function markAllNotificationsRead(parentId) {
+  db.prepare('UPDATE notifications SET read = 1 WHERE parent_id = ?').run(parentId);
+}
+// Ensures exactly one unread renewal reminder exists per booking — called
+// on dashboard load so re-visiting the page doesn't spam duplicate reminders.
+function ensureRenewalNotification({ parentId, bookingId, message }) {
+  const existing = db.prepare('SELECT id FROM notifications WHERE related_id = ? AND type = ?').get(bookingId, 'renewal_due');
+  if (existing) return;
+  insertNotification({ parentId, type: 'renewal_due', relatedId: bookingId, message });
 }
 
 // ---------- Staff bookings (separate section, mirrors real app's Staff area) ----------
@@ -320,6 +393,40 @@ function createStaffBooking(booking) {
   return mapStaffBooking(db.prepare('SELECT * FROM staff_bookings WHERE id = ?').get(info.lastInsertRowid));
 }
 
+// ---------- School admins ----------
+function findSchoolAdminByEmail(email) {
+  const r = db.prepare('SELECT * FROM school_admins WHERE email = ?').get(email);
+  if (!r) return undefined;
+  return { id: r.id, school: r.school, name: r.name, email: r.email, passwordHash: r.password_hash, createdAt: r.created_at };
+}
+function findSchoolAdminById(id) {
+  const r = db.prepare('SELECT * FROM school_admins WHERE id = ?').get(id);
+  if (!r) return undefined;
+  return { id: r.id, school: r.school, name: r.name, email: r.email, passwordHash: r.password_hash, createdAt: r.created_at };
+}
+
+// ---------- School dashboard (real data, scoped to one school) ----------
+function getStudentsBySchool(school) {
+  return db.prepare('SELECT * FROM students WHERE school = ?').all(school).map(mapStudent);
+}
+function getBookingsForSchool(school) {
+  return db.prepare(`
+    SELECT b.* FROM bookings b
+    JOIN students s ON s.id = b.student_id
+    WHERE s.school = ?
+    ORDER BY b.start_date DESC, b.id DESC
+  `).all(school).map(mapBooking);
+}
+
+// ---------- Inquiries (Schools / Caterers lead capture) ----------
+function createInquiry(inquiry) {
+  const info = db.prepare(`
+    INSERT INTO inquiries (type, organization_name, contact_name, contact_role, email, phone, scale_info, current_arrangement, message)
+    VALUES (@type, @organizationName, @contactName, @contactRole, @email, @phone, @scaleInfo, @currentArrangement, @message)
+  `).run(inquiry);
+  return info.lastInsertRowid;
+}
+
 module.exports = {
   resetToSeed,
   findParentByCivilId, findParentById, createParent, updateParent,
@@ -329,5 +436,8 @@ module.exports = {
   getWallet, adjustWallet, getWalletTransactions,
   getBookingsForParent, createBooking, updateBooking, findBookingById,
   bookAndCharge, cancelAndRefund,
-  getStaffBookingsByParent, createStaffBooking
+  getStaffBookingsByParent, createStaffBooking,
+  getNotificationsForParent, getUnreadNotificationCount, markNotificationRead, markAllNotificationsRead, ensureRenewalNotification,
+  findSchoolAdminByEmail, findSchoolAdminById, getStudentsBySchool, getBookingsForSchool,
+  createInquiry
 };

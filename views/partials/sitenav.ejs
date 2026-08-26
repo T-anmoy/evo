@@ -1,0 +1,40 @@
+<header class="site-header">
+  <div class="wrap-wide site-nav">
+    <a href="/" class="site-logo"><span>Evo <span class="dot">Meals</span></span></a>
+    <nav class="site-links">
+      <a href="/" class="<%= active === 'home' ? 'active' : '' %>">Home</a>
+      <a href="/schools" class="<%= active === 'schools' ? 'active' : '' %>">For Schools</a>
+      <a href="/parents" class="<%= active === 'parents' ? 'active' : '' %>">For Parents</a>
+      <a href="/caterers" class="<%= active === 'caterers' ? 'active' : '' %>">For Caterers</a>
+      <a href="/#how-it-works">How It Works</a>
+      <a href="/#features">Features</a>
+      <a href="/about" class="<%= active === 'about' ? 'active' : '' %>">About Evo Meals</a>
+      <a href="/contact" class="<%= active === 'contact' ? 'active' : '' %>">Contact</a>
+    </nav>
+    <div class="site-actions">
+      <a href="/login" class="btn btn-ghost btn-sm">Log in</a>
+      <a href="/register" class="btn btn-outline-lime btn-sm">Register</a>
+      <a href="/#app" class="btn btn-primary btn-sm">Download App</a>
+      <button type="button" class="nav-toggle" id="siteNavToggle" aria-expanded="false" aria-controls="siteLinksMobile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <span>Menu</span>
+      </button>
+    </div>
+  </div>
+  <nav class="site-links-mobile" id="siteLinksMobile">
+    <a href="/" class="<%= active === 'home' ? 'active' : '' %>">Home</a>
+    <a href="/schools" class="<%= active === 'schools' ? 'active' : '' %>">For Schools</a>
+    <a href="/parents" class="<%= active === 'parents' ? 'active' : '' %>">For Parents</a>
+    <a href="/caterers" class="<%= active === 'caterers' ? 'active' : '' %>">For Caterers</a>
+    <a href="/#how-it-works">How It Works</a>
+    <a href="/#features">Features</a>
+    <a href="/about" class="<%= active === 'about' ? 'active' : '' %>">About Evo Meals</a>
+    <a href="/contact" class="<%= active === 'contact' ? 'active' : '' %>">Contact</a>
+    <div class="site-links-mobile-actions">
+      <a href="/login" class="btn btn-ghost">Log in</a>
+      <a href="/register" class="btn btn-outline-lime">Register</a>
+      <a href="/#app" class="btn btn-primary">Download App</a>
+    </div>
+  </nav>
+</header>
+<script src="/js/sitenav.js" defer></script>

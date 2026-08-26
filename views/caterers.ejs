@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'For Caterers — Evo Meals School Meal Management Platform' }) %>
+<meta name="description" content="Evo Meals connects catering partners to a school-specific customer base with predictable digital demand — real orders, a streamlined queue, and far less manual processing.">
+</head>
+<body>
+
+<%- include('partials/sitenav', { active: 'caterers' }) %>
+
+<section class="hero hero-inner-page">
+  <div class="wrap-wide">
+    <div class="hero-copy" data-reveal style="max-width:640px;">
+      <span class="eyebrow on-dark">For Caterers</span>
+      <h1>Kitchens run better on real orders.</h1>
+      <p class="lede">Evo Meals is a genuine operational partner for the kitchens fulfilling school meal programs — not an afterthought bolted onto the parent-facing app. You get predictable, digital demand and a customer base that's already there.</p>
+      <div class="hero-actions">
+        <a href="#caterer-form" class="btn btn-primary">Partner with us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="caterer-benefits">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">What changes for your kitchen</span>
+      <h2>Operational partners, not an afterthought.</h2>
+    </div>
+    <div class="grid-2">
+      <div class="benefit-card" data-reveal data-reveal-group="caterer">
+        <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M7 15l4-4 3 3 5-6"/></svg></div>
+        <h3>Predictable demand</h3>
+        <p>Orders come from real digital subscriptions and daily bookings, not estimates. You know what you're preparing before service starts, not after the queue forms.</p>
+      </div>
+      <div class="benefit-card" data-reveal data-reveal-group="caterer">
+        <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg></div>
+        <h3>Streamlined order management</h3>
+        <p>One digital queue replaces phone calls, paper tickets, and end-of-day reconciliation — every order, every student, every allergy note, in one place your kitchen staff can actually work from.</p>
+      </div>
+      <div class="benefit-card" data-reveal data-reveal-group="caterer">
+        <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11H5a2 2 0 0 0-2 2v7h6M15 11h4a2 2 0 0 1 2 2v7h-6M9 11V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6M9 21v-6h6v6"/></svg></div>
+        <h3>Reduced manual processing</h3>
+        <p>No more re-keying phone orders or reconciling cash at the end of the week. Orders arrive already matched to a student, a plan, and a payment that's already settled.</p>
+      </div>
+      <div class="benefit-card" data-reveal data-reveal-group="caterer">
+        <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a6 6 0 0 1 6-6h0a6 6 0 0 1 6 6v2"/><path d="M17 8a4 4 0 0 1 0 8M21 21v-2a4 4 0 0 0-3-3.87"/></svg></div>
+        <h3>A ready-made customer base</h3>
+        <p>Every school on the Evo Meals platform is a customer base you don't have to market to separately — we connect you to schools already running their program through us.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section on-tint" id="caterer-form">
+  <div class="wrap partner-form-wrap">
+    <div class="section-head" data-reveal style="margin:0;">
+      <span class="eyebrow">Partner with us</span>
+      <h2>Tell us about your kitchen.</h2>
+      <p>We'll match you against schools looking for a catering partner. A member of our partnerships team responds <strong>within one business day</strong>.</p>
+    </div>
+    <div class="card" data-reveal>
+      <% if (typeof success !== 'undefined' && success) { %>
+        <div class="alert alert-success"><%- include('partials/success-icon') %><span>Thank you — we've received your application and will be in touch within one business day.</span></div>
+      <% } else { %>
+        <% var fd = (typeof formData !== 'undefined' && formData) ? formData : {}; var errs = (typeof errors !== 'undefined' && errors) ? errors : {}; %>
+        <form method="POST" action="/caterers/inquiry" id="catererInquiryForm" novalidate>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <div class="field <%= errs.organizationName ? 'invalid' : '' %>">
+            <label for="catererOrgName">Company / kitchen name</label>
+            <input type="text" id="catererOrgName" name="organizationName" value="<%= fd.organizationName || '' %>" required data-validate="required">
+            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.organizationName || 'Company name is required.' %></span></div>
+          </div>
+          <div class="field <%= errs.contactName ? 'invalid' : '' %>">
+            <label for="catererContactName">Contact person</label>
+            <input type="text" id="catererContactName" name="contactName" value="<%= fd.contactName || '' %>" required data-validate="required">
+            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.contactName || 'Contact person is required.' %></span></div>
+          </div>
+          <div class="form-row">
+            <div class="field <%= errs.email ? 'invalid' : '' %>">
+              <label for="catererContactEmail">Email</label>
+              <input type="email" id="catererContactEmail" name="email" value="<%= fd.email || '' %>" inputmode="email" required data-validate="email">
+              <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.email || 'A valid email address is required.' %></span></div>
+            </div>
+            <div class="field">
+              <label for="catererContactPhone">Phone</label>
+              <input type="tel" id="catererContactPhone" name="phone" value="<%= fd.phone || '' %>" inputmode="tel">
+            </div>
+          </div>
+          <div class="field">
+            <label for="catererScale">Current capacity / operation size</label>
+            <select id="catererScale" name="scaleInfo">
+              <option value="Under 200 meals/day" <%= fd.scaleInfo === 'Under 200 meals/day' ? 'selected' : '' %>>Under 200 meals/day</option>
+              <option value="200–500 meals/day" <%= fd.scaleInfo === '200–500 meals/day' ? 'selected' : '' %>>200–500 meals/day</option>
+              <option value="500–1,500 meals/day" <%= fd.scaleInfo === '500–1,500 meals/day' ? 'selected' : '' %>>500–1,500 meals/day</option>
+              <option value="1,500+ meals/day" <%= fd.scaleInfo === '1,500+ meals/day' ? 'selected' : '' %>>1,500+ meals/day</option>
+            </select>
+          </div>
+          <div class="field <%= errs.message ? 'invalid' : '' %>">
+            <label for="catererMessage">Tell us about your kitchen</label>
+            <textarea id="catererMessage" name="message" rows="4" required data-validate="minlength:10" placeholder="Schools you currently serve (if any), cuisine specialties, anything else useful..."><%= fd.message || '' %></textarea>
+            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.message || 'Tell us a little more — at least 10 characters.' %></span></div>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;">Send to our partnerships team</button>
+        </form>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/sitefoot') %>
+
+</body>
+</html>

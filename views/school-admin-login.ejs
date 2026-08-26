@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'School Admin Login — Evo Meals' }) %>
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="auth-card">
+      <div class="logo"><span>Evo <span class="dot">Meals</span></span></div>
+      <span class="eyebrow" style="justify-content:center; margin-bottom:10px;">School Admin</span>
+      <h1>Sign in to your dashboard</h1>
+      <p class="sub">Real-time visibility into your school's meal program.</p>
+
+      <% if (error) { %>
+        <div class="alert alert-error"><%= error %></div>
+      <% } %>
+
+      <form method="POST" action="/school-admin/login">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" inputmode="email" placeholder="admin@yourschool.edu.kw" required autofocus>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Sign in</button>
+      </form>
+
+      <div class="auth-demo-note">
+        Demo login — Kuwait English School · <strong>admin@kes.evomeals.demo</strong> · password <strong>admin1234</strong>
+      </div>
+      <div class="auth-foot">Parent, not a school administrator? <a href="/login" style="color:var(--lime-700); font-weight:600;">Go to parent login</a></div>
+    </div>
+  </div>
+</body>
+</html>

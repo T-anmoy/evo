@@ -43,6 +43,9 @@
       "tag": "Kid · Regular Meal",
       "calories": 420,
       "protein": 28,
+      "carbs": 46,
+      "fat": 12,
+      "ingredients": "Grilled chicken breast, penne pasta, tomato & basil sauce, olive oil, garlic, oregano",
       "allergenFree": ["nut", "shellfish", "sesame", "soy"]
     },
     {
@@ -51,6 +54,9 @@
       "tag": "Kid · Regular Meal",
       "calories": 380,
       "protein": 26,
+      "carbs": 32,
+      "fat": 14,
+      "ingredients": "Chicken thigh, cannellini beans, balsamic glaze, roasted carrots, green beans",
       "allergenFree": ["nut", "shellfish", "sesame", "soy"]
     },
     {
@@ -59,6 +65,9 @@
       "tag": "Kid · Regular Meal",
       "calories": 460,
       "protein": 24,
+      "carbs": 41,
+      "fat": 20,
+      "ingredients": "Beef patty, whole-wheat bun, BBQ sauce, lettuce, tomato, side of baked potato wedges",
       "allergenFree": ["nut", "shellfish", "sesame", "soy"]
     },
     {
@@ -67,6 +76,9 @@
       "tag": "Kid · Regular Meal",
       "calories": 410,
       "protein": 27,
+      "carbs": 38,
+      "fat": 13,
+      "ingredients": "Grilled chicken breast, roasted sweet potato, steamed broccoli, house BBQ glaze",
       "allergenFree": ["nut", "shellfish", "sesame", "soy"]
     },
     {
@@ -75,6 +87,9 @@
       "tag": "Kid · Dessert",
       "calories": 90,
       "protein": 1,
+      "carbs": 22,
+      "fat": 0,
+      "ingredients": "Rotating seasonal fruit — typically apple, melon, grapes, and berries",
       "allergenFree": ["nut", "shellfish", "sesame", "soy"]
     }
   ],
@@ -109,7 +124,57 @@
       "totalKWD": 1,
       "status": "collected",
       "collectedAt": "2026-08-10T12:05:00.000Z"
+    },
+    {
+      "id": 3,
+      "studentId": 2,
+      "menuItemId": 2,
+      "planType": "monthly",
+      "startDate": "__TODAY_MINUS_25__",
+      "days": 22,
+      "totalKWD": 24,
+      "status": "upcoming",
+      "collectedAt": null
     }
   ],
-  "staffBookings": []
+  "staffBookings": [],
+  "schoolAdmins": [
+    {
+      "id": 1,
+      "school": "Kuwait English School",
+      "name": "Fatima Al-Sabah",
+      "email": "admin@kes.evomeals.demo",
+      "passwordHash": "$2a$10$s8mu0b405gWy55AxRb2PP.U0Ug1VZAjV6t3EzZzjYxrHF.DsAZYqi",
+      "createdAt": "2026-06-01T08:00:00.000Z"
+    }
+  ],
+  "notifications": [
+    {
+      "id": 1,
+      "parentId": 1,
+      "type": "collected",
+      "message": "Ahmed collected his lunch at 12:14 PM — Arabiatta Chicken Pasta.",
+      "relatedId": 1,
+      "read": 0,
+      "createdAt": "__TODAY_1214__"
+    },
+    {
+      "id": 2,
+      "parentId": 1,
+      "type": "collected",
+      "message": "Sara collected her lunch — BBQ Chicken & Sweet Potato.",
+      "relatedId": 2,
+      "read": 1,
+      "createdAt": "2026-08-10T12:05:00.000Z"
+    },
+    {
+      "id": 3,
+      "parentId": 1,
+      "type": "booking_confirmed",
+      "message": "Monthly plan booked for Ahmed — KWD 24.000 deducted from your wallet.",
+      "relatedId": 1,
+      "read": 1,
+      "createdAt": "2026-08-01T09:15:00.000Z"
+    }
+  ]
 }

@@ -13,23 +13,30 @@
     <p>Every dish shows full nutrition info — this fixes a content gap flagged in the earlier system, where menu tabs existed but were never populated.</p>
   </div>
 
-  <div class="allergen-row">
-    <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Nut-free available</span>
-    <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Shellfish-free available</span>
-    <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Sesame-free available</span>
-    <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Soy-free available</span>
+  <div class="allergen-banner">
+    <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg><span>Nut-free available</span></div>
+    <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg><span>Shellfish-free available</span></div>
+    <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg><span>Sesame-free available</span></div>
+    <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg><span>Soy-free available</span></div>
   </div>
+  <p class="allergen-commitment">Every dish below is checked against these four allergens before it's ever offered as a menu option — not a footnote, a standing commitment.</p>
 
-  <div class="grid-4">
+  <div class="grid-2">
     <% menuItems.forEach(m => { %>
-      <div class="menu-card">
-        <div class="menu-thumb">
+      <div class="menu-card menu-card-full">
+        <div class="menu-thumb menu-thumb-wide">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v6M8 8h8l-1 12H9L8 8Z"/></svg>
         </div>
         <div class="menu-card-body">
           <span class="tag"><%= m.tag %></span>
           <h3><%= m.name %></h3>
-          <div class="menu-nutri"><span class="data-num"><%= m.calories %> kcal</span><span>·</span><span class="data-num"><%= m.protein %>g protein</span></div>
+          <p class="menu-ingredients"><strong>Ingredients:</strong> <%= m.ingredients %></p>
+          <div class="menu-nutri-grid">
+            <div><span class="menu-nutri-val data-num"><%= m.calories %></span><span class="menu-nutri-key">kcal</span></div>
+            <div><span class="menu-nutri-val data-num"><%= m.protein %>g</span><span class="menu-nutri-key">Protein</span></div>
+            <div><span class="menu-nutri-val data-num"><%= m.carbs %>g</span><span class="menu-nutri-key">Carbs</span></div>
+            <div><span class="menu-nutri-val data-num"><%= m.fat %>g</span><span class="menu-nutri-key">Fat</span></div>
+          </div>
         </div>
       </div>
     <% }) %>
