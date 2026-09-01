@@ -129,6 +129,42 @@ textarea:focus-visible,
   }
 }
 
+/* ---------- prevent accidental selection/drag on tap (mobile) ----------
+   A slightly imprecise tap on UI chrome was registering as a text/image
+   selection drag instead of a clean tap. Scoped to chrome only — real
+   informational text stays selectable on purpose: body copy, headlines,
+   .price-amt and the booking total, .menu-ingredients / .menu-nutri-*,
+   .site-foot-contact / .app-foot-contact (address + email), and the
+   notification dropdown's actual message text (.notif-body, .notif-time)
+   are deliberately NOT included below. */
+.site-header,
+.app-logo, .app-links, .app-links-mobile,
+.notif-bell, .notif-badge, .notif-dropdown-head, .notif-viewall,
+.profile-link, .nav-toggle,
+.btn,
+.badge, .badge-save, .check-badge,
+.allergen-pill, .allergen-banner-item,
+.hero-proof .schools span,
+.price-tag,
+.tag,
+.store-badge,
+.site-foot-links,
+.app-foot-links,
+svg{
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  user-select:none;
+}
+img{
+  -webkit-user-drag:none;
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  user-select:none;
+}
+a, button, .btn{
+  touch-action:manipulation;
+}
+
 /* ---------- entrance choreography ---------- */
 /* Elements opt in with [data-reveal]; motion.js adds .is-visible on
    intersection (or immediately, if JS is off or motion is reduced —
