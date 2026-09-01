@@ -36,13 +36,21 @@
             <% } %>
           </div>
         </div>
+        <% // Siblings are commonly at the same school — default the field to
+           // whichever school the most recently added child is at, so a
+           // second (or third) child is a one-tap confirm instead of a
+           // reselect from scratch.
+           const lastStudent = students.length ? students.reduce((a, b) => (b.id > a.id ? b : a)) : null;
+           const defaultSchool = editing ? editing.school : (lastStudent ? lastStudent.school : null);
+        %>
         <div class="field">
           <label>School</label>
           <select name="school" required>
             <% ['Kuwait English School','American Creativity Academy','The English School'].forEach(s => { %>
-              <option value="<%= s %>" <%= editing && editing.school === s ? 'selected' : '' %>><%= s %></option>
+              <option value="<%= s %>" <%= defaultSchool === s ? 'selected' : '' %>><%= s %></option>
             <% }) %>
           </select>
+          <% if (!editing && lastStudent) { %><div class="hint">Defaulted to <%= lastStudent.name %>'s school — change it if this child is somewhere else.</div><% } %>
         </div>
         <div class="form-row">
           <div class="field">

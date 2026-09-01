@@ -27,8 +27,12 @@
         <a href="/students" class="btn btn-primary btn-sm" style="margin-top:16px;">Add a student</a>
       </div>
     <% } else { %>
-      <% const rebookStudentId = (typeof rebook !== 'undefined' && rebook) ? rebook.studentId : null; %>
-      <% const rebookMenuId = (typeof rebook !== 'undefined' && rebook) ? rebook.menuItemId : (menuItems[0] && menuItems[0].id); %>
+      <% // Rebooking wins if present; otherwise fall back to this parent's
+         // own smart defaults (most recently used student, most-booked
+         // meal) computed on the server, so a fresh booking never starts
+         // from an arbitrary "first in the list" pick. %>
+      <% const rebookStudentId = (typeof rebook !== 'undefined' && rebook) ? rebook.studentId : (typeof defaultStudentId !== 'undefined' ? defaultStudentId : null); %>
+      <% const rebookMenuId = (typeof rebook !== 'undefined' && rebook) ? rebook.menuItemId : ((typeof defaultMenuId !== 'undefined' && defaultMenuId) ? defaultMenuId : (menuItems[0] && menuItems[0].id)); %>
       <% const rebookPlan = (typeof rebook !== 'undefined' && rebook) ? rebook.planType : 'monthly'; %>
       <form method="POST" action="/booking" id="bookingForm">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">

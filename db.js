@@ -364,9 +364,13 @@ function insertNotification({ parentId, type, message, relatedId }) {
 function bookAndCharge({ studentId, menuItemId, planType, startDate, days, totalKWD, parentId, note }) {
   return db.transaction(() => {
     const booking = createBooking({ studentId, menuItemId, planType, startDate, days, totalKWD });
+    // note arrives as "Student Name — meal detail"; lead the notification
+    // with the name so it can be bolded at a glance, detail stays secondary.
+    const [studentName, ...rest] = note.split(' — ');
+    const detail = rest.join(' — ');
     insertNotification({
       parentId, type: 'booking_confirmed', relatedId: booking.id,
-      message: `Booking confirmed — ${note}, KWD ${totalKWD.toFixed(3)} charged.`
+      message: `${studentName} — Booking confirmed: ${detail}, KWD ${totalKWD.toFixed(3)} charged.`
     });
     return booking;
   })();
@@ -380,9 +384,11 @@ function cancelAndRefund({ bookingId, parentId }) {
     const booking = findBookingById(bookingId);
     if (!booking || booking.status !== 'upcoming') return null;
     updateBooking(bookingId, { status: 'cancelled' });
+    const student = findStudentById(booking.studentId);
+    const studentName = student ? student.name : 'Booking';
     insertNotification({
       parentId, type: 'booking_cancelled', relatedId: booking.id,
-      message: `Booking cancelled — KWD ${booking.totalKWD.toFixed(3)} refunded to your original payment method (demo — simulated).`
+      message: `${studentName} — Booking cancelled: KWD ${booking.totalKWD.toFixed(3)} refunded to your original payment method (demo — simulated).`
     });
     return findBookingById(bookingId);
   })();

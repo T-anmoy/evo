@@ -281,7 +281,7 @@ a, button, .btn{
    min-height:44px on every size — the smallest button here (.btn-sm, used
    for "Edit" rows etc.) still meets the 44x44 comfortable touch target,
    even though its padding/font read visually smaller. */
-.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:13px 24px; border-radius:100px; font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; border:none; cursor:pointer; transition:transform var(--dur-micro) var(--ease-standard), box-shadow var(--dur-micro) var(--ease-standard), background var(--dur-micro) var(--ease-standard);}
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:13px 24px; border-radius:100px; font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; border:none; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:transform var(--dur-micro) var(--ease-standard), box-shadow var(--dur-micro) var(--ease-standard), background var(--dur-micro) var(--ease-standard);}
 .btn-primary{background:var(--lime-500); color:var(--navy-950);}
 .btn-primary:hover{background:var(--lime-600); transform:translateY(-1px); box-shadow:var(--shadow-sm);}
 .btn-primary:active{transform:scale(.97) translateY(0); transition-duration:80ms;}
@@ -315,7 +315,7 @@ a, button, .btn{
    ============================================================ */
 .app-header{background:var(--navy-950); position:sticky; top:0; z-index:50; padding-top:env(safe-area-inset-top);}
 .app-nav{display:flex; align-items:center; justify-content:space-between; height:66px;}
-.app-logo{color:var(--white); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:17px; display:flex; align-items:center; min-height:44px; gap:8px;}
+.app-logo{color:var(--white); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:17px; display:flex; align-items:center; min-height:44px; gap:8px; white-space:nowrap; flex-shrink:0;}
 .app-logo .dot{color:var(--lime-500);}
 .admin-nav-tag{font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:10.5px; letter-spacing:0.04em; text-transform:uppercase; color:var(--lime-500); background:rgba(159,224,73,0.12); border:1px solid rgba(159,224,73,0.28); border-radius:100px; padding:4px 10px;}
 .app-links{display:flex; align-items:center; gap:4px;}
@@ -524,6 +524,20 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
   .renewal-card .btn{width:100%; justify-content:center;}
 }
 
+/* Prominent, near the top of the dashboard on purpose — a returning
+   parent who wants to repeat their last booking shouldn't have to scroll
+   past stats and notifications to find it. */
+.quick-rebook-card{display:flex; align-items:center; gap:16px; margin-bottom:24px; background:linear-gradient(135deg, rgba(159,224,73,0.14), var(--white) 60%); border-color:rgba(159,224,73,0.4);}
+.quick-rebook-icon{flex-shrink:0; width:48px; height:48px; border-radius:50%; background:var(--lime-500); color:var(--navy-950); display:flex; align-items:center; justify-content:center;}
+.quick-rebook-icon svg{width:22px; height:22px;}
+.quick-rebook-body{flex:1; min-width:0; display:flex; flex-direction:column; gap:3px;}
+.quick-rebook-body strong{font-size:17px; color:var(--navy-950);}
+.quick-rebook-body span{font-size:16px; color:var(--muted);}
+@media (max-width:560px){
+  .quick-rebook-card{flex-wrap:wrap;}
+  .quick-rebook-card .btn{width:100%; justify-content:center;}
+}
+
 .dash-card-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;}
 .dash-card-head h3{margin:0;}
 .dash-card-head .notif-markall{color:var(--lime-700); background:none; border:none; font-size:16px; font-weight:600; cursor:pointer; padding:0;}
@@ -673,14 +687,15 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    Marketing site (public pages)
    ============================================================ */
 .site-header{background:var(--navy-950); position:sticky; top:0; z-index:50; padding-top:env(safe-area-inset-top);}
-.site-nav{display:flex; align-items:center; justify-content:space-between; height:72px;}
-.site-logo{color:var(--white); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:18px; display:flex; align-items:center; min-height:44px; gap:8px;}
+.site-nav{display:flex; align-items:center; justify-content:space-between; height:72px; max-width:1400px;}
+.site-logo{color:var(--white); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:18px; display:flex; align-items:center; min-height:44px; gap:8px; white-space:nowrap; flex-shrink:0;}
 .site-logo .dot{color:var(--lime-500);}
 .site-links{display:flex; align-items:center; gap:2px;}
-.site-links a{color:rgba(255,255,255,0.72); font-size:16px; font-weight:500; padding:8px 9px; border-radius:8px; white-space:nowrap; transition:background .15s, color .15s;}
+.site-links a{color:rgba(255,255,255,0.72); font-size:16px; font-weight:500; padding:8px 7px; border-radius:8px; white-space:nowrap; transition:background .15s, color .15s;}
 .site-links a:hover{color:var(--white); background:rgba(255,255,255,0.08);}
 .site-links a.active{color:var(--lime-500); font-weight:700;}
-.site-actions{display:flex; align-items:center; gap:8px;}
+.site-actions{display:flex; align-items:center; gap:6px;}
+.site-actions .btn-sm{padding:9px 15px;}
 .site-actions a.btn-ghost{color:#fff; border-color:rgba(255,255,255,0.28);}
 .site-actions a.btn-ghost:hover{background:rgba(255,255,255,0.08);}
 .btn-outline-lime{background:transparent; color:var(--lime-500); border:1.5px solid rgba(142,209,62,0.45);}
@@ -1284,7 +1299,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .menu-thumb-wide{width:100%; height:70px; border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
   .menu-nutri-grid{grid-template-columns:repeat(2,1fr); row-gap:14px;}
 }
-@media (max-width:1290px){
+@media (max-width:1400px){
   .site-links{display:none;}
   .site-actions a.btn{display:none;} /* the three actions move into the mobile drawer below, not shown twice */
   .site-header .nav-toggle{display:flex;}

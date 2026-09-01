@@ -39,7 +39,11 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 1000 * 60 * 60 * 4, httpOnly: true, sameSite: 'lax' }
+  // A parent checking on lunch bookings isn't a same-session, one-sitting
+  // user — 30 days keeps a returning visitor logged in without forcing a
+  // re-login on every visit, the way this kind of everyday consumer app
+  // is expected to behave.
+  cookie: { maxAge: 1000 * 60 * 60 * 24 * 30, httpOnly: true, sameSite: 'lax' }
 }));
 
 const { csrfSynchronisedProtection } = csrfSync({
@@ -61,6 +65,14 @@ const loginLimiter = rateLimit({
 
 // ---------- helpers ----------
 app.locals.maskCivilId = maskCivilId;
+// Notifications are stored as "Student Name — rest of the message" —
+// split so the template can bold the name (the fact a parent scans for)
+// and keep the rest secondary, without ever rendering raw HTML.
+app.locals.splitNotif = (message) => {
+  const idx = message.indexOf(' — ');
+  if (idx === -1) return { lead: '', rest: message };
+  return { lead: message.slice(0, idx), rest: message.slice(idx + 3) };
+};
 app.locals.fmtKWD = (n) => `KWD ${Number(n).toFixed(3)}`;
 app.locals.fmtDate = (iso) => new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 app.locals.fmtTime = (iso) => new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
@@ -437,7 +449,7 @@ app.get('/dashboard', requireAuth, (req, res) => {
       const menuItem = db.findMenuItem(booking.menuItemId);
       db.ensureRenewalNotification({
         parentId: parent.id, bookingId: booking.id,
-        message: `${student ? student.name : 'Your child'}'s subscription period ends in ${daysLeft} day${daysLeft === 1 ? '' : 's'} — renew to keep meals booked without a gap.`
+        message: `${student ? student.name : 'Your child'} — Subscription ending in ${daysLeft} day${daysLeft === 1 ? '' : 's'}: renew to keep meals booked without a gap.`
       });
       return {
         bookingId: booking.id, daysLeft,
@@ -559,9 +571,22 @@ app.get('/booking', requireAuth, (req, res) => {
   const studentIds = students.map(s => s.id);
   const rebookRaw = req.query.rebook ? db.findBookingById(Number(req.query.rebook)) : null;
   const rebook = (rebookRaw && studentIds.includes(rebookRaw.studentId)) ? rebookRaw : null;
+
+  // Smart defaults for a fresh (non-rebook) booking: the student picked
+  // most recently, and whichever meal this parent books most often — a
+  // returning parent shouldn't have to reselect from scratch every time.
+  const pastBookings = db.getBookingsForParent(parent.id);
+  const mostRecentStudentId = pastBookings.length ? pastBookings.reduce((a, b) => (b.id > a.id ? b : a)).studentId : null;
+  const menuCounts = {};
+  pastBookings.forEach(b => { menuCounts[b.menuItemId] = (menuCounts[b.menuItemId] || 0) + 1; });
+  const mostBookedMenuId = Object.keys(menuCounts).length
+    ? Number(Object.keys(menuCounts).reduce((a, b) => (menuCounts[b] > menuCounts[a] ? b : a)))
+    : null;
+
   res.render('booking', {
     students, menuItems, plans, error: null, success: null,
     parentId: parent.id, rebook,
+    defaultStudentId: mostRecentStudentId, defaultMenuId: mostBookedMenuId,
     schoolCalendar: schoolCalendarForStudents(students),
     dailyRateKWD: plans.single ? plans.single.rateKWD : 2
   });

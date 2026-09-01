@@ -32,6 +32,17 @@
     <% }) %>
   <% } %>
 
+  <% if (typeof lastBooking !== 'undefined' && lastBooking) { %>
+    <div class="card quick-rebook-card" data-reveal>
+      <div class="quick-rebook-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8 12 4l8 4-8 4-8-4Z"/><path d="M4 8v8l8 4 8-4V8"/></svg></div>
+      <div class="quick-rebook-body">
+        <strong>Quick rebook</strong>
+        <span><%= lastBooking.mealName %> for <%= lastBooking.studentName %> — same choices, one tap.</span>
+      </div>
+      <a href="/booking?rebook=<%= lastBooking.id %>" class="btn btn-primary">Book it again</a>
+    </div>
+  <% } %>
+
   <div class="grid-3" style="margin-bottom:28px;">
     <div class="stat lime" data-reveal data-reveal-group="stats">
       <div class="label">Active subscriptions</div>
@@ -118,7 +129,7 @@
               <% } else { %><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg><% } %>
             </span>
             <div class="notif-body">
-              <p><%= n.message %></p>
+              <p><% const nm = splitNotif(n.message); %><% if (nm.lead) { %><strong><%= nm.lead %></strong> <% } %><%= nm.rest %></p>
               <span class="notif-time"><%= timeAgo(n.createdAt) %></span>
             </div>
             <% if (!n.read) { %>
@@ -134,19 +145,11 @@
   </div>
 
   <div class="grid-2" style="margin-top:24px;">
-    <% if (typeof lastBooking !== 'undefined' && lastBooking) { %>
-      <div class="card" data-reveal>
-        <h3 style="font-size:15px; margin-bottom:10px;">Quick rebook</h3>
-        <p style="font-size:13.5px; color:var(--muted); margin-bottom:16px;">Book <%= lastBooking.mealName %> for <%= lastBooking.studentName %> again — same choices, prefilled for you.</p>
-        <a href="/booking?rebook=<%= lastBooking.id %>" class="btn btn-primary btn-sm">Book it again</a>
-      </div>
-    <% } else { %>
-      <div class="card" data-reveal>
-        <h3 style="font-size:15px; margin-bottom:10px;">Book a meal</h3>
-        <p style="font-size:13.5px; color:var(--muted); margin-bottom:16px;">Pick a student, a meal, and a plan — total calculates automatically.</p>
-        <a href="/booking" class="btn btn-primary btn-sm">Book now</a>
-      </div>
-    <% } %>
+    <div class="card" data-reveal>
+      <h3 style="font-size:15px; margin-bottom:10px;">Book a meal</h3>
+      <p style="font-size:13.5px; color:var(--muted); margin-bottom:16px;">Pick a student, a meal, and a plan — total calculates automatically.</p>
+      <a href="/booking" class="btn btn-primary btn-sm">Book now</a>
+    </div>
     <div class="card" data-reveal>
       <h3 style="font-size:15px; margin-bottom:10px;">Booking history</h3>
       <p style="font-size:13.5px; color:var(--muted); margin-bottom:16px;">Every booking, what it cost, and a one-tap cancel if plans change.</p>

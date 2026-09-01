@@ -287,12 +287,34 @@
     });
   }
 
+  // Every real page navigation involves a moment of nothing happening
+  // between tap and the next screen — a disabled, spinning button fills
+  // that gap so the press always reads as registered immediately. Applies
+  // site-wide (login, booking, cancel, renew, mark-read, everything);
+  // initGenericValidation above already handles its own novalidate forms
+  // with custom "Sending…" copy, so this only steps in where nothing else did.
+  function initSubmitFeedback() {
+    document.querySelectorAll('form').forEach(function (form) {
+      // The tiny 10px notification "mark as read" dot has no room for a
+      // spinner — leave it alone, its own state (disappearing) is the feedback.
+      if (form.classList.contains('notif-read-form')) return;
+      form.addEventListener('submit', function (e) {
+        if (e.defaultPrevented) return;
+        var submitBtn = form.querySelector('button[type="submit"], button:not([type])');
+        if (!submitBtn || submitBtn.disabled || submitBtn.classList.contains('btn-loading')) return;
+        submitBtn.disabled = true;
+        submitBtn.classList.add('btn-loading');
+      });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initReveal();
     initCountUp();
     initFaq();
     initFieldValidation();
     initGenericValidation();
+    initSubmitFeedback();
     initHeroParallax();
     initMagneticButtons();
   });

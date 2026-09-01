@@ -37,7 +37,7 @@
                     <% } else { %><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg><% } %>
                   </span>
                   <div class="notif-body">
-                    <p><%= n.message %></p>
+                    <p><% const nm = splitNotif(n.message); %><% if (nm.lead) { %><strong><%= nm.lead %></strong> <% } %><%= nm.rest %></p>
                     <span class="notif-time"><%= timeAgo(n.createdAt) %></span>
                   </div>
                   <% if (!n.read) { %>
