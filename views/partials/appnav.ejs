@@ -62,6 +62,12 @@
     </div>
   </div>
   <nav class="app-links-mobile" id="appLinksMobile">
+    <div class="mobile-menu-head">
+      <span class="mobile-menu-brand">Evo <span class="dot">Meals</span></span>
+      <button type="button" class="mobile-menu-close" id="appLinksMobileClose" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
     <a href="/dashboard" class="<%= active === 'dashboard' ? 'active' : '' %>">Dashboard</a>
     <a href="/students" class="<%= active === 'students' ? 'active' : '' %>">Students</a>
     <a href="/booking" class="<%= active === 'booking' ? 'active' : '' %>">Book a Meal</a>

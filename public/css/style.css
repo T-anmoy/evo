@@ -689,6 +689,25 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .site-links-mobile-actions{display:flex; flex-direction:column; gap:10px; margin-top:20px;}
 .site-links-mobile-actions .btn{width:100%; justify-content:center;}
 
+/* Self-contained header inside the full-viewport mobile menu overlay —
+   the close control lives here, not in the page's own (sticky) header,
+   so it's always visible no matter where the page was scrolled when the
+   menu opened. Shared by both the public and logged-in mobile menus. */
+.mobile-menu-head{
+  position:sticky; top:0; z-index:1; display:flex; align-items:center; justify-content:space-between;
+  padding:calc(16px + env(safe-area-inset-top)) 0 16px; margin-bottom:4px;
+  background:var(--navy-950);
+}
+.mobile-menu-brand{color:var(--white); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:18px;}
+.mobile-menu-brand .dot{color:var(--lime-500);}
+.mobile-menu-close{
+  display:flex; align-items:center; justify-content:center; width:44px; height:44px; flex-shrink:0;
+  background:rgba(255,255,255,0.08); border:none; border-radius:50%; color:#fff; cursor:pointer;
+  transition:background var(--dur-micro) var(--ease-standard);
+}
+.mobile-menu-close:hover{background:rgba(255,255,255,0.14);}
+.mobile-menu-close svg{width:18px; height:18px;}
+
 /* --- hero --- */
 .hero{background:var(--navy-950); color:#fff; position:relative; overflow:hidden;}
 .hero-inner{display:grid; grid-template-columns:1.15fr 1fr; align-items:center; gap:0; min-height:640px; position:relative;}
@@ -1266,8 +1285,8 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .site-actions a.btn{display:none;} /* the three actions move into the mobile drawer below, not shown twice */
   .site-header .nav-toggle{display:flex;}
   .site-links-mobile{
-    display:block; position:fixed; top:calc(72px + env(safe-area-inset-top)); right:0; bottom:0; left:0; z-index:49;
-    background:var(--navy-950); padding:8px 20px calc(24px + env(safe-area-inset-bottom)); overflow-y:auto;
+    display:block; position:fixed; inset:0; height:100vh; height:100dvh; z-index:60;
+    background:var(--navy-950); padding:0 20px calc(24px + env(safe-area-inset-bottom)); overflow-y:auto;
     transform:translateY(-8px); opacity:0; pointer-events:none; transition:opacity .18s, transform .18s;
   }
   .site-links-mobile.open{opacity:1; transform:translateY(0); pointer-events:auto;}
@@ -1281,8 +1300,8 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .app-links{display:none;}
   .app-header .nav-toggle{display:flex;}
   .app-links-mobile{
-    display:block; position:fixed; top:calc(66px + env(safe-area-inset-top)); right:0; bottom:0; left:0; z-index:49;
-    background:var(--navy-950); padding:8px 20px calc(24px + env(safe-area-inset-bottom)); overflow-y:auto;
+    display:block; position:fixed; inset:0; height:100vh; height:100dvh; z-index:60;
+    background:var(--navy-950); padding:0 20px calc(24px + env(safe-area-inset-bottom)); overflow-y:auto;
     transform:translateY(-8px); opacity:0; pointer-events:none; transition:opacity .18s, transform .18s;
   }
   .app-links-mobile.open{opacity:1; transform:translateY(0); pointer-events:auto;}

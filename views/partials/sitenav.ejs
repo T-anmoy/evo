@@ -22,6 +22,12 @@
     </div>
   </div>
   <nav class="site-links-mobile" id="siteLinksMobile">
+    <div class="mobile-menu-head">
+      <span class="mobile-menu-brand">Evo <span class="dot">Meals</span></span>
+      <button type="button" class="mobile-menu-close" id="siteLinksMobileClose" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
     <a href="/" class="<%= active === 'home' ? 'active' : '' %>">Home</a>
     <a href="/schools" class="<%= active === 'schools' ? 'active' : '' %>">For Schools</a>
     <a href="/parents" class="<%= active === 'parents' ? 'active' : '' %>">For Parents</a>
