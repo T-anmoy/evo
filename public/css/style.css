@@ -75,7 +75,16 @@
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
-html{-webkit-text-size-adjust:100%;}
+/* Safety net, not the fix — real overflow sources (fixed pixel widths,
+   100vw sizing that includes the scrollbar gutter, unaccounted padding on
+   full-bleed elements) are addressed individually where found; this just
+   stops any that slip through from ever showing as sideways scroll.
+   html only, deliberately — the same overflow-x:hidden on body upgrades
+   its overflow-y to auto per the CSS overflow computed-value rules, which
+   turns body into its own scroll container and breaks position:sticky on
+   .site-header/.app-header (confirmed by testing: this exact change made
+   the header scroll away instead of staying pinned). */
+html{-webkit-text-size-adjust:100%; overflow-x:hidden;}
 body{
   font-family:'Poppins',Arial,sans-serif;
   color:var(--ink-900);
@@ -334,12 +343,19 @@ a, button, .btn{
 .notif-badge{position:absolute; top:3px; right:3px; min-width:16px; height:16px; padding:0 4px; border-radius:100px; background:var(--lime-500); color:var(--navy-950); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:9.5px; display:flex; align-items:center; justify-content:center; border:2px solid var(--navy-950);}
 
 .notif-dropdown{
-  position:absolute; top:calc(100% + 12px); right:-8px; width:360px; max-width:calc(100vw - 32px);
+  position:absolute; top:calc(100% + 12px); right:-8px; width:360px;
   background:var(--white); border-radius:var(--radius); box-shadow:0 20px 48px -18px rgba(9,20,44,0.35), 0 2px 8px rgba(9,20,44,0.08);
   border:1px solid var(--line); z-index:80; opacity:0; transform:translateY(-8px) scale(0.98); pointer-events:none;
   transition:opacity var(--dur-standard) var(--ease-out), transform var(--dur-standard) var(--ease-out);
 }
 .notif-dropdown.open{opacity:1; transform:translateY(0) scale(1); pointer-events:auto;}
+@media (max-width:480px){
+  /* 100vw includes the scrollbar gutter on some browsers, which can push
+     an absolutely-positioned panel a few pixels past the real edge —
+     position:fixed with explicit insets ties this to the true viewport
+     instead, so it can never be wider than what's actually visible. */
+  .notif-dropdown{position:fixed; top:64px; left:16px; right:16px; width:auto;}
+}
 @media (prefers-reduced-motion: reduce){.notif-dropdown{transition:opacity var(--dur-micro) linear;}}
 .notif-dropdown-head{display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid var(--line);}
 .notif-dropdown-head span{font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; color:var(--navy-950);}
@@ -612,6 +628,9 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
    not display:none) so it's still keyboard- and screen-reader-operable. */
 .picker-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px; margin-bottom:4px;}
 .plan-picker{grid-template-columns:1fr 1fr;}
+@media (max-width:400px){
+  .plan-picker{grid-template-columns:1fr;}
+}
 .picker-card{position:relative; min-width:0;}
 .picker-card input{position:absolute; opacity:0; width:1px; height:1px; margin:-1px; overflow:hidden; clip:rect(0,0,0,0);}
 .picker-card label{
