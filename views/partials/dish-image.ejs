@@ -1,0 +1,18 @@
+<%
+/* Placeholder dish illustrations (public/images/menu/) — pending real food
+   photography, same as the homepage hero placeholder. One 800x800 image
+   per dish, used identically on mobile and desktop (no responsive crops
+   needed here). Falls back to the generic icon if a menu item's name
+   doesn't exactly match one of the five mapped dishes, rather than
+   guessing or showing the wrong dish's picture. */
+var __slug = dishImageSlug(m.name);
+var __eager = typeof eager !== 'undefined' && eager;
+%>
+<% if (__slug) { %>
+<picture>
+  <source srcset="/images/menu/<%= __slug %>.webp" type="image/webp">
+  <img src="/images/menu/<%= __slug %>.png" alt="<%= m.name %>" width="800" height="800" loading="<%= __eager ? 'eager' : 'lazy' %>" decoding="async">
+</picture>
+<% } else { %>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v6M8 8h8l-1 12H9L8 8Z"/></svg>
+<% } %>

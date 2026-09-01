@@ -3,7 +3,7 @@
 // This replaced the original JSON-file datastore. Every function here keeps
 // the exact name and signature it had before, so server.js did not need to
 // change for the swap itself — only the two spots that needed real
-// transactional safety (booking + wallet debit, cancellation + refund)
+// transactional safety (booking + notification, cancellation + refund)
 // gained new atomic functions (see bookAndCharge / cancelAndRefund below),
 // and the two spots that needed live pricing gained getPlans().
 
@@ -11,6 +11,7 @@ const fs = require('fs');
 const path = require('path');
 const Database = require('better-sqlite3');
 const { migrate } = require('./db/migrate');
+const { endOfMonthISO } = require('./lib/pricing');
 
 const DB_FILE = process.env.DATABASE_FILE || path.join(__dirname, 'evo360.db');
 const SEED_FILE = path.join(__dirname, 'seed.json');
@@ -18,6 +19,56 @@ const SEED_FILE = path.join(__dirname, 'seed.json');
 const db = new Database(DB_FILE);
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
+
+// ---------- School calendar (illustrative placeholder) ----------
+// Real, school-confirmed calendars aren't available yet — Evo Meals is
+// currently calibrating this system with The English School specifically,
+// as the reference school. Until that real calendar lands, every school
+// gets the same generated placeholder: the standard Kuwait school week
+// (Sunday–Thursday, Friday/Saturday weekend) plus a couple of illustrative
+// example holidays. Generated relative to the seeding date (like the
+// __TODAY__ tokens below) rather than hardcoded, so the demo always has
+// real day-level data to price against, regardless of when it's reseeded.
+// The one real daily/per-meal rate — prices both the single-day plan and,
+// multiplied by real school days, the monthly subscription (see
+// lib/pricing.js). Single source of truth: seeded into the `plans` table
+// below and reused here at seed time so demo totals match production math.
+const DAILY_RATE_KWD = 2.000;
+
+const CALENDAR_SCHOOLS = ['The English School', 'Kuwait English School', 'American Creativity Academy'];
+const CALENDAR_WINDOW_DAYS_BACK = 45;
+const CALENDAR_WINDOW_DAYS_FORWARD = 150;
+const CALENDAR_HOLIDAY_OFFSETS = [9, 10, 38]; // illustrative example holidays, relative to seeding day
+
+function generateCalendarDays(today) {
+  const start = new Date(today);
+  start.setDate(start.getDate() - CALENDAR_WINDOW_DAYS_BACK);
+  const end = new Date(today);
+  end.setDate(end.getDate() + CALENDAR_WINDOW_DAYS_FORWARD);
+
+  const holidayISODates = new Set(CALENDAR_HOLIDAY_OFFSETS.map(offset => {
+    const d = new Date(today);
+    d.setDate(d.getDate() + offset);
+    return d.toISOString().split('T')[0];
+  }));
+
+  const days = [];
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+    const iso = d.toISOString().split('T')[0];
+    const dayOfWeek = d.getDay(); // 0 = Sun ... 6 = Sat
+    const isWeekend = dayOfWeek === 5 || dayOfWeek === 6; // Kuwait weekend: Fri/Sat
+    const isSchoolDay = !isWeekend && !holidayISODates.has(iso);
+    days.push({ date: iso, isSchoolDay });
+  }
+  return days;
+}
+
+// Real school days between startISO and endISO (inclusive), counted from an
+// in-memory generated calendar — used at seed time so demo booking totals
+// are computed the exact same way the live app will compute them later.
+function countSchoolDaysInRange(calendarDays, startISO, endISO) {
+  return calendarDays.filter(d => d.isSchoolDay && d.date >= startISO && d.date <= endISO).length;
+}
 
 migrate(db);
 seedIfEmpty();
@@ -46,17 +97,6 @@ function mapMenuItem(r) {
     allergenFree: JSON.parse(r.allergen_free || '[]')
   };
 }
-function mapWallet(r) {
-  if (!r) return undefined;
-  return { parentId: r.parent_id, balanceKWD: r.balance_kwd };
-}
-function mapWalletTx(r) {
-  if (!r) return undefined;
-  return {
-    id: r.id, parentId: r.parent_id, type: r.type, amountKWD: r.amount_kwd,
-    note: r.note, createdAt: r.created_at
-  };
-}
 function mapBooking(r) {
   if (!r) return undefined;
   return {
@@ -83,16 +123,33 @@ function seedIfEmpty() {
   const todayISODate = today.toISOString().split('T')[0];
   const todayCollected = new Date(today);
   todayCollected.setHours(12, 14, 0, 0);
-  const minus25 = new Date(today);
-  minus25.setDate(minus25.getDate() - 25);
-  const minus25ISODate = minus25.toISOString().split('T')[0];
+
+  // Generate the placeholder school calendar now so monthly bookings below
+  // can be priced against real (illustrative) school-day counts, the same
+  // way the live app prices them — rather than seeding a stale flat number.
+  const calendarDays = generateCalendarDays(today);
+  const studentSchool = {};
+  seed.students.forEach(s => { studentSchool[s.id] = s.school; });
+  const dailyRateKWD = DAILY_RATE_KWD;
+
   seed.bookings.forEach(b => {
     if (b.startDate === '__TODAY__') b.startDate = todayISODate;
-    if (b.startDate === '__TODAY_MINUS_25__') b.startDate = minus25ISODate;
     if (b.collectedAt === '__TODAY_1214__') b.collectedAt = todayCollected.toISOString();
+    if (b.totalKWD === '__CALC__') {
+      const school = studentSchool[b.studentId];
+      const monthEndISO = endOfMonthISO(b.startDate);
+      const schoolDayCount = countSchoolDaysInRange(calendarDays, b.startDate, monthEndISO);
+      b.days = schoolDayCount;
+      b.totalKWD = Math.round(dailyRateKWD * schoolDayCount * 1000) / 1000;
+    }
   });
   (seed.notifications || []).forEach(n => {
     if (n.createdAt === '__TODAY_1214__') n.createdAt = todayCollected.toISOString();
+    if (typeof n.message === 'string' && n.message.includes('__CALC_TOTAL__')) {
+      const relatedBooking = seed.bookings.find(b => b.id === n.relatedId);
+      const amount = relatedBooking ? relatedBooking.totalKWD.toFixed(3) : '0.000';
+      n.message = n.message.replace('__CALC_TOTAL__', amount);
+    }
   });
 
   const insertAll = db.transaction(() => {
@@ -114,14 +171,13 @@ function seedIfEmpty() {
     `);
     seed.menuItems.forEach(m => insertMenuItem.run({ ...m, allergenFree: JSON.stringify(m.allergenFree || []) }));
 
-    const insertWallet = db.prepare('INSERT INTO wallets (parent_id, balance_kwd) VALUES (?, ?)');
-    seed.wallets.forEach(w => insertWallet.run(w.parentId, w.balanceKWD));
-
-    const insertTx = db.prepare(`
-      INSERT INTO wallet_transactions (id, parent_id, type, amount_kwd, note, created_at)
-      VALUES (@id, @parentId, @type, @amountKWD, @note, @createdAt)
+    // Placeholder school calendar — see generateCalendarDays() above.
+    const insertCalendarDay = db.prepare(`
+      INSERT INTO school_calendar_days (school, date, is_school_day) VALUES (?, ?, ?)
     `);
-    seed.walletTransactions.forEach(t => insertTx.run(t));
+    CALENDAR_SCHOOLS.forEach(school => {
+      calendarDays.forEach(d => insertCalendarDay.run(school, d.date, d.isSchoolDay ? 1 : 0));
+    });
 
     const insertBooking = db.prepare(`
       INSERT INTO bookings (id, student_id, menu_item_id, plan_type, start_date, days, total_kwd, status, collected_at)
@@ -135,13 +191,17 @@ function seedIfEmpty() {
     `);
     (seed.staffBookings || []).forEach(b => insertStaffBooking.run(b));
 
-    // Plan pricing lives in the database — same values the old hardcoded
-    // `planType === 'monthly' ? 24.000 : ...` ternary in server.js used,
-    // now editable without a code deploy.
+    // Plan pricing lives in the database, not hardcoded in route logic.
+    // `single.rate_kwd` is the one real daily rate — it also prices the
+    // `monthly` (subscription) plan now, multiplied by the actual school
+    // days in range (see lib/pricing.js). The `monthly` row's own
+    // rate_kwd/monthly_days are unused by the calculation and kept only so
+    // the row has somewhere to hold its label; a flat monthly figure no
+    // longer means anything under calendar-accurate billing.
     db.prepare('INSERT OR REPLACE INTO plans (code, label, rate_kwd, monthly_days) VALUES (?, ?, ?, ?)')
-      .run('single', 'Single Day', 1.000, 1);
+      .run('single', 'Single Day', DAILY_RATE_KWD, 1);
     db.prepare('INSERT OR REPLACE INTO plans (code, label, rate_kwd, monthly_days) VALUES (?, ?, ?, ?)')
-      .run('monthly', 'Monthly Plan', 24.000, 22);
+      .run('monthly', 'Monthly Plan', 0, 0);
 
     const insertSchoolAdmin = db.prepare(`
       INSERT INTO school_admins (id, school, name, email, password_hash, created_at)
@@ -161,10 +221,8 @@ function seedIfEmpty() {
 function resetToSeed() {
   const wipe = db.transaction(() => {
     db.exec(`
-      DELETE FROM wallet_transactions;
       DELETE FROM bookings;
       DELETE FROM staff_bookings;
-      DELETE FROM wallets;
       DELETE FROM students;
       DELETE FROM parents;
       DELETE FROM menu_items;
@@ -172,6 +230,7 @@ function resetToSeed() {
       DELETE FROM school_admins;
       DELETE FROM notifications;
       DELETE FROM inquiries;
+      DELETE FROM school_calendar_days;
     `);
   });
   wipe();
@@ -187,15 +246,11 @@ function findParentById(id) {
 }
 function createParent(parent) {
   const createdAt = new Date().toISOString();
-  const result = db.transaction(() => {
-    const info = db.prepare(`
-      INSERT INTO parents (civil_id, name, email, phone, password_hash, created_at)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `).run(parent.civilId, parent.name, parent.email, parent.phone, parent.passwordHash, createdAt);
-    db.prepare('INSERT INTO wallets (parent_id, balance_kwd) VALUES (?, 0)').run(info.lastInsertRowid);
-    return info.lastInsertRowid;
-  })();
-  return findParentById(result);
+  const info = db.prepare(`
+    INSERT INTO parents (civil_id, name, email, phone, password_hash, created_at)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).run(parent.civilId, parent.name, parent.email, parent.phone, parent.passwordHash, createdAt);
+  return findParentById(info.lastInsertRowid);
 }
 function updateParent(id, fields) {
   const existing = findParentById(id);
@@ -252,30 +307,16 @@ function getPlans() {
   return plans;
 }
 
-// ---------- Wallet ----------
-function getWallet(parentId) {
-  return mapWallet(db.prepare('SELECT * FROM wallets WHERE parent_id = ?').get(parentId))
-    || { parentId, balanceKWD: 0 };
-}
-function adjustWallet(parentId, deltaKWD, type, note) {
-  return db.transaction(() => {
-    const existing = db.prepare('SELECT * FROM wallets WHERE parent_id = ?').get(parentId);
-    const newBalance = Math.round(((existing ? existing.balance_kwd : 0) + deltaKWD) * 1000) / 1000;
-    if (existing) {
-      db.prepare('UPDATE wallets SET balance_kwd = ? WHERE parent_id = ?').run(newBalance, parentId);
-    } else {
-      db.prepare('INSERT INTO wallets (parent_id, balance_kwd) VALUES (?, ?)').run(parentId, newBalance);
-    }
-    db.prepare(`
-      INSERT INTO wallet_transactions (parent_id, type, amount_kwd, note, created_at)
-      VALUES (?, ?, ?, ?, ?)
-    `).run(parentId, type, deltaKWD, note, new Date().toISOString());
-    return getWallet(parentId);
-  })();
-}
-function getWalletTransactions(parentId) {
-  return db.prepare('SELECT * FROM wallet_transactions WHERE parent_id = ? ORDER BY created_at DESC, id DESC')
-    .all(parentId).map(mapWalletTx);
+// ---------- School calendar ----------
+// Real school-day dates for one school in a date range, used to price a
+// monthly subscription (see lib/pricing.js) and to show a parent exactly
+// which days they're paying for before they confirm.
+function getSchoolDaysInRange(school, startISO, endISO) {
+  return db.prepare(`
+    SELECT date FROM school_calendar_days
+    WHERE school = ? AND date >= ? AND date <= ? AND is_school_day = 1
+    ORDER BY date
+  `).all(school, startISO, endISO).map(r => r.date);
 }
 
 // ---------- Bookings ----------
@@ -309,8 +350,6 @@ function findBookingById(id) {
   return mapBooking(db.prepare('SELECT * FROM bookings WHERE id = ?').get(id));
 }
 
-const LOW_BALANCE_THRESHOLD_KWD = 3.000;
-
 function insertNotification({ parentId, type, message, relatedId }) {
   db.prepare(`
     INSERT INTO notifications (parent_id, type, message, related_id, read, created_at)
@@ -318,38 +357,32 @@ function insertNotification({ parentId, type, message, relatedId }) {
   `).run(parentId, type, message, relatedId || null, new Date().toISOString());
 }
 
-// Atomic: create the booking, debit the wallet, and log the resulting
-// notification(s) in one transaction — a crash partway through can never
-// leave a charge with no booking, a booking with no charge, or a wallet
-// change with no notification trail.
+// Atomic: create the booking and log the confirmation notification in one
+// transaction. Payment is a direct simulated charge per period (no wallet
+// to debit) — same "demo only, no real payment processed" simulation the
+// old wallet top-up used, just without a stored balance in between.
 function bookAndCharge({ studentId, menuItemId, planType, startDate, days, totalKWD, parentId, note }) {
   return db.transaction(() => {
     const booking = createBooking({ studentId, menuItemId, planType, startDate, days, totalKWD });
-    const wallet = adjustWallet(parentId, -totalKWD, 'debit', note);
     insertNotification({
       parentId, type: 'booking_confirmed', relatedId: booking.id,
-      message: `Booking confirmed — ${note}, KWD ${totalKWD.toFixed(3)} deducted.`
+      message: `Booking confirmed — ${note}, KWD ${totalKWD.toFixed(3)} charged.`
     });
-    if (wallet.balanceKWD < LOW_BALANCE_THRESHOLD_KWD) {
-      insertNotification({
-        parentId, type: 'low_balance', relatedId: null,
-        message: `Your wallet balance is low — KWD ${wallet.balanceKWD.toFixed(3)} left. Top up to avoid a booking failing.`
-      });
-    }
     return booking;
   })();
 }
 
-// Atomic: cancel the booking, refund the wallet, and log the notification.
+// Atomic: cancel the booking and log the notification. The refund is
+// simulated back to the original (simulated) payment method — there's no
+// wallet credit step now, just as there's no real gateway behind the charge.
 function cancelAndRefund({ bookingId, parentId }) {
   return db.transaction(() => {
     const booking = findBookingById(bookingId);
     if (!booking || booking.status !== 'upcoming') return null;
     updateBooking(bookingId, { status: 'cancelled' });
-    adjustWallet(parentId, booking.totalKWD, 'credit', `Refund — booking #${booking.id} cancelled`);
     insertNotification({
       parentId, type: 'booking_cancelled', relatedId: booking.id,
-      message: `Booking cancelled — KWD ${booking.totalKWD.toFixed(3)} refunded to your wallet.`
+      message: `Booking cancelled — KWD ${booking.totalKWD.toFixed(3)} refunded to your original payment method (demo — simulated).`
     });
     return findBookingById(bookingId);
   })();
@@ -433,7 +466,7 @@ module.exports = {
   getStudentsByParent, findStudentById, createStudent, updateStudent,
   getMenuItems, findMenuItem,
   getPlans,
-  getWallet, adjustWallet, getWalletTransactions,
+  getSchoolDaysInRange,
   getBookingsForParent, createBooking, updateBooking, findBookingById,
   bookAndCharge, cancelAndRefund,
   getStaffBookingsByParent, createStaffBooking,

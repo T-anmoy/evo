@@ -1,7 +1,7 @@
 {
   "name": "evo360-demo-system",
   "version": "1.0.0",
-  "description": "Working multi-page demo of the redesigned Evo360 school meal system — real login, real booking logic, real wallet. Built by Highline Works.",
+  "description": "Working multi-page demo of the Evo Meals school meal platform — real login, real calendar-based booking logic, real calculation, no flat fees.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

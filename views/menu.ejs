@@ -14,18 +14,16 @@
   </div>
 
   <div class="allergen-banner">
-    <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg><span>Nut-free available</span></div>
-    <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg><span>Shellfish-free available</span></div>
-    <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg><span>Sesame-free available</span></div>
-    <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg><span>Soy-free available</span></div>
+    <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg><span>Allergen information available per dish</span></div>
   </div>
-  <p class="allergen-commitment">Every dish below is checked against these four allergens before it's ever offered as a menu option — not a footnote, a standing commitment.</p>
+  <p class="allergen-commitment">Special dietary claims — nut-free, shellfish-free, sesame-free, soy-free, egg-free, gluten-free, lactose-free — apply to specific meal preparations, not a blanket guarantee across every dish, and aren't independently verified by Evo Meals. Check each dish's own detail before booking if your child has a specific allergy.</p>
+  <p class="allergen-commitment">Portions and protein content shown are the base recipe — each student's actual serving is matched to their registered grade when you book.</p>
 
   <div class="grid-2">
     <% menuItems.forEach(m => { %>
       <div class="menu-card menu-card-full">
         <div class="menu-thumb menu-thumb-wide">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v6M8 8h8l-1 12H9L8 8Z"/></svg>
+          <%- include('partials/dish-image', { m: m }) %>
         </div>
         <div class="menu-card-body">
           <span class="tag"><%= m.tag %></span>
@@ -43,5 +41,6 @@
   </div>
 </div>
 
+<%- include('partials/appfoot') %>
 </body>
 </html>

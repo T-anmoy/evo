@@ -11,7 +11,7 @@ const pino = require('pino');
 const pinoHttp = require('pino-http');
 const { csrfSync } = require('csrf-sync');
 const db = require('./db');
-const { calculateBookingTotal, canAfford } = require('./lib/pricing');
+const { calculateBookingTotal, endOfMonthISO } = require('./lib/pricing');
 const { maskCivilId } = require('./lib/mask');
 
 if (!process.env.SESSION_SECRET) {
@@ -75,6 +75,20 @@ app.locals.timeAgo = (iso) => {
   if (days < 7) return `${days}d ago`;
   return app.locals.fmtDate(iso);
 };
+
+// Placeholder dish illustrations (public/images/menu/) — matched by exact
+// menu item name, pending real food photography for these five dishes.
+// Falls back to `null` (the old generic icon) for any name that doesn't
+// exactly match, rather than guessing or mismatching a dish to the wrong
+// picture.
+const DISH_IMAGE_SLUGS = {
+  'Arabiatta Chicken Pasta': 'dish-arabiatta-pasta',
+  'Balsamic Chicken & Beans': 'dish-balsamic-chicken-beans',
+  'BBQ Beef Burger': 'dish-bbq-beef-burger',
+  'BBQ Chicken & Sweet Potato': 'dish-bbq-chicken-sweet-potato',
+  'Seasonal Fruit Cup': 'dish-seasonal-fruit-cup'
+};
+app.locals.dishImageSlug = (name) => DISH_IMAGE_SLUGS[name] || null;
 
 function requireAuth(req, res, next) {
   if (!req.session.parentId) return res.redirect('/login');
@@ -223,7 +237,6 @@ Disallow: /dashboard
 Disallow: /students
 Disallow: /booking
 Disallow: /history
-Disallow: /wallet
 Disallow: /profile
 Disallow: /staff
 Disallow: /menu
@@ -311,10 +324,10 @@ app.get('/school-admin/dashboard', requireSchoolAdmin, (req, res) => {
   const isActiveToday = (b) => {
     if (b.status === 'cancelled') return false;
     if (b.planType === 'monthly') {
-      const start = new Date(b.startDate);
-      const windowEnd = new Date(start);
-      windowEnd.setDate(windowEnd.getDate() + 30);
-      return b.startDate <= todayISO && todayISO <= windowEnd.toISOString().split('T')[0];
+      // A monthly subscription's coverage runs through the end of the
+      // calendar month it started in — not 30 raw days, which could bleed
+      // into the next month regardless of the school's real calendar.
+      return b.startDate <= todayISO && todayISO <= endOfMonthISO(b.startDate);
     }
     return b.startDate === todayISO;
   };
@@ -351,23 +364,22 @@ app.get('/school-admin/dashboard', requireSchoolAdmin, (req, res) => {
 app.get('/dashboard', requireAuth, (req, res) => {
   const parent = currentParent(req);
   const students = db.getStudentsByParent(parent.id);
-  const wallet = db.getWallet(parent.id);
   const bookings = db.getBookingsForParent(parent.id);
   const todayISO = new Date().toISOString().split('T')[0];
 
+  const isActiveToday = (b) => {
+    if (b.status === 'cancelled') return false;
+    if (b.planType === 'monthly') {
+      // A monthly subscription's coverage runs through the end of the
+      // calendar month it started in — not 30 raw days.
+      return b.startDate <= todayISO && todayISO <= endOfMonthISO(b.startDate);
+    }
+    // single-day plan: only counts as "today" if it's actually dated today
+    return b.startDate === todayISO;
+  };
+
   const studentStatus = students.map(s => {
-    const todaysBooking = bookings.find(b => {
-      if (b.studentId !== s.id) return false;
-      if (b.status === 'cancelled') return false;
-      if (b.planType === 'monthly') {
-        const start = new Date(b.startDate);
-        const windowEnd = new Date(start);
-        windowEnd.setDate(windowEnd.getDate() + 30);
-        return b.startDate <= todayISO && todayISO <= windowEnd.toISOString().split('T')[0];
-      }
-      // single-day plan: only counts as "today" if it's actually dated today
-      return b.startDate === todayISO;
-    });
+    const todaysBooking = bookings.find(b => b.studentId === s.id && isActiveToday(b));
     return { student: s, booking: todaysBooking || null };
   });
 
@@ -382,9 +394,28 @@ app.get('/dashboard', requireAuth, (req, res) => {
     mealName: (db.findMenuItem(lastBooking.menuItemId) || {}).name || 'that meal'
   } : null;
 
-  // Renewal: a monthly plan within 7 days of the end of its 30-day window
-  // gets a real one-tap "Renew" action instead of sending the parent
-  // through the booking flow again from scratch.
+  // Active subscription periods: replaces the old wallet-balance stat — with
+  // exact per-period charging, what a parent needs to see is which period
+  // is currently covering their child, how many real school days it spans,
+  // and what was actually paid for it.
+  const activeSubscriptionPeriods = bookings
+    .filter(b => b.planType === 'monthly' && b.status !== 'cancelled' && isActiveToday(b))
+    .map(b => {
+      const student = students.find(s => s.id === b.studentId);
+      const menuItem = db.findMenuItem(b.menuItemId);
+      return {
+        studentName: student ? student.name : 'Your child',
+        mealName: menuItem ? menuItem.name : 'Meal plan',
+        startDate: b.startDate,
+        endDate: endOfMonthISO(b.startDate),
+        days: b.days,
+        totalKWD: b.totalKWD
+      };
+    });
+
+  // Renewal: a monthly plan within 7 days of the end of its calendar-month
+  // coverage gets a real one-tap "Renew" action instead of sending the
+  // parent through the booking flow again from scratch.
   const RENEWAL_WINDOW_DAYS = 7;
   const renewalCandidates = bookings
     .filter(b => b.planType === 'monthly' && b.status !== 'cancelled')
@@ -396,9 +427,7 @@ app.get('/dashboard', requireAuth, (req, res) => {
       other.status !== 'cancelled' && other.startDate > b.startDate
     ))
     .map(b => {
-      const start = new Date(b.startDate);
-      const windowEnd = new Date(start);
-      windowEnd.setDate(windowEnd.getDate() + 30);
+      const windowEnd = new Date(`${endOfMonthISO(b.startDate)}T00:00:00Z`);
       const daysLeft = Math.ceil((windowEnd - new Date()) / (1000 * 60 * 60 * 24));
       return { booking: b, daysLeft };
     })
@@ -408,7 +437,7 @@ app.get('/dashboard', requireAuth, (req, res) => {
       const menuItem = db.findMenuItem(booking.menuItemId);
       db.ensureRenewalNotification({
         parentId: parent.id, bookingId: booking.id,
-        message: `${student ? student.name : 'Your child'}'s monthly plan ends in ${daysLeft} day${daysLeft === 1 ? '' : 's'} — renew to keep meals booked without a gap.`
+        message: `${student ? student.name : 'Your child'}'s subscription period ends in ${daysLeft} day${daysLeft === 1 ? '' : 's'} — renew to keep meals booked without a gap.`
       });
       return {
         bookingId: booking.id, daysLeft,
@@ -421,9 +450,9 @@ app.get('/dashboard', requireAuth, (req, res) => {
   const unreadNotificationCount = db.getUnreadNotificationCount(parent.id);
 
   res.render('dashboard', {
-    parent, students, wallet, studentStatus, activeBookingCount, lastBooking: lastBookingView,
-    renewalCandidates, notifications, unreadNotificationCount, parentId: parent.id,
-    renewed: req.query.renewed === '1'
+    parent, students, studentStatus, activeBookingCount, lastBooking: lastBookingView,
+    activeSubscriptionPeriods, renewalCandidates, notifications, unreadNotificationCount, parentId: parent.id,
+    renewed: req.query.renewed === '1', norenewaldays: req.query.norenewaldays === '1'
   });
 });
 
@@ -445,20 +474,24 @@ app.post('/booking/:id/renew', requireAuth, (req, res) => {
   const student = original ? db.findStudentById(original.studentId) : null;
   if (!original || !student || student.parentId !== parent.id) return res.redirect('/dashboard');
 
+  // Recalculated fresh against the NEW month's real calendar — never a
+  // repeat of the previous period's amount, since a different month can
+  // have a different number of real school days.
   const plans = db.getPlans();
-  const wallet = db.getWallet(parent.id);
-  const { total, days } = calculateBookingTotal({ planType: original.planType, days: original.days, plans });
+  const newStartDate = new Date().toISOString().split('T')[0];
+  const monthEndISO = endOfMonthISO(newStartDate);
+  const schoolDays = db.getSchoolDaysInRange(student.school, newStartDate, monthEndISO);
+  const { total, days } = calculateBookingTotal({ planType: original.planType, plans, schoolDays });
 
-  if (!canAfford(total, wallet.balanceKWD)) {
-    return res.redirect('/wallet?lowbalance=1');
+  if (days === 0) {
+    return res.redirect('/dashboard?norenewaldays=1');
   }
 
   const menuItem = db.findMenuItem(original.menuItemId);
-  const newStartDate = new Date().toISOString().split('T')[0];
   db.bookAndCharge({
     studentId: student.id, menuItemId: original.menuItemId, planType: original.planType,
     startDate: newStartDate, days, totalKWD: total, parentId: parent.id,
-    note: `${student.name} — ${menuItem ? menuItem.name : 'Meal plan'}, renewed monthly plan`
+    note: `${student.name} — ${menuItem ? menuItem.name : 'Meal plan'}, renewed subscription`
   });
   res.redirect('/dashboard?renewed=1');
 });
@@ -501,51 +534,75 @@ app.get('/menu', requireAuth, (req, res) => {
   res.render('menu', { menuItems: db.getMenuItems(), parentId: req.session.parentId });
 });
 
+// Real school-day dates for every school one of this parent's students
+// attends, over the next ~120 days — embedded into the booking page so the
+// client-side total can be computed live (exact charge for a chosen start
+// date) without a server round-trip on every date change.
+function schoolCalendarForStudents(students) {
+  const todayISO = new Date().toISOString().split('T')[0];
+  const horizon = new Date();
+  horizon.setDate(horizon.getDate() + 120);
+  const horizonISO = horizon.toISOString().split('T')[0];
+  const schools = [...new Set(students.map(s => s.school))];
+  const schoolCalendar = {};
+  schools.forEach(school => {
+    schoolCalendar[school] = db.getSchoolDaysInRange(school, todayISO, horizonISO);
+  });
+  return schoolCalendar;
+}
+
 app.get('/booking', requireAuth, (req, res) => {
   const parent = currentParent(req);
   const students = db.getStudentsByParent(parent.id);
-  const wallet = db.getWallet(parent.id);
   const menuItems = db.getMenuItems();
   const plans = db.getPlans();
   const studentIds = students.map(s => s.id);
   const rebookRaw = req.query.rebook ? db.findBookingById(Number(req.query.rebook)) : null;
   const rebook = (rebookRaw && studentIds.includes(rebookRaw.studentId)) ? rebookRaw : null;
   res.render('booking', {
-    students, wallet, menuItems, plans, error: null, success: null,
-    parentId: parent.id, rebook
+    students, menuItems, plans, error: null, success: null,
+    parentId: parent.id, rebook,
+    schoolCalendar: schoolCalendarForStudents(students),
+    dailyRateKWD: plans.single ? plans.single.rateKWD : 2
   });
 });
 
 app.post('/booking', requireAuth, (req, res) => {
   const parent = currentParent(req);
   const students = db.getStudentsByParent(parent.id);
-  const wallet = db.getWallet(parent.id);
   const menuItems = db.getMenuItems();
   const { studentId, menuItemId, planType, startDate, days } = req.body;
 
   const plans = db.getPlans();
+  const schoolCalendar = schoolCalendarForStudents(students);
+  const dailyRateKWD = plans.single ? plans.single.rateKWD : 2;
+  const renderArgs = { students, menuItems, plans, parentId: parent.id, rebook: null, schoolCalendar, dailyRateKWD };
+
   const student = students.find(s => s.id === Number(studentId));
   if (!student) {
-    return res.render('booking', { students, wallet, menuItems, plans, error: 'Choose a valid student.', success: null, parentId: parent.id, rebook: null });
+    return res.render('booking', { ...renderArgs, error: 'Choose a valid student.', success: null });
   }
 
-  // Real, always-correct total calculation — this is the direct fix for the
-  // KWD 0.00 bug found in the live system audit: the total is computed from
-  // an actual selected plan and quantity (with pricing loaded from the
-  // database, not hardcoded), never left unconfigured.
-  const { total, days: resolvedDays } = calculateBookingTotal({ planType, days, plans });
-
-  if (!canAfford(total, wallet.balanceKWD)) {
-    return res.render('booking', {
-      students, wallet, menuItems, plans, success: null,
-      error: `Insufficient wallet balance. This booking costs ${app.locals.fmtKWD(total)}, but your wallet has ${app.locals.fmtKWD(wallet.balanceKWD)}. Top up your wallet first.`,
-      parentId: parent.id, rebook: null
-    });
+  // Real, always-correct total calculation — the direct fix for the
+  // KWD 0.00 bug found in the live system audit. A monthly plan is priced
+  // against the real school days between the chosen start date and the end
+  // of that calendar month — never a flat rate.
+  let total, resolvedDays;
+  if (planType === 'monthly') {
+    const monthEndISO = endOfMonthISO(startDate);
+    const schoolDays = db.getSchoolDaysInRange(student.school, startDate, monthEndISO);
+    ({ total, days: resolvedDays } = calculateBookingTotal({ planType, plans, schoolDays }));
+    if (resolvedDays === 0) {
+      return res.render('booking', {
+        ...renderArgs, success: null,
+        error: `${student.school} has no school days left between ${startDate} and the end of that month. Try a start date next month instead.`
+      });
+    }
+  } else {
+    ({ total, days: resolvedDays } = calculateBookingTotal({ planType, days, plans }));
   }
 
   const menuItem = db.findMenuItem(Number(menuItemId));
-  // Booking creation and the wallet debit happen in a single database
-  // transaction — if the process crashes partway through, neither write lands.
   db.bookAndCharge({
     studentId: student.id,
     menuItemId: Number(menuItemId),
@@ -554,14 +611,12 @@ app.post('/booking', requireAuth, (req, res) => {
     days: resolvedDays,
     totalKWD: total,
     parentId: parent.id,
-    note: `${student.name} — ${menuItem ? menuItem.name : 'Meal plan'}, ${planType === 'monthly' ? 'monthly plan' : resolvedDays + ' day(s)'}`
+    note: `${student.name} — ${menuItem ? menuItem.name : 'Meal plan'}, ${planType === 'monthly' ? resolvedDays + ' real school day(s) this month' : resolvedDays + ' day(s)'}`
   });
 
-  const freshWallet = db.getWallet(parent.id);
   res.render('booking', {
-    students, wallet: freshWallet, menuItems, plans, error: null,
-    success: `Booking confirmed for ${student.name} — ${app.locals.fmtKWD(total)} deducted from your wallet.`,
-    parentId: parent.id, rebook: null
+    ...renderArgs, error: null,
+    success: `Booking confirmed for ${student.name} — ${app.locals.fmtKWD(total)} charged via KNET (demo — no real payment processed).`
   });
 });
 
@@ -587,33 +642,6 @@ app.post('/history/:id/cancel', requireAuth, (req, res) => {
   res.redirect('/history');
 });
 
-app.get('/wallet', requireAuth, (req, res) => {
-  const parent = currentParent(req);
-  const wallet = db.getWallet(parent.id);
-  const transactions = db.getWalletTransactions(parent.id);
-  res.render('wallet', { wallet, transactions, parentId: parent.id, success: req.query.success || null, lowbalance: req.query.lowbalance === '1' });
-});
-
-// Real KNET/Bookey integration slots in here once sandbox credentials are
-// issued (see .env.example — KNET_MERCHANT_ID / KNET_API_KEY). Route and
-// response shape are stable so the frontend never has to change; only the
-// body of this function needs to become a real gateway call.
-function processTopUp(parent, amountKWD) {
-  if (process.env.KNET_MERCHANT_ID && process.env.KNET_API_KEY) {
-    throw new Error('KNET/Bookey integration not yet implemented — credentials are configured but no gateway call exists yet.');
-  }
-  db.adjustWallet(parent.id, amountKWD, 'credit', 'Wallet top-up via KNET (demo — no real payment processed)');
-}
-
-app.post('/wallet/topup', requireAuth, (req, res) => {
-  const parent = currentParent(req);
-  const amount = Math.max(0, parseFloat(req.body.amount) || 0);
-  if (amount > 0) {
-    processTopUp(parent, amount);
-  }
-  res.redirect('/wallet?success=1');
-});
-
 app.get('/profile', requireAuth, (req, res) => {
   const parent = currentParent(req);
   res.render('profile', { parent, parentId: parent.id, success: req.query.success || null });
@@ -630,17 +658,19 @@ app.post('/profile', requireAuth, (req, res) => {
 app.get('/staff', requireAuth, (req, res) => {
   const parent = currentParent(req);
   const bookings = db.getStaffBookingsByParent(parent.id);
-  res.render('staff', { bookings, parentId: parent.id, success: null });
+  const plans = db.getPlans();
+  res.render('staff', { bookings, parentId: parent.id, success: null, dailyRateKWD: plans.single ? plans.single.rateKWD : 2 });
 });
 
 app.post('/staff', requireAuth, (req, res) => {
   const parent = currentParent(req);
   const { menuItemId, startDate } = req.body;
+  const plans = db.getPlans();
   db.createStaffBooking({
     staffId: parent.id,
     menuItemId: Number(menuItemId),
     startDate,
-    totalKWD: 1.500
+    totalKWD: plans.single ? plans.single.rateKWD : 2
   });
   res.redirect('/staff');
 });

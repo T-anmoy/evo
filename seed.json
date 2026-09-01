@@ -93,15 +93,6 @@
       "allergenFree": ["nut", "shellfish", "sesame", "soy"]
     }
   ],
-  "wallets": [
-    { "parentId": 1, "balanceKWD": 8.4 }
-  ],
-  "walletTransactions": [
-    { "id": 1, "parentId": 1, "type": "credit", "amountKWD": 30, "note": "Wallet top-up via KNET", "createdAt": "2026-08-01T09:12:00.000Z" },
-    { "id": 2, "parentId": 1, "type": "debit", "amountKWD": -24, "note": "Monthly plan — Ahmed, Kuwait English School", "createdAt": "2026-08-01T09:15:00.000Z" },
-    { "id": 3, "parentId": 1, "type": "debit", "amountKWD": -1, "note": "Sara — BBQ Chicken & Sweet Potato, single day", "createdAt": "2026-08-10T07:40:00.000Z" },
-    { "id": 4, "parentId": 1, "type": "credit", "amountKWD": 3.4, "note": "Wallet top-up via KNET", "createdAt": "2026-08-18T10:02:00.000Z" }
-  ],
   "bookings": [
     {
       "id": 1,
@@ -109,8 +100,8 @@
       "menuItemId": 3,
       "planType": "monthly",
       "startDate": "__TODAY__",
-      "days": 22,
-      "totalKWD": 24,
+      "days": 0,
+      "totalKWD": "__CALC__",
       "status": "collected",
       "collectedAt": "__TODAY_1214__"
     },
@@ -121,7 +112,7 @@
       "planType": "single",
       "startDate": "2026-08-10",
       "days": 1,
-      "totalKWD": 1,
+      "totalKWD": 2,
       "status": "collected",
       "collectedAt": "2026-08-10T12:05:00.000Z"
     },
@@ -130,9 +121,9 @@
       "studentId": 2,
       "menuItemId": 2,
       "planType": "monthly",
-      "startDate": "__TODAY_MINUS_25__",
-      "days": 22,
-      "totalKWD": 24,
+      "startDate": "__TODAY__",
+      "days": 0,
+      "totalKWD": "__CALC__",
       "status": "upcoming",
       "collectedAt": null
     }
@@ -171,7 +162,7 @@
       "id": 3,
       "parentId": 1,
       "type": "booking_confirmed",
-      "message": "Monthly plan booked for Ahmed — KWD 24.000 deducted from your wallet.",
+      "message": "Monthly plan booked for Ahmed — KWD __CALC_TOTAL__ charged.",
       "relatedId": 1,
       "read": 1,
       "createdAt": "2026-08-01T09:15:00.000Z"

@@ -31,7 +31,7 @@
       </div>
       <div style="display:flex; justify-content:space-between; align-items:center; background:var(--navy-950); border-radius:14px; padding:18px 20px; margin-bottom:18px;">
         <span style="color:rgba(255,255,255,0.65); font-size:13px; font-weight:500;">Staff meal price</span>
-        <strong class="data-num" style="color:var(--lime-500); font-size:18px;">KWD 1.500</strong>
+        <strong class="data-num" style="color:var(--lime-500); font-size:18px;">KWD <%= dailyRateKWD.toFixed(3) %></strong>
       </div>
       <button type="submit" class="btn btn-primary" style="width:100%;">Book Staff Meal</button>
     </form>
@@ -56,5 +56,6 @@
   </div>
 </div>
 
+<%- include('partials/appfoot') %>
 </body>
 </html>

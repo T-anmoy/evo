@@ -1,6 +1,6 @@
 /* ============================================================
-   Evo360 — design tokens
-   Palette derived from Evo360's real navy/lime identity, refined
+   Evo Meals — design tokens
+   Palette derived from Evo Meals' real navy/lime identity, refined
    for contrast and given each color an actual job (see README-ish
    comments below) rather than one all-purpose accent.
    ============================================================ */
@@ -31,6 +31,15 @@
   /* Morning Sky — page background, cool pale blue (not cream) */
   --ice-50:#EFF4FA;
   --ice-100:#E4ECF7;
+
+  /* Warm Table — hero and food-forward sections only (trust-building,
+     appetite-appealing), not the structural navy/lime identity. Matches
+     the hero placeholder image's own background almost exactly so a
+     cover-cropped image never shows a seam against the section. Text on
+     these tokens uses navy-950/muted (already AA-safe) plus lime-700. */
+  --cream-50:#FFF8ED;
+  --cream-100:#FBEEDA;
+  --cream-line:rgba(120,80,20,0.12);
 
   --ink-900:#131B27;
   --white:#FFFFFF;
@@ -137,6 +146,94 @@ textarea:focus-visible,
   ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important;}
 }
 
+/* ---------- interactive surfaces: one hover/focus treatment, everywhere ----------
+   Every card-like surface site-wide gets the same lift + shadow-deepen on
+   hover/focus, on the same duration/easing tokens as the rest of the
+   motion system — defined once here rather than each section inventing
+   its own. Icons that sit inside these cards get a small sympathetic
+   scale, same trigger, same timing. */
+.menu-card, .trust-card, .price-card, .what-is-pillar, .feature-role, .testimonial-card, .allergen-banner-item{
+  transition:transform var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), border-color var(--dur-standard) var(--ease-standard);
+}
+.menu-card:hover, .menu-card:focus-within,
+.trust-card:hover, .trust-card:focus-within,
+.price-card:hover, .price-card:focus-within,
+.what-is-pillar:hover, .what-is-pillar:focus-within,
+.feature-role:hover, .feature-role:focus-within,
+.testimonial-card:hover, .testimonial-card:focus-within{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-sm);
+  border-color:var(--line-strong);
+}
+.trust-card:hover .trust-icon, .trust-card:focus-within .trust-icon{transform:scale(1.08);}
+.trust-icon{transition:transform var(--dur-standard) var(--ease-spring);}
+@media (prefers-reduced-motion: reduce){
+  .menu-card, .trust-card, .price-card, .what-is-pillar, .feature-role, .testimonial-card, .trust-icon{transition:none;}
+  .menu-card:hover, .trust-card:hover, .price-card:hover, .what-is-pillar:hover, .feature-role:hover, .testimonial-card:hover{transform:none;}
+}
+
+/* ---------- hero entrance: the richest moment on the page, on purpose ----------
+   Everything below the fold uses [data-reveal] (scroll-triggered). The
+   hero is always above the fold on load, so it gets a dedicated
+   page-load choreography instead — pure CSS, no IntersectionObserver
+   round-trip needed for content that's visible from the first frame.
+   One curve (--ease-out), one duration (--dur-hero), staggered by 80ms —
+   same system, just the top of its hierarchy. */
+@keyframes hero-rise-in{from{opacity:0; transform:translateY(22px);} to{opacity:1; transform:translateY(0);}}
+.hero-copy > .eyebrow, .hero-copy > h1, .hero-copy > p.lede, .hero-copy > .hero-actions, .hero-copy > .hero-proof, .hero-media-wrap{
+  animation:hero-rise-in var(--dur-hero) var(--ease-out) both;
+}
+.hero-copy > .eyebrow{animation-delay:0ms;}
+.hero-copy > h1{animation-delay:90ms;}
+.hero-copy > p.lede{animation-delay:180ms;}
+.hero-copy > .hero-actions{animation-delay:270ms;}
+.hero-media-wrap{animation-delay:220ms;}
+.hero-copy > .hero-proof{animation-delay:360ms;}
+@media (prefers-reduced-motion: reduce){
+  .hero-copy > .eyebrow, .hero-copy > h1, .hero-copy > p.lede, .hero-copy > .hero-actions, .hero-copy > .hero-proof, .hero-media-wrap{
+    animation:none; opacity:1; transform:none;
+  }
+}
+
+/* A living detail on the hero itself — a slow, low-opacity light sweep
+   across the image, so the first thing a visitor sees doesn't sit
+   perfectly static. Kept subtle: this reads as ambient light, not a
+   loading state. */
+.hero-media-glow{
+  position:absolute; inset:0; pointer-events:none; z-index:2;
+  background:linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.22) 50%, transparent 60%);
+  background-size:250% 250%;
+  animation:hero-glow-sweep 6s ease-in-out 1.4s infinite;
+}
+@keyframes hero-glow-sweep{
+  0%, 100%{background-position:120% 120%;}
+  50%{background-position:-20% -20%;}
+}
+@media (prefers-reduced-motion: reduce){
+  .hero-media-glow{animation:none; display:none;}
+}
+
+/* Parallax (motion.js) writes --parallax-y here on scroll; translateZ(0)
+   keeps it on its own compositor layer so it stays smooth. */
+.hero-media-wrap{will-change:transform;}
+@media (prefers-reduced-motion: reduce){
+  .hero-media-wrap{transform:none !important;}
+}
+
+/* Magnetic buttons (motion.js, desktop pointer only) write --mx/--my as
+   the button is approached; falls back to static if JS never sets them. */
+[data-magnetic]{transform:translate(var(--mx, 0), var(--my, 0)); transition:transform 320ms var(--ease-out);}
+[data-magnetic]:active{transition-duration:120ms;}
+/* These elements also have their own hover-lift transform (higher
+   specificity than [data-magnetic] alone would win outright and cancel
+   the pull) — recompose both explicitly so lift and magnetic pull apply
+   together instead of one silently overriding the other. */
+.btn-primary[data-magnetic]:hover{transform:translate(var(--mx, 0), var(--my, 0)) translateY(-1px);}
+.store-badge[data-magnetic]:hover, .store-badge[data-magnetic]:focus-visible{transform:translate(var(--mx, 0), var(--my, 0)) translateY(-3px);}
+@media (prefers-reduced-motion: reduce){
+  [data-magnetic]{transform:none !important; transition:none;}
+}
+
 /* ---------- layout ---------- */
 .wrap{max-width:1120px; margin:0 auto; padding:0 24px;}
 .wrap-wide{max-width:1280px; margin:0 auto; padding:0 24px;}
@@ -149,6 +246,9 @@ textarea:focus-visible,
 .btn-primary{background:var(--lime-500); color:var(--navy-950);}
 .btn-primary:hover{background:var(--lime-600); transform:translateY(-1px); box-shadow:var(--shadow-sm);}
 .btn-primary:active{transform:scale(.97) translateY(0); transition-duration:80ms;}
+/* Deliberately larger than any other hero action — "Order Meals" is the
+   one thing a scanning parent should register as the primary action. */
+.btn-hero-primary{padding:16px 32px; font-size:15.5px; box-shadow:var(--shadow-sm);}
 .btn-dark{background:var(--navy-950); color:var(--white);}
 .btn-dark:hover{background:var(--navy-800); transform:translateY(-1px);}
 .btn-dark:active{transform:scale(.97) translateY(0); transition-duration:80ms;}
@@ -296,7 +396,7 @@ form .hint{font-size:11.5px; color:var(--muted); margin-top:4px;}
 .alert-info{background:var(--ice-50); color:var(--navy-800); border:1px solid var(--line);}
 
 /* Success is one of the two moments this whole product exists to deliver
-   (booking confirmed, wallet credited) — it gets the hero-duration,
+   (booking confirmed, refund processed) — it gets the hero-duration,
    ease-spring treatment. It plays once (no infinite loop) and is skipped
    entirely under reduced motion. */
 .alert-success{background:#EEF9E4; color:#2F5A0F; border:1px solid #CBE8A8; animation:success-settle var(--dur-hero) var(--ease-spring) both;}
@@ -359,6 +459,19 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 .badge-collected{background:#E8F8DB; color:#3C6E12;}
 .badge-cancelled{background:#F1F2F4; color:#6B7280;}
 
+.period-row{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:13px 0; border-top:1px solid var(--line);}
+.period-row:first-child{border-top:none; padding-top:0;}
+.period-meta{display:flex; flex-direction:column; gap:3px;}
+.period-meta strong{font-size:14px; color:var(--navy-950);}
+.period-meta span{font-size:12.5px; color:var(--muted);}
+.period-figures{display:flex; flex-direction:column; align-items:flex-end; gap:3px; flex-shrink:0;}
+.period-figures span{font-size:12px; color:var(--muted);}
+.period-figures strong{font-size:14px; color:var(--lime-700);}
+@media (max-width:480px){
+  .period-row{flex-wrap:wrap;}
+  .period-figures{align-items:flex-start;}
+}
+
 .renewal-card{display:flex; align-items:center; gap:16px; background:linear-gradient(135deg, rgba(159,224,73,0.1), var(--white) 55%); border-color:rgba(159,224,73,0.35);}
 .renewal-card + .renewal-card{margin-top:14px;}
 .renewal-icon{flex-shrink:0; width:42px; height:42px; border-radius:50%; background:var(--lime-500); color:var(--navy-950); display:flex; align-items:center; justify-content:center;}
@@ -404,7 +517,6 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 .auth-card .logo .dot{color:var(--lime-500);}
 .auth-card h1{font-size:22px; text-align:center; margin-bottom:6px;}
 .auth-card .sub{text-align:center; color:var(--muted); font-size:13.5px; margin-bottom:26px;}
-.auth-demo-note{background:var(--ice-50); border:1px dashed var(--line-strong); border-radius:10px; padding:12px 14px; font-size:12px; color:var(--navy-800); margin-top:18px; text-align:center;}
 .auth-foot{text-align:center; margin-top:18px; font-size:13px; color:var(--muted);}
 .auth-foot a{color:var(--blue-600); font-weight:600;}
 
@@ -412,10 +524,16 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 .allergen-pill{display:flex; align-items:center; gap:6px; padding:7px 14px; border-radius:100px; background:var(--white); border:1px solid var(--line); font-size:11.5px; font-weight:600; color:var(--navy-800);}
 .allergen-pill svg{width:12px; height:12px; color:var(--lime-700); flex-shrink:0;}
 
-.menu-card{background:var(--white); border-radius:var(--radius-sm); overflow:hidden; border:1px solid var(--line); transition:transform .15s, box-shadow .15s;}
-.menu-card:hover{transform:translateY(-3px); box-shadow:var(--shadow-sm);}
-.menu-thumb{height:84px; background:linear-gradient(135deg, var(--navy-800), var(--navy-700)); display:flex; align-items:center; justify-content:center; position:relative;}
+.menu-card{background:var(--white); border-radius:var(--radius-sm); overflow:hidden; border:1px solid var(--line);}
+/* aspect-ratio (not a fixed px height) so the crop window is always a true
+   square regardless of how wide the card renders at any breakpoint — cover
+   fitting inside a mismatched box can still look aggressively cropped even
+   though it never distorts, so the box itself needs to be square. Holds
+   automatically for real photography later too, square or not. */
+.menu-thumb{aspect-ratio:1/1; height:auto; background:linear-gradient(135deg, var(--navy-800), var(--navy-700)); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;}
 .menu-thumb svg{width:26px; height:26px; color:var(--lime-500);}
+.menu-thumb picture{display:block; width:100%; height:100%;}
+.menu-thumb picture img{width:100%; height:100%; object-fit:cover;}
 .menu-card-body{padding:15px 16px;}
 .menu-card-body .tag{font-size:10px; font-weight:700; color:var(--lime-700); text-transform:uppercase; letter-spacing:0.06em;}
 .menu-card-body h3{font-size:14.5px; margin:6px 0 8px;}
@@ -424,7 +542,7 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 /* ---------- full menu detail (menu.ejs) ---------- */
 .allergen-commitment{text-align:center; max-width:560px; margin:0 auto 28px; font-size:13.5px; color:var(--muted);}
 .menu-card-full{display:flex; gap:0; overflow:visible;}
-.menu-thumb-wide{width:100px; flex-shrink:0; height:auto; border-radius:var(--radius-sm) 0 0 var(--radius-sm);}
+.menu-thumb-wide{width:100px; aspect-ratio:1/1; height:auto; flex-shrink:0; align-self:flex-start; border-radius:var(--radius-sm) 0 0 var(--radius-sm);}
 .menu-card-full .menu-card-body{padding:18px 20px; flex:1;}
 .menu-card-full h3{font-size:16px; margin:6px 0 10px;}
 .menu-ingredients{font-size:12.5px; color:var(--navy-800); line-height:1.6; margin-bottom:16px;}
@@ -441,10 +559,10 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
    not display:none) so it's still keyboard- and screen-reader-operable. */
 .picker-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px; margin-bottom:4px;}
 .plan-picker{grid-template-columns:1fr 1fr;}
-.picker-card{position:relative;}
+.picker-card{position:relative; min-width:0;}
 .picker-card input{position:absolute; opacity:0; width:1px; height:1px; margin:-1px; overflow:hidden; clip:rect(0,0,0,0);}
 .picker-card label{
-  display:flex; align-items:center; gap:12px; height:100%; min-height:44px; padding:12px 14px;
+  display:flex; align-items:center; gap:12px; height:100%; min-height:44px; min-width:0; padding:12px 14px;
   border:2px solid var(--border-input); border-radius:var(--radius-sm); background:var(--white); cursor:pointer;
   transition:border-color var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), transform var(--dur-micro) var(--ease-standard);
   position:relative;
@@ -452,8 +570,10 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 .picker-card label:hover{border-color:var(--blue-500);}
 .picker-card input:focus-visible + label{outline:2.5px solid var(--blue-600); outline-offset:2px;}
 .picker-card input:checked + label{border-color:var(--lime-500); box-shadow:0 0 0 3px rgba(142,209,62,0.16); background:#FBFEF7;}
-.picker-thumb{width:40px; height:40px; border-radius:9px; background:linear-gradient(135deg, var(--navy-800), var(--navy-700)); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.picker-thumb{width:40px; aspect-ratio:1/1; border-radius:9px; background:linear-gradient(135deg, var(--navy-800), var(--navy-700)); display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;}
 .picker-thumb svg{width:19px; height:19px; color:var(--lime-500);}
+.picker-thumb picture{display:block; width:100%; height:100%;}
+.picker-thumb picture img{width:100%; height:100%; object-fit:cover;}
 .picker-body{display:flex; flex-direction:column; gap:3px; min-width:0; padding-right:30px;} /* clears the absolutely-positioned check-badge so long dish names never wrap underneath it */
 .picker-body strong{font-size:13.5px; color:var(--navy-950); line-height:1.3;}
 .picker-meta{font-size:11.5px; color:var(--saffron-700); font-weight:600;}
@@ -486,6 +606,30 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 
 footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-size:12px; border-top:1px solid var(--line); margin-top:20px;}
 
+/* Condensed footer for the logged-in parent app shell — same real link
+   grid + contact block as the marketing footer, on the app's own light
+   background rather than dropping in a dark marketing-style block, and
+   without the store badges (dropped here, kept on the marketing footer). */
+.app-foot-full{margin-top:40px; padding-top:44px; border-top:1px solid var(--line); background:var(--white);}
+.app-foot-grid{display:flex; justify-content:space-between; gap:40px; flex-wrap:wrap; padding-bottom:28px;}
+.app-foot-links{display:flex; gap:40px; flex-wrap:wrap;}
+.app-foot-links h4{font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--navy-800); margin-bottom:14px;}
+.app-foot-links .foot-col{display:flex; flex-direction:column; gap:10px;}
+.app-foot-links a{color:var(--muted); font-size:13px; text-decoration:none; transition:color var(--dur-micro) var(--ease-standard);}
+.app-foot-links a:hover{color:var(--lime-700);}
+.app-foot-contact{display:flex; flex-direction:column; gap:12px; align-items:flex-start;}
+.app-foot-contact span, .app-foot-contact a{display:inline-flex; align-items:center; gap:8px; color:var(--muted); font-size:13px; text-decoration:none;}
+.app-foot-contact a:hover{color:var(--lime-700);}
+.app-foot-contact svg{width:16px; height:16px; flex-shrink:0; color:var(--muted);}
+.app-foot-bottom{padding-top:20px; padding-bottom:20px; border-top:1px solid var(--line); font-size:12px; color:var(--muted);}
+@media (max-width:700px){
+  .app-foot-grid{flex-direction:column; gap:28px;}
+  .app-foot-links{gap:28px;}
+}
+@media (max-width:400px){
+  .app-foot-links{flex-direction:column; gap:24px;}
+}
+
 /* ============================================================
    Marketing site (public pages)
    ============================================================ */
@@ -512,6 +656,93 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 /* --- hero --- */
 .hero{background:var(--navy-950); color:#fff; position:relative; overflow:hidden;}
 .hero-inner{display:grid; grid-template-columns:1.15fr 1fr; align-items:center; gap:0; min-height:640px; position:relative;}
+
+/* Homepage hero only — light, warm, appetite-appealing palette, distinct
+   from the navy/lime identity that stays on nav, footer, and every B2B/
+   legal page. The parent landing here needs to trust the food fast; a
+   dark "enterprise software" hero works against that. */
+.hero-light{background:var(--cream-50); color:var(--ink-900);}
+.hero-light .hero-inner{grid-template-columns:1fr 0.9fr; min-height:0;}
+.hero-light .hero-copy{padding:64px 40px 64px 0;}
+.hero-light .hero-copy .eyebrow{color:var(--navy-800);}
+.hero-light .hero-copy .eyebrow::before{background:var(--lime-500);}
+.hero-light .hero-copy h1{color:var(--navy-950);}
+.hero-light .hero-copy h1 em{color:var(--lime-700);}
+.hero-light .hero-copy p.lede{color:var(--muted);}
+.hero-light .hero-actions a.btn-ghost{color:var(--navy-950); border-color:var(--line-strong);}
+.hero-light .hero-actions a.btn-ghost:hover{background:rgba(11,21,38,0.05);}
+/* btn-outline-lime's lime-500 text is documented decorative-only (2.7:1 on
+   white, fails AA) — safe on the navy header it's normally used against,
+   but this hero is now light, so swap in the text-safe lime-700 here. */
+.hero-light .hero-actions a.btn-outline-lime{color:var(--lime-700); border-color:rgba(79,127,27,0.4);}
+.hero-light .hero-actions a.btn-outline-lime:hover{background:rgba(79,127,27,0.08); border-color:var(--lime-700);}
+.hero-light .hero-proof .proof-label{color:var(--muted);}
+.hero-light .hero-proof .schools span{color:var(--navy-800); border-color:var(--line-strong); background:rgba(255,255,255,0.55);}
+
+/* The hero image sits in its own column on desktop (stretched to match the
+   copy column's height, cropped via object-fit:cover — not ratio-locked
+   by design, since the two-column layout's height is driven by the text).
+   Source file is real photography, confirmed 16:9-ish (2752×1536) — no
+   separate CSS aspect-ratio forced on the desktop box, "no change needed"
+   per the correction brief.
+
+   On mobile the box IS ratio-locked to a true 3:4 — the corrected file is
+   1792×2400 (0.7467, effectively 3:4) — set explicitly below rather than
+   left to whatever the source file happens to be, so a future image swap
+   can't silently distort or crop.
+
+   Shape treatment: an organic lime blob peeking out behind the image on
+   two sides, offset and irregular — not a uniform border. The image
+   itself keeps plain clean rounded corners; the blob is what makes the
+   frame distinctive. */
+.hero-media-wrap{position:relative; align-self:stretch;}
+.hero-media-wrap::before{
+  content:""; position:absolute; z-index:0;
+  top:10px; right:-22px; bottom:-26px; left:-14px;
+  background:var(--lime-500);
+  border-radius:62% 38% 55% 45% / 45% 58% 42% 55%;
+}
+.hero-media{position:relative; z-index:1; align-self:stretch; height:100%; min-height:340px; border-radius:var(--radius-lg); overflow:hidden;}
+.hero-media picture, .hero-media img{display:block; width:100%; height:100%;}
+.hero-media img{object-fit:cover; object-position:75% center;}
+
+/* Live-proof moment, up near the hero instead of only at the page's
+   closing CTA — same real tap-to-collect toast, seen early. */
+.hero-toast{
+  position:absolute; z-index:2; left:16px; bottom:-16px; max-width:220px;
+  background:var(--white); border-radius:14px; padding:12px 14px; display:flex; align-items:center; gap:10px;
+  box-shadow:var(--shadow-lg);
+}
+.hero-toast-icon{width:28px; height:28px; border-radius:50%; background:#E8F8DB; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.hero-toast-icon svg{width:13px; height:13px; color:var(--lime-700);}
+.hero-toast-title{font-family:'Montserrat',sans-serif; font-weight:700; font-size:12px; color:var(--navy-950); line-height:1.3;}
+.hero-toast-sub{font-size:10.5px; color:var(--muted); margin-top:2px;}
+@media (max-width:900px){
+  /* .hero-copy's box disappears from layout; its children become direct
+     grid items of .hero-inner alongside .hero-media-wrap, so `order`
+     below can interleave the image between the CTA row and the school
+     trust badges without touching the markup itself. */
+  .hero-light .hero-inner{grid-template-columns:1fr;}
+  .hero-light .hero-copy{display:contents;}
+  .hero-copy > .eyebrow{order:1;}
+  .hero-copy > h1{order:2;}
+  .hero-copy > p.lede{order:3;}
+  .hero-copy > .hero-actions{order:4;}
+  .hero-media-wrap{order:5; margin-top:28px;}
+  .hero-copy > .hero-proof{order:6; margin-top:28px;}
+
+  .hero-media-wrap::before{top:8px; right:-14px; bottom:-16px; left:-8px; border-radius:58% 42% 48% 52% / 40% 55% 45% 60%;}
+  .hero-media{min-height:0; aspect-ratio:3/4; height:auto; border-radius:var(--radius); box-shadow:var(--shadow);}
+  .hero-media img{object-position:top;}
+  /* .hero-copy has no box under display:contents, so the "top padding
+     below the header" and "no max-width cap" that used to live on it move
+     to .hero-inner (a real box) and its now-direct child elements. */
+  .hero-light .hero-inner{padding-top:20px;}
+  .hero-copy > .eyebrow, .hero-copy > h1, .hero-copy > p.lede, .hero-copy > .hero-actions, .hero-copy > .hero-proof{max-width:none;}
+  .hero-light .hero-copy h1{margin-bottom:14px;}
+  .hero-light .hero-copy p.lede{margin-bottom:20px;}
+  .hero-light .hero-actions.hero-actions-3{margin-bottom:0;}
+}
 .hero-copy{padding:64px 40px 64px 0; position:relative; z-index:2; max-width:560px;}
 .hero-copy .eyebrow{margin-bottom:22px;}
 .hero-copy h1{color:#fff; font-size:clamp(36px,4.6vw,58px); line-height:1.05; margin-bottom:22px;}
@@ -638,6 +869,19 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .section.on-navy h2{color:#fff;}
 .section.on-navy p{color:rgba(255,255,255,0.68);}
 .section.on-tint{background:var(--ice-100);}
+/* Food-forward sections only (see --cream tokens) — warm, not the cool
+   ice-50/100 used for structural/B2B sections. */
+.section.on-cream{background:var(--cream-50);}
+
+.trust-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+.trust-card{background:var(--white); border:1px solid var(--cream-line); border-radius:var(--radius); padding:28px 24px; text-align:center;}
+.trust-icon{width:52px; height:52px; margin:0 auto 18px; border-radius:50%; background:rgba(79,127,27,0.1); color:var(--lime-700); display:flex; align-items:center; justify-content:center;}
+.trust-icon svg{width:24px; height:24px;}
+.trust-card h3{font-size:16.5px; margin-bottom:10px;}
+.trust-card p{font-size:13.5px; line-height:1.6;}
+@media (max-width:800px){
+  .trust-grid{grid-template-columns:1fr; gap:16px;}
+}
 
 /* --- origin story: the one human, unhurried moment on the page --- */
 .origin-section{padding:64px 0;}
@@ -703,6 +947,15 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .proof-name{font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:clamp(22px,3.4vw,38px); letter-spacing:-0.01em; color:#fff; line-height:1.1;}
 .proof-tag{font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--lime-500); flex-shrink:0;}
 
+/* A second, lightweight chance to act roughly midway down the page — a
+   parent convinced by this point shouldn't have to scroll back to the
+   hero or all the way to the closing band to book. Deliberately quiet
+   next to the full-weight hero and closing cta-band. */
+.mid-cta{background:var(--ice-100); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+.mid-cta-row{display:flex; align-items:center; justify-content:center; gap:24px; flex-wrap:wrap; padding-top:28px; padding-bottom:28px; text-align:center;}
+.mid-cta-row p{margin:0; font-family:'Montserrat',sans-serif; font-weight:700; font-size:15.5px; color:var(--navy-950);}
+@media (max-width:560px){.mid-cta-row{flex-direction:column; gap:14px; padding:24px 0;}}
+
 /* final CTA with diagonal seam */
 /* The closing section carries the same creative weight as the hero — it's
    the last thing a visitor feels before deciding to act (peak-end rule).
@@ -734,16 +987,34 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .site-foot-top{display:grid; grid-template-columns:1.4fr 2.6fr; gap:48px; padding-bottom:44px;}
 .site-foot-brand .site-logo{color:var(--white); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:18px; display:inline-flex; margin-bottom:14px;}
 .site-foot-brand .site-logo .dot{color:var(--lime-500);}
-.site-foot-brand p{color:rgba(255,255,255,0.5); font-size:13px; line-height:1.6; max-width:280px; margin:0;}
+.site-foot-brand p{color:rgba(255,255,255,0.5); font-size:13px; line-height:1.6; max-width:280px; margin:0 0 16px;}
 .site-foot-links{display:grid; grid-template-columns:repeat(4,1fr); gap:24px;}
 .site-foot-links h4{font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.85); margin-bottom:16px;}
 .site-foot-links .foot-col{display:flex; flex-direction:column; gap:11px;}
-.site-foot-bottom{display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding:22px 0; border-top:1px solid rgba(255,255,255,0.08); font-size:12px; color:rgba(255,255,255,0.45);}
+.site-foot-contact-row{display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; padding-top:28px; padding-bottom:28px; border-top:1px solid rgba(255,255,255,0.08);}
+.site-foot-contact{display:flex; align-items:center; gap:24px; flex-wrap:wrap; font-size:13px;}
+.site-foot-contact span, .site-foot-contact a{display:inline-flex; align-items:center; gap:8px; color:rgba(255,255,255,0.65);}
+.site-foot-contact a:hover{color:var(--lime-500);}
+.site-foot-contact svg{width:16px; height:16px; flex-shrink:0; color:rgba(255,255,255,0.4);}
+.store-badges-footer{justify-content:flex-start; gap:10px;}
+.store-badges-footer .store-badge{background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); padding:7px 14px;}
+.store-badges-footer .store-badge:hover, .store-badges-footer .store-badge:focus-visible{background:rgba(255,255,255,0.1);}
+.store-badges-footer .store-badge svg{width:19px; height:19px;}
+.store-badges-footer .store-badge span{font-size:11.5px;}
+.store-badges-footer .store-badge small{font-size:8.5px;}
+.site-foot-bottom{display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding-top:22px; padding-bottom:22px; border-top:1px solid rgba(255,255,255,0.08); font-size:12px; color:rgba(255,255,255,0.45);}
 .site-foot-legal{display:flex; gap:20px;}
 .site-foot-legal a{color:rgba(255,255,255,0.6); font-size:12px;}
+.site-foot-note{max-width:420px; text-align:right;}
 @media (max-width:900px){
   .site-foot-top{grid-template-columns:1fr; gap:36px;}
   .site-foot-links{grid-template-columns:repeat(2,1fr); gap:28px 20px;}
+  .site-foot-note{text-align:left; max-width:none;}
+}
+@media (max-width:560px){
+  .site-foot-links{grid-template-columns:1fr; gap:26px;}
+  .site-foot-contact{flex-direction:column; align-items:flex-start; gap:14px;}
+  .site-foot-contact-row{flex-direction:column; align-items:flex-start;}
 }
 @media (max-width:520px){
   .site-foot-bottom{flex-direction:column; align-items:flex-start; gap:10px;}
@@ -768,7 +1039,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 
 /* ---------- trust bar ---------- */
 .trustbar{background:var(--white); border-bottom:1px solid var(--line);}
-.trustbar-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:24px; padding:28px 0;}
+.trustbar-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:24px; padding-top:28px; padding-bottom:28px;}
 .trustbar-item{display:flex; flex-direction:column; gap:6px; text-align:center; border-left:1px solid var(--line); padding-left:24px;}
 .trustbar-item:first-child{border-left:none; padding-left:0;}
 .trustbar-label{font-family:'Montserrat',sans-serif; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted);}
@@ -821,6 +1092,8 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 /* ---------- platform features ---------- */
 .feature-roles{display:grid; grid-template-columns:repeat(5,1fr); gap:16px;}
 .feature-role{background:var(--white); border:1px solid var(--line); border-radius:var(--radius-sm); padding:20px 18px;}
+.feature-role-icon{width:34px; height:34px; border-radius:10px; background:var(--ice-100); color:var(--lime-700); display:flex; align-items:center; justify-content:center; margin-bottom:12px;}
+.feature-role-icon svg{width:17px; height:17px;}
 .feature-role h3{font-size:14px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--line);}
 .feature-role ul{display:flex; flex-direction:column; gap:10px;}
 .feature-role li{font-size:12.5px; color:var(--navy-800); line-height:1.5; padding-left:14px; position:relative;}
@@ -830,6 +1103,15 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .allergen-banner{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:32px;}
 .allergen-banner-item{display:flex; align-items:center; gap:8px; background:var(--navy-950); color:#fff; padding:12px 20px; border-radius:100px; font-family:'Montserrat',sans-serif; font-weight:700; font-size:12.5px;}
 .allergen-banner-item svg{width:15px; height:15px; color:var(--lime-500); flex-shrink:0;}
+
+.age-portion-note{display:flex; align-items:center; gap:16px; max-width:680px; margin:0 auto 40px; background:var(--white); border:1px solid var(--cream-line); border-radius:var(--radius); padding:18px 24px;}
+.age-portion-icon{flex-shrink:0; width:42px; height:42px; border-radius:50%; background:rgba(79,127,27,0.1); color:var(--lime-700); display:flex; align-items:center; justify-content:center;}
+.age-portion-icon svg{width:20px; height:20px;}
+.age-portion-note strong{display:block; font-size:14px; color:var(--navy-950); margin-bottom:3px;}
+.age-portion-note span{font-size:13px; color:var(--muted); line-height:1.5;}
+@media (max-width:560px){
+  .age-portion-note{flex-direction:column; text-align:center;}
+}
 .nutrition-more{text-align:center; margin-top:28px; font-size:13.5px; color:var(--muted);}
 .nutrition-more a{color:var(--blue-600); font-weight:600;}
 
@@ -855,8 +1137,13 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .app-flow span:not(.app-flow-arrow){background:var(--white); border:1px solid var(--line); border-radius:100px; padding:8px 16px;}
 .app-flow-arrow{color:var(--lime-600); font-weight:400;}
 .store-badges{display:flex; justify-content:center; gap:14px; flex-wrap:wrap;}
-.store-badge{display:flex; align-items:center; gap:10px; background:var(--navy-950); color:#fff; border-radius:12px; padding:10px 18px;}
+.store-badge{display:flex; align-items:center; gap:10px; background:var(--navy-950); color:#fff; border-radius:12px; padding:10px 18px; transition:transform var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), background var(--dur-standard) var(--ease-standard);}
+.store-badge:hover, .store-badge:focus-visible{transform:translateY(-3px); box-shadow:var(--shadow-sm); background:var(--navy-800);}
 .store-badge svg{width:24px; height:24px; color:var(--lime-500); flex-shrink:0;}
+@media (prefers-reduced-motion: reduce){
+  .store-badge{transition:none;}
+  .store-badge:hover, .store-badge:focus-visible{transform:none;}
+}
 .store-badge span{display:flex; flex-direction:column; text-align:left; font-family:'Montserrat',sans-serif; font-weight:700; font-size:13.5px;}
 .store-badge small{font-family:'Poppins',sans-serif; font-weight:400; font-size:10px; color:rgba(255,255,255,0.6);}
 
@@ -879,7 +1166,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .legal-content ul{margin:0 0 14px; padding-left:20px; display:flex; flex-direction:column; gap:10px;}
 .legal-content ul li{font-size:14.5px; line-height:1.7; color:#4A5568;}
 .legal-content strong{color:var(--navy-950);}
-.legal-note{margin-top:36px; padding-top:20px; border-top:1px solid var(--line); font-size:12.5px; color:var(--muted);}
 
 /* ---------- Schools page: numbered benefit rows ---------- */
 .benefit-row{display:grid; grid-template-columns:64px 1fr; gap:24px; padding:32px 0; border-bottom:1px solid var(--line);}

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <%- include('partials/head', { title: 'For Parents — Evo Meals' }) %>
-<meta name="description" content="Book school meals, manage subscriptions, and know the moment your child collects lunch — all from the Evo Meals parent account. Real-time notifications, allergen-checked menus, and a KNET wallet.">
+<meta name="description" content="Book school meals, manage subscriptions, and know the moment your child collects lunch — all from the Evo Meals parent account. Real-time notifications, allergen-checked menus, and calendar-accurate KNET payments.">
 </head>
 <body>
 
@@ -13,7 +13,7 @@
     <div class="hero-copy" data-reveal>
       <span class="eyebrow on-dark">For Parents</span>
       <h1>Know they ate.<br>Know what they ate.<br><em>Never have to ask.</em></h1>
-      <p class="lede">One account for every child, every meal. Book a plan, top up the wallet, and see the exact moment they've collected lunch — dish, time, done.</p>
+      <p class="lede">One account for every child, every meal. Book a plan, pay only for the real school days it covers, and see the exact moment they've collected lunch — dish, time, done.</p>
       <div class="hero-actions">
         <a href="/register" class="btn btn-primary">Create your account</a>
         <a href="/login" class="btn btn-ghost">Log in</a>
@@ -67,12 +67,12 @@
       <div class="step" data-reveal data-reveal-group="psteps">
         <div class="step-num">Book</div>
         <h3>Pick a plan</h3>
-        <p>Choose a meal, pay-as-you-go or a flat monthly plan, and the total is calculated and shown before you confirm — never a surprise charge.</p>
+        <p>Choose a meal, pay-as-you-go or a subscription priced by real school days, and the total is calculated and shown before you confirm — never a surprise charge.</p>
       </div>
       <div class="step" data-reveal data-reveal-group="psteps">
-        <div class="step-num">Wallet</div>
-        <h3>Top up once</h3>
-        <p>Fund the wallet with KNET. Bookings draw from balance automatically — no cash, no forgotten lunch money, ever.</p>
+        <div class="step-num">Pay</div>
+        <h3>Pay via KNET</h3>
+        <p>Pay the exact total for the real school days in your period — no wallet, no top-ups, no forgotten lunch money, ever.</p>
       </div>
       <div class="step" data-reveal data-reveal-group="psteps">
         <div class="step-num">Tap</div>
@@ -113,16 +113,16 @@
     <div class="pricing-grid">
       <div class="price-card" data-reveal data-reveal-group="ppricing">
         <div class="price-tag">Pay as you go</div>
-        <div class="price-amt">KWD <%= (plans.single ? plans.single.rateKWD : 1).toFixed(3) %><span>/day</span></div>
+        <div class="price-amt">KWD <%= (plans.single ? plans.single.rateKWD : 2).toFixed(3) %><span>/day</span></div>
         <p>Book single days whenever you need to — school trips, half terms, or just trying it out.</p>
         <a href="/register" class="btn btn-outline" style="width:100%;">Start booking</a>
       </div>
       <div class="price-card featured" data-reveal data-reveal-group="ppricing">
         <span class="badge-save">Most parents choose this</span>
-        <div class="price-tag">Monthly plan</div>
-        <div class="price-amt">KWD <%= (plans.monthly ? plans.monthly.rateKWD : 24).toFixed(3) %><span>/month</span></div>
-        <p><%= plans.monthly ? plans.monthly.monthlyDays : 22 %> school days covered, booked once.</p>
-        <a href="/register" class="btn btn-primary" style="width:100%;">Start with the monthly plan</a>
+        <div class="price-tag">Subscription</div>
+        <div class="price-amt">KWD <%= (plans.single ? plans.single.rateKWD : 2).toFixed(3) %><span>/real school day</span></div>
+        <p>Pay only for the real school days in your period — calculated against your school's actual calendar, never a flat monthly guess.</p>
+        <a href="/register" class="btn btn-primary" style="width:100%;">Start a subscription</a>
       </div>
     </div>
   </div>
@@ -136,16 +136,13 @@
       <p>Every dish is checked against your child's allergy profile before it's ever offered as an option.</p>
     </div>
     <div class="allergen-row" style="justify-content:center;">
-      <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Nut-free available</span>
-      <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Shellfish-free available</span>
-      <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Sesame-free available</span>
-      <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Soy-free available</span>
+      <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg> Allergen information available per dish</span>
     </div>
     <div class="grid-4">
       <% menuItems.forEach(m => { %>
         <div class="menu-card" data-reveal data-reveal-group="pmenu">
           <div class="menu-thumb">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v6M8 8h8l-1 12H9L8 8Z"/></svg>
+            <%- include('partials/dish-image', { m: m }) %>
           </div>
           <div class="menu-card-body">
             <span class="tag"><%= m.tag %></span>
@@ -162,7 +159,7 @@
   <div class="wrap" style="text-align:center;">
     <span class="eyebrow on-dark" style="justify-content:center;">Ready when you are</span>
     <h2 style="margin-top:16px;">Set it up before the next school run.</h2>
-    <p style="margin:14px auto 28px;">Takes about two minutes — add a child, top up the wallet, book the first meal.</p>
+    <p style="margin:14px auto 28px;">Takes about two minutes — add a child, pick a plan, book the first meal.</p>
     <a href="/register" class="btn btn-primary">Create your account</a>
   </div>
 </section>

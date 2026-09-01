@@ -1,8 +1,16 @@
+<%
+/* Content gates — flip to true once real data exists, no rebuild needed.
+   Off for now: no real figures (schools/students/meals served) and no real
+   testimonials have been collected yet. An omitted section is honest; a
+   placeholder or invented number is not. */
+const SHOW_TRUST_STATS = false;
+const SHOW_TESTIMONIALS = false;
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<%- include('partials/head', { title: 'Evo Meals — School Meal Management Platform, Kuwait' }) %>
-<meta name="description" content="Evo Meals is the digital school meal management platform connecting schools, parents, students, and catering partners in Kuwait through subscriptions, ordering, tap-to-collect, and real-time reporting.">
+<%- include('partials/head', { title: 'Evo Meals — School Meal Management System, Kuwait' }) %>
+<meta name="description" content="Evo Meals is Kuwait's digital school meal management system — running the school meal program for schools, parents, students, and catering partners through subscriptions, ordering, tap-to-collect, and real-time reporting.">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -14,7 +22,7 @@
     "@type": "Country",
     "name": "Kuwait"
   },
-  "email": "hello@evomeals.demo"
+  "email": "hello@evomeals.example"
 }
 </script>
 </head>
@@ -22,16 +30,16 @@
 
 <%- include('partials/sitenav', { active: 'home' }) %>
 
-<section class="hero">
+<section class="hero hero-light">
   <div class="wrap-wide hero-inner">
-    <div class="hero-copy" data-reveal>
-      <span class="eyebrow on-dark">The school meal management platform</span>
-      <h1>Smarter school meals.<br>Happier parents.<br><em>Better schools.</em></h1>
-      <p class="lede">Evo Meals is a complete digital platform for managing school meal programs — menu planning, subscriptions, ordering, tap-to-collect delivery, parent notifications, and real-time reporting, all in one system connecting schools, parents, students, and catering partners.</p>
+    <div class="hero-copy">
+      <span class="eyebrow">For busy parents in Kuwait</span>
+      <h1>Skip the cooking.<br>Never skip the meal.<br><em>Every school day.</em></h1>
+      <p class="lede">Booked in minutes, confirmed the moment your child collects it — a real hot lunch, not a maybe.</p>
       <div class="hero-actions hero-actions-3">
-        <a href="/schools" class="btn btn-primary">For Schools</a>
-        <a href="/register" class="btn btn-outline-lime">Order Meals</a>
-        <a href="/#app" class="btn btn-ghost">Download App</a>
+        <a href="/register" class="btn btn-primary btn-hero-primary" data-magnetic>Order Meals</a>
+        <a href="/schools" class="btn btn-outline-lime btn-sm">For Schools</a>
+        <a href="/#app" class="btn btn-ghost btn-sm">Download App</a>
       </div>
       <div class="hero-proof">
         <span class="proof-label">Live at</span>
@@ -42,44 +50,32 @@
         </div>
       </div>
     </div>
-
-    <div class="hero-visual" aria-hidden="true">
-      <div class="ecosystem" data-reveal>
-        <div class="eco-node">
-          <span class="eco-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></span>
-          <span class="eco-label">Parent App</span>
-        </div>
-        <div class="eco-line"></div>
-        <div class="eco-node eco-hub">
-          <span class="eco-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 8.5a8 8 0 0 1 12 0M8.5 11a4.5 4.5 0 0 1 7 0M12 14v.01"/></svg></span>
-          <span class="eco-label">Evo Platform</span>
-        </div>
-        <div class="eco-line"></div>
-        <div class="eco-node">
-          <span class="eco-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9l8-5 8 5v12M9 21v-6h6v6M4 21h16"/></svg></span>
-          <span class="eco-label">School</span>
-        </div>
-        <div class="eco-line"></div>
-        <div class="eco-node">
-          <span class="eco-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M6 12V7a6 6 0 0 1 12 0v5M5 12l1.5 8h11L19 12"/></svg></span>
-          <span class="eco-label">Kitchen</span>
-        </div>
-        <div class="eco-line"></div>
-        <div class="eco-node">
-          <span class="eco-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 21a7 7 0 0 1 14 0"/></svg></span>
-          <span class="eco-label">Student</span>
+    <div class="hero-media-wrap" data-parallax>
+      <div class="hero-media">
+        <picture>
+          <source media="(max-width:900px)" srcset="/images/hero-mobile.webp" type="image/webp">
+          <source media="(max-width:900px)" srcset="/images/hero-mobile.png" type="image/png">
+          <source media="(min-width:901px)" srcset="/images/hero-desktop.webp" type="image/webp">
+          <source media="(min-width:901px)" srcset="/images/hero-desktop.png" type="image/png">
+          <img src="/images/hero-desktop.png" alt="A student opening her Evo Meals box to a freshly cooked hot lunch" fetchpriority="high" decoding="async">
+        </picture>
+        <span class="hero-media-glow"></span>
+      </div>
+      <div class="hero-toast" aria-hidden="true">
+        <span class="hero-toast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <div>
+          <div class="hero-toast-title">Sara tapped in — lunch collected</div>
+          <div class="hero-toast-sub">12:04 PM · Arabiatta Chicken Pasta</div>
         </div>
       </div>
-      <p class="ecosystem-caption">One order flows from a parent's phone to the kitchen and back to a confirmed, collected meal — every step visible to the people who need to see it.</p>
     </div>
   </div>
 </section>
 
-<!-- Trust bar: PLACEHOLDER TREATMENT — do not fill these with invented
-     numbers. Real figures (schools served, students, meals delivered,
-     technology uptime/metrics) need to come from the client before this
-     goes live. Visually distinct (dashed, muted) so it reads as pending,
-     not as a real understated stat. -->
+<% if (SHOW_TRUST_STATS) { %>
+<!-- Trust bar: do not fill these with invented numbers. Real figures
+     (schools served, students, meals delivered) go here once they exist —
+     flip SHOW_TRUST_STATS at the top of this file to bring it back. -->
 <section class="trustbar">
   <div class="wrap trustbar-grid">
     <div class="trustbar-item">
@@ -97,6 +93,34 @@
     <div class="trustbar-item">
       <span class="trustbar-label">Technology</span>
       <span class="trustbar-value">Built on real-time tap infrastructure</span>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<section class="section on-cream" id="how-its-made">
+  <div class="wrap">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">How your child's meal actually gets made</span>
+      <h2>Not just "nutritious." Specifically this.</h2>
+      <p>The three things a busy parent actually wants to know before trusting a school lunch to someone else.</p>
+    </div>
+    <div class="trust-grid">
+      <div class="trust-card" data-reveal data-reveal-group="trust">
+        <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M6 12V7a6 6 0 0 1 12 0v5M5 12l1.5 8h11L19 12"/><path d="M9 5.5c0-1 .5-2 1.5-2M13 5c0-1.2.6-2.2 1.7-2.5"/></svg></div>
+        <h3>Freshly cooked, never canned</h3>
+        <p>Cooked fresh from real ingredients the same day — never pre-packaged or shelf-stable.</p>
+      </div>
+      <div class="trust-card" data-reveal data-reveal-group="trust">
+        <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="9" width="16" height="11" rx="2"/><path d="M8 9V6a4 4 0 0 1 8 0v3"/><path d="M12 13v3"/></svg></div>
+        <h3>Held warm, not reheated</h3>
+        <p>Kept hot in proper warmers all the way to your child — never microwaved back to temperature.</p>
+      </div>
+      <div class="trust-card" data-reveal data-reveal-group="trust">
+        <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8 12 4l8 4-8 4-8-4Z"/><path d="M4 8v8l8 4 8-4V8"/><path d="M12 12v8"/></svg></div>
+        <h3>Served in a proper box</h3>
+        <p>A sturdy, purpose-made box — not a flimsy container thrown together.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -185,7 +209,7 @@
       <div class="step" data-reveal data-reveal-group="platformflow">
         <div class="step-num">Parent</div>
         <h3>Subscribes &amp; orders</h3>
-        <p>Books a plan for their child, tops up the wallet, and manages everything from one account.</p>
+        <p>Books a plan for their child, pays only for the real school days it covers, and manages everything from one account.</p>
       </div>
       <div class="step" data-reveal data-reveal-group="platformflow">
         <div class="step-num">Evo Meals</div>
@@ -246,12 +270,12 @@
         <div class="step" data-reveal data-reveal-group="parentsteps">
           <div class="step-num">Book</div>
           <h3>Pick a plan</h3>
-          <p>Choose a meal, pay-as-you-go or a flat monthly plan, and the total is calculated and shown before you confirm — never a surprise charge.</p>
+          <p>Choose a meal, pay-as-you-go or a subscription priced by real school days, and the total is calculated and shown before you confirm — never a surprise charge.</p>
         </div>
         <div class="step" data-reveal data-reveal-group="parentsteps">
-          <div class="step-num">Wallet</div>
-          <h3>Top up once</h3>
-          <p>Fund the wallet with KNET. Bookings draw from balance automatically — no cash, no forgotten lunch money, ever.</p>
+          <div class="step-num">Pay</div>
+          <h3>Pay via KNET</h3>
+          <p>Pay the exact total for the real school days in your period — no wallet, no top-ups, no forgotten lunch money, ever.</p>
         </div>
         <div class="step" data-reveal data-reveal-group="parentsteps">
           <div class="step-num">Tap</div>
@@ -309,16 +333,16 @@
     <div class="pricing-grid" style="margin-top:56px;">
       <div class="price-card" data-reveal data-reveal-group="pricing">
         <div class="price-tag">Pay as you go</div>
-        <div class="price-amt">KWD <%= (plans.single ? plans.single.rateKWD : 1).toFixed(3) %><span>/day</span></div>
+        <div class="price-amt">KWD <%= (plans.single ? plans.single.rateKWD : 2).toFixed(3) %><span>/day</span></div>
         <p>Book single days whenever you need to — school trips, half terms, or just trying it out.</p>
         <a href="/register" class="btn btn-outline" style="width:100%;">Start booking</a>
       </div>
       <div class="price-card featured" data-reveal data-reveal-group="pricing">
         <span class="badge-save">Most parents choose this</span>
-        <div class="price-tag">Monthly plan</div>
-        <div class="price-amt">KWD <%= (plans.monthly ? plans.monthly.rateKWD : 24).toFixed(3) %><span>/month</span></div>
-        <p><%= plans.monthly ? plans.monthly.monthlyDays : 22 %> school days covered, booked once — works out cheaper than paying daily, and one less thing to remember.</p>
-        <a href="/register" class="btn btn-primary" style="width:100%;">Start with the monthly plan</a>
+        <div class="price-tag">Subscription</div>
+        <div class="price-amt">KWD <%= (plans.single ? plans.single.rateKWD : 2).toFixed(3) %><span>/real school day</span></div>
+        <p>Pay only for the real school days in your period — calculated against your school's actual calendar, never a flat monthly guess. The exact total is shown before you confirm.</p>
+        <a href="/register" class="btn btn-primary" style="width:100%;">Start a subscription</a>
       </div>
     </div>
   </div>
@@ -341,6 +365,13 @@
   </div>
 </section>
 
+<section class="mid-cta">
+  <div class="wrap mid-cta-row">
+    <p>Ready to stop wondering if they ate?</p>
+    <a href="/register" class="btn btn-primary" data-magnetic>Order Meals</a>
+  </div>
+</section>
+
 <section class="section on-tint" id="features">
   <div class="wrap">
     <div class="section-head" data-reveal>
@@ -350,6 +381,7 @@
     </div>
     <div class="feature-roles">
       <div class="feature-role" data-reveal data-reveal-group="features">
+        <div class="feature-role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"/></svg></div>
         <h3>Parents</h3>
         <ul>
           <li>Order, subscribe &amp; manage in one account</li>
@@ -357,6 +389,7 @@
         </ul>
       </div>
       <div class="feature-role" data-reveal data-reveal-group="features">
+        <div class="feature-role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9l8-5 8 5v12"/><path d="M9 21v-6h6v6"/></svg></div>
         <h3>Schools</h3>
         <ul>
           <li>Live monitoring dashboards</li>
@@ -364,6 +397,7 @@
         </ul>
       </div>
       <div class="feature-role" data-reveal data-reveal-group="features">
+        <div class="feature-role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8 12 4l8 4-8 4-8-4Z"/><path d="M4 8v8l8 4 8-4V8"/></svg></div>
         <h3>Caterers</h3>
         <ul>
           <li>Digital order receiving &amp; queue management</li>
@@ -371,6 +405,7 @@
         </ul>
       </div>
       <div class="feature-role" data-reveal data-reveal-group="features">
+        <div class="feature-role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8.5a8 8 0 0 1 12 0M8.5 11a4.5 4.5 0 0 1 7 0M12 14v.01"/></svg></div>
         <h3>Students</h3>
         <ul>
           <li>Allergy-matched meals only ever offered</li>
@@ -378,6 +413,7 @@
         </ul>
       </div>
       <div class="feature-role" data-reveal data-reveal-group="features">
+        <div class="feature-role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V10M12 19V4M20 19v-7"/></svg></div>
         <h3>Administrators</h3>
         <ul>
           <li>Centralized program management</li>
@@ -388,25 +424,29 @@
   </div>
 </section>
 
-<section class="section" id="nutrition">
+<section class="section on-cream" id="nutrition">
   <div class="wrap">
     <div class="section-head" data-reveal>
       <span class="eyebrow">Nutrition &amp; food safety</span>
       <p class="section-tagline">Freshly Prepared Meals. Seamlessly Delivered.</p>
       <h2>Every dish, checked before it's ever offered.</h2>
-      <p>This is a commitment, not a footnote — every meal on the platform is verified against these four allergens before it ever reaches a menu.</p>
+      <p>Allergen information — nut, shellfish, sesame, soy, egg, gluten, and lactose — is documented per dish, not a blanket claim across the whole menu. Special dietary claims apply to specific preparations and aren't independently lab-verified.</p>
     </div>
     <div class="allergen-banner" data-reveal>
-      <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg><span>Nut-free available</span></div>
-      <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg><span>Shellfish-free available</span></div>
-      <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg><span>Sesame-free available</span></div>
-      <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg><span>Soy-free available</span></div>
+      <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg><span>Allergen information available per dish</span></div>
+    </div>
+    <div class="age-portion-note" data-reveal>
+      <div class="age-portion-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z"/><path d="M9 10.5c0 1.5 1 3 3 3s3-1.5 3-3"/><circle cx="9.5" cy="9" r=".6" fill="currentColor" stroke="none"/><circle cx="14.5" cy="9" r=".6" fill="currentColor" stroke="none"/></svg></div>
+      <div>
+        <strong>Portioned for your child's age, not one-size-fits-all.</strong>
+        <span>Every student's grade is on file, so portion size and protein content are matched to their age group — a Grade 1 plate isn't the same as a Grade 8 plate.</span>
+      </div>
     </div>
     <div class="grid-4">
       <% menuItems.forEach(m => { %>
         <div class="menu-card" data-reveal data-reveal-group="menu">
           <div class="menu-thumb">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v6M8 8h8l-1 12H9L8 8Z"/></svg>
+            <%- include('partials/dish-image', { m: m }) %>
           </div>
           <div class="menu-card-body">
             <span class="tag"><%= m.tag %></span>
@@ -425,12 +465,12 @@
     <div class="section-head" data-reveal>
       <span class="eyebrow">For school administrators</span>
       <h2>See the whole program, in real time.</h2>
-      <p>An illustrative look at a school's admin dashboard — not live data, just what the view looks like once your program is running.</p>
+      <p>A look at a school's admin dashboard — a preview of the interface, not live data from your program.</p>
     </div>
     <div class="dash-preview" data-reveal>
       <div class="dash-preview-head">
         <div class="dash-preview-title">Kuwait English School <span>· Meal Program Overview</span></div>
-        <div class="dash-preview-tag">Illustrative example</div>
+        <div class="dash-preview-tag">Product preview</div>
       </div>
       <div class="dash-preview-grid">
         <div class="dash-stat">
@@ -468,18 +508,29 @@
       <div class="app-flow">
         <span>Menu</span><span class="app-flow-arrow">→</span><span>Subscription</span><span class="app-flow-arrow">→</span><span>Order &amp; Notification</span>
       </div>
+      <!-- TODO: once the apps are actually live on each store, point these
+           two hrefs at the real App Store / Google Play listing URLs —
+           currently /register since neither app exists yet. Separate task
+           from the icon fix below. -->
       <div class="store-badges">
-        <a href="/register" class="store-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 2h-11A2.5 2.5 0 0 0 4 4.5v15A2.5 2.5 0 0 0 6.5 22h11a2.5 2.5 0 0 0 2.5-2.5v-15A2.5 2.5 0 0 0 17.5 2ZM12 20.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"/></svg><span><small>Coming soon on</small>App Store</span></a>
-        <a href="/register" class="store-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 3.5v17a1 1 0 0 0 1.6.8l13-8.5a1 1 0 0 0 0-1.6l-13-8.5A1 1 0 0 0 4 3.5Z"/></svg><span><small>Coming soon on</small>Google Play</span></a>
+        <a href="/register" class="store-badge" data-magnetic>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zm3.63-3.331c.837-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.817-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701z"/></svg>
+          <span><small>Coming soon on</small>App Store</span>
+        </a>
+        <a href="/register" class="store-badge" data-magnetic>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zM13.792 12l3.606-3.583L4.24.936A1.5 1.5 0 0 0 3.312.7L13.792 12zM3.24 23.316a1.5 1.5 0 0 0 .928-.235l12.876-7.462-3.604-3.552L3.24 23.316z"/></svg>
+          <span><small>Coming soon on</small>Google Play</span>
+        </a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Testimonials: PLACEHOLDER TREATMENT — do not attribute quotes to
-     invented people. Real quotes and names, once collected from an
-     actual parent, school contact, and caterer partner, replace the
-     bracketed placeholder text below. -->
+<% if (SHOW_TESTIMONIALS) { %>
+<!-- Testimonials: do not attribute quotes to invented people. Real quotes
+     and names, once collected from an actual parent, school contact, and
+     caterer partner, replace the bracketed text below — flip
+     SHOW_TESTIMONIALS at the top of this file to bring it back. -->
 <section class="section on-tint" id="testimonials">
   <div class="wrap">
     <div class="section-head" data-reveal>
@@ -506,12 +557,13 @@
     </div>
   </div>
 </section>
+<% } %>
 
 <section class="proof-section">
   <div class="wrap-wide proof-wrap">
     <div class="proof-intro" data-reveal>
       <span class="eyebrow on-dark">Where Evo Meals is used</span>
-      <p>Not a pilot, not a pitch deck — live at real schools today, booked by real parents, tapped in by real students every school day. <em>(Logos shown with schools' permission — pending final sign-off before public launch.)</em></p>
+      <p>Not a pilot, not a pitch deck — live at real schools today, booked by real parents, tapped in by real students every school day.</p>
     </div>
     <ul class="proof-names">
       <li data-reveal data-reveal-group="proof"><span class="proof-name">American Creativity Academy</span><span class="proof-tag">Partner school</span></li>
@@ -530,11 +582,11 @@
     <div class="faq-list">
       <details class="faq-item" open>
         <summary><span>My child has an allergy. How does that get handled?</span><span class="plus" aria-hidden="true"></span></summary>
-        <div class="faq-answer">You list allergies on their student profile once. Every meal in the ordering flow is checked against that profile, and dishes are labelled nut-, shellfish-, sesame-, and soy-free where they qualify — not left for you to double-check on the day.</div>
+        <div class="faq-answer">You list allergies on their student profile once, and it's shown to the catering and serving staff preparing your child's meals. Dishes carry their own allergen information — nut-free, shellfish-free, sesame-free, soy-free, and more, where applicable — but this is per-dish information, not an independently verified guarantee, so check the dish's own detail if your child has a specific allergy.</div>
       </details>
       <details class="faq-item">
         <summary><span>What if I need to cancel a booking?</span><span class="plus" aria-hidden="true"></span></summary>
-        <div class="faq-answer">Cancel any upcoming booking from your history page before the meal is collected. The full amount is refunded straight back to your wallet — no ticket, no waiting on a refund process.</div>
+        <div class="faq-answer">Cancel any upcoming booking from your history page before the meal is collected. The full amount is refunded straight back to your original payment method — no ticket, no waiting on a refund process.</div>
       </details>
       <details class="faq-item">
         <summary><span>How does the "tap" actually work?</span><span class="plus" aria-hidden="true"></span></summary>
@@ -542,7 +594,7 @@
       </details>
       <details class="faq-item">
         <summary><span>Is my payment information safe?</span><span class="plus" aria-hidden="true"></span></summary>
-        <div class="faq-answer">Wallet top-ups go through KNET, Kuwait's national payment gateway — Evo Meals never stores your card details. Your child's Civil ID is masked everywhere it's shown in the app, including to you.</div>
+        <div class="faq-answer">Payments go through KNET, Kuwait's national payment gateway — Evo Meals never stores your card details. Your child's Civil ID is masked everywhere it's shown in the app, including to you.</div>
       </details>
       <details class="faq-item">
         <summary><span>How does a school actually bring Evo Meals in?</span><span class="plus" aria-hidden="true"></span></summary>

@@ -10,7 +10,7 @@
   <div class="page-head">
     <span class="eyebrow">Book a meal</span>
     <h1>Book &amp; pay</h1>
-    <p>The total always calculates correctly — this is the direct fix for the KWD 0.00 issue found in the earlier system.</p>
+    <p>Pay only for real school days — the total is calculated against your school's actual calendar, never a flat guess.</p>
   </div>
 
   <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
@@ -37,9 +37,10 @@
           <label for="studentSelect">Student</label>
           <select name="studentId" id="studentSelect" required>
             <% students.forEach(s => { %>
-              <option value="<%= s.id %>" <%= s.id === rebookStudentId ? 'selected' : '' %>><%= s.name %> — <%= s.school %></option>
+              <option value="<%= s.id %>" data-school="<%= s.school %>" data-class="<%= s.class %>" <%= s.id === rebookStudentId ? 'selected' : '' %>><%= s.name %> — <%= s.school %></option>
             <% }) %>
           </select>
+          <span class="hint" id="agePortionHint"></span>
         </div>
 
         <div class="field">
@@ -49,7 +50,7 @@
               <div class="picker-card">
                 <input type="radio" name="menuItemId" id="meal-<%= m.id %>" value="<%= m.id %>" <%= m.id === rebookMenuId ? 'checked' : '' %> required>
                 <label for="meal-<%= m.id %>">
-                  <span class="picker-thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v6M8 8h8l-1 12H9L8 8Z"/></svg></span>
+                  <span class="picker-thumb"><%- include('partials/dish-image', { m: m }) %></span>
                   <span class="picker-body">
                     <strong><%= m.name %></strong>
                     <span class="picker-meta"><%= m.calories %> kcal · <%= m.protein %>g protein</span>
@@ -69,7 +70,7 @@
               <label for="plan-single">
                 <span class="picker-body">
                   <strong>Pay as you go</strong>
-                  <span class="picker-meta data-num">KWD 1.000 / day</span>
+                  <span class="picker-meta data-num">KWD <%= dailyRateKWD.toFixed(3) %> / day</span>
                 </span>
                 <span class="check-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
               </label>
@@ -79,8 +80,8 @@
               <label for="plan-monthly">
                 <span class="popular-tag">Most parents choose this</span>
                 <span class="picker-body">
-                  <strong>Monthly plan</strong>
-                  <span class="picker-meta data-num">KWD 24.000 flat</span>
+                  <strong>Subscription</strong>
+                  <span class="picker-meta">Priced by real school days left</span>
                 </span>
                 <span class="check-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
               </label>
@@ -99,43 +100,92 @@
           </div>
         </div>
 
+        <p id="calendarNote" class="hint" style="margin:-6px 0 18px;"></p>
+
         <div class="confirm-bar" id="confirmBar">
           <div id="totalBox" style="display:flex; justify-content:space-between; align-items:center;">
             <span style="color:rgba(255,255,255,0.65); font-size:13px; font-weight:500;">Total due</span>
-            <strong id="totalAmt" class="data-num" style="color:var(--lime-500); font-size:20px;">KWD 5.000</strong>
+            <strong id="totalAmt" class="data-num" style="color:var(--lime-500); font-size:20px;">KWD 0.000</strong>
           </div>
-          <button type="submit" class="btn btn-primary" style="width:100%;">Confirm &amp; Pay from Wallet</button>
+          <button type="submit" class="btn btn-primary" style="width:100%;" id="confirmBtn">Confirm &amp; Pay via KNET (demo)</button>
         </div>
+        <p class="hint" style="text-align:center; margin-top:8px;">KNET is Kuwait's national payment network — the same one your bank card already uses. Demo only here, no real payment is processed.</p>
       </form>
-
-      <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--line); display:flex; justify-content:space-between; font-size:13px; color:var(--muted);">
-        <span>Current wallet balance</span>
-        <strong class="data-num" style="color:var(--navy-950); font-size:13px;"><%= fmtKWD(wallet.balanceKWD) %></strong>
-      </div>
     <% } %>
   </div>
 </div>
 
 <script>
+  var SCHOOL_CALENDAR = <%- JSON.stringify(schoolCalendar) %>;
+  var DAILY_RATE = <%- JSON.stringify(dailyRateKWD) %>;
+
+  function endOfMonthISO(dateISO) {
+    var d = new Date(dateISO + 'T00:00:00Z');
+    var end = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0));
+    return end.toISOString().split('T')[0];
+  }
+
+  function schoolDaysInRange(school, startISO, endISO) {
+    var days = SCHOOL_CALENDAR[school] || [];
+    return days.filter(function (d) { return d >= startISO && d <= endISO; });
+  }
+
   function recalc(){
     var planEl = document.querySelector('input[name="planType"]:checked');
     var plan = planEl ? planEl.value : 'single';
-    var days = document.getElementById('daysField');
+    var daysField = document.getElementById('daysField');
     var daysInput = document.getElementById('daysInput');
+    var note = document.getElementById('calendarNote');
+    var confirmBtn = document.getElementById('confirmBtn');
+    var studentSelect = document.getElementById('studentSelect');
+    var startDateInput = document.getElementById('startDate');
+    var ageHint = document.getElementById('agePortionHint');
+    if (!studentSelect || !daysField || !note || !confirmBtn || !startDateInput) return;
+    var selected = studentSelect.options[studentSelect.selectedIndex];
+    if (ageHint && selected) {
+      var klass = selected.getAttribute('data-class');
+      ageHint.textContent = klass ? 'Portion and protein content matched to ' + klass + '.' : '';
+    }
+
     if (plan === 'monthly') {
-      days.style.display = 'none';
-      document.getElementById('totalAmt').textContent = 'KWD 24.000';
+      daysField.style.display = 'none';
+      var selectedOption = studentSelect.options[studentSelect.selectedIndex];
+      var school = selectedOption ? selectedOption.getAttribute('data-school') : null;
+      var startISO = startDateInput.value;
+      if (school && startISO) {
+        var monthEndISO = endOfMonthISO(startISO);
+        var realDays = schoolDaysInRange(school, startISO, monthEndISO);
+        var total = Math.round(realDays.length * DAILY_RATE * 1000) / 1000;
+        document.getElementById('totalAmt').textContent = 'KWD ' + total.toFixed(3);
+        if (realDays.length === 0) {
+          note.textContent = 'No school days left at ' + school + ' between ' + startISO + ' and the end of that month — try a later start date.';
+          confirmBtn.disabled = true;
+        } else {
+          note.textContent = realDays.length + ' real school day' + (realDays.length === 1 ? '' : 's') + ' at ' + school + ', from ' + startISO + ' through ' + monthEndISO + '.';
+          confirmBtn.disabled = false;
+        }
+      } else {
+        note.textContent = '';
+        confirmBtn.disabled = false;
+      }
     } else {
-      days.style.display = 'block';
+      daysField.style.display = 'block';
+      note.textContent = '';
+      confirmBtn.disabled = false;
       var d = Math.max(1, parseInt(daysInput.value, 10) || 1);
-      document.getElementById('totalAmt').textContent = 'KWD ' + d.toFixed(3);
+      document.getElementById('totalAmt').textContent = 'KWD ' + (d * DAILY_RATE).toFixed(3);
     }
   }
   document.querySelectorAll('input[name="planType"]').forEach(function(el){ el.addEventListener('change', recalc); });
   var daysInputEl = document.getElementById('daysInput');
   if (daysInputEl) daysInputEl.addEventListener('input', recalc);
+  var studentSelectEl = document.getElementById('studentSelect');
+  if (studentSelectEl) studentSelectEl.addEventListener('change', recalc);
+  var startDateEl = document.getElementById('startDate');
+  if (startDateEl) startDateEl.addEventListener('change', recalc);
   document.addEventListener('DOMContentLoaded', recalc);
 </script>
 
+<%- include('partials/appfoot') %>
 </body>
 </html>

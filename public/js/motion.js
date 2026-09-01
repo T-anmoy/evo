@@ -99,6 +99,65 @@
     setTimeout(function () { els.forEach(runOnce); }, 1200);
   }
 
+  // ---------- hero parallax ----------
+  // The hero image drifts slightly slower than the page as it scrolls out —
+  // applied to the inner .hero-media (not the [data-parallax] wrapper
+  // itself), which keeps this independent of the wrapper's own CSS
+  // entrance animation instead of both fighting over `transform`. Capped
+  // and rAF-throttled; a no-op once the hero has scrolled well past view.
+  function initHeroParallax() {
+    if (reduceMotion) return;
+    var wrap = document.querySelector('[data-parallax]');
+    var target = wrap ? wrap.querySelector('.hero-media') : null;
+    if (!wrap || !target) return;
+    var ticking = false;
+    var MAX_SHIFT = 28;
+    function update() {
+      ticking = false;
+      var rect = wrap.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      if (rect.bottom < 0 || rect.top > vh) return;
+      var progress = (rect.top) / vh; // 1 at top of viewport, 0 as it centers, negative past center
+      var shift = Math.max(-MAX_SHIFT, Math.min(MAX_SHIFT, progress * MAX_SHIFT));
+      target.style.transform = 'translateY(' + shift.toFixed(1) + 'px)';
+    }
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    update();
+  }
+
+  // ---------- magnetic buttons ----------
+  // Primary CTAs marked [data-magnetic] pull slightly toward the cursor on
+  // desktop hover — a small, premium touch, never on touch devices (no
+  // hover to react to, and it would just feel like a delayed tap there).
+  function initMagneticButtons() {
+    if (reduceMotion) return;
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    var RADIUS = 70;
+    var STRENGTH = 0.28;
+    document.querySelectorAll('[data-magnetic]').forEach(function (btn) {
+      btn.addEventListener('mousemove', function (e) {
+        var rect = btn.getBoundingClientRect();
+        var cx = rect.left + rect.width / 2;
+        var cy = rect.top + rect.height / 2;
+        var dx = e.clientX - cx;
+        var dy = e.clientY - cy;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist > RADIUS) return;
+        btn.style.setProperty('--mx', (dx * STRENGTH).toFixed(1) + 'px');
+        btn.style.setProperty('--my', (dy * STRENGTH).toFixed(1) + 'px');
+      });
+      btn.addEventListener('mouseleave', function () {
+        btn.style.setProperty('--mx', '0px');
+        btn.style.setProperty('--my', '0px');
+      });
+    });
+  }
+
   // ---------- FAQ smooth expand/collapse ----------
   // Native <details> snaps open/closed; this enhances it with a smooth
   // height transition while keeping <details>/<summary> as the source of
@@ -234,5 +293,7 @@
     initFaq();
     initFieldValidation();
     initGenericValidation();
+    initHeroParallax();
+    initMagneticButtons();
   });
 })();

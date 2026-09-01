@@ -41,7 +41,7 @@
                 </td>
                 <td>
                   <% if (b.status === 'upcoming') { %>
-                    <form method="POST" action="/history/<%= b.id %>/cancel" onsubmit="return confirm('Cancel this booking for <%= b.student ? b.student.name : "this student" %>?\n\nKWD <%= b.totalKWD.toFixed(3) %> will be refunded to your wallet immediately. This can\'t be undone — you\'ll need to book again if you change your mind.');">
+                    <form method="POST" action="/history/<%= b.id %>/cancel" onsubmit="return confirm('Cancel this booking for <%= b.student ? b.student.name : "this student" %>?\n\nKWD <%= b.totalKWD.toFixed(3) %> will be refunded to your original payment method immediately (demo — simulated). This can\'t be undone — you\'ll need to book again if you change your mind.');">
                       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                       <button type="submit" class="btn btn-danger">Cancel booking</button>
                     </form>
@@ -72,7 +72,7 @@
               <div class="data-card-row"><span class="k">Collected</span><span class="v data-num"><%= fmtTime(b.collectedAt) %></span></div>
             <% } %>
             <% if (b.status === 'upcoming') { %>
-              <form method="POST" action="/history/<%= b.id %>/cancel" onsubmit="return confirm('Cancel this booking for <%= b.student ? b.student.name : "this student" %>?\n\nKWD <%= b.totalKWD.toFixed(3) %> will be refunded to your wallet immediately. This can\'t be undone — you\'ll need to book again if you change your mind.');">
+              <form method="POST" action="/history/<%= b.id %>/cancel" onsubmit="return confirm('Cancel this booking for <%= b.student ? b.student.name : "this student" %>?\n\nKWD <%= b.totalKWD.toFixed(3) %> will be refunded to your original payment method immediately (demo — simulated). This can\'t be undone — you\'ll need to book again if you change your mind.');">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <button type="submit" class="btn btn-danger">Cancel booking</button>
               </form>
@@ -84,5 +84,6 @@
   </div>
 </div>
 
+<%- include('partials/appfoot') %>
 </body>
 </html>
