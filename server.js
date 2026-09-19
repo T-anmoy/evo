@@ -273,6 +273,18 @@ app.post('/login', loginLimiter, (req, res) => {
   res.redirect('/dashboard');
 });
 
+app.get('/forgot-password', (req, res) => {
+  res.render('forgot-password', { submitted: false, parentId: req.session.parentId });
+});
+
+app.post('/forgot-password', (req, res) => {
+  const { identifier } = req.body;
+  // Demo only — no email is actually sent. Never reveal whether the
+  // identifier matches an account, same reasoning as any real reset flow.
+  logger.info({ identifier }, 'forgot-password request (demo — no email sent)');
+  res.render('forgot-password', { submitted: true, parentId: req.session.parentId });
+});
+
 app.get('/register', (req, res) => {
   res.render('register', { error: null, parentId: req.session.parentId });
 });

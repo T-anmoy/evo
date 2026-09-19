@@ -21,7 +21,7 @@
           <input type="text" id="name" name="name" autocomplete="name" placeholder="Your name" required autofocus>
         </div>
         <div class="field">
-          <label for="civilId">Civil ID</label>
+          <label for="civilId">Parent Civil ID</label>
           <input type="text" id="civilId" name="civilId" placeholder="e.g. 987654321098" inputmode="numeric" autocomplete="username" maxlength="12" pattern="\d{12}" data-validate="civilid" required aria-describedby="civilIdHint">
           <div class="hint" id="civilIdHint">Your 12-digit government-issued ID number. It's masked everywhere it's shown in Evo Meals, including to you.</div>
           <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span>Civil ID should be exactly 12 digits.</span></div>
@@ -29,16 +29,20 @@
         <div class="form-row">
           <div class="field">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com">
+            <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com" required>
           </div>
           <div class="field">
             <label for="phone">Mobile number</label>
-            <input type="tel" id="phone" name="phone" inputmode="tel" autocomplete="tel" placeholder="+965 ...">
+            <input type="tel" id="phone" name="phone" inputmode="tel" autocomplete="tel" placeholder="+965 ..." required>
           </div>
         </div>
         <div class="field">
           <label for="password">Password</label>
           <input type="password" id="password" name="password" autocomplete="new-password" placeholder="At least 8 characters" required minlength="6">
+        </div>
+        <div class="field" style="display:flex; align-items:flex-start; gap:8px;">
+          <input type="checkbox" id="agreeTerms" name="agreeTerms" checked required style="margin-top:3px;">
+          <label for="agreeTerms" style="font-weight:400;">I agree to the <a href="/terms" style="color:var(--lime-700); font-weight:600;">Terms of Use</a></label>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;">Create Account</button>
       </form>
