@@ -442,9 +442,11 @@ a, button, .btn{
 .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
 .grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:20px;}
 
-.stat{background:var(--white); border-radius:14px; padding:20px; border:1px solid var(--line); position:relative; overflow:hidden;}
+.stat{background:var(--white); border-radius:var(--radius); padding:20px; border:1px solid var(--line); box-shadow:var(--shadow-sm); position:relative; overflow:hidden;}
 .stat::before{content:""; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--line);}
 .stat.lime::before{background:var(--lime-500);}
+.stat-icon{width:30px; height:30px; border-radius:9px; background:var(--ice-100); color:var(--lime-700); display:flex; align-items:center; justify-content:center; margin-bottom:10px;}
+.stat-icon svg{width:15px; height:15px;}
 .stat .label{font-size:16px; color:var(--muted); margin-bottom:8px; font-weight:500; text-transform:uppercase; letter-spacing:0.05em;}
 .stat .value{font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:26px; color:var(--navy-950); font-variant-numeric:tabular-nums;}
 .stat .value.lime{color:var(--lime-700);}
@@ -464,6 +466,8 @@ form .field.invalid input, form .field.invalid select, form .field.invalid texta
 form .field.invalid .field-error{display:flex;}
 form .field.valid input{border-color:var(--lime-600);}
 form .hint{font-size:16px; color:var(--muted); margin-top:4px;}
+form .hint-secure{display:flex; align-items:flex-start; gap:6px;}
+form .hint-secure svg{width:14px; height:14px; color:var(--lime-700); flex-shrink:0; margin-top:1px;}
 .form-row{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
 
 .alert{padding:14px 16px; border-radius:10px; font-size:16px; margin-bottom:18px; display:flex; align-items:center; gap:12px;}
@@ -477,7 +481,7 @@ form .hint{font-size:16px; color:var(--muted); margin-top:4px;}
    entirely under reduced motion. */
 .alert-success{background:#EEF9E4; color:#2F5A0F; border:1px solid #CBE8A8; animation:success-settle var(--dur-hero) var(--ease-spring) both;}
 .alert-success .success-icon{width:26px; height:26px; border-radius:50%; background:var(--lime-500); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
-.alert-success .success-icon svg{width:14px; height:14px; color:var(--navy-950); stroke-dasharray:1px; stroke-dashoffset:1px; animation:check-draw-once .5s var(--ease-out) .3s forwards;}
+.alert-success .success-icon svg{width:14px; height:14px; color:var(--ink-900); stroke-dasharray:1px; stroke-dashoffset:1px; animation:check-draw-once .5s var(--ease-out) .3s forwards;}
 @keyframes success-settle{0%{opacity:0; transform:scale(.94) translateY(-6px);} 100%{opacity:1; transform:scale(1) translateY(0);}}
 @keyframes check-draw-once{to{stroke-dashoffset:0;}}
 @media (prefers-reduced-motion: reduce){
@@ -671,13 +675,15 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 .picker-body strong{font-size:16px; color:var(--navy-950); line-height:1.3;}
 .picker-meta{font-size:16px; color:var(--saffron-700); font-weight:600;}
 .plan-picker .picker-meta{color:var(--muted); font-size:16px;}
+.plan-icon{width:34px; height:34px; border-radius:10px; background:var(--ice-100); color:var(--lime-700); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.plan-icon svg{width:17px; height:17px;}
 .check-badge{
   position:absolute; top:10px; right:10px; width:22px; height:22px; border-radius:50%;
   background:var(--lime-500); display:flex; align-items:center; justify-content:center;
   opacity:0; transform:scale(.5); transition:opacity var(--dur-standard) var(--ease-spring), transform var(--dur-standard) var(--ease-spring);
 }
 .picker-card input:checked + label .check-badge{opacity:1; transform:scale(1);}
-.check-badge svg{width:12px; height:12px; color:var(--navy-950);}
+.check-badge svg{width:12px; height:12px; color:var(--ink-900);}
 .plan-picker .picker-card label{flex-direction:column; align-items:flex-start; gap:6px; padding:16px 36px 16px 16px;} /* extra right padding clears the check-badge corner */
 .popular-tag{display:block; font-size:16px; font-weight:700; color:var(--lime-700); text-transform:uppercase; letter-spacing:0.04em;}
 
@@ -685,8 +691,10 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 .student-row:last-child{border-bottom:none;}
 .avatar{width:40px; height:40px; border-radius:50%; background:var(--navy-950); color:var(--white); display:flex; align-items:center; justify-content:center; font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; flex-shrink:0;}
 .student-meta{flex:1; min-width:0;}
-.student-meta strong{display:block; font-size:16px;}
+.student-meta strong{display:flex; align-items:center; gap:6px; font-size:16px;}
 .student-meta span{font-size:16px; color:var(--muted);}
+.allergy-flag{display:inline-flex; color:var(--lime-700); flex-shrink:0;}
+.allergy-flag svg{width:14px; height:14px;}
 .status-line{font-size:16px; padding:5px 12px; border-radius:100px; background:var(--ice-50); color:var(--navy-800); font-weight:600; display:inline-flex; align-items:center; gap:6px; white-space:nowrap;}
 .status-line svg{width:11px; height:11px;}
 .status-line.ok{background:#E8F8DB; color:#3C6E12;}
@@ -1299,6 +1307,16 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .benefit-card{background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:28px;}
 .benefit-card-icon{width:48px; height:48px; border-radius:12px; background:var(--navy-950); color:var(--lime-300); display:flex; align-items:center; justify-content:center; margin-bottom:18px;}
 .benefit-card-icon svg{width:22px; height:22px;}
+.benefit-icon-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
+.benefit-icon-grid .benefit-card-wide{grid-column:span 3;}
+@media (max-width:900px){
+  .benefit-icon-grid{grid-template-columns:1fr 1fr;}
+  .benefit-icon-grid .benefit-card-wide{grid-column:span 2;}
+}
+@media (max-width:520px){
+  .benefit-icon-grid{grid-template-columns:1fr;}
+  .benefit-icon-grid .benefit-card-wide{grid-column:span 1;}
+}
 .benefit-card h3{font-size:16px; margin-bottom:8px;}
 .benefit-card p{font-size:16px; line-height:1.7; color:var(--navy-800);}
 

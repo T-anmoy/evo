@@ -72,6 +72,7 @@
             <div class="picker-card">
               <input type="radio" name="planType" id="plan-single" value="single" <%= rebookPlan === 'single' ? 'checked' : '' %>>
               <label for="plan-single">
+                <span class="plan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
                 <span class="picker-body">
                   <strong>Pay as you go</strong>
                   <span class="picker-meta data-num">KWD <%= dailyRateKWD.toFixed(3) %> / day</span>
@@ -83,6 +84,7 @@
               <input type="radio" name="planType" id="plan-monthly" value="monthly" <%= rebookPlan === 'monthly' ? 'checked' : '' %>>
               <label for="plan-monthly">
                 <span class="popular-tag">Most parents choose this</span>
+                <span class="plan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 0 1 4 4L7 21l-5 1 1-5Z"/></svg></span>
                 <span class="picker-body">
                   <strong>Subscription</strong>
                   <span class="picker-meta">Priced by real school days left</span>
@@ -109,7 +111,7 @@
         <div class="confirm-bar" id="confirmBar">
           <div id="totalBox" style="display:flex; justify-content:space-between; align-items:center;">
             <span style="color:rgba(255,255,255,0.65); font-size:13px; font-weight:500;">Total due</span>
-            <strong id="totalAmt" class="data-num" style="color:var(--lime-500); font-size:20px;">KWD 0.000</strong>
+            <strong id="totalAmt" class="data-num" style="color:var(--lime-300); font-size:20px;">KWD 0.000</strong>
           </div>
           <button type="submit" class="btn btn-primary" style="width:100%;" id="confirmBtn">Confirm &amp; Pay via KNET (demo)</button>
         </div>

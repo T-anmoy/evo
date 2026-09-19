@@ -91,7 +91,7 @@
           <div class="student-row">
             <div class="avatar"><%= s.name.charAt(0) %></div>
             <div class="student-meta">
-              <strong><%= s.name %></strong>
+              <strong><%= s.name %><% if (s.allergies) { %><span class="allergy-flag" title="Allergies: <%= s.allergies %>" aria-label="Has allergies on file"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.4 3.4 8.4 8 9 4.6-.6 8-4.6 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span><% } %></strong>
               <span><%= s.school %> · <%= s.class %><%= s.section ? '-' + s.section : '' %> · ID <%= maskCivilId(s.civilId) %></span>
             </div>
             <a href="/students/<%= s.id %>/edit" class="btn btn-outline btn-sm">Edit</a>
