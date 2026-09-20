@@ -267,7 +267,7 @@ app.post('/login', loginLimiter, (req, res) => {
   const { civilId, password } = req.body;
   const parent = db.findParentByCivilId((civilId || '').trim());
   if (!parent || !bcrypt.compareSync(password || '', parent.passwordHash)) {
-    return res.render('login', { error: 'Civil ID or password is incorrect. Try the demo login shown below.', parentId: null });
+    return res.render('login', { error: 'Invalid credentials. Try the demo login below.', parentId: null });
   }
   req.session.parentId = parent.id;
   res.redirect('/dashboard');
@@ -290,9 +290,25 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-  const { name, civilId, email, phone, password } = req.body;
-  if (!name || !civilId || !password) {
-    return res.render('register', { error: 'Name, Civil ID, and password are required.', parentId: null });
+  const { name, civilId, email, phone, password, confirmPassword } = req.body;
+  if (!name || !civilId || !email || !phone || !password || !confirmPassword) {
+    return res.render('register', { error: 'All fields are required.', parentId: null });
+  }
+  if (!/^[A-Za-z\s]{2,60}$/.test(name.trim())) {
+    return res.render('register', { error: 'Enter a valid full name (letters only, 2–60 characters).', parentId: null });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+    return res.render('register', { error: 'Enter a valid email address.', parentId: null });
+  }
+  const phoneDigits = phone.replace(/\D/g, '');
+  if (phoneDigits.length < 10 || phoneDigits.length > 15) {
+    return res.render('register', { error: 'Enter a phone number with 10–15 digits.', parentId: null });
+  }
+  if (!/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9\s]).{8,}$/.test(password)) {
+    return res.render('register', { error: 'Password must be at least 8 characters, with a letter, a number, and a special character.', parentId: null });
+  }
+  if (password !== confirmPassword) {
+    return res.render('register', { error: "Passwords don't match.", parentId: null });
   }
   if (db.findParentByCivilId(civilId.trim())) {
     return res.render('register', { error: 'An account with that Civil ID already exists — try logging in instead.', parentId: null });

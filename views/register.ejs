@@ -14,39 +14,54 @@
         <div class="alert alert-error"><%= error %></div>
       <% } %>
 
-      <form method="POST" action="/register">
+      <form method="POST" action="/register" novalidate>
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <div class="field">
-          <label for="name">Full name</label>
-          <input type="text" id="name" name="name" autocomplete="name" placeholder="Your name" required autofocus>
+          <label for="name">Full name<span class="req">*</span></label>
+          <input type="text" id="name" name="name" autocomplete="name" placeholder="Your name" maxlength="60" data-validate="name" required autofocus>
+          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span>Enter your name (letters only, 2–60 characters).</span></div>
         </div>
         <div class="field">
-          <label for="civilId">Parent Civil ID</label>
+          <label for="civilId">Parent Civil ID<span class="req">*</span></label>
           <input type="text" id="civilId" name="civilId" placeholder="e.g. 987654321098" inputmode="numeric" autocomplete="username" maxlength="12" pattern="\d{12}" data-validate="civilid" required aria-describedby="civilIdHint">
           <div class="hint hint-secure" id="civilIdHint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>Your 12-digit government-issued ID number. It's masked everywhere it's shown in Evo Meals, including to you.</span></div>
           <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span>Civil ID should be exactly 12 digits.</span></div>
         </div>
         <div class="form-row">
           <div class="field">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com" required>
+            <label for="email">Email<span class="req">*</span></label>
+            <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com" data-validate="email" required>
+            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span>Enter a valid email address.</span></div>
           </div>
           <div class="field">
-            <label for="phone">Mobile number</label>
-            <input type="tel" id="phone" name="phone" inputmode="tel" autocomplete="tel" placeholder="+965 ..." required>
+            <label for="phone">Mobile number<span class="req">*</span></label>
+            <input type="tel" id="phone" name="phone" inputmode="tel" autocomplete="tel" placeholder="+965 ..." data-validate="phone" required>
+            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span>Enter a phone number with 10–15 digits.</span></div>
           </div>
         </div>
         <div class="field">
-          <label for="password">Password</label>
-          <input type="password" id="password" name="password" autocomplete="new-password" placeholder="At least 8 characters" required minlength="6">
+          <label for="password">Password<span class="req">*</span></label>
+          <div class="password-field">
+            <input type="password" id="password" name="password" autocomplete="new-password" placeholder="At least 8 characters" data-validate="password" required>
+            <button type="button" class="password-toggle" data-toggle-for="password" aria-label="Show password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span>At least 8 characters, with a letter, a number, and a special character.</span></div>
         </div>
-        <div class="field" style="display:flex; align-items:flex-start; gap:8px;">
-          <input type="checkbox" id="agreeTerms" name="agreeTerms" checked required style="margin-top:3px;">
-          <label for="agreeTerms" style="font-weight:400;">I agree to the <a href="/terms" style="color:var(--lime-700); font-weight:600;">Terms of Use</a></label>
+        <div class="field">
+          <label for="confirmPassword">Confirm Password<span class="req">*</span></label>
+          <div class="password-field">
+            <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" placeholder="Re-enter your password" data-validate="confirm-password" data-match="password" required>
+            <button type="button" class="password-toggle" data-toggle-for="confirmPassword" aria-label="Show password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span>Passwords don't match.</span></div>
+        </div>
+        <div class="field" style="display:flex; align-items:flex-start; gap:10px;">
+          <input type="checkbox" id="agreeTerms" name="agreeTerms" required style="width:18px; height:18px; flex-shrink:0; margin-top:2px; accent-color:var(--lime-500);">
+          <label for="agreeTerms" style="font-weight:400;">I agree to the <a href="/terms" style="color:var(--lime-700); font-weight:600;">Terms of Use</a><span class="req">*</span></label>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;">Create Account</button>
       </form>
-      <div class="auth-foot">Already have an account? <a href="/login" style="color:var(--lime-700); font-weight:600;">Log in</a></div>
+      <div class="auth-foot">Have an account? <a href="/login" style="color:var(--lime-700); font-weight:600;">Log in</a></div>
     </div>
   </div>
 </body>

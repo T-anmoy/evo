@@ -331,9 +331,9 @@ a, button, .btn{
 .btn:active{transform:scale(.97);}
 .btn:disabled{opacity:0.5; cursor:not-allowed;}
 .btn:disabled:hover,.btn:disabled:active{transform:none; box-shadow:none;}
-.btn-loading{opacity:0.75; cursor:wait; position:relative; padding-left:40px;}
+.btn-loading{opacity:0.75; cursor:wait;}
 .btn-loading::before{
-  content:""; position:absolute; left:16px; top:50%; width:15px; height:15px; margin-top:-7.5px;
+  content:""; flex-shrink:0; width:15px; height:15px;
   border:2px solid currentColor; border-top-color:transparent; border-radius:50%;
   animation:btn-spin 0.7s linear infinite;
 }
@@ -468,7 +468,13 @@ form .field.valid input{border-color:var(--lime-600);}
 form .hint{font-size:16px; color:var(--muted); margin-top:4px;}
 form .hint-secure{display:flex; align-items:flex-start; gap:6px;}
 form .hint-secure svg{width:14px; height:14px; color:var(--lime-700); flex-shrink:0; margin-top:1px;}
-.form-row{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+.form-row{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:18px;}
+.form-row .field{margin-bottom:0;}
+.password-field{position:relative;}
+.password-field input{padding-right:44px;}
+.password-toggle{position:absolute; top:0; right:0; width:44px; height:44px; display:flex; align-items:center; justify-content:center; background:none; border:none; cursor:pointer; color:var(--muted);}
+.password-toggle svg{width:18px; height:18px;}
+.password-toggle.is-showing{color:var(--lime-700);}
 
 .alert{padding:14px 16px; border-radius:10px; font-size:16px; margin-bottom:18px; display:flex; align-items:center; gap:12px;}
 .alert svg{width:16px; height:16px; flex-shrink:0;}
@@ -527,10 +533,15 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 @media (max-width:640px){
   .confirm-bar{
     position:fixed; left:0; right:0; bottom:0; z-index:40; margin-bottom:0;
-    border-radius:20px 20px 0 0; padding:14px 20px calc(14px + env(safe-area-inset-bottom));
+    border-radius:20px 20px 0 0; padding:16px 24px calc(16px + env(safe-area-inset-bottom));
     box-shadow:0 -10px 30px -12px rgba(27,94,86,0.4);
   }
   #bookingForm{padding-bottom:132px;}
+  /* The fixed bar floats over whatever is at that screen position
+     regardless of scroll — padding the form isn't enough, the footer
+     that follows it needs its own clearance too, or its bottom (the
+     Instagram link included) ends up hidden underneath the bar. */
+  body:has(.confirm-bar) .app-foot-full{padding-bottom:110px;}
 }
 
 .badge{display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:100px; font-size:16px; font-weight:600;}
@@ -687,7 +698,9 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 .plan-picker .picker-card label{flex-direction:column; align-items:flex-start; gap:6px; padding:16px 36px 16px 16px;} /* extra right padding clears the check-badge corner */
 .popular-tag{display:block; font-size:16px; font-weight:700; color:var(--lime-700); text-transform:uppercase; letter-spacing:0.04em;}
 
-.student-row{display:flex; align-items:center; gap:14px; padding:15px 0; border-bottom:1px solid var(--line);}
+.student-row{display:flex; align-items:flex-start; gap:14px; padding:15px 0; border-bottom:1px solid var(--line);}
+.student-row .avatar{margin-top:2px;}
+.student-row .btn{margin-top:2px;}
 .student-row:last-child{border-bottom:none;}
 .avatar{width:40px; height:40px; border-radius:50%; background:var(--navy-950); color:var(--white); display:flex; align-items:center; justify-content:center; font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; flex-shrink:0;}
 .student-meta{flex:1; min-width:0;}
@@ -718,6 +731,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .app-foot-links .foot-col{display:flex; flex-direction:column;}
 .app-foot-links a{display:flex; align-items:center; min-height:44px; color:var(--muted); font-size:16px; text-decoration:none; transition:color var(--dur-micro) var(--ease-standard);}
 .app-foot-links a:hover{color:var(--lime-700);}
+.app-foot-links a.active{color:var(--lime-700); font-weight:700;}
 .app-foot-contact{display:flex; flex-direction:column; gap:12px; align-items:flex-start;}
 .app-foot-contact span, .app-foot-contact a{display:inline-flex; align-items:center; min-height:44px; gap:8px; color:var(--muted); font-size:16px; text-decoration:none;}
 .app-foot-contact a:hover{color:var(--lime-700);}
@@ -1089,7 +1103,9 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    Asymmetric like the hero, and it closes the loop visually: the hero
    opens on the full tap demo, this section quietly echoes just the
    result — the same signature moment, remembered rather than replayed. */
-.cta-band{background:var(--navy-950); position:relative; overflow:hidden; padding:96px 0;}
+.cta-band{background:var(--navy-950); color:#fff; position:relative; overflow:hidden; padding:96px 0;}
+.cta-band h2{color:#fff;}
+.cta-band p{color:rgba(255,255,255,0.72);}
 .cta-band::before{
   content:""; position:absolute; top:0; left:0; width:100%; height:100%;
   background:linear-gradient(100deg, transparent 62%, rgba(242,117,74,0.10) 62%, rgba(242,117,74,0.10) 64%, transparent 64%);
@@ -1119,6 +1135,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .site-foot-links h4{font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.85); margin-bottom:16px;}
 .site-foot-links .foot-col{display:flex; flex-direction:column;}
 .site-foot-links a{display:flex; align-items:center; min-height:44px;}
+.site-foot-links a.active{color:var(--lime-300); font-weight:700;}
 .site-foot-contact-row{display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; padding-top:28px; padding-bottom:28px; border-top:1px solid rgba(255,255,255,0.08);}
 .site-foot-contact{display:flex; align-items:center; gap:24px; flex-wrap:wrap; font-size:16px;}
 .site-foot-contact span, .site-foot-contact a{display:inline-flex; align-items:center; min-height:44px; gap:8px; color:rgba(255,255,255,0.65);}
@@ -1232,7 +1249,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .allergen-banner-item{display:flex; align-items:center; gap:8px; background:var(--navy-950); color:#fff; padding:12px 20px; border-radius:100px; font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px;}
 .allergen-banner-item svg{width:15px; height:15px; color:var(--lime-300); flex-shrink:0;}
 
-.age-portion-note{display:flex; align-items:center; gap:16px; max-width:680px; margin:0 auto 40px; background:var(--white); border:1px solid var(--cream-line); border-radius:var(--radius); padding:18px 24px;}
+.age-portion-note{display:flex; align-items:center; justify-content:center; gap:16px; max-width:680px; margin:0 auto 40px; background:var(--white); border:1px solid var(--cream-line); border-radius:var(--radius); padding:18px 24px;}
 .age-portion-icon{flex-shrink:0; width:42px; height:42px; border-radius:50%; background:rgba(178,61,31,0.1); color:var(--lime-700); display:flex; align-items:center; justify-content:center;}
 .age-portion-icon svg{width:20px; height:20px;}
 .age-portion-note strong{display:block; font-size:16px; color:var(--navy-950); margin-bottom:3px;}
@@ -1424,5 +1441,5 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .app-user > span, .app-user a.profile-link{display:none;}
   .price-card .price-amt{font-size:32px;}
   .student-row{flex-wrap:wrap; row-gap:10px;}
-  .student-row .status-line{flex-basis:100%; margin-left:54px; width:fit-content;}
+  .student-row .status-line{flex-basis:100%; margin-left:54px; width:auto; max-width:calc(100% - 54px); white-space:normal; text-align:left;}
 }
