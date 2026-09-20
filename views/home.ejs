@@ -585,10 +585,12 @@ const SHOW_TESTIMONIALS = false;
           <h3>Booking</h3>
         </div>
         <div class="faq-list">
-          <details class="faq-item" open>
-            <summary><span>How does the "tap" actually work?</span><span class="plus" aria-hidden="true"></span></summary>
-            <div class="faq-answer">Your child carries a school-issued meal card. At the counter, they tap it against the reader — that single tap confirms their booking, marks the meal collected, and updates your dashboard within moments. No PIN and no cash changes hands.</div>
-          </details>
+          <div class="faq-item is-open">
+        <button class="faq-summary" type="button" aria-expanded="true"><span>How does the "tap" actually work?</span><span class="plus" aria-hidden="true"></span></button>
+        <div class="faq-content">
+          <div class="faq-answer"><div class="faq-answer-inner">Your child carries a school-issued meal card. At the counter, they tap it against the reader — that single tap confirms their booking, marks the meal collected, and updates your dashboard within moments. No PIN and no cash changes hands.</div></div>
+        </div>
+      </div>
         </div>
       </div>
 
@@ -598,10 +600,12 @@ const SHOW_TESTIMONIALS = false;
           <h3>Payments</h3>
         </div>
         <div class="faq-list">
-          <details class="faq-item">
-            <summary><span>Is my payment information safe?</span><span class="plus" aria-hidden="true"></span></summary>
-            <div class="faq-answer">Payments go through KNET, Kuwait's national payment gateway — Evo Meals never stores your card details. Your child's Civil ID is masked everywhere it's shown in the app, including to you.</div>
-          </details>
+          <div class="faq-item">
+        <button class="faq-summary" type="button" aria-expanded="false"><span>Is my payment information safe?</span><span class="plus" aria-hidden="true"></span></button>
+        <div class="faq-content">
+          <div class="faq-answer"><div class="faq-answer-inner">Payments go through KNET, Kuwait's national payment gateway — Evo Meals never stores your card details. Your child's Civil ID is masked everywhere it's shown in the app, including to you.</div></div>
+        </div>
+      </div>
         </div>
       </div>
 
@@ -611,10 +615,12 @@ const SHOW_TESTIMONIALS = false;
           <h3>Allergies &amp; Safety</h3>
         </div>
         <div class="faq-list">
-          <details class="faq-item">
-            <summary><span>My child has an allergy. How does that get handled?</span><span class="plus" aria-hidden="true"></span></summary>
-            <div class="faq-answer">You list allergies on their student profile once, and it's shown to the catering and serving staff preparing your child's meals. Dishes carry their own allergen information — nut-free, shellfish-free, sesame-free, soy-free, and more, where applicable — but this is per-dish information, not an independently verified guarantee, so check the dish's own detail if your child has a specific allergy.</div>
-          </details>
+          <div class="faq-item">
+        <button class="faq-summary" type="button" aria-expanded="false"><span>My child has an allergy. How does that get handled?</span><span class="plus" aria-hidden="true"></span></button>
+        <div class="faq-content">
+          <div class="faq-answer"><div class="faq-answer-inner">You list allergies on their student profile once, and it's shown to the catering and serving staff preparing your child's meals. Dishes carry their own allergen information — nut-free, shellfish-free, sesame-free, soy-free, and more, where applicable — but this is per-dish information, not an independently verified guarantee, so check the dish's own detail if your child has a specific allergy.</div></div>
+        </div>
+      </div>
         </div>
       </div>
 
@@ -624,10 +630,12 @@ const SHOW_TESTIMONIALS = false;
           <h3>Cancellations</h3>
         </div>
         <div class="faq-list">
-          <details class="faq-item">
-            <summary><span>What if I need to cancel a booking?</span><span class="plus" aria-hidden="true"></span></summary>
-            <div class="faq-answer">Cancel any upcoming booking from your history page before the meal is collected. The full amount is refunded straight back to your original payment method — no ticket, no waiting on a refund process.</div>
-          </details>
+          <div class="faq-item">
+        <button class="faq-summary" type="button" aria-expanded="false"><span>What if I need to cancel a booking?</span><span class="plus" aria-hidden="true"></span></button>
+        <div class="faq-content">
+          <div class="faq-answer"><div class="faq-answer-inner">Cancel any upcoming booking from your history page before the meal is collected. The full amount is refunded straight back to your original payment method — no ticket, no waiting on a refund process.</div></div>
+        </div>
+      </div>
         </div>
       </div>
 
@@ -637,18 +645,24 @@ const SHOW_TESTIMONIALS = false;
           <h3>Schools &amp; Caterers</h3>
         </div>
         <div class="faq-list">
-          <details class="faq-item">
-            <summary><span>How does a school actually bring Evo Meals in?</span><span class="plus" aria-hidden="true"></span></summary>
-            <div class="faq-answer">Get in touch through the <a href="/schools">For Schools</a> page or the contact form. We set up your menu, plans, and parent onboarding together before your program goes live — there's no self-serve signup for schools.</div>
-          </details>
-          <details class="faq-item">
-            <summary><span>How does a caterer get set up on the platform?</span><span class="plus" aria-hidden="true"></span></summary>
-            <div class="faq-answer">Caterers connect through the <a href="/caterers">For Caterers</a> page. We match you to a school's program and get your kitchen onto the digital order queue before day one.</div>
-          </details>
-          <details class="faq-item">
-            <summary><span>Can school staff use Evo Meals too?</span><span class="plus" aria-hidden="true"></span></summary>
-            <div class="faq-answer">Yes — staff have their own meal booking flow, separate from student accounts, at a fixed staff meal price.</div>
-          </details>
+          <div class="faq-item">
+        <button class="faq-summary" type="button" aria-expanded="false"><span>How does a school actually bring Evo Meals in?</span><span class="plus" aria-hidden="true"></span></button>
+        <div class="faq-content">
+          <div class="faq-answer"><div class="faq-answer-inner">Get in touch through the <a href="/schools">For Schools</a> page or the contact form. We set up your menu, plans, and parent onboarding together before your program goes live — there's no self-serve signup for schools.</div></div>
+        </div>
+      </div>
+          <div class="faq-item">
+        <button class="faq-summary" type="button" aria-expanded="false"><span>How does a caterer get set up on the platform?</span><span class="plus" aria-hidden="true"></span></button>
+        <div class="faq-content">
+          <div class="faq-answer"><div class="faq-answer-inner">Caterers connect through the <a href="/caterers">For Caterers</a> page. We match you to a school's program and get your kitchen onto the digital order queue before day one.</div></div>
+        </div>
+      </div>
+          <div class="faq-item">
+        <button class="faq-summary" type="button" aria-expanded="false"><span>Can school staff use Evo Meals too?</span><span class="plus" aria-hidden="true"></span></button>
+        <div class="faq-content">
+          <div class="faq-answer"><div class="faq-answer-inner">Yes — staff have their own meal booking flow, separate from student accounts, at a fixed staff meal price.</div></div>
+        </div>
+      </div>
         </div>
       </div>
     </div>

@@ -34,7 +34,16 @@ app.use(helmet({
 app.use(compression()); // gzip text responses — real weight on a throttled mobile connection
 app.use(pinoHttp({ logger, autoLogging: { ignore: (req) => req.url === '/health' } }));
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {
+  // Static assets are unversioned file paths, so we can't send far-future
+  // immutable caching without risking stale CSS/JS after a deploy — a
+  // day-long max-age plus revalidation balances repeat-visit speed against
+  // that risk. Content still updates within a day, or instantly on a
+  // conditional GET once the browser revalidates.
+  maxAge: '1d',
+  etag: true,
+  lastModified: true
+}));
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,

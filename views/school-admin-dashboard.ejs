@@ -41,7 +41,7 @@
       <% trend.forEach(t => { %>
         <div class="trend-bar-col">
           <div class="trend-bar-track">
-            <div class="trend-bar-fill" style="height:<%= Math.round((t.count / trendMax) * 100) %>%;" title="<%= t.date %>: <%= t.count %>"></div>
+            <div class="trend-bar-fill" style="--pct:<%= Math.max(0.03, t.count / trendMax) %>;" title="<%= t.date %>: <%= t.count %>"></div>
           </div>
           <span class="trend-bar-count data-num"><%= t.count %></span>
           <span class="trend-bar-label"><%= new Date(t.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) %></span>

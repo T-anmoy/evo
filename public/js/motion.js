@@ -159,48 +159,29 @@
   }
 
   // ---------- FAQ smooth expand/collapse ----------
-  // Native <details> snaps open/closed; this enhances it with a smooth
-  // height transition while keeping <details>/<summary> as the source of
-  // truth (works with no JS, just without the animation).
+  // Pure CSS grid-template-rows (0fr <-> 1fr) drives the height animation —
+  // no scrollHeight measurement, no layout thrash per toggle. JS only
+  // flips a class and enforces one open item per .faq-list.
   function initFaq() {
     document.querySelectorAll('.faq-item').forEach(function (item) {
-      var summary = item.querySelector('summary');
-      var answer = item.querySelector('.faq-answer');
-      if (!summary || !answer) return;
+      var button = item.querySelector('.faq-summary');
+      if (!button) return;
 
-      summary.addEventListener('click', function (e) {
-        e.preventDefault();
-        var isOpen = item.hasAttribute('open');
-        if (reduceMotion) {
-          if (isOpen) item.removeAttribute('open'); else item.setAttribute('open', '');
-          return;
-        }
-        if (isOpen) {
-          answer.style.height = answer.scrollHeight + 'px';
-          requestAnimationFrame(function () {
-            answer.style.height = '0px';
-            answer.style.opacity = '0';
-          });
-          answer.addEventListener('transitionend', function onEnd() {
-            item.removeAttribute('open');
-            answer.style.height = '';
-            answer.style.opacity = '';
-            answer.removeEventListener('transitionend', onEnd);
-          });
-        } else {
-          item.setAttribute('open', '');
-          var target = answer.scrollHeight;
-          answer.style.height = '0px';
-          answer.style.opacity = '0';
-          requestAnimationFrame(function () {
-            answer.style.height = target + 'px';
-            answer.style.opacity = '1';
-          });
-          answer.addEventListener('transitionend', function onEnd() {
-            answer.style.height = '';
-            answer.removeEventListener('transitionend', onEnd);
+      button.addEventListener('click', function () {
+        var isOpen = item.classList.contains('is-open');
+        var list = item.closest('.faq-list');
+
+        if (list && !isOpen) {
+          list.querySelectorAll('.faq-item.is-open').forEach(function (other) {
+            if (other === item) return;
+            other.classList.remove('is-open');
+            var otherBtn = other.querySelector('.faq-summary');
+            if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
           });
         }
+
+        item.classList.toggle('is-open', !isOpen);
+        button.setAttribute('aria-expanded', String(!isOpen));
       });
     });
   }
