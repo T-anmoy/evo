@@ -131,7 +131,7 @@ const SHOW_TESTIMONIALS = false;
     <div data-reveal>
       <span class="eyebrow">What is Evo Meals?</span>
       <h2>Not a food ordering app. A school meal management platform.</h2>
-      <p>Evo Meals started with a frustration every parent in Kuwait knows — sending a child off with lunch money and just hoping it was enough, hoping they ate, hoping the allergy you'd mentioned a dozen times was remembered. We built the system we wished existed: one platform that plans menus, runs subscriptions, takes orders, confirms delivery by tap, notifies parents the moment it happens, and gives schools the reporting to run the whole program with confidence.</p>
+      <p>Plans menus, runs subscriptions, confirms delivery by tap, and reports it all — replacing hope with proof.</p>
     </div>
     <div class="what-is-pillars">
       <div class="what-is-pillar" data-reveal data-reveal-group="whatis">
@@ -199,33 +199,33 @@ const SHOW_TESTIMONIALS = false;
     <div class="section-head" data-reveal>
       <span class="eyebrow">How the platform works</span>
       <h2>Five roles, one connected system.</h2>
-      <p>This is the platform-level view — how a meal moves from a school's program to a specific student's hands. Parents have their own simpler four-step flow below.</p>
+      <p>How a meal moves from a school's program to a student's hands.</p>
     </div>
     <div class="steps steps-5">
       <div class="step" data-reveal data-reveal-group="platformflow">
         <div class="step-num">School</div>
         <h3>Sets up the program</h3>
-        <p>Partners with Evo Meals, defines meal plans and pricing, and onboards its parent community.</p>
+        <p>Partners with Evo Meals and onboards its parent community.</p>
       </div>
       <div class="step" data-reveal data-reveal-group="platformflow">
         <div class="step-num">Parent</div>
         <h3>Subscribes &amp; orders</h3>
-        <p>Books a plan for their child, pays only for the real school days it covers, and manages everything from one account.</p>
+        <p>Books a plan and pays only for real school days.</p>
       </div>
       <div class="step" data-reveal data-reveal-group="platformflow">
         <div class="step-num">Evo Meals</div>
         <h3>Routes &amp; confirms</h3>
-        <p>Matches the order to the right student and allergy profile, and sends it to the kitchen queue.</p>
+        <p>Matches each order to the right student and allergy profile.</p>
       </div>
       <div class="step" data-reveal data-reveal-group="platformflow">
         <div class="step-num">Caterer</div>
         <h3>Prepares &amp; delivers</h3>
-        <p>Sees real orders, not estimates — prepares exactly what's been booked, nothing wasted.</p>
+        <p>Sees real orders and prepares exactly what's booked.</p>
       </div>
       <div class="step" data-reveal data-reveal-group="platformflow">
         <div class="step-num">Student</div>
         <h3>Taps &amp; collects</h3>
-        <p>One tap at the counter confirms the meal — and their parent sees it happen in real time.</p>
+        <p>One tap confirms the meal — parents see it in real time.</p>
       </div>
     </div>
   </div>
@@ -266,51 +266,50 @@ const SHOW_TESTIMONIALS = false;
       <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Notifications</li>
     </ul>
 
-    <div class="parent-flow-grid">
-      <div class="steps" style="margin-bottom:0;">
-        <div class="step" data-reveal data-reveal-group="parentsteps">
-          <div class="step-num">Book</div>
-          <h3>Pick a plan</h3>
-          <p>Choose a meal, pay-as-you-go or a subscription priced by real school days, and the total is calculated and shown before you confirm — never a surprise charge.</p>
-        </div>
-        <div class="step" data-reveal data-reveal-group="parentsteps">
-          <div class="step-num">Pay</div>
-          <h3>Pay via KNET</h3>
-          <p>Pay the exact total for the real school days in your period — no wallet, no top-ups, no forgotten lunch money, ever.</p>
-        </div>
-        <div class="step" data-reveal data-reveal-group="parentsteps">
-          <div class="step-num">Tap</div>
-          <h3>Your child taps in</h3>
-          <p>At the meal counter, their card taps the reader. No PIN, no queue for cash — just a two-second tap they can do themselves.</p>
-        </div>
-        <div class="step" data-reveal data-reveal-group="parentsteps">
-          <div class="step-num">Notified</div>
-          <h3>You see it happen</h3>
-          <p>The moment they tap, your dashboard updates: which meal, and the exact time they collected it.</p>
-        </div>
+    <div class="steps" data-reveal-group="parentsteps">
+      <div class="step" data-reveal data-reveal-group="parentsteps">
+        <div class="step-num">Book</div>
+        <h3>Pick a plan</h3>
+        <p>Real school days, real total — shown before you confirm.</p>
       </div>
-      <div class="hero-visual parent-flow-visual" aria-hidden="true" data-reveal>
-        <div class="tap-demo">
-          <div class="tap-card">
-            <div class="chip"></div>
-            <div class="card-name">Ahmed A.</div>
+      <div class="step" data-reveal data-reveal-group="parentsteps">
+        <div class="step-num">Pay</div>
+        <h3>Pay via KNET</h3>
+        <p>Pay the exact amount. No wallet, no top-ups, no forgotten lunch money.</p>
+      </div>
+      <div class="step" data-reveal data-reveal-group="parentsteps">
+        <div class="step-num">Tap</div>
+        <h3>Your child taps in</h3>
+        <p>One tap at the counter. No PIN, no cash queue.</p>
+      </div>
+      <div class="step" data-reveal data-reveal-group="parentsteps">
+        <div class="step-num">Notified</div>
+        <h3>You see it happen</h3>
+        <p>The moment they tap, you know — which meal, what time.</p>
+      </div>
+    </div>
+
+    <div class="parent-flow-demo" aria-hidden="true" data-reveal>
+      <div class="tap-demo">
+        <div class="tap-card">
+          <div class="chip"></div>
+          <div class="card-name">Ahmed A.</div>
+        </div>
+        <div class="tap-reader pulse">
+          <div class="ripple"></div>
+          <div class="ripple delay"></div>
+          <div class="reader-ring">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8.5a8 8 0 0 1 12 0M8.5 11a4.5 4.5 0 0 1 7 0M12 14v.01"/></svg>
           </div>
-          <div class="tap-reader pulse">
-            <div class="ripple"></div>
-            <div class="ripple delay"></div>
-            <div class="reader-ring">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8.5a8 8 0 0 1 12 0M8.5 11a4.5 4.5 0 0 1 7 0M12 14v.01"/></svg>
-            </div>
-            <div class="reader-label">MEAL READER · GATE 2</div>
+          <div class="reader-label">MEAL READER · GATE 2</div>
+        </div>
+        <div class="tap-toast">
+          <div class="toast-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1"><path d="M20 6 9 17l-5-5"/></svg>
           </div>
-          <div class="tap-toast">
-            <div class="toast-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1"><path d="M20 6 9 17l-5-5"/></svg>
-            </div>
-            <div>
-              <div class="toast-title">Ahmed tapped in — lunch collected</div>
-              <div class="toast-sub">12:14 PM · Arabiatta Chicken Pasta</div>
-            </div>
+          <div>
+            <div class="toast-title">Ahmed tapped in — lunch collected</div>
+            <div class="toast-sub">12:14 PM · Arabiatta Chicken Pasta</div>
           </div>
         </div>
       </div>
@@ -431,7 +430,7 @@ const SHOW_TESTIMONIALS = false;
       <span class="eyebrow">Nutrition &amp; food safety</span>
       <p class="section-tagline">Freshly Prepared Meals. Seamlessly Delivered.</p>
       <h2>Every dish, checked before it's ever offered.</h2>
-      <p>Allergen information — nut, shellfish, sesame, soy, egg, gluten, and lactose — is documented per dish, not a blanket claim across the whole menu. Special dietary claims apply to specific preparations and aren't independently lab-verified.</p>
+      <p>Allergen and nutrition detail documented per dish, not a blanket menu claim.</p>
     </div>
     <div class="allergen-banner" data-reveal>
       <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg><span>Allergen information available per dish</span></div>
