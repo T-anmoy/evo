@@ -115,22 +115,22 @@ const SHOW_TRUST_STATS = false;
       <span class="eyebrow">What you can actually check, before you book</span>
       <h2>Not just "trust us." See it yourself.</h2>
     </div>
-    <div class="trust-grid trust-grid-4">
-      <div class="trust-card" data-reveal data-reveal-group="trust">
-        <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.4 3.4 8.4 8 9 4.6-.6 8-4.6 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
-        <h3>Nutrition &amp; allergen info, per dish</h3>
+    <div class="proof-row" data-reveal>
+      <div class="proof-row-item">
+        <span class="proof-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.4 3.4 8.4 8 9 4.6-.6 8-4.6 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
+        <span>Nutrition &amp; allergen info, per dish</span>
       </div>
-      <div class="trust-card" data-reveal data-reveal-group="trust">
-        <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
-        <h3>A clear digital payment, before you confirm</h3>
+      <div class="proof-row-item">
+        <span class="proof-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
+        <span>A clear digital payment, before you confirm</span>
       </div>
-      <div class="trust-card" data-reveal data-reveal-group="trust">
-        <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8.5a8 8 0 0 1 12 0M8.5 11a4.5 4.5 0 0 1 7 0M12 14v.01"/></svg></div>
-        <h3>Tap-to-collect at the counter</h3>
+      <div class="proof-row-item">
+        <span class="proof-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8.5a8 8 0 0 1 12 0M8.5 11a4.5 4.5 0 0 1 7 0M12 14v.01"/></svg></span>
+        <span>Tap-to-collect at the counter</span>
       </div>
-      <div class="trust-card" data-reveal data-reveal-group="trust">
-        <div class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
-        <h3>A notification when they've eaten</h3>
+      <div class="proof-row-item">
+        <span class="proof-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></span>
+        <span>A notification when they've eaten</span>
       </div>
     </div>
   </div>
@@ -177,7 +177,13 @@ const SHOW_TRUST_STATS = false;
     <div class="section-head" data-reveal>
       <span class="eyebrow">The moment that matters</span>
       <h2>Know when the meal was collected.</h2>
-      <p>One tap at the counter confirms the meal and notifies you — illustrative example below, not a live feed.</p>
+      <p>One tap at the counter confirms the meal and notifies you.</p>
+    </div>
+    <div class="flow-caption">
+      <span>Tap</span><span class="flow-caption-arrow">→</span><span>Collected</span><span class="flow-caption-arrow">→</span><span>Notified</span>
+    </div>
+    <div style="text-align:center; margin-bottom:8px;">
+      <span class="sample-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> Illustrative example, not a live feed</span>
     </div>
     <div class="parent-flow-demo" aria-hidden="true" data-reveal>
       <div class="tap-demo">
@@ -213,9 +219,13 @@ const SHOW_TRUST_STATS = false;
     <div data-reveal>
       <span class="eyebrow">One account, every child</span>
       <h2>One account. Every child.</h2>
-      <p>Add each child once — their school, class, and meal plan stay separate, but you check on all of them from the same place. Sample account view below.</p>
+      <p>Add each child once — their school, class, and meal plan stay separate, but you check on all of them from the same place.</p>
     </div>
     <div class="card" data-reveal style="max-width:480px;">
+      <div class="dash-preview-head" style="padding:0 0 14px;">
+        <strong style="font-family:'Montserrat',Arial,sans-serif; font-size:15px; color:var(--navy-950);">Your account</strong>
+        <span class="sample-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> Sample view</span>
+      </div>
       <div class="student-row">
         <div class="avatar">A</div>
         <div class="student-meta">

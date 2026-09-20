@@ -93,6 +93,33 @@
   --dur-standard:240ms;
   --dur-elevated:480ms;
   --dur-hero:750ms;
+
+  /* ---------- layout tokens (Phase 3 consolidation) ----------
+     Named so a page's structural width/rhythm reads as intent, not a
+     repeated magic number. Existing .wrap/.wrap-wide widths and the
+     44px control height (already applied consistently pre-Phase-3)
+     are unchanged in value — only now named. */
+  --content-max:1120px;
+  --content-max-wide:1280px;
+  --gutter:24px;
+  --control-height:44px;
+  --focus-ring-color:var(--blue-600);
+
+  /* A small spacing scale — used for new Phase 3 components (slim proof
+     rows, connectors, sample tags) rather than a wholesale retrofit of
+     every existing hand-tuned spacing value in this file. */
+  --space-1:8px;
+  --space-2:12px;
+  --space-3:16px;
+  --space-4:24px;
+  --space-5:32px;
+  --space-6:48px;
+
+  /* Fluid heading scale for body-copy sections (hero h1 already had its
+     own clamp()). Base h1/h2 stay as page-title sizes; this pair is for
+     in-page section headings so long section titles don't force a wrap
+     mid-word on narrow phones. */
+  --h2-size:clamp(22px,3.2vw,27px);
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -123,7 +150,7 @@ ul{list-style:none;}
 /* ---------- type scale ---------- */
 h1,h2,h3,.display{font-family:'Montserrat',Arial,sans-serif; font-weight:800; letter-spacing:-0.015em; color:var(--navy-950);}
 h1{font-size:32px; line-height:1.08;}
-h2{font-size:27px; line-height:1.15; letter-spacing:-0.01em;}
+h2{font-size:var(--h2-size); line-height:1.15; letter-spacing:-0.01em;}
 h3{font-size:17px; line-height:1.3; font-weight:700; letter-spacing:-0.005em;}
 p{color:#4A5568;}
 
@@ -141,7 +168,7 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 [tabindex]:focus-visible{
-  outline:2.5px solid var(--blue-600);
+  outline:2.5px solid var(--focus-ring-color);
   outline-offset:3px;
   border-radius:6px;
 }
@@ -303,14 +330,14 @@ a, button, .btn{
 }
 
 /* ---------- layout ---------- */
-.wrap{max-width:1120px; margin:0 auto; padding:0 24px;}
-.wrap-wide{max-width:1280px; margin:0 auto; padding:0 24px;}
+.wrap{max-width:var(--content-max); margin:0 auto; padding:0 var(--gutter);}
+.wrap-wide{max-width:var(--content-max-wide); margin:0 auto; padding:0 var(--gutter);}
 
 /* ---------- buttons ----------
-   min-height:44px on every size — the smallest button here (.btn-sm, used
+   min-height:var(--control-height) on every size — the smallest button here (.btn-sm, used
    for "Edit" rows etc.) still meets the 44x44 comfortable touch target,
    even though its padding/font read visually smaller. */
-.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:44px; padding:13px 24px; border-radius:100px; font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; border:none; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:transform var(--dur-micro) var(--ease-standard), box-shadow var(--dur-micro) var(--ease-standard), background var(--dur-micro) var(--ease-standard);}
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:var(--control-height); padding:13px 24px; border-radius:100px; font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; border:none; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:transform var(--dur-micro) var(--ease-standard), box-shadow var(--dur-micro) var(--ease-standard), background var(--dur-micro) var(--ease-standard);}
 .btn-primary{background:var(--lime-500); color:var(--ink-900);}
 .btn-primary:hover{background:var(--lime-600); transform:translateY(-1px); box-shadow:var(--shadow-sm);}
 .btn-primary:active{transform:scale(.97) translateY(0); transition-duration:80ms;}
@@ -324,9 +351,9 @@ a, button, .btn{
 .btn-ghost:hover{background:rgba(27,94,86,0.04);}
 .btn-outline{background:var(--white); color:var(--navy-950); border:1.5px solid var(--line-strong);}
 .btn-outline:hover{border-color:var(--blue-600); color:var(--blue-600);}
-.btn-danger{background:transparent; color:var(--red-700); border:1.5px solid rgba(214,69,69,0.3); padding:8px 16px; font-size:16px; min-height:44px;}
+.btn-danger{background:transparent; color:var(--red-700); border:1.5px solid rgba(214,69,69,0.3); padding:8px 16px; font-size:16px; min-height:var(--control-height);}
 .btn-danger:hover{background:var(--red-050);}
-.btn-sm{min-height:44px; padding:9px 18px; font-size:16px;}
+.btn-sm{min-height:var(--control-height); padding:9px 18px; font-size:16px;}
 .btn:active{transform:scale(.97);}
 .btn:disabled{opacity:0.5; cursor:not-allowed;}
 .btn:disabled:hover,.btn:disabled:active{transform:none; box-shadow:none;}
@@ -344,7 +371,7 @@ a, button, .btn{
    ============================================================ */
 .app-header{background:var(--navy-950); position:sticky; top:0; z-index:50; padding-top:env(safe-area-inset-top);}
 .app-nav{display:flex; align-items:center; justify-content:space-between; height:66px;}
-.app-logo{color:var(--white); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:17px; display:flex; align-items:center; min-height:44px; gap:8px; white-space:nowrap; flex-shrink:0;}
+.app-logo{color:var(--white); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:17px; display:flex; align-items:center; min-height:var(--control-height); gap:8px; white-space:nowrap; flex-shrink:0;}
 .app-logo .dot{color:var(--lime-500);}
 .admin-nav-tag{font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:10.5px; letter-spacing:0.04em; text-transform:uppercase; color:var(--lime-500); background:rgba(245,143,104,0.12); border:1px solid rgba(245,143,104,0.28); border-radius:100px; padding:4px 10px;}
 .app-links{display:flex; align-items:center; gap:4px;}
@@ -402,7 +429,7 @@ a, button, .btn{
   .notif-dropdown{position:fixed; left:16px; right:16px; top:calc(66px + env(safe-area-inset-top) + 10px); width:auto; max-width:none;}
 }
 
-.nav-toggle{display:none; align-items:center; gap:6px; min-height:44px; background:none; border:none; color:var(--white); padding:8px 10px; font-family:'Montserrat',Arial,sans-serif; font-weight:600; font-size:16px; cursor:pointer; flex-shrink:0; border-radius:8px;}
+.nav-toggle{display:none; align-items:center; gap:6px; min-height:var(--control-height); background:none; border:none; color:var(--white); padding:8px 10px; font-family:'Montserrat',Arial,sans-serif; font-weight:600; font-size:16px; cursor:pointer; flex-shrink:0; border-radius:8px;}
 .nav-toggle:hover{background:rgba(255,255,255,0.08);}
 .nav-toggle svg{width:20px; height:20px;}
 .app-links-mobile{display:none;}
@@ -442,6 +469,12 @@ a, button, .btn{
 .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
 .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
 .grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:20px;}
+/* Grid tracks default to an "auto" minimum (their content's max-content
+   width), which lets a long non-wrapping button/label force a track wider
+   than its 1fr share and overflow the row — this resets that minimum so
+   the track (and its content) can actually shrink to the column width.
+   Found via Phase 3 visual QA on /contact at 1024px. */
+.grid-2 > *, .grid-3 > *, .grid-4 > *{min-width:0;}
 
 .stat{background:var(--white); border-radius:var(--radius); padding:20px; border:1px solid var(--line); box-shadow:var(--shadow-sm); position:relative; overflow:hidden;}
 .stat::before{content:""; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--line);}
@@ -456,7 +489,7 @@ form .field{margin-bottom:18px;}
 form label{display:block; font-size:16px; font-weight:600; color:var(--navy-800); margin-bottom:7px;}
 form label .req{color:var(--red-700); font-weight:700;}
 form input, form select, form textarea{
-  width:100%; min-height:44px; padding:12px 14px; border:1.5px solid var(--border-input); border-radius:10px; background:var(--white); color:var(--ink-900); transition:border-color var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard);
+  width:100%; min-height:var(--control-height); padding:12px 14px; border:1.5px solid var(--border-input); border-radius:10px; background:var(--white); color:var(--ink-900); transition:border-color var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard);
 }
 /* The 44px touch-target minimum above is meant for text inputs, not a
    native checkbox — applied unscoped, it forced a real 18x18 checkbox into
@@ -681,7 +714,7 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 .picker-card{position:relative; min-width:0;}
 .picker-card input{position:absolute; opacity:0; width:1px; height:1px; margin:-1px; overflow:hidden; clip:rect(0,0,0,0);}
 .picker-card label{
-  display:flex; align-items:center; gap:12px; height:100%; min-height:44px; min-width:0; padding:12px 14px;
+  display:flex; align-items:center; gap:12px; height:100%; min-height:var(--control-height); min-width:0; padding:12px 14px;
   border:2px solid var(--border-input); border-radius:var(--radius-sm); background:var(--white); cursor:pointer;
   transition:border-color var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), transform var(--dur-micro) var(--ease-standard);
   position:relative;
@@ -740,11 +773,11 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .app-foot-links{display:flex; gap:40px; flex-wrap:wrap;}
 .app-foot-links h4{font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; letter-spacing:0.06em; text-transform:uppercase; color:var(--navy-800); margin-bottom:14px;}
 .app-foot-links .foot-col{display:flex; flex-direction:column;}
-.app-foot-links a{display:flex; align-items:center; min-height:44px; color:var(--muted); font-size:16px; text-decoration:none; transition:color var(--dur-micro) var(--ease-standard);}
+.app-foot-links a{display:flex; align-items:center; min-height:var(--control-height); color:var(--muted); font-size:16px; text-decoration:none; transition:color var(--dur-micro) var(--ease-standard);}
 .app-foot-links a:hover{color:var(--lime-700);}
 .app-foot-links a.active{color:var(--lime-700); font-weight:700;}
 .app-foot-contact{display:flex; flex-direction:column; gap:12px; align-items:flex-start;}
-.app-foot-contact span, .app-foot-contact a{display:inline-flex; align-items:center; min-height:44px; gap:8px; color:var(--muted); font-size:16px; text-decoration:none;}
+.app-foot-contact span, .app-foot-contact a{display:inline-flex; align-items:center; min-height:var(--control-height); gap:8px; color:var(--muted); font-size:16px; text-decoration:none;}
 .app-foot-contact a:hover{color:var(--lime-700);}
 .app-foot-contact svg{width:16px; height:16px; flex-shrink:0; color:var(--muted);}
 .app-foot-bottom{padding-top:20px; padding-bottom:20px; border-top:1px solid var(--line); font-size:16px; color:var(--muted);}
@@ -763,13 +796,33 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    ============================================================ */
 .site-header{background:var(--navy-950); position:sticky; top:0; z-index:50; padding-top:env(safe-area-inset-top);}
 .site-nav{display:flex; align-items:center; justify-content:space-between; height:72px; max-width:1400px;}
-.site-logo{color:var(--white); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:18px; display:flex; align-items:center; min-height:44px; gap:8px; white-space:nowrap; flex-shrink:0;}
+.site-logo{color:var(--white); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:18px; display:flex; align-items:center; min-height:var(--control-height); gap:8px; white-space:nowrap; flex-shrink:0;}
 .site-logo .dot{color:var(--lime-500);}
 .site-links{display:flex; align-items:center; gap:2px;}
-.site-links a{color:rgba(255,255,255,0.72); font-size:16px; font-weight:500; padding:8px 7px; border-radius:8px; white-space:nowrap; transition:background .15s, color .15s;}
+.site-links a{color:rgba(255,255,255,0.72); font-size:16px; font-weight:500; padding:8px 6px; border-radius:8px; white-space:nowrap; transition:background .15s, color .15s;}
 .site-links a:hover{color:var(--white); background:rgba(255,255,255,0.08);}
 .site-links a.active{color:var(--lime-300); font-weight:700;}
 .site-actions{display:flex; align-items:center; gap:6px;}
+
+/* ---------- language switch placeholder (Phase 3) ----------
+   Structurally present now, functionally inert (disabled) — Phase 4 wires
+   this up for English/Arabic without needing to redesign the header. A
+   disabled <button> (rather than a decorative span) is the right choice:
+   assistive tech announces it as an unavailable control instead of silently
+   doing nothing on activation, and no extra JS/focus-trap is needed until
+   it actually does something. */
+.lang-switch{
+  display:flex; align-items:center; gap:4px; min-height:var(--control-height);
+  padding:8px 12px; border-radius:100px; border:1.5px solid rgba(255,255,255,0.18);
+  background:transparent; color:rgba(255,255,255,0.55);
+  font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:13px; letter-spacing:0.02em;
+  white-space:nowrap; cursor:not-allowed; flex-shrink:0;
+}
+.lang-switch-divider{color:rgba(255,255,255,0.3);}
+/* Both mobile drawers (site + app) are dark navy — the base .lang-switch
+   colors (light text, light border) are already correct here; this
+   modifier only adjusts layout, not color. */
+.lang-switch-mobile{width:100%; justify-content:center; margin-bottom:4px;}
 .site-actions .btn-sm{padding:9px 15px;}
 .site-actions a.btn-ghost{color:#fff; border-color:rgba(255,255,255,0.28);}
 .site-actions a.btn-ghost:hover{background:rgba(255,255,255,0.08);}
@@ -1040,6 +1093,38 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .trust-grid-4{grid-template-columns:repeat(2,1fr);}
 }
 
+/* ---------- proof row (Phase 3) ----------
+   A slim, divided horizontal row — the anti-card-wall alternative to a
+   4-up grid of white cards, used for the homepage confidence row. No
+   background, no border, no shadow per item: a thin rule divides items
+   instead, so four short trust signals read as one scannable strip. */
+.proof-row{display:flex; flex-wrap:wrap; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+.proof-row-item{display:flex; align-items:center; gap:var(--space-2); flex:1 1 220px; padding:var(--space-3) var(--space-4); border-left:1px solid var(--line);}
+.proof-row-item:first-child{border-left:none;}
+.proof-row-icon{width:36px; height:36px; border-radius:50%; background:rgba(178,61,31,0.1); color:var(--lime-700); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.proof-row-icon svg{width:17px; height:17px;}
+.proof-row-item span{font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:15.5px; color:var(--navy-950); line-height:1.3;}
+@media (max-width:900px){
+  .proof-row-item{flex:1 1 45%; border-left:none; border-top:1px solid var(--line);}
+  .proof-row-item:nth-child(1),.proof-row-item:nth-child(2){border-top:none;}
+}
+@media (max-width:520px){
+  .proof-row-item{flex:1 1 100%; border-top:1px solid var(--line);}
+  .proof-row-item:first-child{border-top:none;}
+}
+
+/* ---------- sample / illustrative tag (Phase 3) ----------
+   One consistent small badge for every place the site shows seeded or
+   mocked data instead of a live feed — reused across the homepage,
+   /parents, /schools, and /caterers rather than each page inventing its
+   own "(illustrative example)" wording treatment. */
+.sample-tag{display:inline-flex; align-items:center; gap:6px; font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--lime-700); background:rgba(178,61,31,0.08); border-radius:100px; padding:4px 11px;}
+.sample-tag svg{width:11px; height:11px;}
+/* Dark-surface variant — same component, safe contrast on navy (e.g. the
+   dashboard preview card): border instead of a tinted fill, lime-500
+   instead of the text-safe-on-white lime-700. */
+.sample-tag.on-dark{color:var(--lime-500); background:transparent; border:1px solid rgba(242,117,74,0.4);}
+
 /* steps (real sequence: book -> tap -> collected -> notified) */
 .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:24px; counter-reset:step;}
 .step{position:relative; padding-top:8px;}
@@ -1162,11 +1247,11 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .site-foot-links{display:grid; grid-template-columns:repeat(4,1fr); gap:24px;}
 .site-foot-links h4{font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.85); margin-bottom:16px;}
 .site-foot-links .foot-col{display:flex; flex-direction:column;}
-.site-foot-links a{display:flex; align-items:center; min-height:44px;}
+.site-foot-links a{display:flex; align-items:center; min-height:var(--control-height);}
 .site-foot-links a.active{color:var(--lime-300); font-weight:700;}
 .site-foot-contact-row{display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; padding-top:28px; padding-bottom:28px; border-top:1px solid rgba(255,255,255,0.08);}
 .site-foot-contact{display:flex; align-items:center; gap:24px; flex-wrap:wrap; font-size:16px;}
-.site-foot-contact span, .site-foot-contact a{display:inline-flex; align-items:center; min-height:44px; gap:8px; color:rgba(255,255,255,0.65);}
+.site-foot-contact span, .site-foot-contact a{display:inline-flex; align-items:center; min-height:var(--control-height); gap:8px; color:rgba(255,255,255,0.65);}
 .site-foot-contact a:hover{color:var(--lime-300);}
 .site-foot-contact svg{width:16px; height:16px; flex-shrink:0; color:rgba(255,255,255,0.4);}
 .store-badges-footer{justify-content:flex-start; gap:10px;}
@@ -1274,7 +1359,21 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .parent-flow-demo .tap-demo{max-width:420px;}
 }
 
+/* ---------- flow caption (Phase 3) ----------
+   Names the three-stage sequence (Tap → Collected → Notified) explicitly
+   above the widget that shows it, so the interaction reads as a defined
+   sequence rather than a single static mockup. Text-based, not another
+   animation — the existing reader pulse/ripple already carries the motion
+   and already respects prefers-reduced-motion (see .tap-reader.pulse). */
+.flow-caption{display:flex; align-items:center; justify-content:center; gap:var(--space-2); margin-bottom:var(--space-4); flex-wrap:wrap;}
+.flow-caption span{font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:var(--lime-700);}
+.flow-caption .flow-caption-arrow{color:var(--muted); font-weight:400; letter-spacing:0; font-size:15px;}
+.flow-caption.on-dark span{color:var(--lime-300);}
+.flow-caption.on-dark .flow-caption-arrow{color:rgba(255,255,255,0.4);}
+
 /* ---------- platform features ---------- */
+/* Kept for compatibility if any other view still references it directly;
+   the current /features page (below) no longer uses .feature-roles. */
 .feature-roles{display:grid; grid-template-columns:repeat(5,1fr); gap:16px;}
 .feature-role{background:var(--white); border:1px solid var(--line); border-radius:var(--radius-sm); padding:20px 18px;}
 .feature-role-icon{width:34px; height:34px; border-radius:10px; background:var(--ice-100); color:var(--lime-700); display:flex; align-items:center; justify-content:center; margin-bottom:12px;}
@@ -1283,6 +1382,24 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .feature-chip-list{display:flex; flex-direction:column; gap:8px;}
 .feature-chip-list li{display:flex; align-items:center; gap:8px; font-size:16px; font-weight:600; color:var(--navy-800); line-height:1.3;}
 .feature-chip-list li svg{width:16px; height:16px; color:var(--lime-700); flex-shrink:0;}
+
+/* ---------- role rows (Phase 3) ----------
+   Anti-card-wall replacement for the five identical white "role" cards:
+   one continuous divided list instead of a 5-up card grid. Each row pairs
+   a role statement (icon + name) with its capability list inline. */
+.role-rows{border-top:1px solid var(--line);}
+.role-row{display:flex; flex-wrap:wrap; align-items:center; gap:var(--space-4); padding:var(--space-4) 0; border-bottom:1px solid var(--line);}
+.role-row-head{display:flex; align-items:center; gap:14px; flex:0 0 200px;}
+.role-row-icon{width:40px; height:40px; border-radius:12px; background:var(--ice-100); color:var(--lime-700); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.role-row-icon svg{width:19px; height:19px;}
+.role-row-head h3{font-size:18px; margin:0;}
+.role-row-chips{display:flex; flex-wrap:wrap; gap:10px 28px; flex:1 1 320px;}
+.role-row-chips li{display:flex; align-items:center; gap:8px; font-size:16px; font-weight:600; color:var(--navy-800); line-height:1.3;}
+.role-row-chips li svg{width:16px; height:16px; color:var(--lime-700); flex-shrink:0;}
+@media (max-width:700px){
+  .role-row{flex-direction:column; align-items:flex-start; gap:14px;}
+  .role-row-head{flex:none;}
+}
 
 /* ---------- nutrition trust banner ---------- */
 .allergen-banner{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:32px;}
@@ -1305,7 +1422,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .dash-preview-head{display:flex; align-items:center; justify-content:space-between; padding:18px 22px;}
 .dash-preview-title{font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; color:#fff;}
 .dash-preview-title span{color:rgba(255,255,255,0.5); font-weight:500;}
-.dash-preview-tag{font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--lime-500); border:1px solid rgba(242,117,74,0.4); border-radius:100px; padding:5px 12px;}
 .dash-preview-grid{background:var(--ice-50); border-radius:calc(var(--radius-lg) - 8px); padding:22px; display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
 .dash-stat{background:var(--white); border:1px solid var(--line); border-radius:12px; padding:18px;}
 .dash-stat-label{display:block; font-size:16px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;}
@@ -1413,9 +1529,9 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .menu-thumb-wide{width:100%; height:70px; border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
   .menu-nutri-grid{grid-template-columns:repeat(2,1fr); row-gap:14px;}
 }
-@media (max-width:1400px){
+@media (max-width:1279px){
   .site-links{display:none;}
-  .site-actions a.btn{display:none;} /* the three actions move into the mobile drawer below, not shown twice */
+  .site-actions a.btn, .site-actions .lang-switch{display:none;} /* the three actions (and the language switch) move into the mobile drawer below, not shown twice */
   .site-header .nav-toggle{display:flex;}
   .site-links-mobile{
     display:block; position:fixed; inset:0; height:100vh; height:100dvh; z-index:60;
