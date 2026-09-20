@@ -1233,6 +1233,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .why-card p{font-size:16px; line-height:1.65; color:var(--navy-800);}
 
 .steps-5{grid-template-columns:repeat(5,1fr);}
+.steps-6{grid-template-columns:repeat(6,1fr);}
 
 /* ---------- teaser sections (Schools / Caterers) ---------- */
 .teaser-wrap{display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center;}
@@ -1383,6 +1384,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .hero-visual::after{clip-path:none;}
   .steps{grid-template-columns:1fr 1fr;}
   .steps-5{grid-template-columns:1fr 1fr;}
+  .steps-6{grid-template-columns:1fr 1fr;}
   .pricing-grid{grid-template-columns:1fr;}
   .proof-wrap{grid-template-columns:1fr; gap:28px;}
   .proof-names li{flex-direction:column; align-items:flex-start; gap:6px; padding:18px 0;}
@@ -1447,7 +1449,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .section{padding:56px 0;}
 }
 @media (max-width:520px){
-  .steps, .steps-5{grid-template-columns:1fr;}
+  .steps, .steps-5, .steps-6{grid-template-columns:1fr;}
   .hero-actions, .hero-actions-3{flex-direction:column; align-items:stretch;}
   .hero-actions .btn, .hero-actions-3 .btn{width:100%;}
   h1{font-size:26px;}
