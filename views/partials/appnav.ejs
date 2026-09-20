@@ -1,15 +1,21 @@
+<a href="#main-content" class="skip-link"><%= t('a11y.skipToContent') %></a>
 <header class="app-header">
   <div class="wrap app-nav">
     <a href="/dashboard" class="app-logo"><span>Evo <span class="dot">Meals</span></span></a>
     <nav class="app-links">
-      <a href="/dashboard" class="<%= active === 'dashboard' ? 'active' : '' %>">Dashboard</a>
-      <a href="/students" class="<%= active === 'students' ? 'active' : '' %>">Students</a>
-      <a href="/booking" class="<%= active === 'booking' ? 'active' : '' %>">Book a Meal</a>
-      <a href="/menu" class="<%= active === 'menu' ? 'active' : '' %>">Menu</a>
-      <a href="/history" class="<%= active === 'history' ? 'active' : '' %>">History</a>
-      <a href="/staff" class="<%= active === 'staff' ? 'active' : '' %>">Staff</a>
+      <a href="/dashboard" class="<%= active === 'dashboard' ? 'active' : '' %>" <%= active === 'dashboard' ? 'aria-current="page"' : '' %>><%= t('appNav.dashboard') %></a>
+      <a href="/students" class="<%= active === 'students' ? 'active' : '' %>" <%= active === 'students' ? 'aria-current="page"' : '' %>><%= t('appNav.students') %></a>
+      <a href="/booking" class="<%= active === 'booking' ? 'active' : '' %>" <%= active === 'booking' ? 'aria-current="page"' : '' %>><%= t('appNav.bookAMeal') %></a>
+      <a href="/menu" class="<%= active === 'menu' ? 'active' : '' %>" <%= active === 'menu' ? 'aria-current="page"' : '' %>><%= t('appNav.menu') %></a>
+      <a href="/history" class="<%= active === 'history' ? 'active' : '' %>" <%= active === 'history' ? 'aria-current="page"' : '' %>><%= t('appNav.history') %></a>
+      <a href="/staff" class="<%= active === 'staff' ? 'active' : '' %>" <%= active === 'staff' ? 'aria-current="page"' : '' %>><%= t('appNav.staff') %></a>
     </nav>
     <div class="app-user">
+      <div class="lang-switch" role="group" aria-label="<%= t('nav.langSwitchLabel') %>">
+        <a href="/locale/en?returnTo=<%= encodeURIComponent(currentPath) %>" lang="en" hreflang="en" aria-current="<%= locale === 'en' ? 'true' : 'false' %>" class="<%= locale === 'en' ? 'is-current' : '' %>">EN</a>
+        <span class="lang-switch-divider" aria-hidden="true">|</span>
+        <a href="/locale/ar?returnTo=<%= encodeURIComponent(currentPath) %>" lang="ar" hreflang="ar" aria-current="<%= locale === 'ar' ? 'true' : 'false' %>" class="<%= locale === 'ar' ? 'is-current' : '' %>">AR</a>
+      </div>
       <div class="notif-bell-wrap">
         <button type="button" class="notif-bell" id="notifBellBtn" aria-haspopup="true" aria-expanded="false" aria-controls="notifDropdown">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -17,16 +23,16 @@
         </button>
         <div class="notif-dropdown" id="notifDropdown">
           <div class="notif-dropdown-head">
-            <span>Notifications</span>
+            <span><%= t('appNav.notifications') %></span>
             <% if (typeof unreadNotificationCount !== 'undefined' && unreadNotificationCount > 0) { %>
               <form method="POST" action="/notifications/read-all">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <button type="submit" class="notif-markall">Mark all read</button>
+                <button type="submit" class="notif-markall"><%= t('appNav.markAllRead') %></button>
               </form>
             <% } %>
           </div>
           <% if (typeof headerNotifications === 'undefined' || headerNotifications.length === 0) { %>
-            <div class="notif-empty">No notifications yet.</div>
+            <div class="notif-empty"><%= t('appNav.noNotifications') %></div>
           <% } else { %>
             <div class="notif-list">
               <% headerNotifications.forEach(n => { %>
@@ -43,38 +49,45 @@
                   <% if (!n.read) { %>
                     <form method="POST" action="/notifications/<%= n.id %>/read" class="notif-read-form">
                       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                      <button type="submit" aria-label="Mark as read" title="Mark as read"></button>
+                      <button type="submit" aria-label="<%= t('appNav.markAsRead') %>" title="<%= t('appNav.markAsRead') %>"></button>
                     </form>
                   <% } %>
                 </div>
               <% }) %>
             </div>
           <% } %>
-          <a href="/dashboard#notifications" class="notif-viewall">View all on dashboard</a>
+          <a href="/dashboard#notifications" class="notif-viewall"><%= t('appNav.viewAllOnDashboard') %></a>
         </div>
       </div>
-      <a href="/profile" class="profile-link">Profile</a>
-      <a href="/logout" class="btn btn-sm" style="background:rgba(255,255,255,0.1); color:#fff;">Log out</a>
+      <a href="/profile" class="profile-link"><%= t('appNav.profile') %></a>
+      <a href="/logout" class="btn btn-sm" style="background:rgba(255,255,255,0.1); color:#fff;"><%= t('appNav.logout') %></a>
       <button type="button" class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="appLinksMobile">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-        <span>Menu</span>
+        <span><%= t('nav.menuToggle') %></span>
       </button>
     </div>
   </div>
   <nav class="app-links-mobile" id="appLinksMobile">
     <div class="mobile-menu-head">
       <span class="mobile-menu-brand">Evo <span class="dot">Meals</span></span>
-      <button type="button" class="mobile-menu-close" id="appLinksMobileClose" aria-label="Close menu">
+      <button type="button" class="mobile-menu-close" id="appLinksMobileClose" aria-label="<%= t('nav.closeMenu') %>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
       </button>
     </div>
-    <a href="/dashboard" class="<%= active === 'dashboard' ? 'active' : '' %>">Dashboard</a>
-    <a href="/students" class="<%= active === 'students' ? 'active' : '' %>">Students</a>
-    <a href="/booking" class="<%= active === 'booking' ? 'active' : '' %>">Book a Meal</a>
-    <a href="/menu" class="<%= active === 'menu' ? 'active' : '' %>">Menu</a>
-    <a href="/history" class="<%= active === 'history' ? 'active' : '' %>">History</a>
-    <a href="/staff" class="<%= active === 'staff' ? 'active' : '' %>">Staff</a>
-    <a href="/profile" class="<%= active === 'profile' ? 'active' : '' %>">Profile</a>
+    <a href="/dashboard" class="<%= active === 'dashboard' ? 'active' : '' %>" <%= active === 'dashboard' ? 'aria-current="page"' : '' %>><%= t('appNav.dashboard') %></a>
+    <a href="/students" class="<%= active === 'students' ? 'active' : '' %>" <%= active === 'students' ? 'aria-current="page"' : '' %>><%= t('appNav.students') %></a>
+    <a href="/booking" class="<%= active === 'booking' ? 'active' : '' %>" <%= active === 'booking' ? 'aria-current="page"' : '' %>><%= t('appNav.bookAMeal') %></a>
+    <a href="/menu" class="<%= active === 'menu' ? 'active' : '' %>" <%= active === 'menu' ? 'aria-current="page"' : '' %>><%= t('appNav.menu') %></a>
+    <a href="/history" class="<%= active === 'history' ? 'active' : '' %>" <%= active === 'history' ? 'aria-current="page"' : '' %>><%= t('appNav.history') %></a>
+    <a href="/staff" class="<%= active === 'staff' ? 'active' : '' %>" <%= active === 'staff' ? 'aria-current="page"' : '' %>><%= t('appNav.staff') %></a>
+    <a href="/profile" class="<%= active === 'profile' ? 'active' : '' %>" <%= active === 'profile' ? 'aria-current="page"' : '' %>><%= t('appNav.profile') %></a>
+    <div class="site-links-mobile-actions">
+      <div class="lang-switch lang-switch-mobile" role="group" aria-label="<%= t('nav.langSwitchLabel') %>">
+        <a href="/locale/en?returnTo=<%= encodeURIComponent(currentPath) %>" lang="en" hreflang="en" aria-current="<%= locale === 'en' ? 'true' : 'false' %>" class="<%= locale === 'en' ? 'is-current' : '' %>">English</a>
+        <span class="lang-switch-divider" aria-hidden="true">|</span>
+        <a href="/locale/ar?returnTo=<%= encodeURIComponent(currentPath) %>" lang="ar" hreflang="ar" aria-current="<%= locale === 'ar' ? 'true' : 'false' %>" class="<%= locale === 'ar' ? 'is-current' : '' %>">العربية</a>
+      </div>
+    </div>
   </nav>
 </header>
 <script src="/js/nav.js" defer></script>

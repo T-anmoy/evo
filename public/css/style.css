@@ -162,6 +162,18 @@ p{color:#4A5568;}
 .data-num{font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:-0.01em;}
 
 /* ---------- accessibility baseline ---------- */
+/* Off-screen until focused (keyboard Tab from the very top of the page),
+   then a real, visible, high-contrast control — not display:none, which
+   would remove it from the tab order entirely. */
+.skip-link{
+  position:absolute; top:-100px; left:12px; z-index:200;
+  background:var(--navy-950); color:#fff; padding:12px 20px; border-radius:8px;
+  font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:15px; text-decoration:none;
+  transition:top var(--dur-micro) var(--ease-standard);
+}
+[dir="rtl"] .skip-link{left:auto; right:12px;}
+.skip-link:focus{top:12px;}
+
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
@@ -804,25 +816,29 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .site-links a.active{color:var(--lime-300); font-weight:700;}
 .site-actions{display:flex; align-items:center; gap:6px;}
 
-/* ---------- language switch placeholder (Phase 3) ----------
-   Structurally present now, functionally inert (disabled) — Phase 4 wires
-   this up for English/Arabic without needing to redesign the header. A
-   disabled <button> (rather than a decorative span) is the right choice:
-   assistive tech announces it as an unavailable control instead of silently
-   doing nothing on activation, and no extra JS/focus-trap is needed until
-   it actually does something. */
+/* ---------- language switch (Phase 4) ----------
+   Two real links (not a JS toggle) — each is a plain <a> to the actual
+   counterpart URL, so it works with no JS, is a real keyboard tab stop,
+   and Ctrl/Cmd-click / "open in new tab" behave like any other link.
+   Current language is marked by both weight/underline AND aria-current
+   ("true"/"false" string, not a boolean, matches how EJS interpolates
+   it) — never by color alone. */
 .lang-switch{
-  display:flex; align-items:center; gap:4px; min-height:var(--control-height);
-  padding:8px 12px; border-radius:100px; border:1.5px solid rgba(255,255,255,0.18);
-  background:transparent; color:rgba(255,255,255,0.55);
-  font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:13px; letter-spacing:0.02em;
-  white-space:nowrap; cursor:not-allowed; flex-shrink:0;
+  display:flex; align-items:center; gap:8px; min-height:var(--control-height);
+  padding:0 4px; white-space:nowrap; flex-shrink:0;
 }
+.lang-switch a{
+  color:rgba(255,255,255,0.55); font-family:'Montserrat',Arial,sans-serif;
+  font-weight:600; font-size:13px; letter-spacing:0.02em; text-decoration:none;
+  padding:6px 2px;
+}
+.lang-switch a:hover{color:rgba(255,255,255,0.85);}
+.lang-switch a[aria-current="true"]{color:#fff; font-weight:800; text-decoration:underline; text-underline-offset:3px;}
 .lang-switch-divider{color:rgba(255,255,255,0.3);}
 /* Both mobile drawers (site + app) are dark navy — the base .lang-switch
-   colors (light text, light border) are already correct here; this
-   modifier only adjusts layout, not color. */
-.lang-switch-mobile{width:100%; justify-content:center; margin-bottom:4px;}
+   colors (light text) are already correct here; this modifier only
+   adjusts layout, not color. */
+.lang-switch-mobile{width:100%; justify-content:center; margin-bottom:4px; padding:10px 0;}
 .site-actions .btn-sm{padding:9px 15px;}
 .site-actions a.btn-ghost{color:#fff; border-color:rgba(255,255,255,0.28);}
 .site-actions a.btn-ghost:hover{background:rgba(255,255,255,0.08);}
@@ -1588,4 +1604,74 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .price-card .price-amt{font-size:32px;}
   .student-row{flex-wrap:wrap; row-gap:10px;}
   .student-row .status-line{flex-basis:100%; margin-left:54px; width:auto; max-width:calc(100% - 54px); white-space:normal; text-align:left;}
+}
+
+/* ============================================================
+   RTL adjustments (Phase 4)
+   ============================================================
+   Most of this stylesheet needs no RTL-specific rule at all: it's built on
+   flex/grid, and `flex-direction:row` / grid auto-placement are already
+   direction-aware per the CSS spec — they visually reverse on their own
+   under dir="rtl", with zero extra CSS. This section exists only for the
+   minority of rules that use a genuinely physical left/right (an absolute
+   position, a one-sided border, a hardcoded text-align) where the intent
+   was always "the start edge" or "the end edge", not literally "left" or
+   "right". Converting the whole file to logical properties (margin-inline,
+   inset-inline, etc.) would be the more thorough long-term fix, but was
+   judged out of scope for this pass — flagged in the Phase 4 writeup as a
+   follow-up rather than attempted piecemeal across 1600+ pre-existing
+   lines this phase didn't otherwise touch. */
+
+[dir="rtl"] .password-field input{padding-right:14px; padding-left:44px;}
+[dir="rtl"] .password-toggle{right:auto; left:0;}
+
+[dir="rtl"] .check-badge{right:auto; left:10px;}
+[dir="rtl"] .picker-body{padding-right:0; padding-left:30px;}
+
+[dir="rtl"] .notif-badge{right:auto; left:3px;}
+[dir="rtl"] .notif-dropdown{right:auto; left:-8px;}
+@media (max-width:480px){
+  [dir="rtl"] .notif-dropdown{left:16px; right:16px;}
+}
+
+[dir="rtl"] .proof-row-item{border-left:none; border-right:1px solid var(--line);}
+[dir="rtl"] .proof-row-item:first-child{border-right:none;}
+@media (max-width:900px){
+  [dir="rtl"] .proof-row-item{border-right:none;}
+}
+
+@media (max-width:480px){
+  [dir="rtl"] .student-row .status-line{margin-left:0; margin-right:54px; text-align:right;}
+}
+
+/* Arabic type: Montserrat/Poppins have no Arabic glyphs, so the browser
+   falls back to the system Arabic font anyway even without this rule —
+   but the Latin fonts' negative letter-spacing (tuned for Montserrat's
+   caps) actively harms Arabic legibility if it's inherited by a mixed
+   LTR/RTL element, and Poppins' line-height was tuned for Latin x-height,
+   not Arabic's taller glyphs. Cairo is loaded specifically for this
+   (see partials/head.ejs) — a single, professional Arabic family used for
+   both headings and body copy, rather than trying to find two separate
+   Arabic families to match Montserrat/Poppins' distinct roles. */
+[dir="rtl"] {
+  font-family:'Cairo', Arial, sans-serif;
+}
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3, [dir="rtl"] .display,
+[dir="rtl"] .site-logo, [dir="rtl"] .app-logo, [dir="rtl"] .logo,
+[dir="rtl"] .btn, [dir="rtl"] .eyebrow, [dir="rtl"] .data-num {
+  font-family:'Cairo', Arial, sans-serif;
+  letter-spacing:normal;
+}
+[dir="rtl"] body{line-height:1.75;}
+[dir="rtl"] h1{line-height:1.3;}
+[dir="rtl"] h2{line-height:1.35;}
+[dir="rtl"] p, [dir="rtl"] .lede{line-height:1.85;}
+
+/* Directional arrows (app-flow, flow-caption, section-head trailing rule)
+   point the way the flow actually reads — right-to-left in Arabic — so
+   the glyph itself flips instead of pointing backwards through a
+   correctly-reordered flex row. */
+[dir="rtl"] .app-flow-arrow,
+[dir="rtl"] .flow-caption-arrow{
+  display:inline-block; transform:scaleX(-1);
 }

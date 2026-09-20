@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
 <head>
-<%- include('partials/head', { title: 'Features — Evo Meals' }) %>
-<meta name="description" content="Everything live in the Evo Meals platform today, organized by who uses it — parents, schools, caterers, students, and administrators.">
+<%- include('partials/head', { title: t('meta.features.title') }) %>
+<meta name="description" content="<%= t('meta.features.description') %>">
 </head>
 <body>
 
 <%- include('partials/sitenav', { active: 'features' }) %>
 
+<main id="main-content">
 <section class="hero hero-inner-page">
   <div class="wrap-wide">
     <div class="hero-copy" data-reveal style="max-width:680px;">
-      <span class="eyebrow on-dark">Features</span>
-      <h1>What's actually live in the platform today.</h1>
-      <p class="lede">Organized by who uses it — parents, schools, caterers, students, and administrators.</p>
+      <span class="eyebrow on-dark"><%= t('features.hero.eyebrow') %></span>
+      <h1><%= t('features.hero.heading') %></h1>
+      <p class="lede"><%= t('features.hero.lede') %></p>
     </div>
   </div>
 </section>
@@ -22,12 +23,13 @@
 
 <section class="cta-band">
   <div class="wrap" style="text-align:center;">
-    <span class="eyebrow on-dark" style="justify-content:center;">Ready when you are</span>
-    <h2 style="margin-top:16px;">See what this looks like for you.</h2>
-    <p style="margin:14px auto 28px;">Whether you're a parent, a school, or a caterer, there's a dedicated page with the details.</p>
-    <a href="/register" class="btn btn-primary">Create your account</a>
+    <span class="eyebrow on-dark" style="justify-content:center;"><%= t('features.cta.eyebrow') %></span>
+    <h2 style="margin-top:16px;"><%= t('features.cta.heading') %></h2>
+    <p style="margin:14px auto 28px;"><%= t('features.cta.body') %></p>
+    <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-primary"><%= t('common.createAccount') %></a>
   </div>
 </section>
+</main>
 
 <%- include('partials/sitefoot') %>
 

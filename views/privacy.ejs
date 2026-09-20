@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
 <head>
 <%- include('partials/head', { title: 'Privacy Policy — Evo Meals' }) %>
 <meta name="description" content="How Evo Meals collects, uses, shares, and retains data from parents, students, schools, and catering partners.">

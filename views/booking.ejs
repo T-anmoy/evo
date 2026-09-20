@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
 <head>
-<%- include('partials/head', { title: 'Book a Meal — Evo Meals' }) %>
+<%- include('partials/head', { title: t('meta.booking.title') }) %>
 </head>
 <body>
 <%- include('partials/appnav', { active: 'booking' }) %>
 
-<div class="page" style="max-width:680px;">
+<main class="page" id="main-content" style="max-width:680px;">
   <div class="page-head">
-    <span class="eyebrow">Book a meal</span>
-    <h1>Book &amp; pay</h1>
-    <p>Pay only for real school days — the total is calculated against your school's actual calendar, never a flat guess.</p>
+    <span class="eyebrow"><%= t('booking.eyebrow') %></span>
+    <h1><%= t('booking.heading') %></h1>
+    <p><%= t('booking.intro') %></p>
   </div>
 
   <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
   <% if (success) { %><div class="alert alert-success"><%- include('partials/success-icon') %><span><%= success %></span></div><% } %>
   <% if (typeof rebook !== 'undefined' && rebook) { %>
-    <div class="alert alert-info">Prefilled from your last booking — check the details below, then confirm.</div>
+    <div class="alert alert-info"><%= t('booking.rebookInfo') %></div>
   <% } %>
 
   <div class="card">
     <% if (students.length === 0) { %>
       <div class="empty-state">
         <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"/></svg></div>
-        <p><strong>Add a student to book a meal</strong>Bookings are tied to a registered child, so start there first.</p>
-        <a href="/students" class="btn btn-primary btn-sm" style="margin-top:16px;">Add a student</a>
+        <p><strong><%= t('booking.emptyTitle') %></strong><%= t('booking.emptyBody') %></p>
+        <a href="/students" class="btn btn-primary btn-sm" style="margin-top:16px;"><%= t('booking.emptyCta') %></a>
       </div>
     <% } else { %>
       <% // Rebooking wins if present; otherwise fall back to this parent's
@@ -38,7 +38,7 @@
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
         <div class="field">
-          <label for="studentSelect">Student</label>
+          <label for="studentSelect"><%= t('booking.labelStudent') %></label>
           <select name="studentId" id="studentSelect" required>
             <% students.forEach(s => { %>
               <option value="<%= s.id %>" data-school="<%= s.school %>" data-class="<%= s.class %>" <%= s.id === rebookStudentId ? 'selected' : '' %>><%= s.name %> — <%= s.school %></option>
@@ -48,7 +48,7 @@
         </div>
 
         <div class="field">
-          <label>Meal <span style="font-weight:400; color:var(--muted);">— tap a card to choose</span></label>
+          <label><%= t('booking.labelMeal') %> <span style="font-weight:400; color:var(--muted);"><%= t('booking.labelMealHint') %></span></label>
           <div class="picker-grid">
             <% menuItems.forEach((m, i) => { %>
               <div class="picker-card">
@@ -57,7 +57,7 @@
                   <span class="picker-thumb"><%- include('partials/dish-image', { m: m }) %></span>
                   <span class="picker-body">
                     <strong><%= m.name %></strong>
-                    <span class="picker-meta"><%= m.calories %> kcal · <%= m.protein %>g protein</span>
+                    <span class="picker-meta"><bdi><%= m.calories %> <%= t('common.kcal') %> · <%= m.protein %>g <%= t('common.protein') %></bdi></span>
                   </span>
                   <span class="check-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
                 </label>
@@ -67,15 +67,15 @@
         </div>
 
         <div class="field">
-          <label>Plan</label>
+          <label><%= t('booking.labelPlan') %></label>
           <div class="picker-grid plan-picker">
             <div class="picker-card">
               <input type="radio" name="planType" id="plan-single" value="single" <%= rebookPlan === 'single' ? 'checked' : '' %>>
               <label for="plan-single">
                 <span class="plan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
                 <span class="picker-body">
-                  <strong>Pay as you go</strong>
-                  <span class="picker-meta data-num">KWD <%= dailyRateKWD.toFixed(3) %> / day</span>
+                  <strong><%= t('booking.planSingleTitle') %></strong>
+                  <span class="picker-meta data-num"><bdi>KWD <%= dailyRateKWD.toFixed(3) %></bdi> <%= t('booking.planSinglePer') %></span>
                 </span>
                 <span class="check-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
               </label>
@@ -83,11 +83,11 @@
             <div class="picker-card">
               <input type="radio" name="planType" id="plan-monthly" value="monthly" <%= rebookPlan === 'monthly' ? 'checked' : '' %>>
               <label for="plan-monthly">
-                <span class="popular-tag">Most parents choose this</span>
+                <span class="popular-tag"><%= t('booking.planMonthlyBadge') %></span>
                 <span class="plan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 0 1 4 4L7 21l-5 1 1-5Z"/></svg></span>
                 <span class="picker-body">
-                  <strong>Subscription</strong>
-                  <span class="picker-meta">Priced by real school days left</span>
+                  <strong><%= t('booking.planMonthlyTitle') %></strong>
+                  <span class="picker-meta"><%= t('booking.planMonthlyMeta') %></span>
                 </span>
                 <span class="check-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
               </label>
@@ -97,11 +97,11 @@
 
         <div class="form-row">
           <div class="field">
-            <label for="startDate">Start date</label>
+            <label for="startDate"><%= t('booking.labelStartDate') %></label>
             <input type="date" name="startDate" id="startDate" value="<%= new Date().toISOString().split('T')[0] %>" required>
           </div>
           <div class="field" id="daysField">
-            <label for="daysInput">Number of days</label>
+            <label for="daysInput"><%= t('booking.labelDays') %></label>
             <input type="number" name="days" id="daysInput" inputmode="numeric" value="5" min="1" max="30">
           </div>
         </div>
@@ -110,20 +110,34 @@
 
         <div class="confirm-bar" id="confirmBar">
           <div id="totalBox" style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="color:rgba(255,255,255,0.65); font-size:13px; font-weight:500;">Total due</span>
-            <strong id="totalAmt" class="data-num" style="color:var(--lime-300); font-size:20px;">KWD 0.000</strong>
+            <span style="color:rgba(255,255,255,0.65); font-size:13px; font-weight:500;"><%= t('booking.totalDue') %></span>
+            <strong id="totalAmt" class="data-num" style="color:var(--lime-300); font-size:20px;"><bdi>KWD 0.000</bdi></strong>
           </div>
-          <button type="submit" class="btn btn-primary" style="width:100%;" id="confirmBtn">Confirm &amp; Pay via KNET (demo)</button>
+          <button type="submit" class="btn btn-primary" style="width:100%;" id="confirmBtn"><%= t('booking.confirmCta') %></button>
         </div>
-        <p class="hint" style="text-align:center; margin-top:8px;">KNET is Kuwait's national payment network — the same one your bank card already uses. Demo only here, no real payment is processed.</p>
+        <p class="hint" style="text-align:center; margin-top:8px;"><%= t('booking.knetHint') %></p>
       </form>
     <% } %>
   </div>
-</div>
+</main>
 
 <script>
   var SCHOOL_CALENDAR = <%- JSON.stringify(schoolCalendar) %>;
   var DAILY_RATE = <%- JSON.stringify(dailyRateKWD) %>;
+  // Translated fragments for the client-side live-preview calculation
+  // below — the same strings the server would use if this were a full
+  // page reload, so the preview never drifts into English while the rest
+  // of the page is Arabic (or vice versa).
+  var T = {
+    agePortionHint: <%- JSON.stringify(t('booking.agePortionHint')) %>,
+    noSchoolDaysNote: <%- JSON.stringify(t('booking.noSchoolDaysNote')) %>,
+    realSchoolDaysNote: <%- JSON.stringify(t('booking.realSchoolDaysNote')) %>,
+    realSchoolDayUnitOne: <%- JSON.stringify(t('booking.realSchoolDayUnitOne')) %>,
+    realSchoolDayUnitOther: <%- JSON.stringify(t('booking.realSchoolDayUnitOther')) %>
+  };
+  function fmt(str, vars) {
+    return str.replace(/\{(\w+)\}/g, function (m, k) { return (k in vars) ? vars[k] : m; });
+  }
 
   function endOfMonthISO(dateISO) {
     var d = new Date(dateISO + 'T00:00:00Z');
@@ -150,7 +164,7 @@
     var selected = studentSelect.options[studentSelect.selectedIndex];
     if (ageHint && selected) {
       var klass = selected.getAttribute('data-class');
-      ageHint.textContent = klass ? 'Portion and protein content matched to ' + klass + '.' : '';
+      ageHint.textContent = klass ? fmt(T.agePortionHint, { className: klass }) : '';
     }
 
     if (plan === 'monthly') {
@@ -164,10 +178,14 @@
         var total = Math.round(realDays.length * DAILY_RATE * 1000) / 1000;
         document.getElementById('totalAmt').textContent = 'KWD ' + total.toFixed(3);
         if (realDays.length === 0) {
-          note.textContent = 'No school days left at ' + school + ' between ' + startISO + ' and the end of that month — try a later start date.';
+          note.textContent = fmt(T.noSchoolDaysNote, { school: school, startDate: startISO });
           confirmBtn.disabled = true;
         } else {
-          note.textContent = realDays.length + ' real school day' + (realDays.length === 1 ? '' : 's') + ' at ' + school + ', from ' + startISO + ' through ' + monthEndISO + '.';
+          note.textContent = fmt(T.realSchoolDaysNote, {
+            count: realDays.length,
+            unit: realDays.length === 1 ? T.realSchoolDayUnitOne : T.realSchoolDayUnitOther,
+            school: school, startDate: startISO, monthEnd: monthEndISO
+          });
           confirmBtn.disabled = false;
         }
       } else {

@@ -6,10 +6,10 @@
 const SHOW_TRUST_STATS = false;
 %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
 <head>
-<%- include('partials/head', { title: 'Evo Meals — School Meal Programme, Kuwait' }) %>
-<meta name="description" content="Evo Meals runs the school meal programme for schools, parents, and catering partners in Kuwait — real menus, calendar-accurate pricing, and a notification the moment your child collects lunch.">
+<%- include('partials/head', { title: t('meta.home.title') }) %>
+<meta name="description" content="<%= t('meta.home.description') %>">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -29,17 +29,18 @@ const SHOW_TRUST_STATS = false;
 
 <%- include('partials/sitenav', { active: 'home' }) %>
 
+<main id="main-content">
 <!-- 4.1 Hero — parent-first -->
 <section class="hero hero-light">
   <div class="wrap-wide hero-inner">
     <div class="hero-copy">
-      <span class="eyebrow">For parents in Kuwait</span>
-      <h1>Freshly made. Clearly tracked. <em>Every school day.</em></h1>
-      <p class="lede">Choose from your school's meal programme, book the school days you need, and know the moment your child collects lunch.</p>
+      <span class="eyebrow"><%= t('home.hero.eyebrow') %></span>
+      <h1><%= t('home.hero.headlinePre') %> <em><%= t('home.hero.headlineEm') %></em></h1>
+      <p class="lede"><%= t('home.hero.lede') %></p>
       <div class="hero-actions hero-actions-3">
-        <a href="#supported-schools" class="btn btn-primary btn-hero-primary" data-magnetic>Check Your School</a>
-        <a href="/how-it-works" class="btn btn-outline-lime btn-sm">See How It Works</a>
-        <a href="/#app" class="btn btn-ghost btn-sm">Download App</a>
+        <a href="#supported-schools" class="btn btn-primary btn-hero-primary" data-magnetic><%= t('home.hero.ctaCheckSchool') %></a>
+        <a href="<%= locale === 'ar' ? '/ar/how-it-works' : '/how-it-works' %>" class="btn btn-outline-lime btn-sm"><%= t('home.hero.ctaHowItWorks') %></a>
+        <a href="#app" class="btn btn-ghost btn-sm"><%= t('common.downloadApp') %></a>
       </div>
     </div>
     <div class="hero-media-wrap" data-parallax>
@@ -49,15 +50,15 @@ const SHOW_TRUST_STATS = false;
           <source media="(max-width:900px)" srcset="/images/hero-mobile.png" type="image/png">
           <source media="(min-width:901px)" srcset="/images/hero-desktop.webp" type="image/webp">
           <source media="(min-width:901px)" srcset="/images/hero-desktop.png" type="image/png">
-          <img src="/images/hero-desktop.png" alt="A student opening her Evo Meals box to a freshly cooked hot lunch" fetchpriority="high" decoding="async">
+          <img src="/images/hero-desktop.png" alt="<%= t('home.hero.imgAlt') %>" fetchpriority="high" decoding="async">
         </picture>
         <span class="hero-media-glow"></span>
       </div>
       <div class="hero-toast" aria-hidden="true">
         <span class="hero-toast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
         <div>
-          <div class="hero-toast-title">Sara tapped in — lunch collected</div>
-          <div class="hero-toast-sub">12:04 PM · Arabiatta Chicken Pasta · illustrative example</div>
+          <div class="hero-toast-title"><%= t('home.hero.toastTitle') %></div>
+          <div class="hero-toast-sub"><bdi><%= t('home.hero.toastSub') %></bdi></div>
         </div>
       </div>
     </div>
@@ -94,13 +95,13 @@ const SHOW_TRUST_STATS = false;
 <section class="proof-section" id="supported-schools">
   <div class="wrap-wide proof-wrap">
     <div class="proof-intro" data-reveal>
-      <span class="eyebrow on-dark">Supported schools</span>
-      <p>Currently set up for these schools. More are added as each programme is configured — don't see yours? <a href="/contact" style="color:#fff; text-decoration:underline;">Get in touch</a> and we'll let you know what it takes to bring Evo Meals in.</p>
+      <span class="eyebrow on-dark"><%= t('home.supportedSchools.eyebrow') %></span>
+      <p><%- t('home.supportedSchools.intro', { link: `<a href="/contact" style="color:#fff; text-decoration:underline;">${t('home.supportedSchools.introLink')}</a>` }) %></p>
     </div>
     <ul class="proof-names">
-      <li data-reveal data-reveal-group="proof"><span class="proof-name">American Creativity Academy</span><span class="proof-tag">Supported school</span></li>
-      <li data-reveal data-reveal-group="proof"><span class="proof-name">Kuwait English School</span><span class="proof-tag">Supported school</span></li>
-      <li data-reveal data-reveal-group="proof"><span class="proof-name">The English School</span><span class="proof-tag">Supported school</span></li>
+      <li data-reveal data-reveal-group="proof"><span class="proof-name">American Creativity Academy</span><span class="proof-tag"><%= t('home.supportedSchools.tag') %></span></li>
+      <li data-reveal data-reveal-group="proof"><span class="proof-name">Kuwait English School</span><span class="proof-tag"><%= t('home.supportedSchools.tag') %></span></li>
+      <li data-reveal data-reveal-group="proof"><span class="proof-name">The English School</span><span class="proof-tag"><%= t('home.supportedSchools.tag') %></span></li>
     </ul>
   </div>
 </section>
@@ -112,25 +113,25 @@ const SHOW_TRUST_STATS = false;
 <section class="section" id="confidence">
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">What you can actually check, before you book</span>
-      <h2>Not just "trust us." See it yourself.</h2>
+      <span class="eyebrow"><%= t('home.confidence.eyebrow') %></span>
+      <h2><%= t('home.confidence.heading') %></h2>
     </div>
     <div class="proof-row" data-reveal>
       <div class="proof-row-item">
         <span class="proof-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.4 3.4 8.4 8 9 4.6-.6 8-4.6 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
-        <span>Nutrition &amp; allergen info, per dish</span>
+        <span><%= t('home.confidence.item1') %></span>
       </div>
       <div class="proof-row-item">
         <span class="proof-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
-        <span>A clear digital payment, before you confirm</span>
+        <span><%= t('home.confidence.item2') %></span>
       </div>
       <div class="proof-row-item">
         <span class="proof-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8.5a8 8 0 0 1 12 0M8.5 11a4.5 4.5 0 0 1 7 0M12 14v.01"/></svg></span>
-        <span>Tap-to-collect at the counter</span>
+        <span><%= t('home.confidence.item3') %></span>
       </div>
       <div class="proof-row-item">
         <span class="proof-row-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></span>
-        <span>A notification when they've eaten</span>
+        <span><%= t('home.confidence.item4') %></span>
       </div>
     </div>
   </div>
@@ -140,9 +141,9 @@ const SHOW_TRUST_STATS = false;
 <section class="section on-tint" id="menu-proof">
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">Sample menu experience</span>
-      <h2>Know what's on the plate.</h2>
-      <p>Every dish shows real nutrition and allergen data — this is seeded sample content from the current menu configuration, not a live daily menu feed.</p>
+      <span class="eyebrow"><%= t('home.menuProof.eyebrow') %></span>
+      <h2><%= t('home.menuProof.heading') %></h2>
+      <p><%= t('home.menuProof.intro') %></p>
     </div>
     <div class="grid-4">
       <% menuItems.slice(0, 2).forEach(m => { %>
@@ -153,14 +154,14 @@ const SHOW_TRUST_STATS = false;
           <div class="menu-card-body">
             <span class="tag"><%= m.tag %></span>
             <h3><%= m.name %></h3>
-            <div class="menu-nutri"><span><%= m.calories %> kcal</span><span>·</span><span><%= m.protein %>g protein</span></div>
+            <div class="menu-nutri"><span><bdi><%= m.calories %> <%= t('common.kcal') %></bdi></span><span>·</span><span><bdi><%= m.protein %>g <%= t('common.protein') %></bdi></span></div>
           </div>
         </div>
       <% }) %>
     </div>
-    <p class="nutrition-more" data-reveal>Allergen information is per-dish, not a blanket menu guarantee — check each dish's own detail if your child has a specific allergy.</p>
+    <p class="nutrition-more" data-reveal><%= t('home.menuProof.footnote') %></p>
     <div style="text-align:center; margin-top:24px;">
-      <a href="/parents#menu" class="btn btn-outline">Explore the menu experience</a>
+      <a href="<%= locale === 'ar' ? '/ar/parents' : '/parents' %>#menu" class="btn btn-outline"><%= t('home.menuProof.cta') %></a>
     </div>
   </div>
 </section>
@@ -175,15 +176,15 @@ const SHOW_TRUST_STATS = false;
 <section class="section on-cream" id="collection-proof">
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">The moment that matters</span>
-      <h2>Know when the meal was collected.</h2>
-      <p>One tap at the counter confirms the meal and notifies you.</p>
+      <span class="eyebrow"><%= t('home.collectionProof.eyebrow') %></span>
+      <h2><%= t('home.collectionProof.heading') %></h2>
+      <p><%= t('home.collectionProof.intro') %></p>
     </div>
     <div class="flow-caption">
-      <span>Tap</span><span class="flow-caption-arrow">→</span><span>Collected</span><span class="flow-caption-arrow">→</span><span>Notified</span>
+      <span><%= t('home.collectionProof.flowTap') %></span><span class="flow-caption-arrow" aria-hidden="true">→</span><span><%= t('home.collectionProof.flowCollected') %></span><span class="flow-caption-arrow" aria-hidden="true">→</span><span><%= t('home.collectionProof.flowNotified') %></span>
     </div>
     <div style="text-align:center; margin-bottom:8px;">
-      <span class="sample-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> Illustrative example, not a live feed</span>
+      <span class="sample-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> <%= t('home.collectionProof.sampleTag') %></span>
     </div>
     <div class="parent-flow-demo" aria-hidden="true" data-reveal>
       <div class="tap-demo">
@@ -204,8 +205,8 @@ const SHOW_TRUST_STATS = false;
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1"><path d="M20 6 9 17l-5-5"/></svg>
           </div>
           <div>
-            <div class="toast-title">Ahmed tapped in — lunch collected</div>
-            <div class="toast-sub">12:14 PM · Arabiatta Chicken Pasta · illustrative example</div>
+            <div class="toast-title"><%= t('home.collectionProof.toastTitle') %></div>
+            <div class="toast-sub"><bdi><%= t('home.collectionProof.toastSub') %></bdi></div>
           </div>
         </div>
       </div>
@@ -217,30 +218,30 @@ const SHOW_TRUST_STATS = false;
 <section class="section" id="multiple-children">
   <div class="wrap what-is-wrap">
     <div data-reveal>
-      <span class="eyebrow">One account, every child</span>
-      <h2>One account. Every child.</h2>
-      <p>Add each child once — their school, class, and meal plan stay separate, but you check on all of them from the same place.</p>
+      <span class="eyebrow"><%= t('home.multipleChildren.eyebrow') %></span>
+      <h2><%= t('home.multipleChildren.heading') %></h2>
+      <p><%= t('home.multipleChildren.intro') %></p>
     </div>
     <div class="card" data-reveal style="max-width:480px;">
       <div class="dash-preview-head" style="padding:0 0 14px;">
-        <strong style="font-family:'Montserrat',Arial,sans-serif; font-size:15px; color:var(--navy-950);">Your account</strong>
-        <span class="sample-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> Sample view</span>
+        <strong style="font-family:'Montserrat',Arial,sans-serif; font-size:15px; color:var(--navy-950);"><%= t('home.multipleChildren.cardTitle') %></strong>
+        <span class="sample-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> <%= t('home.multipleChildren.sampleView') %></span>
       </div>
       <div class="student-row">
         <div class="avatar">A</div>
         <div class="student-meta">
           <strong>Ahmed</strong>
-          <span>Kuwait English School · Grade 3</span>
+          <span><%= t('home.multipleChildren.child1School') %></span>
         </div>
-        <span class="status-line ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> Collected</span>
+        <span class="status-line ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('home.multipleChildren.statusCollected') %></span>
       </div>
       <div class="student-row">
         <div class="avatar">S</div>
         <div class="student-meta">
           <strong>Sara</strong>
-          <span>American Creativity Academy · Grade 1</span>
+          <span><%= t('home.multipleChildren.child2School') %></span>
         </div>
-        <span class="status-line pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> Booked</span>
+        <span class="status-line pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> <%= t('home.multipleChildren.statusBooked') %></span>
       </div>
     </div>
   </div>
@@ -253,15 +254,15 @@ const SHOW_TRUST_STATS = false;
     <div class="grid-2">
       <div class="benefit-card" data-reveal data-reveal-group="b2b">
         <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9l8-5 8 5v12"/><path d="M9 21v-6h6v6"/></svg></div>
-        <h3>For Schools</h3>
-        <p>Run your school meal programme with less manual coordination.</p>
-        <a href="/schools" class="btn btn-dark btn-sm">Partner With Evo Meals</a>
+        <h3><%= t('home.b2b.schoolsTitle') %></h3>
+        <p><%= t('home.b2b.schoolsBody') %></p>
+        <a href="<%= locale === 'ar' ? '/ar/schools' : '/schools' %>" class="btn btn-dark btn-sm"><%= t('home.b2b.schoolsCta') %></a>
       </div>
       <div class="benefit-card" data-reveal data-reveal-group="b2b">
         <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8 12 4l8 4-8 4-8-4Z"/><path d="M4 8v8l8 4 8-4V8"/></svg></div>
-        <h3>For Caterers</h3>
-        <p>Prepare from clear digital demand and school-specific orders.</p>
-        <a href="/caterers" class="btn btn-dark btn-sm">Become a Catering Partner</a>
+        <h3><%= t('home.b2b.caterersTitle') %></h3>
+        <p><%= t('home.b2b.caterersBody') %></p>
+        <a href="/caterers" class="btn btn-dark btn-sm"><%= t('home.b2b.caterersCta') %></a>
       </div>
     </div>
   </div>
@@ -271,20 +272,20 @@ const SHOW_TRUST_STATS = false;
 <section class="section" id="app">
   <div class="wrap app-section-wrap">
     <div data-reveal>
-      <span class="eyebrow">The Evo Meals app</span>
-      <h2>Your child's meals.<br>At your fingertips.</h2>
+      <span class="eyebrow"><%= t('home.app.eyebrow') %></span>
+      <h2><%= t('home.app.headingLine1') %><br><%= t('home.app.headingLine2') %></h2>
       <div class="app-flow">
-        <span>Menu</span><span class="app-flow-arrow">→</span><span>Choose</span><span class="app-flow-arrow">→</span><span>Pay</span><span class="app-flow-arrow">→</span><span>Collect</span><span class="app-flow-arrow">→</span><span>Notified</span>
+        <span><%= t('home.app.flowMenu') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('home.app.flowChoose') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('home.app.flowPay') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('home.app.flowCollect') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('home.app.flowNotified') %></span>
       </div>
-      <p class="app-download-cta" style="font-weight:700; margin-bottom:10px;">Download the app!</p>
+      <p class="app-download-cta" style="font-weight:700; margin-bottom:10px;"><%= t('home.app.downloadCta') %></p>
       <div class="store-badges">
         <a href="https://apps.apple.com/us/app/evo-school-meal/id6738001343" class="store-badge" data-magnetic target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zm3.63-3.331c.837-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.817-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701z"/></svg>
-          <span>App Store</span>
+          <span><%= t('common.appStore') %></span>
         </a>
         <a href="https://play.google.com/store/apps/details?id=com.pmg.school" class="store-badge" data-magnetic target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zM13.792 12l3.606-3.583L4.24.936A1.5 1.5 0 0 0 3.312.7L13.792 12zM3.24 23.316a1.5 1.5 0 0 0 .928-.235l12.876-7.462-3.604-3.552L3.24 23.316z"/></svg>
-          <span>Google Play</span>
+          <span><%= t('common.googlePlay') %></span>
         </a>
       </div>
     </div>
@@ -295,36 +296,39 @@ const SHOW_TRUST_STATS = false;
 <section class="section on-tint" id="faq">
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">Before you book</span>
-      <h2>A few quick answers</h2>
+      <span class="eyebrow"><%= t('home.faq.eyebrow') %></span>
+      <h2><%= t('home.faq.heading') %></h2>
     </div>
     <div class="faq-list">
       <div class="faq-item is-open">
-        <button class="faq-summary" type="button" aria-expanded="true"><span>How does the "tap" actually work?</span><span class="plus" aria-hidden="true"></span></button>
+        <button class="faq-summary" type="button" aria-expanded="true"><span><%= t('home.faq.q1') %></span><span class="plus" aria-hidden="true"></span></button>
         <div class="faq-content">
-          <div class="faq-answer"><div class="faq-answer-inner">Your child carries a school-issued meal card. At the counter, they tap it against the reader — that single tap confirms their booking, marks the meal collected, and updates your dashboard within moments. No PIN and no cash changes hands.</div></div>
+          <div class="faq-answer"><div class="faq-answer-inner"><%= t('home.faq.a1') %></div></div>
         </div>
       </div>
       <div class="faq-item">
-        <button class="faq-summary" type="button" aria-expanded="false"><span>Is my payment information safe?</span><span class="plus" aria-hidden="true"></span></button>
+        <button class="faq-summary" type="button" aria-expanded="false"><span><%= t('home.faq.q2') %></span><span class="plus" aria-hidden="true"></span></button>
         <div class="faq-content">
-          <div class="faq-answer"><div class="faq-answer-inner">Payments go through KNET, Kuwait's national payment gateway — Evo Meals never stores your card details. Your child's Civil ID is masked everywhere it's shown in the app, including to you.</div></div>
+          <div class="faq-answer"><div class="faq-answer-inner"><%= t('home.faq.a2') %></div></div>
         </div>
       </div>
       <div class="faq-item">
-        <button class="faq-summary" type="button" aria-expanded="false"><span>My child has an allergy. How does that get handled?</span><span class="plus" aria-hidden="true"></span></button>
+        <button class="faq-summary" type="button" aria-expanded="false"><span><%= t('home.faq.q3') %></span><span class="plus" aria-hidden="true"></span></button>
         <div class="faq-content">
-          <div class="faq-answer"><div class="faq-answer-inner">You list allergies on their student profile once. Dishes carry their own allergen information, but this is per-dish information, not an independently verified guarantee — check the dish's own detail if your child has a specific allergy.</div></div>
+          <div class="faq-answer"><div class="faq-answer-inner"><%= t('home.faq.a3') %></div></div>
         </div>
       </div>
       <div class="faq-item">
-        <button class="faq-summary" type="button" aria-expanded="false"><span>What if I need to cancel a booking?</span><span class="plus" aria-hidden="true"></span></button>
+        <button class="faq-summary" type="button" aria-expanded="false"><span><%= t('home.faq.q4') %></span><span class="plus" aria-hidden="true"></span></button>
         <div class="faq-content">
-          <div class="faq-answer"><div class="faq-answer-inner">Cancel any upcoming booking from your history page before the meal is collected — the full amount is refunded to your original payment method.</div></div>
+          <div class="faq-answer"><div class="faq-answer-inner"><%= t('home.faq.a4') %></div></div>
         </div>
       </div>
     </div>
-    <p class="nutrition-more" data-reveal>Booking, pricing, and the full parent journey: see <a href="/parents">For Parents</a>. Platform-wide capabilities: see <a href="/features">Features</a>.</p>
+    <p class="nutrition-more" data-reveal><%- t('home.faq.footnote', {
+      parents: `<a href="${locale === 'ar' ? '/ar/parents' : '/parents'}">${t('home.faq.footnoteParents')}</a>`,
+      features: `<a href="${locale === 'ar' ? '/ar/features' : '/features'}">${t('home.faq.footnoteFeatures')}</a>`
+    }) %></p>
   </div>
 </section>
 
@@ -332,31 +336,32 @@ const SHOW_TRUST_STATS = false;
 <section class="cta-band">
   <div class="wrap">
     <div class="section-head" data-reveal style="margin-bottom:32px;">
-      <span class="eyebrow on-dark" style="justify-content:center;">Ready when you are</span>
-      <h2 style="margin-top:16px;">Get started, whoever you are.</h2>
+      <span class="eyebrow on-dark" style="justify-content:center;"><%= t('home.finalCta.eyebrow') %></span>
+      <h2 style="margin-top:16px;"><%= t('home.finalCta.heading') %></h2>
     </div>
     <div class="grid-3">
       <div class="benefit-card" data-reveal data-reveal-group="finalcta" style="text-align:center;">
-        <h3>Parent</h3>
-        <p>Check your school, then register or log in to start booking.</p>
+        <h3><%= t('home.finalCta.parentTitle') %></h3>
+        <p><%= t('home.finalCta.parentBody') %></p>
         <div class="hero-actions" style="justify-content:center; flex-wrap:wrap;">
-          <a href="/register" class="btn btn-primary btn-sm">Register</a>
-          <a href="/login" class="btn btn-outline btn-sm">Log in</a>
+          <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-primary btn-sm"><%= t('common.register') %></a>
+          <a href="<%= locale === 'ar' ? '/ar/login' : '/login' %>" class="btn btn-outline btn-sm"><%= t('common.login') %></a>
         </div>
       </div>
       <div class="benefit-card" data-reveal data-reveal-group="finalcta" style="text-align:center;">
-        <h3>School</h3>
-        <p>Talk to us about running your programme on Evo Meals.</p>
-        <a href="/schools" class="btn btn-primary btn-sm">Partner With Evo Meals</a>
+        <h3><%= t('home.finalCta.schoolTitle') %></h3>
+        <p><%= t('home.finalCta.schoolBody') %></p>
+        <a href="<%= locale === 'ar' ? '/ar/schools' : '/schools' %>" class="btn btn-primary btn-sm"><%= t('home.finalCta.schoolCta') %></a>
       </div>
       <div class="benefit-card" data-reveal data-reveal-group="finalcta" style="text-align:center;">
-        <h3>Caterer</h3>
-        <p>Connect your kitchen to a school's digital order queue.</p>
-        <a href="/caterers" class="btn btn-primary btn-sm">Become a Catering Partner</a>
+        <h3><%= t('home.finalCta.catererTitle') %></h3>
+        <p><%= t('home.finalCta.catererBody') %></p>
+        <a href="/caterers" class="btn btn-primary btn-sm"><%= t('home.finalCta.catererCta') %></a>
       </div>
     </div>
   </div>
 </section>
+</main>
 
 <%- include('partials/sitefoot') %>
 

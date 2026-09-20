@@ -1,24 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
 <head>
-<%- include('partials/head', { title: 'Menu — Evo Meals' }) %>
+<%- include('partials/head', { title: t('meta.menu.title') }) %>
 </head>
 <body>
 <%- include('partials/appnav', { active: 'menu' }) %>
 
-<div class="page">
+<main class="page" id="main-content">
   <div class="page-head">
-    <span class="eyebrow">This week's menu</span>
-    <h1>Real meals, real nutrition</h1>
-    <p>Every dish shows full nutrition info — this fixes a content gap flagged in the earlier system, where menu tabs existed but were never populated.</p>
+    <span class="eyebrow"><%= t('menu.eyebrow') %></span>
+    <h1><%= t('menu.heading') %></h1>
+    <p><%= t('menu.intro') %></p>
   </div>
 
   <div class="allergen-banner">
-    <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg><span>Allergen information available per dish</span></div>
+    <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg><span><%= t('menu.allergenBanner') %></span></div>
   </div>
-  <p class="allergen-commitment">Special dietary claims — nut-free, shellfish-free, sesame-free, soy-free, egg-free, gluten-free, lactose-free — apply to specific meal preparations, not a blanket guarantee across every dish, and aren't independently verified by Evo Meals. Check each dish's own detail before booking if your child has a specific allergy.</p>
-  <p class="allergen-commitment">Portions and protein content shown are the base recipe — each student's actual serving is matched to their registered grade when you book.</p>
+  <p class="allergen-commitment"><%= t('menu.commitment1') %></p>
+  <p class="allergen-commitment"><%= t('menu.commitment2') %></p>
 
+  <!-- Dish names, tags, and ingredients are real product/menu data (from
+       seed.json via db.js), not UI copy — they are not translated this
+       phase, since doing so would mean adding a parallel Arabic dataset to
+       the data layer, out of scope for a localization pass. See
+       docs/evo-implementation/PHASE-04-LOCALIZATION-RESPONSIVE.md. -->
   <div class="grid-2">
     <% menuItems.forEach(m => { %>
       <div class="menu-card menu-card-full">
@@ -28,18 +33,18 @@
         <div class="menu-card-body">
           <span class="tag"><%= m.tag %></span>
           <h3><%= m.name %></h3>
-          <p class="menu-ingredients"><strong>Ingredients:</strong> <%= m.ingredients %></p>
+          <p class="menu-ingredients"><strong><%= t('menu.ingredientsLabel') %></strong> <%= m.ingredients %></p>
           <div class="menu-nutri-grid">
-            <div><span class="menu-nutri-val data-num"><%= m.calories %></span><span class="menu-nutri-key">kcal</span></div>
-            <div><span class="menu-nutri-val data-num"><%= m.protein %>g</span><span class="menu-nutri-key">Protein</span></div>
-            <div><span class="menu-nutri-val data-num"><%= m.carbs %>g</span><span class="menu-nutri-key">Carbs</span></div>
-            <div><span class="menu-nutri-val data-num"><%= m.fat %>g</span><span class="menu-nutri-key">Fat</span></div>
+            <div><span class="menu-nutri-val data-num"><%= m.calories %></span><span class="menu-nutri-key"><%= t('menu.kcal') %></span></div>
+            <div><span class="menu-nutri-val data-num"><bdi><%= m.protein %>g</bdi></span><span class="menu-nutri-key"><%= t('menu.protein') %></span></div>
+            <div><span class="menu-nutri-val data-num"><bdi><%= m.carbs %>g</bdi></span><span class="menu-nutri-key"><%= t('menu.carbs') %></span></div>
+            <div><span class="menu-nutri-val data-num"><bdi><%= m.fat %>g</bdi></span><span class="menu-nutri-key"><%= t('menu.fat') %></span></div>
           </div>
         </div>
       </div>
     <% }) %>
   </div>
-</div>
+</main>
 
 <%- include('partials/appfoot') %>
 </body>

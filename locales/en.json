@@ -1,0 +1,560 @@
+{
+  "meta": {
+    "siteName": "Evo Meals",
+    "home": { "title": "Evo Meals — School Meal Programme, Kuwait", "description": "Evo Meals runs the school meal programme for schools, parents, and catering partners in Kuwait — real menus, calendar-accurate pricing, and a notification the moment your child collects lunch." },
+    "parents": { "title": "For Parents — Evo Meals", "description": "Book school meals, manage subscriptions, and know the moment your child collects lunch — all from the Evo Meals parent account. Real-time notifications, allergen-checked menus, and calendar-accurate KNET payments." },
+    "schools": { "title": "For Schools — Evo Meals School Meal Management Platform", "description": "Evo Meals partners with schools to run their school meal program in Kuwait digitally — automated subscriptions and orders, student-level meal accuracy, real-time dashboards, and a revenue-sharing partnership model." },
+    "howItWorks": { "title": "How It Works — Evo Meals", "description": "How a meal moves through Evo Meals — from a school's program, through a parent's subscription, to a student's tap-to-collect at the counter." },
+    "features": { "title": "Features — Evo Meals", "description": "Everything live in the Evo Meals platform today, organized by who uses it — parents, schools, caterers, students, and administrators." },
+    "login": { "title": "Log in — Evo Meals" },
+    "register": { "title": "Sign up — Evo Meals" },
+    "forgotPassword": { "title": "Forgot password — Evo Meals" },
+    "dashboard": { "title": "Dashboard — Evo Meals" },
+    "menu": { "title": "Menu — Evo Meals" },
+    "booking": { "title": "Book a Meal — Evo Meals" }
+  },
+
+  "common": {
+    "login": "Log in",
+    "register": "Register",
+    "downloadApp": "Download App",
+    "createAccount": "Create your account",
+    "appStore": "App Store",
+    "googlePlay": "Google Play",
+    "kcal": "kcal",
+    "protein": "protein"
+  },
+
+  "nav": {
+    "home": "Home",
+    "forParents": "For Parents",
+    "forSchools": "For Schools",
+    "forCaterers": "For Caterers",
+    "howItWorks": "How It Works",
+    "features": "Features",
+    "about": "About",
+    "aboutFull": "About Evo Meals",
+    "contact": "Contact",
+    "menuToggle": "Menu",
+    "closeMenu": "Close menu",
+    "langSwitchLabel": "Switch language"
+  },
+
+  "footer": {
+    "tagline": "Kuwait's school meal management platform — subscriptions, tap-to-collect, and real-time reporting for parents, schools, and caterers.",
+    "parentsHeading": "Parents",
+    "menu": "Menu",
+    "howItWorks": "How It Works",
+    "orderMeals": "Order Meals",
+    "faq": "FAQ",
+    "schoolsHeading": "Schools",
+    "forSchools": "For Schools",
+    "partnerWithUs": "Partner With Us",
+    "caterersHeading": "Caterers",
+    "forCaterers": "For Caterers",
+    "companyHeading": "Company",
+    "about": "About Evo Meals",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "address": "Farwaniya, Kuwait",
+    "instagram": "Instagram",
+    "copyright": "© {year} Evo Meals · Kuwait",
+    "disclaimer": "Evo Meals connects parents with an independent catering partner — it does not prepare meals itself."
+  },
+
+  "a11y": {
+    "skipToContent": "Skip to content"
+  },
+
+  "appNav": {
+    "dashboard": "Dashboard",
+    "students": "Students",
+    "bookAMeal": "Book a Meal",
+    "menu": "Menu",
+    "history": "History",
+    "staff": "Staff",
+    "profile": "Profile",
+    "logout": "Log out",
+    "notifications": "Notifications",
+    "markAllRead": "Mark all read",
+    "noNotifications": "No notifications yet.",
+    "viewAllOnDashboard": "View all on dashboard",
+    "markAsRead": "Mark as read"
+  },
+
+  "appFoot": {
+    "parentAccountHeading": "Parent account",
+    "manageHeading": "Manage"
+  },
+
+  "home": {
+    "hero": {
+      "eyebrow": "For parents in Kuwait",
+      "headlinePre": "Freshly made. Clearly tracked.",
+      "headlineEm": "Every school day.",
+      "lede": "Choose from your school's meal programme, book the school days you need, and know the moment your child collects lunch.",
+      "ctaCheckSchool": "Check Your School",
+      "ctaHowItWorks": "See How It Works",
+      "toastTitle": "Sara tapped in — lunch collected",
+      "toastSub": "12:04 PM · Arabiatta Chicken Pasta · illustrative example",
+      "imgAlt": "A student opening her Evo Meals box to a freshly cooked hot lunch"
+    },
+    "supportedSchools": {
+      "eyebrow": "Supported schools",
+      "intro": "Currently set up for these schools. More are added as each programme is configured — don't see yours? {link} and we'll let you know what it takes to bring Evo Meals in.",
+      "introLink": "Get in touch",
+      "tag": "Supported school"
+    },
+    "confidence": {
+      "eyebrow": "What you can actually check, before you book",
+      "heading": "Not just \"trust us.\" See it yourself.",
+      "item1": "Nutrition & allergen info, per dish",
+      "item2": "A clear digital payment, before you confirm",
+      "item3": "Tap-to-collect at the counter",
+      "item4": "A notification when they've eaten"
+    },
+    "menuProof": {
+      "eyebrow": "Sample menu experience",
+      "heading": "Know what's on the plate.",
+      "intro": "Every dish shows real nutrition and allergen data — this is seeded sample content from the current menu configuration, not a live daily menu feed.",
+      "footnote": "Allergen information is per-dish, not a blanket menu guarantee — check each dish's own detail if your child has a specific allergy.",
+      "cta": "Explore the menu experience"
+    },
+    "collectionProof": {
+      "eyebrow": "The moment that matters",
+      "heading": "Know when the meal was collected.",
+      "intro": "One tap at the counter confirms the meal and notifies you.",
+      "flowTap": "Tap", "flowCollected": "Collected", "flowNotified": "Notified",
+      "sampleTag": "Illustrative example, not a live feed",
+      "toastTitle": "Ahmed tapped in — lunch collected",
+      "toastSub": "12:14 PM · Arabiatta Chicken Pasta · illustrative example"
+    },
+    "multipleChildren": {
+      "eyebrow": "One account, every child",
+      "heading": "One account. Every child.",
+      "intro": "Add each child once — their school, class, and meal plan stay separate, but you check on all of them from the same place.",
+      "cardTitle": "Your account",
+      "sampleView": "Sample view",
+      "child1School": "Kuwait English School · Grade 3",
+      "child2School": "American Creativity Academy · Grade 1",
+      "statusCollected": "Collected",
+      "statusBooked": "Booked"
+    },
+    "b2b": {
+      "schoolsTitle": "For Schools",
+      "schoolsBody": "Run your school meal programme with less manual coordination.",
+      "schoolsCta": "Partner With Evo Meals",
+      "caterersTitle": "For Caterers",
+      "caterersBody": "Prepare from clear digital demand and school-specific orders.",
+      "caterersCta": "Become a Catering Partner"
+    },
+    "app": {
+      "eyebrow": "The Evo Meals app",
+      "headingLine1": "Your child's meals.",
+      "headingLine2": "At your fingertips.",
+      "flowMenu": "Menu",
+      "flowChoose": "Choose",
+      "flowPay": "Pay",
+      "flowCollect": "Collect",
+      "flowNotified": "Notified",
+      "downloadCta": "Download the app!"
+    },
+    "faq": {
+      "eyebrow": "Before you book",
+      "heading": "A few quick answers",
+      "q1": "How does the \"tap\" actually work?",
+      "a1": "Your child carries a school-issued meal card. At the counter, they tap it against the reader — that single tap confirms their booking, marks the meal collected, and updates your dashboard within moments. No PIN and no cash changes hands.",
+      "q2": "Is my payment information safe?",
+      "a2": "Payments go through KNET, Kuwait's national payment gateway — Evo Meals never stores your card details. Your child's Civil ID is masked everywhere it's shown in the app, including to you.",
+      "q3": "My child has an allergy. How does that get handled?",
+      "a3": "You list allergies on their student profile once. Dishes carry their own allergen information, but this is per-dish information, not an independently verified guarantee — check the dish's own detail if your child has a specific allergy.",
+      "q4": "What if I need to cancel a booking?",
+      "a4": "Cancel any upcoming booking from your history page before the meal is collected — the full amount is refunded to your original payment method.",
+      "footnote": "Booking, pricing, and the full parent journey: see {parents}. Platform-wide capabilities: see {features}.",
+      "footnoteParents": "For Parents",
+      "footnoteFeatures": "Features"
+    },
+    "finalCta": {
+      "eyebrow": "Ready when you are",
+      "heading": "Get started, whoever you are.",
+      "parentTitle": "Parent",
+      "parentBody": "Check your school, then register or log in to start booking.",
+      "schoolTitle": "School",
+      "schoolBody": "Talk to us about running your programme on Evo Meals.",
+      "schoolCta": "Partner With Evo Meals",
+      "catererTitle": "Caterer",
+      "catererBody": "Connect your kitchen to a school's digital order queue.",
+      "catererCta": "Become a Catering Partner"
+    }
+  },
+
+  "howItWorksSection": {
+    "eyebrow": "How the platform works",
+    "heading": "From school programme to your child's hands.",
+    "intro": "How a meal moves through the system, in six steps.",
+    "step1Role": "School", "step1Title": "Sets the programme", "step1Body": "Partners with Evo Meals and onboards its parent community.",
+    "step2Role": "Parent", "step2Title": "Books & pays", "step2Body": "Books a plan and pays only for real school days.",
+    "step3Role": "Evo Meals", "step3Title": "Routes the order", "step3Body": "Matches each order to the right student and allergy profile.",
+    "step4Role": "Caterer", "step4Title": "Prepares the meal", "step4Body": "Sees real orders and prepares exactly what's booked.",
+    "step5Role": "Student", "step5Title": "Taps & collects", "step5Body": "One tap at the counter confirms the meal.",
+    "step6Role": "Parent", "step6Title": "Gets notified", "step6Body": "You see which meal, and when it was collected."
+  },
+
+  "howItWorks": {
+    "hero": {
+      "eyebrow": "How It Works",
+      "heading": "How a meal actually moves through the system.",
+      "lede": "From a school's program to a student's tap-to-collect — see the full breakdown for {parents}, {schools}, and {caterers}.",
+      "ledeParents": "parents", "ledeSchools": "schools", "ledeCaterers": "caterers"
+    },
+    "roleFlows": {
+      "eyebrow": "The same flow, from each seat",
+      "heading": "What it looks like for you specifically.",
+      "parentTitle": "Parent", "parentStep1": "Book", "parentStep2": "Pay", "parentStep3": "Tap", "parentStep4": "Notified",
+      "schoolTitle": "School", "schoolStep1": "Set up", "schoolStep2": "Monitor", "schoolStep3": "Report",
+      "catererTitle": "Caterer", "catererStep1": "Receive", "catererStep2": "Prepare", "catererStep3": "Deliver"
+    },
+    "cta": {
+      "eyebrow": "Ready when you are",
+      "heading": "See what this looks like for you.",
+      "body": "Whether you're a parent, a school, or a caterer, there's a dedicated page with the details."
+    }
+  },
+
+  "featuresSection": {
+    "eyebrow": "Platform features",
+    "heading": "Real capability, not just a booking form.",
+    "intro": "Everything below is live in the product today — organized by who actually uses it.",
+    "parentsTitle": "Parents", "parentsChip1": "Order & Subscribe", "parentsChip2": "Live Notifications",
+    "schoolsTitle": "Schools", "schoolsChip1": "Live Dashboards", "schoolsChip2": "Participation Analytics",
+    "caterersTitle": "Caterers", "caterersChip1": "Digital Order Queue", "caterersChip2": "Demand Visibility",
+    "studentsTitle": "Students", "studentsChip1": "Allergy-Matched Meals", "studentsChip2": "Tap-to-Collect",
+    "adminsTitle": "Administrators", "adminsChip1": "Centralized Management", "adminsChip2": "Revenue Reporting"
+  },
+
+  "features": {
+    "hero": { "eyebrow": "Features", "heading": "What's actually live in the platform today.", "lede": "Organized by who uses it — parents, schools, caterers, students, and administrators." },
+    "cta": { "eyebrow": "Ready when you are", "heading": "See what this looks like for you.", "body": "Whether you're a parent, a school, or a caterer, there's a dedicated page with the details." }
+  },
+
+  "parents": {
+    "hero": {
+      "eyebrow": "For Parents",
+      "headline1": "Know they ate.", "headline2": "Know what they ate.", "headlineEm": "Never have to ask.",
+      "lede": "One account for every child, every meal. Book a plan, pay only for the real school days it covers, and see the exact moment they've collected lunch — dish, time, done.",
+      "toastTitle": "Ahmed tapped in — lunch collected",
+      "toastSub": "12:14 PM · Arabiatta Chicken Pasta · illustrative example"
+    },
+    "journey": {
+      "eyebrow": "How it works for you",
+      "heading": "Four steps, once a term.",
+      "intro": "Set it up once. From then on, lunch just happens — and you find out about it, instead of wondering.",
+      "checklist1": "Convenience", "checklist2": "Transparent menus", "checklist3": "Easy subscriptions", "checklist4": "Digital payments", "checklist5": "Notifications",
+      "step1Label": "Book", "step1Title": "Pick a plan", "step1Body": "Real school days, real total — shown before you confirm.",
+      "step2Label": "Pay", "step2Title": "Pay via KNET", "step2Body": "Pay the exact amount. No wallet, no top-ups, no forgotten lunch money.",
+      "step3Label": "Tap", "step3Title": "Your child taps in", "step3Body": "One tap at the counter. No PIN, no cash queue.",
+      "step4Label": "Notified", "step4Title": "You see it happen", "step4Body": "The moment they tap, you know — which meal, what time.",
+      "journeyLabel": "Your complete parent journey — not just booking",
+      "pill1": "View the menu", "pill2": "Check nutritional info", "pill3": "Subscribe to a plan", "pill4": "Select meals",
+      "pill5": "Pay securely", "pill6": "Track orders", "pill7": "Get notifications", "pill8": "Manage multiple children", "pill9": "Renew your subscription"
+    },
+    "menu": {
+      "eyebrow": "This week's menu",
+      "heading": "Real meals, real nutrition, on the record.",
+      "intro": "Every dish is checked against your child's allergy profile before it's ever offered as an option.",
+      "allergenPill": "Allergen information available per dish",
+      "footnote": "Allergen and dietary claims are per-dish information, not an independently verified guarantee — check each dish's own detail if your child has a specific allergy. Full ingredients and carb/fat breakdowns are on every dish once you're logged in."
+    },
+    "pricing": {
+      "eyebrow": "Pricing",
+      "heading": "One price, shown before you pay.",
+      "intro": "You pay for the school days covered by the booking period — never a flat monthly guess, and never a hidden number.",
+      "payAsYouGoTitle": "Pay as you go", "payAsYouGoPer": "/day",
+      "payAsYouGoBody": "Book single days whenever you need to — school trips, half terms, or just trying it out.",
+      "payAsYouGoCta": "Start booking",
+      "subscriptionTitle": "Subscription", "subscriptionPer": "/real school day",
+      "subscriptionBody": "You pay only for the real school days in your booking period — calculated against your school's actual calendar, checked against the same rate shown here.",
+      "subscriptionCta": "Start a subscription"
+    },
+    "collection": {
+      "eyebrow": "The moment that matters",
+      "heading": "Know when the meal was collected.",
+      "intro": "Once your child taps their meal card at the counter, the booking is marked collected and you're notified — no need to ask them how lunch went.",
+      "cardTitle": "Your dashboard",
+      "sampleView": "Sample view",
+      "mealName": "Arabiatta Chicken Pasta",
+      "collectedAt": "Collected at 12:14 PM"
+    },
+    "multipleChildren": {
+      "eyebrow": "One account, every child",
+      "heading": "One account. Every child.",
+      "intro": "Add each child once — their school, class, and meal plan stay separate, but you check on all of them from the same place.",
+      "cardTitle": "Your account",
+      "sampleView": "Sample view",
+      "child1School": "Kuwait English School · Grade 3",
+      "child2School": "American Creativity Academy · Grade 1",
+      "statusCollected": "Collected",
+      "statusBooked": "Booked"
+    },
+    "app": {
+      "eyebrow": "The Evo Meals app",
+      "headingLine1": "Your child's meals.",
+      "headingLine2": "At your fingertips.",
+      "downloadCta": "Download the app!"
+    },
+    "faq": {
+      "eyebrow": "Questions",
+      "heading": "Have more questions?",
+      "body": "Booking, payment, allergies, and cancellations — see the {fullFaq} on the homepage, or platform-wide capabilities on {features}.",
+      "fullFaqLink": "full FAQ", "featuresLink": "Features"
+    },
+    "finalCta": {
+      "eyebrow": "Ready when you are",
+      "heading": "Set it up before the next school run.",
+      "body": "Takes about two minutes — add a child, pick a plan, book the first meal."
+    }
+  },
+
+  "schools": {
+    "hero": {
+      "eyebrow": "For Schools",
+      "heading": "Turn your school meal program into a digital experience.",
+      "lede": "Replace paper forms, WhatsApp coordination, and manual reconciliation with one platform your administration, your parents, and your catering partner all use — built as a partnership, not a software sale.",
+      "ctaPartner": "Partner with us",
+      "ctaHowItWorks": "See how the platform works"
+    },
+    "problem": {
+      "eyebrow": "The problem today",
+      "heading": "Meal coordination shouldn't run through paper and WhatsApp.",
+      "intro": "Most school meal programmes are held together by phone calls, spreadsheets, and group chats between administration, parents, and the catering kitchen — with no single record either side can check.",
+      "item1Label": "Fragmented", "item1Body": "Parent requests, payments, and allergy notes scattered across calls, messages, and paper forms.",
+      "item2Label": "Manual", "item2Body": "Administration staff reconciling orders and payments by hand, school day after school day.",
+      "item3Label": "Opaque", "item3Body": "No shared, real-time record of who booked, who paid, or who actually collected a meal."
+    },
+    "connectedModel": {
+      "eyebrow": "The Evo Meals model",
+      "heading": "One connected programme, not three separate processes.",
+      "intro": "Your school, your parents, and your catering partner all work from the same live booking and calendar data — instead of three separate, disconnected processes.",
+      "item1": "Automated subscriptions, orders & notifications",
+      "item2": "A structured commercial programme, not just software",
+      "item3": "New revenue opportunities from a digitally run programme",
+      "item4": "A real partnership — not a vendor relationship"
+    },
+    "parentExperience": {
+      "eyebrow": "What changes for your parents",
+      "heading": "Higher parent engagement, less admin overhead for you.",
+      "intro": "Parents book directly, pay only for the real school days their plan covers, and get a notification the moment their child collects lunch — instead of calling your office to ask.",
+      "cta": "See the full parent experience",
+      "item1": "Self-service booking and subscription management",
+      "item2": "Calendar-accurate pricing, shown before payment",
+      "item3": "Real-time collection notifications"
+    },
+    "operationalVisibility": {
+      "eyebrow": "What changes for your administration",
+      "heading": "What actually changes for your administration.",
+      "card1Title": "Reduce Administrative Work", "card1Body": "Subscriptions and orders run themselves — no more chasing forms.",
+      "card2Title": "Real-Time Visibility", "card2Body": "See bookings, collections, and trends as they happen, not at month-end.",
+      "card3Title": "A Professional Experience", "card3Body": "Replaces manual processes with one system your whole administration uses."
+    },
+    "studentIdentification": {
+      "item1": "A student-issued meal card, tapped at the counter",
+      "item2": "Every collection matched to the right student and order",
+      "item3": "Allergy information attached to the student's profile",
+      "item4": "Civil ID masked everywhere it's shown, including to staff",
+      "eyebrow": "Improve Meal Accuracy",
+      "heading": "The right meal, matched to the right student, every time.",
+      "body": "Student-level identification means a collection is never guessed — it's tapped, matched, and logged, with allergy information carried alongside the order rather than tracked separately."
+    },
+    "dashboardPreview": {
+      "eyebrow": "For school administrators",
+      "heading": "See the whole programme, in real time.",
+      "intro": "A look at a school's admin dashboard — a preview of the interface, not live data from your programme.",
+      "schoolName": "Kuwait English School", "overview": "Meal Program Overview",
+      "productPreview": "Product preview",
+      "statTodaysMeals": "Today's meals", "statActiveSubs": "Active subscriptions",
+      "statMealsDelivered": "Meals delivered (mtd)", "statPendingOrders": "Pending orders", "statParentEngagement": "Parent engagement"
+    },
+    "onboarding": {
+      "eyebrow": "Getting started",
+      "heading": "What onboarding actually looks like.",
+      "step1Label": "Talk", "step1Title": "Tell us about your school", "step1Body": "Use the form below — a member of our partnerships team responds within one business day.",
+      "step2Label": "Configure", "step2Title": "We set up your programme", "step2Body": "Menus, plans, and your school's calendar, configured together with your team.",
+      "step3Label": "Onboard", "step3Title": "Parents join", "step3Body": "Parents register, add their children, and start booking.",
+      "step4Label": "Live", "step4Title": "Your programme goes live", "step4Body": "Bookings, collections, and reporting run through the platform from day one."
+    },
+    "partnerForm": {
+      "eyebrow": "Partner with us",
+      "heading": "Let's talk about your school's program.",
+      "intro": "This starts a real conversation, not a signup. Tell us about your school and a member of our partnerships team will respond {strong} to set up menus, plans, and parent onboarding together.",
+      "introStrong": "within one business day",
+      "successMsg": "Thank you — we've received your inquiry and will be in touch within one business day.",
+      "labelSchoolName": "School name",
+      "labelContactName": "Contact person",
+      "labelContactRole": "Their role",
+      "placeholderContactRole": "e.g. Principal, Operations Manager",
+      "labelEmail": "Email",
+      "labelPhone": "Phone",
+      "labelStudentCount": "Number of students",
+      "optUnder200": "Under 200", "opt200to500": "200–500", "opt500to1000": "500–1,000", "opt1000plus": "1,000+",
+      "labelCurrentArrangement": "Current meal arrangement",
+      "optNoFormal": "No formal program", "optInformal": "Informal caterer arrangement", "optExisting": "Existing digital system", "optOther": "Other",
+      "labelMessage": "Tell us more",
+      "placeholderMessage": "Anything else that would help us prepare for the conversation...",
+      "submit": "Send to our partnerships team",
+      "errSchoolName": "School name is required.",
+      "errContactName": "Contact person is required.",
+      "errEmail": "A valid email address is required.",
+      "errMessage": "Tell us a little more — at least 10 characters."
+    },
+    "finalCta": {
+      "eyebrow": "Ready when you are",
+      "heading": "See what Evo Meals looks like for your school.",
+      "body": "No commitment — just a conversation about whether this is a fit.",
+      "cta": "Partner with us"
+    }
+  },
+
+  "login": {
+    "title": "Welcome back",
+    "subtitle": "Log in to book meals and manage your children's accounts.",
+    "labelCivilId": "Civil ID",
+    "placeholderCivilId": "e.g. 111111111111",
+    "hintCivilId": "Masked everywhere it's shown, including to you.",
+    "labelPassword": "Password",
+    "placeholderPassword": "Enter your password",
+    "forgotPassword": "Forgot password?",
+    "submit": "Log In",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up",
+    "errInvalid": "Invalid credentials. Try the demo login below."
+  },
+
+  "register": {
+    "title": "Create your account",
+    "subtitle": "Register once, then add your children and start booking.",
+    "labelName": "Full name",
+    "placeholderName": "Your name",
+    "errName": "Enter your name (letters only, 2–60 characters).",
+    "labelCivilId": "Parent Civil ID",
+    "placeholderCivilId": "e.g. 987654321098",
+    "hintCivilId": "Your 12-digit government-issued ID number. It's masked everywhere it's shown in Evo Meals, including to you.",
+    "errCivilId": "Civil ID should be exactly 12 digits.",
+    "labelEmail": "Email",
+    "placeholderEmail": "you@example.com",
+    "errEmail": "Enter a valid email address.",
+    "labelPhone": "Mobile number",
+    "placeholderPhone": "+965 ...",
+    "errPhone": "Enter a phone number with 10–15 digits.",
+    "labelPassword": "Password",
+    "placeholderPassword": "At least 8 characters",
+    "showPassword": "Show password",
+    "errPassword": "At least 8 characters, with a letter, a number, and a special character.",
+    "labelConfirmPassword": "Confirm Password",
+    "placeholderConfirmPassword": "Re-enter your password",
+    "errConfirmPassword": "Passwords don't match.",
+    "agreeTermsPre": "I agree to the",
+    "agreeTermsLink": "Terms of Use",
+    "submit": "Create Account",
+    "errAllFields": "All fields are required.",
+    "errDuplicateCivilId": "An account with that Civil ID already exists — try logging in instead.",
+    "haveAccount": "Have an account?",
+    "logIn": "Log in"
+  },
+
+  "forgotPassword": {
+    "title": "Reset your password",
+    "subtitle": "Enter the Civil ID or email on your account and we'll send you instructions.",
+    "successMsg": "If an account exists, we've sent instructions.",
+    "simulatedHint": "This is a simulated flow for now — no real email is sent yet.",
+    "labelIdentifier": "Civil ID or email",
+    "placeholderIdentifier": "Civil ID or email",
+    "errIdentifier": "Enter a valid Civil ID (12 digits) or email address.",
+    "submit": "Send instructions",
+    "backToLogin": "Back to log in"
+  },
+
+  "dashboard": {
+    "eyebrow": "Welcome back",
+    "intro": "Here's what's happening with your children today.",
+    "renewedAlert": "Plan renewed — booked again from today at the real price for the days remaining this month.",
+    "noRenewalDaysAlert": "No school days remain this month to renew into — try booking next month instead from the Book a Meal page.",
+    "dayUnitOne": "day", "dayUnitOther": "days",
+    "schoolDayUnitOne": "school day", "schoolDayUnitOther": "school days",
+    "renewalEndsIn": "{name}'s subscription ends in {days} {unit}",
+    "renewalBody": "{meal} — renew now to keep meals booked without a gap.",
+    "renewButton": "Renew",
+    "quickRebookTitle": "Quick rebook",
+    "quickRebookBody": "{meal} for {name} — same choices, one tap.",
+    "quickRebookCta": "Book it again",
+    "statActiveSubs": "Active subscriptions",
+    "statChildrenRegistered": "Children registered",
+    "statActiveBookings": "Active bookings",
+    "currentPeriodHeading": "Current subscription period",
+    "currentPeriodHeadingPlural": "Current subscription periods",
+    "periodDays": "{days} {unit}",
+    "periodPaid": "{amount} paid",
+    "todaysStatusHeading": "Today's status",
+    "emptyNoStudentsTitle": "No children registered yet",
+    "emptyNoStudentsBody": "Add your first child to start booking meals and seeing when they've eaten.",
+    "emptyNoStudentsCta": "Add your first child",
+    "statusCollectedAt": "Collected at {time}",
+    "statusPending": "Booked — awaiting collection",
+    "statusNone": "No meal booked today",
+    "notificationsHeading": "Notifications",
+    "markAllRead": "Mark all read",
+    "emptyNotificationsTitle": "You're all caught up",
+    "emptyNotificationsBody": "Booking confirmations, collection updates, and reminders will show up here.",
+    "bookMealTitle": "Book a meal",
+    "bookMealBody": "Pick a student, a meal, and a plan — total calculates automatically.",
+    "bookMealCta": "Book now",
+    "historyTitle": "Booking history",
+    "historyBody": "Every booking, what it cost, and a one-tap cancel if plans change.",
+    "historyCta": "View history"
+  },
+
+  "menu": {
+    "eyebrow": "This week's menu",
+    "heading": "Real meals, real nutrition",
+    "intro": "Every dish shows full nutrition info — this fixes a content gap flagged in the earlier system, where menu tabs existed but were never populated.",
+    "allergenBanner": "Allergen information available per dish",
+    "commitment1": "Special dietary claims — nut-free, shellfish-free, sesame-free, soy-free, egg-free, gluten-free, lactose-free — apply to specific meal preparations, not a blanket guarantee across every dish, and aren't independently verified by Evo Meals. Check each dish's own detail before booking if your child has a specific allergy.",
+    "commitment2": "Portions and protein content shown are the base recipe — each student's actual serving is matched to their registered grade when you book.",
+    "ingredientsLabel": "Ingredients:",
+    "kcal": "kcal",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat"
+  },
+
+  "booking": {
+    "eyebrow": "Book a meal",
+    "heading": "Book & pay",
+    "intro": "Pay only for real school days — the total is calculated against your school's actual calendar, never a flat guess.",
+    "rebookInfo": "Prefilled from your last booking — check the details below, then confirm.",
+    "emptyTitle": "Add a student to book a meal",
+    "emptyBody": "Bookings are tied to a registered child, so start there first.",
+    "emptyCta": "Add a student",
+    "labelStudent": "Student",
+    "labelMeal": "Meal",
+    "labelMealHint": "— tap a card to choose",
+    "labelPlan": "Plan",
+    "planSingleTitle": "Pay as you go",
+    "planSinglePer": "/ day",
+    "planMonthlyBadge": "Most parents choose this",
+    "planMonthlyTitle": "Subscription",
+    "planMonthlyMeta": "Priced by real school days left",
+    "labelStartDate": "Start date",
+    "labelDays": "Number of days",
+    "totalDue": "Total due",
+    "confirmCta": "Confirm & Pay via KNET (demo)",
+    "knetHint": "KNET is Kuwait's national payment network — the same one your bank card already uses. Demo only here, no real payment is processed.",
+    "agePortionHint": "Portion and protein content matched to {className}.",
+    "noSchoolDaysNote": "No school days left at {school} between {startDate} and the end of that month — try a later start date.",
+    "realSchoolDayUnitOne": "real school day", "realSchoolDayUnitOther": "real school days",
+    "realSchoolDaysNote": "{count} {unit} at {school}, from {startDate} through {monthEnd}.",
+    "errInvalidStudent": "Choose a valid student.",
+    "errNoSchoolDaysServer": "{school} has no school days left between {startDate} and the end of that month. Try a start date next month instead.",
+    "successMsg": "Booking confirmed for {name} — {amount} charged via KNET (demo — no real payment processed)."
+  }
+}

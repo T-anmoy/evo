@@ -1,19 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
 <head>
-<%- include('partials/head', { title: 'How It Works — Evo Meals' }) %>
-<meta name="description" content="How a meal moves through Evo Meals — from a school's program, through a parent's subscription, to a student's tap-to-collect at the counter.">
+<%- include('partials/head', { title: t('meta.howItWorks.title') }) %>
+<meta name="description" content="<%= t('meta.howItWorks.description') %>">
 </head>
 <body>
 
 <%- include('partials/sitenav', { active: 'how-it-works' }) %>
 
+<main id="main-content">
 <section class="hero hero-inner-page">
   <div class="wrap-wide">
     <div class="hero-copy" data-reveal style="max-width:680px;">
-      <span class="eyebrow on-dark">How It Works</span>
-      <h1>How a meal actually moves through the system.</h1>
-      <p class="lede">From a school's program to a student's tap-to-collect — see the full breakdown for <a href="/parents" style="color:inherit; text-decoration:underline;">parents</a>, <a href="/schools" style="color:inherit; text-decoration:underline;">schools</a>, and <a href="/caterers" style="color:inherit; text-decoration:underline;">caterers</a>.</p>
+      <span class="eyebrow on-dark"><%= t('howItWorks.hero.eyebrow') %></span>
+      <h1><%= t('howItWorks.hero.heading') %></h1>
+      <p class="lede"><%- t('howItWorks.hero.lede', {
+        parents: `<a href="${locale === 'ar' ? '/ar/parents' : '/parents'}" style="color:inherit; text-decoration:underline;">${t('howItWorks.hero.ledeParents')}</a>`,
+        schools: `<a href="${locale === 'ar' ? '/ar/schools' : '/schools'}" style="color:inherit; text-decoration:underline;">${t('howItWorks.hero.ledeSchools')}</a>`,
+        caterers: `<a href="/caterers" style="color:inherit; text-decoration:underline;">${t('howItWorks.hero.ledeCaterers')}</a>`
+      }) %></p>
     </div>
   </div>
 </section>
@@ -23,26 +28,26 @@
 <section class="section">
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">The same flow, from each seat</span>
-      <h2>What it looks like for you specifically.</h2>
+      <span class="eyebrow"><%= t('howItWorks.roleFlows.eyebrow') %></span>
+      <h2><%= t('howItWorks.roleFlows.heading') %></h2>
     </div>
     <div class="grid-3">
       <div class="benefit-card" data-reveal data-reveal-group="roleflows">
-        <h3>Parent</h3>
+        <h3><%= t('howItWorks.roleFlows.parentTitle') %></h3>
         <p class="app-flow" style="justify-content:flex-start; margin:0;">
-          <span>Book</span><span class="app-flow-arrow">→</span><span>Pay</span><span class="app-flow-arrow">→</span><span>Tap</span><span class="app-flow-arrow">→</span><span>Notified</span>
+          <span><%= t('howItWorks.roleFlows.parentStep1') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('howItWorks.roleFlows.parentStep2') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('howItWorks.roleFlows.parentStep3') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('howItWorks.roleFlows.parentStep4') %></span>
         </p>
       </div>
       <div class="benefit-card" data-reveal data-reveal-group="roleflows">
-        <h3>School</h3>
+        <h3><%= t('howItWorks.roleFlows.schoolTitle') %></h3>
         <p class="app-flow" style="justify-content:flex-start; margin:0;">
-          <span>Set up</span><span class="app-flow-arrow">→</span><span>Monitor</span><span class="app-flow-arrow">→</span><span>Report</span>
+          <span><%= t('howItWorks.roleFlows.schoolStep1') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('howItWorks.roleFlows.schoolStep2') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('howItWorks.roleFlows.schoolStep3') %></span>
         </p>
       </div>
       <div class="benefit-card" data-reveal data-reveal-group="roleflows">
-        <h3>Caterer</h3>
+        <h3><%= t('howItWorks.roleFlows.catererTitle') %></h3>
         <p class="app-flow" style="justify-content:flex-start; margin:0;">
-          <span>Receive</span><span class="app-flow-arrow">→</span><span>Prepare</span><span class="app-flow-arrow">→</span><span>Deliver</span>
+          <span><%= t('howItWorks.roleFlows.catererStep1') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('howItWorks.roleFlows.catererStep2') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('howItWorks.roleFlows.catererStep3') %></span>
         </p>
       </div>
     </div>
@@ -51,12 +56,13 @@
 
 <section class="cta-band">
   <div class="wrap" style="text-align:center;">
-    <span class="eyebrow on-dark" style="justify-content:center;">Ready when you are</span>
-    <h2 style="margin-top:16px;">See what this looks like for you.</h2>
-    <p style="margin:14px auto 28px;">Whether you're a parent, a school, or a caterer, there's a dedicated page with the details.</p>
-    <a href="/register" class="btn btn-primary">Create your account</a>
+    <span class="eyebrow on-dark" style="justify-content:center;"><%= t('howItWorks.cta.eyebrow') %></span>
+    <h2 style="margin-top:16px;"><%= t('howItWorks.cta.heading') %></h2>
+    <p style="margin:14px auto 28px;"><%= t('howItWorks.cta.body') %></p>
+    <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-primary"><%= t('common.createAccount') %></a>
   </div>
 </section>
+</main>
 
 <%- include('partials/sitefoot') %>
 

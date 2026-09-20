@@ -1,23 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
 <head>
-<%- include('partials/head', { title: 'For Schools — Evo Meals School Meal Management Platform' }) %>
-<meta name="description" content="Evo Meals partners with schools to run their school meal program in Kuwait digitally — automated subscriptions and orders, student-level meal accuracy, real-time dashboards, and a revenue-sharing partnership model.">
+<%- include('partials/head', { title: t('meta.schools.title') }) %>
+<meta name="description" content="<%= t('meta.schools.description') %>">
 </head>
 <body>
 
 <%- include('partials/sitenav', { active: 'schools' }) %>
 
+<main id="main-content">
 <!-- 1. Hero -->
 <section class="hero hero-inner-page">
   <div class="wrap-wide">
     <div class="hero-copy" data-reveal style="max-width:680px;">
-      <span class="eyebrow on-dark">For Schools</span>
-      <h1>Turn your school meal program into a digital experience.</h1>
-      <p class="lede">Replace paper forms, WhatsApp coordination, and manual reconciliation with one platform your administration, your parents, and your catering partner all use — built as a partnership, not a software sale.</p>
+      <span class="eyebrow on-dark"><%= t('schools.hero.eyebrow') %></span>
+      <h1><%= t('schools.hero.heading') %></h1>
+      <p class="lede"><%= t('schools.hero.lede') %></p>
       <div class="hero-actions">
-        <a href="#partner-form" class="btn btn-primary">Partner with us</a>
-        <a href="/how-it-works" class="btn btn-ghost">See how the platform works</a>
+        <a href="#partner-form" class="btn btn-primary"><%= t('schools.hero.ctaPartner') %></a>
+        <a href="<%= locale === 'ar' ? '/ar/how-it-works' : '/how-it-works' %>" class="btn btn-ghost"><%= t('schools.hero.ctaHowItWorks') %></a>
       </div>
     </div>
   </div>
@@ -27,22 +28,22 @@
 <section class="section" id="the-problem">
   <div class="wrap what-is-wrap">
     <div data-reveal>
-      <span class="eyebrow">The problem today</span>
-      <h2>Meal coordination shouldn't run through paper and WhatsApp.</h2>
-      <p>Most school meal programmes are held together by phone calls, spreadsheets, and group chats between administration, parents, and the catering kitchen — with no single record either side can check.</p>
+      <span class="eyebrow"><%= t('schools.problem.eyebrow') %></span>
+      <h2><%= t('schools.problem.heading') %></h2>
+      <p><%= t('schools.problem.intro') %></p>
     </div>
     <div class="what-is-pillars">
       <div class="what-is-pillar" data-reveal data-reveal-group="problem">
-        <span class="what-is-num">Fragmented</span>
-        <strong>Parent requests, payments, and allergy notes scattered across calls, messages, and paper forms.</strong>
+        <span class="what-is-num"><%= t('schools.problem.item1Label') %></span>
+        <strong><%= t('schools.problem.item1Body') %></strong>
       </div>
       <div class="what-is-pillar" data-reveal data-reveal-group="problem">
-        <span class="what-is-num">Manual</span>
-        <strong>Administration staff reconciling orders and payments by hand, school day after school day.</strong>
+        <span class="what-is-num"><%= t('schools.problem.item2Label') %></span>
+        <strong><%= t('schools.problem.item2Body') %></strong>
       </div>
       <div class="what-is-pillar" data-reveal data-reveal-group="problem">
-        <span class="what-is-num">Opaque</span>
-        <strong>No shared, real-time record of who booked, who paid, or who actually collected a meal.</strong>
+        <span class="what-is-num"><%= t('schools.problem.item3Label') %></span>
+        <strong><%= t('schools.problem.item3Body') %></strong>
       </div>
     </div>
   </div>
@@ -52,15 +53,15 @@
 <section class="section on-tint" id="connected-model">
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">The Evo Meals model</span>
-      <h2>One connected programme, not three separate processes.</h2>
-      <p>Your school, your parents, and your catering partner all work from the same live booking and calendar data — instead of three separate, disconnected processes.</p>
+      <span class="eyebrow"><%= t('schools.connectedModel.eyebrow') %></span>
+      <h2><%= t('schools.connectedModel.heading') %></h2>
+      <p><%= t('schools.connectedModel.intro') %></p>
     </div>
     <ul class="teaser-list operate-list" data-reveal>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Automated subscriptions, orders &amp; notifications</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> A structured commercial programme, not just software</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> New revenue opportunities from a digitally run programme</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> A real partnership — not a vendor relationship</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.connectedModel.item1') %></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.connectedModel.item2') %></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.connectedModel.item3') %></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.connectedModel.item4') %></li>
     </ul>
   </div>
 </section>
@@ -69,15 +70,15 @@
 <section class="section" id="parent-experience">
   <div class="wrap teaser-wrap">
     <div class="teaser-copy" data-reveal>
-      <span class="eyebrow">What changes for your parents</span>
-      <h2>Higher parent engagement, less admin overhead for you.</h2>
-      <p>Parents book directly, pay only for the real school days their plan covers, and get a notification the moment their child collects lunch — instead of calling your office to ask.</p>
-      <a href="/parents" class="btn btn-dark">See the full parent experience</a>
+      <span class="eyebrow"><%= t('schools.parentExperience.eyebrow') %></span>
+      <h2><%= t('schools.parentExperience.heading') %></h2>
+      <p><%= t('schools.parentExperience.intro') %></p>
+      <a href="<%= locale === 'ar' ? '/ar/parents' : '/parents' %>" class="btn btn-dark"><%= t('schools.parentExperience.cta') %></a>
     </div>
     <ul class="teaser-list" data-reveal>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Self-service booking and subscription management</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Calendar-accurate pricing, shown before payment</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Real-time collection notifications</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.parentExperience.item1') %></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.parentExperience.item2') %></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.parentExperience.item3') %></li>
     </ul>
   </div>
 </section>
@@ -86,24 +87,24 @@
 <section class="section on-tint" id="operational-visibility">
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">What changes for your administration</span>
-      <h2>What actually changes for your administration.</h2>
+      <span class="eyebrow"><%= t('schools.operationalVisibility.eyebrow') %></span>
+      <h2><%= t('schools.operationalVisibility.heading') %></h2>
     </div>
     <div class="benefit-icon-grid">
       <div class="benefit-card" data-reveal data-reveal-group="ops">
         <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></div>
-        <h3>Reduce Administrative Work</h3>
-        <p>Subscriptions and orders run themselves — no more chasing forms.</p>
+        <h3><%= t('schools.operationalVisibility.card1Title') %></h3>
+        <p><%= t('schools.operationalVisibility.card1Body') %></p>
       </div>
       <div class="benefit-card" data-reveal data-reveal-group="ops">
         <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></div>
-        <h3>Real-Time Visibility</h3>
-        <p>See bookings, collections, and trends as they happen, not at month-end.</p>
+        <h3><%= t('schools.operationalVisibility.card2Title') %></h3>
+        <p><%= t('schools.operationalVisibility.card2Body') %></p>
       </div>
       <div class="benefit-card" data-reveal data-reveal-group="ops">
         <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="m4.2 10.9 1.7-.6a7.9 7.9 0 0 1 1-1.7l-.3-1.8 1.7-1 1.5 1.1a7.9 7.9 0 0 1 2 0l1.5-1.1 1.7 1-.3 1.8c.4.5.8 1.1 1 1.7l1.7.6v2l-1.7.6a7.9 7.9 0 0 1-1 1.7l.3 1.8-1.7 1-1.5-1.1a7.9 7.9 0 0 1-2 0l-1.5 1.1-1.7-1 .3-1.8a7.9 7.9 0 0 1-1-1.7l-1.7-.6Z"/></svg></div>
-        <h3>A Professional Experience</h3>
-        <p>Replaces manual processes with one system your whole administration uses.</p>
+        <h3><%= t('schools.operationalVisibility.card3Title') %></h3>
+        <p><%= t('schools.operationalVisibility.card3Body') %></p>
       </div>
     </div>
   </div>
@@ -113,15 +114,15 @@
 <section class="section" id="student-identification">
   <div class="wrap teaser-wrap teaser-wrap-reverse">
     <ul class="teaser-list" data-reveal>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> A student-issued meal card, tapped at the counter</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Every collection matched to the right student and order</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Allergy information attached to the student's profile</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Civil ID masked everywhere it's shown, including to staff</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.studentIdentification.item1') %></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.studentIdentification.item2') %></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.studentIdentification.item3') %></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.studentIdentification.item4') %></li>
     </ul>
     <div class="teaser-copy" data-reveal>
-      <span class="eyebrow">Improve Meal Accuracy</span>
-      <h2>The right meal, matched to the right student, every time.</h2>
-      <p>Student-level identification means a collection is never guessed — it's tapped, matched, and logged, with allergy information carried alongside the order rather than tracked separately.</p>
+      <span class="eyebrow"><%= t('schools.studentIdentification.eyebrow') %></span>
+      <h2><%= t('schools.studentIdentification.heading') %></h2>
+      <p><%= t('schools.studentIdentification.body') %></p>
     </div>
   </div>
 </section>
@@ -130,34 +131,34 @@
 <section class="section on-tint" id="dashboard-preview">
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">For school administrators</span>
-      <h2>See the whole programme, in real time.</h2>
-      <p>A look at a school's admin dashboard — a preview of the interface, not live data from your programme.</p>
+      <span class="eyebrow"><%= t('schools.dashboardPreview.eyebrow') %></span>
+      <h2><%= t('schools.dashboardPreview.heading') %></h2>
+      <p><%= t('schools.dashboardPreview.intro') %></p>
     </div>
     <div class="dash-preview" data-reveal>
       <div class="dash-preview-head">
-        <div class="dash-preview-title">Kuwait English School <span>· Meal Program Overview</span></div>
-        <span class="sample-tag on-dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> Product preview</span>
+        <div class="dash-preview-title"><%= t('schools.dashboardPreview.schoolName') %> <span>· <%= t('schools.dashboardPreview.overview') %></span></div>
+        <span class="sample-tag on-dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> <%= t('schools.dashboardPreview.productPreview') %></span>
       </div>
       <div class="dash-preview-grid">
         <div class="dash-stat">
-          <span class="dash-stat-label">Today's meals</span>
+          <span class="dash-stat-label"><%= t('schools.dashboardPreview.statTodaysMeals') %></span>
           <span class="dash-stat-value data-num">312</span>
         </div>
         <div class="dash-stat">
-          <span class="dash-stat-label">Active subscriptions</span>
+          <span class="dash-stat-label"><%= t('schools.dashboardPreview.statActiveSubs') %></span>
           <span class="dash-stat-value data-num">648</span>
         </div>
         <div class="dash-stat">
-          <span class="dash-stat-label">Meals delivered (mtd)</span>
+          <span class="dash-stat-label"><%= t('schools.dashboardPreview.statMealsDelivered') %></span>
           <span class="dash-stat-value data-num">6,140</span>
         </div>
         <div class="dash-stat">
-          <span class="dash-stat-label">Pending orders</span>
+          <span class="dash-stat-label"><%= t('schools.dashboardPreview.statPendingOrders') %></span>
           <span class="dash-stat-value data-num">14</span>
         </div>
         <div class="dash-stat dash-stat-wide">
-          <span class="dash-stat-label">Parent engagement</span>
+          <span class="dash-stat-label"><%= t('schools.dashboardPreview.statParentEngagement') %></span>
           <div class="dash-bar"><div class="dash-bar-fill" style="width:87%;"></div></div>
           <span class="dash-stat-value data-num" style="font-size:20px;">87%</span>
         </div>
@@ -170,29 +171,29 @@
 <section class="section" id="onboarding">
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">Getting started</span>
-      <h2>What onboarding actually looks like.</h2>
+      <span class="eyebrow"><%= t('schools.onboarding.eyebrow') %></span>
+      <h2><%= t('schools.onboarding.heading') %></h2>
     </div>
     <div class="steps">
       <div class="step" data-reveal data-reveal-group="onboarding">
-        <div class="step-num">Talk</div>
-        <h3>Tell us about your school</h3>
-        <p>Use the form below — a member of our partnerships team responds within one business day.</p>
+        <div class="step-num"><%= t('schools.onboarding.step1Label') %></div>
+        <h3><%= t('schools.onboarding.step1Title') %></h3>
+        <p><%= t('schools.onboarding.step1Body') %></p>
       </div>
       <div class="step" data-reveal data-reveal-group="onboarding">
-        <div class="step-num">Configure</div>
-        <h3>We set up your programme</h3>
-        <p>Menus, plans, and your school's calendar, configured together with your team.</p>
+        <div class="step-num"><%= t('schools.onboarding.step2Label') %></div>
+        <h3><%= t('schools.onboarding.step2Title') %></h3>
+        <p><%= t('schools.onboarding.step2Body') %></p>
       </div>
       <div class="step" data-reveal data-reveal-group="onboarding">
-        <div class="step-num">Onboard</div>
-        <h3>Parents join</h3>
-        <p>Parents register, add their children, and start booking.</p>
+        <div class="step-num"><%= t('schools.onboarding.step3Label') %></div>
+        <h3><%= t('schools.onboarding.step3Title') %></h3>
+        <p><%= t('schools.onboarding.step3Body') %></p>
       </div>
       <div class="step" data-reveal data-reveal-group="onboarding">
-        <div class="step-num">Live</div>
-        <h3>Your programme goes live</h3>
-        <p>Bookings, collections, and reporting run through the platform from day one.</p>
+        <div class="step-num"><%= t('schools.onboarding.step4Label') %></div>
+        <h3><%= t('schools.onboarding.step4Title') %></h3>
+        <p><%= t('schools.onboarding.step4Body') %></p>
       </div>
     </div>
   </div>
@@ -202,70 +203,70 @@
 <section class="section on-tint" id="partner-form">
   <div class="wrap partner-form-wrap">
     <div class="section-head" data-reveal style="margin:0 0 0;">
-      <span class="eyebrow">Partner with us</span>
-      <h2>Let's talk about your school's program.</h2>
-      <p>This starts a real conversation, not a signup. Tell us about your school and a member of our partnerships team will respond <strong>within one business day</strong> to set up menus, plans, and parent onboarding together.</p>
+      <span class="eyebrow"><%= t('schools.partnerForm.eyebrow') %></span>
+      <h2><%= t('schools.partnerForm.heading') %></h2>
+      <p><%- t('schools.partnerForm.intro', { strong: `<strong>${t('schools.partnerForm.introStrong')}</strong>` }) %></p>
     </div>
     <div class="card" data-reveal>
       <% if (typeof success !== 'undefined' && success) { %>
-        <div class="alert alert-success"><%- include('partials/success-icon') %><span>Thank you — we've received your inquiry and will be in touch within one business day.</span></div>
+        <div class="alert alert-success"><%- include('partials/success-icon') %><span><%= t('schools.partnerForm.successMsg') %></span></div>
       <% } else { %>
         <% var fd = (typeof formData !== 'undefined' && formData) ? formData : {}; var errs = (typeof errors !== 'undefined' && errors) ? errors : {}; %>
-        <form method="POST" action="/schools/inquiry" id="schoolInquiryForm" novalidate>
+        <form method="POST" action="<%= locale === 'ar' ? '/ar/schools/inquiry' : '/schools/inquiry' %>" id="schoolInquiryForm" novalidate>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <div class="field <%= errs.organizationName ? 'invalid' : '' %>">
-            <label for="schoolOrgName">School name</label>
+            <label for="schoolOrgName"><%= t('schools.partnerForm.labelSchoolName') %></label>
             <input type="text" id="schoolOrgName" name="organizationName" value="<%= fd.organizationName || '' %>" required data-validate="required">
-            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.organizationName || 'School name is required.' %></span></div>
+            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.organizationName || t('schools.partnerForm.errSchoolName') %></span></div>
           </div>
           <div class="form-row">
             <div class="field <%= errs.contactName ? 'invalid' : '' %>">
-              <label for="schoolContactName">Contact person</label>
+              <label for="schoolContactName"><%= t('schools.partnerForm.labelContactName') %></label>
               <input type="text" id="schoolContactName" name="contactName" value="<%= fd.contactName || '' %>" required data-validate="required">
-              <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.contactName || 'Contact person is required.' %></span></div>
+              <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.contactName || t('schools.partnerForm.errContactName') %></span></div>
             </div>
             <div class="field">
-              <label for="schoolContactRole">Their role</label>
-              <input type="text" id="schoolContactRole" name="contactRole" value="<%= fd.contactRole || '' %>" placeholder="e.g. Principal, Operations Manager">
+              <label for="schoolContactRole"><%= t('schools.partnerForm.labelContactRole') %></label>
+              <input type="text" id="schoolContactRole" name="contactRole" value="<%= fd.contactRole || '' %>" placeholder="<%= t('schools.partnerForm.placeholderContactRole') %>">
             </div>
           </div>
           <div class="form-row">
             <div class="field <%= errs.email ? 'invalid' : '' %>">
-              <label for="schoolContactEmail">Email</label>
+              <label for="schoolContactEmail"><%= t('schools.partnerForm.labelEmail') %></label>
               <input type="email" id="schoolContactEmail" name="email" value="<%= fd.email || '' %>" inputmode="email" required data-validate="email">
-              <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.email || 'A valid email address is required.' %></span></div>
+              <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.email || t('schools.partnerForm.errEmail') %></span></div>
             </div>
             <div class="field">
-              <label for="schoolContactPhone">Phone</label>
+              <label for="schoolContactPhone"><%= t('schools.partnerForm.labelPhone') %></label>
               <input type="tel" id="schoolContactPhone" name="phone" value="<%= fd.phone || '' %>" inputmode="tel">
             </div>
           </div>
           <div class="form-row">
             <div class="field">
-              <label for="schoolScale">Number of students</label>
+              <label for="schoolScale"><%= t('schools.partnerForm.labelStudentCount') %></label>
               <select id="schoolScale" name="scaleInfo">
-                <option value="Under 200" <%= fd.scaleInfo === 'Under 200' ? 'selected' : '' %>>Under 200</option>
-                <option value="200–500" <%= fd.scaleInfo === '200–500' ? 'selected' : '' %>>200–500</option>
-                <option value="500–1,000" <%= fd.scaleInfo === '500–1,000' ? 'selected' : '' %>>500–1,000</option>
-                <option value="1,000+" <%= fd.scaleInfo === '1,000+' ? 'selected' : '' %>>1,000+</option>
+                <option value="Under 200" <%= fd.scaleInfo === 'Under 200' ? 'selected' : '' %>><%= t('schools.partnerForm.optUnder200') %></option>
+                <option value="200–500" <%= fd.scaleInfo === '200–500' ? 'selected' : '' %>><%= t('schools.partnerForm.opt200to500') %></option>
+                <option value="500–1,000" <%= fd.scaleInfo === '500–1,000' ? 'selected' : '' %>><%= t('schools.partnerForm.opt500to1000') %></option>
+                <option value="1,000+" <%= fd.scaleInfo === '1,000+' ? 'selected' : '' %>><%= t('schools.partnerForm.opt1000plus') %></option>
               </select>
             </div>
             <div class="field">
-              <label for="schoolArrangement">Current meal arrangement</label>
+              <label for="schoolArrangement"><%= t('schools.partnerForm.labelCurrentArrangement') %></label>
               <select id="schoolArrangement" name="currentArrangement">
-                <option value="No formal program" <%= fd.currentArrangement === 'No formal program' ? 'selected' : '' %>>No formal program</option>
-                <option value="Informal caterer arrangement" <%= fd.currentArrangement === 'Informal caterer arrangement' ? 'selected' : '' %>>Informal caterer arrangement</option>
-                <option value="Existing digital system" <%= fd.currentArrangement === 'Existing digital system' ? 'selected' : '' %>>Existing digital system</option>
-                <option value="Other" <%= fd.currentArrangement === 'Other' ? 'selected' : '' %>>Other</option>
+                <option value="No formal program" <%= fd.currentArrangement === 'No formal program' ? 'selected' : '' %>><%= t('schools.partnerForm.optNoFormal') %></option>
+                <option value="Informal caterer arrangement" <%= fd.currentArrangement === 'Informal caterer arrangement' ? 'selected' : '' %>><%= t('schools.partnerForm.optInformal') %></option>
+                <option value="Existing digital system" <%= fd.currentArrangement === 'Existing digital system' ? 'selected' : '' %>><%= t('schools.partnerForm.optExisting') %></option>
+                <option value="Other" <%= fd.currentArrangement === 'Other' ? 'selected' : '' %>><%= t('schools.partnerForm.optOther') %></option>
               </select>
             </div>
           </div>
           <div class="field <%= errs.message ? 'invalid' : '' %>">
-            <label for="schoolMessage">Tell us more</label>
-            <textarea id="schoolMessage" name="message" rows="4" required data-validate="minlength:10" placeholder="Anything else that would help us prepare for the conversation..."><%= fd.message || '' %></textarea>
-            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.message || 'Tell us a little more — at least 10 characters.' %></span></div>
+            <label for="schoolMessage"><%= t('schools.partnerForm.labelMessage') %></label>
+            <textarea id="schoolMessage" name="message" rows="4" required data-validate="minlength:10" placeholder="<%= t('schools.partnerForm.placeholderMessage') %>"><%= fd.message || '' %></textarea>
+            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.message || t('schools.partnerForm.errMessage') %></span></div>
           </div>
-          <button type="submit" class="btn btn-primary" style="width:100%;">Send to our partnerships team</button>
+          <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('schools.partnerForm.submit') %></button>
         </form>
       <% } %>
     </div>
@@ -274,12 +275,13 @@
 
 <section class="cta-band">
   <div class="wrap" style="text-align:center;">
-    <span class="eyebrow on-dark" style="justify-content:center;">Ready when you are</span>
-    <h2 style="margin-top:16px;">See what Evo Meals looks like for your school.</h2>
-    <p style="margin:14px auto 28px;">No commitment — just a conversation about whether this is a fit.</p>
-    <a href="#partner-form" class="btn btn-primary">Partner with us</a>
+    <span class="eyebrow on-dark" style="justify-content:center;"><%= t('schools.finalCta.eyebrow') %></span>
+    <h2 style="margin-top:16px;"><%= t('schools.finalCta.heading') %></h2>
+    <p style="margin:14px auto 28px;"><%= t('schools.finalCta.body') %></p>
+    <a href="#partner-form" class="btn btn-primary"><%= t('schools.finalCta.cta') %></a>
   </div>
 </section>
+</main>
 
 <%- include('partials/sitefoot') %>
 
