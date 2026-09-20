@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'Features — Evo Meals' }) %>
+<meta name="description" content="Everything live in the Evo Meals platform today, organized by who uses it — parents, schools, caterers, students, and administrators.">
+</head>
+<body>
+
+<%- include('partials/sitenav', { active: 'features' }) %>
+
+<section class="hero hero-inner-page">
+  <div class="wrap-wide">
+    <div class="hero-copy" data-reveal style="max-width:680px;">
+      <span class="eyebrow on-dark">Features</span>
+      <h1>What's actually live in the platform today.</h1>
+      <p class="lede">Organized by who uses it — parents, schools, caterers, students, and administrators.</p>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/features-section') %>
+
+<section class="cta-band">
+  <div class="wrap" style="text-align:center;">
+    <span class="eyebrow on-dark" style="justify-content:center;">Ready when you are</span>
+    <h2 style="margin-top:16px;">See what this looks like for you.</h2>
+    <p style="margin:14px auto 28px;">Whether you're a parent, a school, or a caterer, there's a dedicated page with the details.</p>
+    <a href="/register" class="btn btn-primary">Create your account</a>
+  </div>
+</section>
+
+<%- include('partials/sitefoot') %>
+
+</body>
+</html>

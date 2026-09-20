@@ -203,6 +203,14 @@ app.post('/caterers/inquiry', (req, res) => {
   res.redirect('/caterers?success=1');
 });
 
+app.get('/how-it-works', (req, res) => {
+  res.render('how-it-works', { parentId: req.session.parentId });
+});
+
+app.get('/features', (req, res) => {
+  res.render('features', { parentId: req.session.parentId });
+});
+
 app.get('/about', (req, res) => {
   res.render('about', { parentId: req.session.parentId });
 });
@@ -235,7 +243,7 @@ app.post('/contact', (req, res) => {
 
 app.get('/sitemap.xml', (req, res) => {
   const base = `${req.protocol}://${req.get('host')}`;
-  const pages = ['/', '/schools', '/parents', '/caterers', '/about', '/contact', '/privacy', '/terms', '/login', '/register'];
+  const pages = ['/', '/schools', '/parents', '/caterers', '/how-it-works', '/features', '/about', '/contact', '/privacy', '/terms', '/login', '/register'];
   const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages
     .map(p => `  <url><loc>${base}${p}</loc></url>`)
     .join('\n')}\n</urlset>`;
@@ -250,6 +258,8 @@ Allow: /
 Allow: /schools
 Allow: /parents
 Allow: /caterers
+Allow: /how-it-works
+Allow: /features
 Allow: /about
 Allow: /contact
 Allow: /privacy

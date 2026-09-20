@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head', { title: 'How It Works — Evo Meals' }) %>
+<meta name="description" content="How a meal moves through Evo Meals — from a school's program, through a parent's subscription, to a student's tap-to-collect at the counter.">
+</head>
+<body>
+
+<%- include('partials/sitenav', { active: 'how-it-works' }) %>
+
+<section class="hero hero-inner-page">
+  <div class="wrap-wide">
+    <div class="hero-copy" data-reveal style="max-width:680px;">
+      <span class="eyebrow on-dark">How It Works</span>
+      <h1>How a meal actually moves through the system.</h1>
+      <p class="lede">From a school's program to a student's tap-to-collect — see the full breakdown for <a href="/parents" style="color:inherit; text-decoration:underline;">parents</a>, <a href="/schools" style="color:inherit; text-decoration:underline;">schools</a>, and <a href="/caterers" style="color:inherit; text-decoration:underline;">caterers</a>.</p>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/how-it-works-section') %>
+
+<section class="cta-band">
+  <div class="wrap" style="text-align:center;">
+    <span class="eyebrow on-dark" style="justify-content:center;">Ready when you are</span>
+    <h2 style="margin-top:16px;">See what this looks like for you.</h2>
+    <p style="margin:14px auto 28px;">Whether you're a parent, a school, or a caterer, there's a dedicated page with the details.</p>
+    <a href="/register" class="btn btn-primary">Create your account</a>
+  </div>
+</section>
+
+<%- include('partials/sitefoot') %>
+
+</body>
+</html>
