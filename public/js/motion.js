@@ -280,6 +280,11 @@
     } else if (rule && rule.indexOf('minlength:') === 0) {
       var min = parseInt(rule.split(':')[1], 10) || 0;
       valid = value.length >= min;
+    } else if (rule === 'allergies') {
+      // Optional field — mirrors lib/validate.js's isValidAllergies: a
+      // reasonable length cap, and no raw angle brackets (basic markup
+      // injection guard on top of the EJS auto-escaping already in place).
+      valid = value.length <= 200 && !/[<>]/.test(value);
     }
 
     if (value.length === 0 && rule !== 'required' && !input.required) {

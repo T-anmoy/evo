@@ -269,6 +269,13 @@ a, button, .btn{
    see the noscript fallback rule below). */
 [data-reveal]{opacity:0; transform:translateY(18px); transition:opacity var(--dur-elevated) var(--ease-out), transform var(--dur-elevated) var(--ease-out);}
 [data-reveal].is-visible{opacity:1; transform:translateY(0);}
+@media (prefers-reduced-motion: reduce){
+  /* motion.js adds .is-visible immediately (no IntersectionObserver
+     wait) when motion is reduced, but without this the opacity/transform
+     change would still animate over --dur-elevated — content should just
+     be there, not fade/rise in even on a fast timer. */
+  [data-reveal]{transition:none;}
+}
 
 /* ---------- cross-page transitions (native, no SPA rearchitecture) ---------- */
 @view-transition{navigation:auto;}
@@ -286,7 +293,7 @@ a, button, .btn{
    motion system — defined once here rather than each section inventing
    its own. Icons that sit inside these cards get a small sympathetic
    scale, same trigger, same timing. */
-.menu-card, .menu-preview-card, .trust-card, .price-card, .what-is-pillar, .feature-role, .testimonial-card, .allergen-banner-item{
+.menu-card, .menu-preview-card, .trust-card, .price-card, .what-is-pillar, .feature-role, .testimonial-card, .allergen-banner-item, .benefit-card, .why-card{
   transition:transform var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), border-color var(--dur-standard) var(--ease-standard);
 }
 .menu-card:hover, .menu-card:focus-within,
@@ -295,7 +302,9 @@ a, button, .btn{
 .price-card:hover, .price-card:focus-within,
 .what-is-pillar:hover, .what-is-pillar:focus-within,
 .feature-role:hover, .feature-role:focus-within,
-.testimonial-card:hover, .testimonial-card:focus-within{
+.testimonial-card:hover, .testimonial-card:focus-within,
+.benefit-card:hover, .benefit-card:focus-within,
+.why-card:hover, .why-card:focus-within{
   transform:translateY(-4px);
   box-shadow:var(--shadow-sm);
   border-color:var(--line-strong);
@@ -314,9 +323,12 @@ a, button, .btn{
 }
 .trust-card:hover .trust-icon, .trust-card:focus-within .trust-icon{transform:scale(1.08);}
 .trust-icon{transition:transform var(--dur-standard) var(--ease-spring);}
+.benefit-card:hover .benefit-card-icon, .benefit-card:focus-within .benefit-card-icon{transform:scale(1.08);}
+.benefit-card-icon{transition:transform var(--dur-standard) var(--ease-spring);}
 @media (prefers-reduced-motion: reduce){
-  .menu-card, .menu-preview-card, .trust-card, .price-card, .what-is-pillar, .feature-role, .testimonial-card, .trust-icon{transition:none;}
-  .menu-card:hover, .menu-preview-card:hover, .trust-card:hover, .price-card:hover, .what-is-pillar:hover, .feature-role:hover, .testimonial-card:hover{transform:none;}
+  .menu-card, .menu-preview-card, .trust-card, .price-card, .what-is-pillar, .feature-role, .testimonial-card, .trust-icon, .benefit-card, .why-card, .benefit-card-icon{transition:none;}
+  .menu-card:hover, .menu-preview-card:hover, .trust-card:hover, .price-card:hover, .what-is-pillar:hover, .feature-role:hover, .testimonial-card:hover, .benefit-card:hover, .why-card:hover{transform:none;}
+  .benefit-card:hover .benefit-card-icon{transform:none;}
   .menu-card .menu-thumb picture img, .menu-preview-card .menu-thumb picture img{transition:none;}
   .menu-card:hover .menu-thumb picture img, .menu-preview-card:hover .menu-thumb picture img{transform:none;}
 }
@@ -371,7 +383,7 @@ a, button, .btn{
 
 /* Magnetic buttons (motion.js, desktop pointer only) write --mx/--my as
    the button is approached; falls back to static if JS never sets them. */
-[data-magnetic]{transform:translate(var(--mx, 0), var(--my, 0)); transition:transform 320ms var(--ease-out);}
+[data-magnetic]{transform:translate(var(--mx, 0), var(--my, 0)); transition:transform var(--dur-standard) var(--ease-out);}
 [data-magnetic]:active{transition-duration:120ms;}
 /* These elements also have their own hover-lift transform (higher
    specificity than [data-magnetic] alone would win outright and cancel
@@ -444,7 +456,7 @@ a, button, .btn{
 .app-logo .dot{color:var(--lime-500);}
 .admin-nav-tag{font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:10.5px; letter-spacing:0.04em; text-transform:uppercase; color:var(--lime-500); background:rgba(94,157,110,0.12); border:1px solid rgba(94,157,110,0.28); border-radius:100px; padding:4px 10px;}
 .app-links{display:flex; align-items:center; gap:4px;}
-.app-links a{color:rgba(255,255,255,0.68); font-size:16px; font-weight:500; padding:8px 14px; border-radius:8px; transition:background .15s, color .15s;}
+.app-links a{color:rgba(255,255,255,0.68); font-size:16px; font-weight:500; padding:8px 14px; border-radius:8px; transition:background var(--dur-standard) var(--ease-standard), color var(--dur-standard) var(--ease-standard);}
 .app-links a:hover{color:var(--white); background:rgba(255,255,255,0.08);}
 .app-links a.active{color:var(--ink-900); background:var(--lime-500); font-weight:700;}
 .app-user{display:flex; align-items:center; gap:12px;}
@@ -534,7 +546,7 @@ a, button, .btn{
 .trend-bar-track{width:100%; max-width:26px; height:100%; display:flex; align-items:flex-end; background:var(--ice-50); border-radius:6px 6px 2px 2px; overflow:hidden;}
 /* Full height always; the bar's visual growth is a transform:scaleY from
    the bottom, not a height change, so it never triggers layout. */
-.trend-bar-fill{width:100%; height:100%; background:linear-gradient(180deg, var(--lime-500), var(--lime-700)); border-radius:6px 6px 2px 2px; transform-origin:bottom; transform:scaleY(var(--pct, 1)); transition:transform 0.6s var(--ease-out, ease-out);}
+.trend-bar-fill{width:100%; height:100%; background:linear-gradient(180deg, var(--lime-500), var(--lime-700)); border-radius:6px 6px 2px 2px; transform-origin:bottom; transform:scaleY(var(--pct, 1)); transition:transform var(--dur-elevated) var(--ease-out);}
 .trend-bar-count{font-size:10.5px; font-weight:700; color:var(--navy-800);}
 .trend-bar-label{font-size:9.5px; color:var(--muted); white-space:nowrap;}
 @media (max-width:640px){
@@ -637,7 +649,7 @@ table{width:100%; border-collapse:collapse;}
 table th{text-align:left; font-size:16px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); font-weight:600; padding:10px 12px; border-bottom:1.5px solid var(--line);}
 table td{padding:14px 12px; border-bottom:1px solid var(--line); font-size:16px;}
 table tr:last-child td{border-bottom:none;}
-table tbody tr{transition:background .1s;}
+table tbody tr{transition:background var(--dur-micro) var(--ease-standard);}
 table tbody tr:hover{background:rgba(62,99,166,0.035);}
 
 /* ---------- responsive data table -> stacked cards ----------
@@ -647,6 +659,12 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
    both, CSS shows exactly one, so there's no client-side reflow logic
    and no risk of the two views drifting out of sync in future edits. */
 .data-card-view{display:none;}
+/* Below 640px the table becomes stacked cards (see above); between there
+   and desktop, a 7-column table (student/meal/plan/date/total/status/
+   cancel) is still wider than a ~768-820px tablet viewport can fit without
+   shrinking cells unreadably — scope the overflow to the table itself
+   instead of letting it push the whole page into horizontal scroll. */
+.data-table-view{overflow-x:auto;}
 @media (max-width:640px){
   .data-table-view{display:none;}
   .data-card-view{display:block;}
@@ -786,7 +804,10 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 .allergen-commitment{text-align:center; max-width:560px; margin:0 auto 28px; font-size:16px; color:var(--muted);}
 .menu-card-full{display:flex; gap:0; overflow:visible;}
 .menu-thumb-wide{width:100px; aspect-ratio:1/1; height:auto; flex-shrink:0; align-self:flex-start; border-radius:var(--radius-sm) 0 0 var(--radius-sm);}
-.menu-card-full .menu-card-body{padding:18px 20px; flex:1;}
+/* min-width:0 overrides the flex item's default min-width:auto — without
+   it, the body couldn't shrink below its content's intrinsic width (the
+   4-up .menu-nutri-grid, dish name) and pushed past the card at ~768px. */
+.menu-card-full .menu-card-body{padding:18px 20px; flex:1; min-width:0;}
 .menu-card-full h3{font-size:16px; margin:6px 0 10px;}
 .menu-ingredients{font-size:16px; color:var(--navy-800); line-height:1.6; margin-bottom:16px;}
 .menu-ingredients strong{color:var(--navy-950);}
@@ -915,7 +936,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .site-logo{color:var(--white); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:18px; display:flex; align-items:center; min-height:var(--control-height); gap:8px; white-space:nowrap; flex-shrink:0;}
 .site-logo .dot{color:var(--lime-500);}
 .site-links{display:flex; align-items:center; gap:2px;}
-.site-links a{color:rgba(255,255,255,0.72); font-size:16px; font-weight:500; padding:8px 6px; border-radius:8px; white-space:nowrap; transition:background .15s, color .15s;}
+.site-links a{color:rgba(255,255,255,0.72); font-size:16px; font-weight:500; padding:8px 6px; border-radius:8px; white-space:nowrap; transition:background var(--dur-standard) var(--ease-standard), color var(--dur-standard) var(--ease-standard);}
 .site-links a:hover{color:var(--white); background:rgba(255,255,255,0.08);}
 .site-links a.active{color:var(--lime-300); font-weight:700;}
 .site-actions{display:flex; align-items:center; gap:6px;}
@@ -1727,7 +1748,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .site-links-mobile{
     display:block; position:fixed; inset:0; height:100vh; height:100dvh; z-index:60;
     background:var(--navy-950); padding:0 20px calc(24px + env(safe-area-inset-bottom)); overflow-y:auto;
-    transform:translateY(-8px); opacity:0; pointer-events:none; transition:opacity .18s, transform .18s;
+    transform:translateY(-8px); opacity:0; pointer-events:none; transition:opacity var(--dur-standard) var(--ease-standard), transform var(--dur-standard) var(--ease-standard);
   }
   .site-links-mobile.open{opacity:1; transform:translateY(0); pointer-events:auto;}
   .site-links-mobile a{
@@ -1735,14 +1756,23 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
     color:rgba(255,255,255,0.82); border-bottom:1px solid rgba(255,255,255,0.08);
   }
   .site-links-mobile a.active{color:var(--lime-300);}
+  @media (prefers-reduced-motion: reduce){
+    .site-links-mobile{transition:opacity var(--dur-micro) linear; transform:none;}
+  }
 }
-@media (max-width:800px){
+/* Own breakpoint, wider than the .form-row/.page/.section block below —
+   the full 6-item .app-links row (Dashboard/Students/Book a Meal/Menu/
+   History/Staff) plus logo and .app-user was still overflowing the
+   viewport at 820px (iPad Mini) with the switch-to-hamburger point at
+   800px; 900px gives it real headroom instead of trading one narrow-width
+   overflow for another just above the old threshold. */
+@media (max-width:900px){
   .app-links{display:none;}
   .app-header .nav-toggle{display:flex;}
   .app-links-mobile{
     display:block; position:fixed; inset:0; height:100vh; height:100dvh; z-index:60;
     background:var(--navy-950); padding:0 20px calc(24px + env(safe-area-inset-bottom)); overflow-y:auto;
-    transform:translateY(-8px); opacity:0; pointer-events:none; transition:opacity .18s, transform .18s;
+    transform:translateY(-8px); opacity:0; pointer-events:none; transition:opacity var(--dur-standard) var(--ease-standard), transform var(--dur-standard) var(--ease-standard);
   }
   .app-links-mobile.open{opacity:1; transform:translateY(0); pointer-events:auto;}
   .app-links-mobile a{
@@ -1750,6 +1780,11 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
     color:rgba(255,255,255,0.82); border-bottom:1px solid rgba(255,255,255,0.08);
   }
   .app-links-mobile a.active{color:var(--lime-300);}
+  @media (prefers-reduced-motion: reduce){
+    .app-links-mobile{transition:opacity var(--dur-micro) linear; transform:none;}
+  }
+}
+@media (max-width:800px){
   .form-row{grid-template-columns:minmax(0,1fr);}
   .page{padding:32px 20px 64px;}
   .section{padding:56px 0;}
@@ -1790,6 +1825,12 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .site-actions{gap:6px;}
   .site-actions .btn, .app-user .btn{padding:8px 13px; font-size:16px; white-space:nowrap;}
   .app-user > span, .app-user a.profile-link{display:none;}
+  /* Same treatment the site-header's lang-switch already gets at its own
+     narrow breakpoint (see .site-actions .lang-switch above) — it's
+     duplicated in the mobile drawer (.lang-switch-mobile), so dropping it
+     here isn't a loss, and app-user was overflowing the viewport at
+     320-360px with it still in place. */
+  .app-user .lang-switch{display:none;}
   .price-card .price-amt{font-size:32px;}
   .student-row{flex-wrap:wrap; row-gap:10px;}
   .student-row .status-line{flex-basis:100%; margin-left:54px; width:auto; max-width:calc(100% - 54px); white-space:normal; text-align:left;}

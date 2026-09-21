@@ -263,7 +263,7 @@
           </div>
           <div class="field <%= errs.message ? 'invalid' : '' %>">
             <label for="schoolMessage"><%= t('schools.partnerForm.labelMessage') %></label>
-            <textarea id="schoolMessage" name="message" rows="4" required data-validate="minlength:10" placeholder="<%= t('schools.partnerForm.placeholderMessage') %>"><%= fd.message || '' %></textarea>
+            <textarea id="schoolMessage" name="message" rows="4" required maxlength="2000" data-validate="minlength:10" placeholder="<%= t('schools.partnerForm.placeholderMessage') %>"><%= fd.message || '' %></textarea>
             <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.message || t('schools.partnerForm.errMessage') %></span></div>
           </div>
           <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('schools.partnerForm.submit') %></button>

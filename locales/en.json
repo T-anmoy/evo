@@ -436,7 +436,7 @@
       "errContactName": "Enter a contact name (letters only, at least 2 characters).",
       "errEmail": "A valid email address is required.",
       "errPhone": "Enter a valid phone number (8–15 digits).",
-      "errMessage": "Tell us a little more — at least 10 characters."
+      "errMessage": "Tell us a little more — between 10 and 2,000 characters."
     },
     "finalCta": {
       "eyebrow": "Ready when you are",
@@ -458,7 +458,9 @@
     "submit": "Log In",
     "noAccount": "Don't have an account?",
     "signUp": "Sign up",
-    "errInvalid": "Invalid credentials. Try the demo login below."
+    "errInvalid": "Invalid credentials. Try the demo login below.",
+    "errCivilId": "Civil ID should be exactly 12 digits.",
+    "errCivilIdFormat": "Enter a valid Civil ID — exactly 12 digits."
   },
 
   "register": {
@@ -489,6 +491,7 @@
     "agreeTermsLink": "Terms of Use",
     "submit": "Create Account",
     "errAllFields": "All fields are required.",
+    "errAgreeTerms": "You need to agree to the Terms of Use to create an account.",
     "errDuplicateCivilId": "An account with that Civil ID already exists — try logging in instead.",
     "haveAccount": "Have an account?",
     "logIn": "Log in"
@@ -667,7 +670,7 @@
       "errContactName": "Enter a contact name (letters only, at least 2 characters).",
       "errEmail": "A valid email address is required.",
       "errPhone": "Enter a valid phone number (8–15 digits).",
-      "errMessage": "Tell us a little more — at least 10 characters."
+      "errMessage": "Tell us a little more — between 10 and 2,000 characters."
     }
   },
 
@@ -711,7 +714,7 @@
       "errRequired": "Name, email, and a short message are required.",
       "errName": "Enter your full name (letters only, at least 2 characters).",
       "errEmail": "Enter a valid email address.",
-      "errMessage": "Add a little more detail — at least 10 characters."
+      "errMessage": "Add a little more detail — between 10 and 2,000 characters."
     }
   },
 
@@ -733,6 +736,8 @@
     "labelClass": "Class",
     "placeholderClass": "e.g. Grade 3",
     "errClass": "Use a shorter class/section value (letters, numbers, spaces).",
+    "errSchool": "Choose a school from the list.",
+    "errAllergies": "Keep allergy notes under 200 characters, with no < or > characters.",
     "labelSection": "Section",
     "placeholderSection": "e.g. B",
     "labelGender": "Gender",
@@ -805,7 +810,9 @@
     "submit": "Sign in",
     "notAdminPre": "Parent, not a school administrator?",
     "goToParentLogin": "Go to parent login",
-    "errInvalid": "Email or password is incorrect. Try the demo login shown below."
+    "errInvalid": "Email or password is incorrect. Try the demo login shown below.",
+    "errEmail": "Enter a valid email address.",
+    "errEmailFormat": "Enter a valid email address."
   },
 
   "schoolAdminDashboard": {

@@ -20,15 +20,17 @@
         <div class="alert alert-error"><%= error %></div>
       <% } %>
 
-      <form method="POST" action="/school-admin/login">
+      <form method="POST" action="/school-admin/login" novalidate>
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <div class="field">
           <label for="email"><%= t('schoolAdminLogin.labelEmail') %></label>
-          <input type="email" id="email" name="email" inputmode="email" placeholder="<%= t('schoolAdminLogin.placeholderEmail') %>" required autofocus>
+          <input type="email" id="email" name="email" inputmode="email" data-validate="email" placeholder="<%= t('schoolAdminLogin.placeholderEmail') %>" required autofocus>
+          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('schoolAdminLogin.errEmail') %></span></div>
         </div>
         <div class="field">
           <label for="password"><%= t('schoolAdminLogin.labelPassword') %></label>
-          <input type="password" id="password" name="password" placeholder="<%= t('schoolAdminLogin.placeholderPassword') %>" required>
+          <input type="password" id="password" name="password" data-validate="required" placeholder="<%= t('schoolAdminLogin.placeholderPassword') %>" required>
+          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('common.valRequired') %></span></div>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('schoolAdminLogin.submit') %></button>
       </form>

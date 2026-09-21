@@ -204,7 +204,7 @@
           </div>
           <div class="field <%= errs.message ? 'invalid' : '' %>">
             <label for="catererMessage"><%= t('caterers.form.labelMessage') %></label>
-            <textarea id="catererMessage" name="message" rows="4" required data-validate="minlength:10" placeholder="<%= t('caterers.form.placeholderMessage') %>"><%= fd.message || '' %></textarea>
+            <textarea id="catererMessage" name="message" rows="4" required maxlength="2000" data-validate="minlength:10" placeholder="<%= t('caterers.form.placeholderMessage') %>"><%= fd.message || '' %></textarea>
             <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.message || t('caterers.form.errMessage') %></span></div>
           </div>
           <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('caterers.form.submit') %></button>

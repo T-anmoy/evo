@@ -81,7 +81,7 @@
         </div>
         <div class="field">
           <label for="contactMessage"><%= t('contact.form.labelMessage') %></label>
-          <textarea id="contactMessage" name="message" rows="5" required minlength="10" placeholder="<%= t('contact.form.placeholderMessage') %>"><%= cv.message || '' %></textarea>
+          <textarea id="contactMessage" name="message" rows="5" required minlength="10" maxlength="2000" data-validate="minlength:10" placeholder="<%= t('contact.form.placeholderMessage') %>"><%= cv.message || '' %></textarea>
           <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('contact.form.errMessage') %></span></div>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('contact.form.submit') %></button>

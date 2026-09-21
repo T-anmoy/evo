@@ -13,7 +13,10 @@ const { csrfSync } = require('csrf-sync');
 const db = require('./db');
 const { calculateBookingTotal, endOfMonthISO } = require('./lib/pricing');
 const { maskCivilId } = require('./lib/mask');
-const { isValidName, isValidEmail, isValidCivilId, isValidPhone, isValidOrgName, isValidClassSection } = require('./lib/validate');
+const {
+  isValidName, isValidEmail, isValidCivilId, isValidPhone, isValidOrgName, isValidClassSection,
+  isStrongPassword, isValidSchool, isValidAllergies
+} = require('./lib/validate');
 const { t: translate, SUPPORTED_LOCALES } = require('./lib/i18n');
 
 if (!process.env.SESSION_SECRET) {
@@ -290,7 +293,7 @@ app.post(['/schools/inquiry', '/ar/schools/inquiry'], (req, res) => {
   if (!isValidName(contactName)) errors.contactName = t('schools.partnerForm.errContactName');
   if (!isValidEmail(email)) errors.email = t('schools.partnerForm.errEmail');
   if (phone && !isValidPhone(phone)) errors.phone = t('schools.partnerForm.errPhone');
-  if (!message || message.trim().length < 10) errors.message = t('schools.partnerForm.errMessage');
+  if (!message || message.trim().length < 10 || message.trim().length > 2000) errors.message = t('schools.partnerForm.errMessage');
 
   if (Object.keys(errors).length) {
     return res.render('schools', { parentId: req.session.parentId, success: null, errors, formData: req.body });
@@ -325,7 +328,7 @@ app.post(['/caterers/inquiry', '/ar/caterers/inquiry'], (req, res) => {
   if (!isValidName(contactName)) errors.contactName = t('caterers.form.errContactName');
   if (!isValidEmail(email)) errors.email = t('caterers.form.errEmail');
   if (phone && !isValidPhone(phone)) errors.phone = t('caterers.form.errPhone');
-  if (!message || message.trim().length < 10) errors.message = t('caterers.form.errMessage');
+  if (!message || message.trim().length < 10 || message.trim().length > 2000) errors.message = t('caterers.form.errMessage');
 
   if (Object.keys(errors).length) {
     return res.render('caterers', { parentId: req.session.parentId, success: null, errors, formData: req.body });
@@ -380,7 +383,7 @@ app.post(['/contact', '/ar/contact'], (req, res) => {
   if (!isValidEmail(email)) {
     return res.render('contact', { parentId: req.session.parentId, success: null, error: t('contact.form.errEmail'), values });
   }
-  if (message.trim().length < 10) {
+  if (message.trim().length < 10 || message.trim().length > 2000) {
     return res.render('contact', { parentId: req.session.parentId, success: null, error: t('contact.form.errMessage'), values });
   }
   // Demo only — no email/CRM integration wired up yet. In production this
@@ -461,6 +464,12 @@ app.get(['/login', '/ar/login'], (req, res) => {
 
 app.post(['/login', '/ar/login'], loginLimiter, (req, res) => {
   const { civilId, password } = req.body;
+  // Reject an obviously malformed Civil ID before ever touching the
+  // database — the client-side check on this field can always be
+  // bypassed by posting directly, so this is the one that actually holds.
+  if (!isValidCivilId(civilId)) {
+    return res.render('login', { error: res.locals.t('login.errCivilIdFormat'), parentId: null });
+  }
   const parent = db.findParentByCivilId((civilId || '').trim());
   if (!parent || !bcrypt.compareSync(password || '', parent.passwordHash)) {
     return res.render('login', { error: res.locals.t('login.errInvalid'), parentId: null });
@@ -473,15 +482,23 @@ app.post(['/login', '/ar/login'], loginLimiter, (req, res) => {
 });
 
 app.get(['/forgot-password', '/ar/forgot-password'], (req, res) => {
-  res.render('forgot-password', { submitted: false, parentId: req.session.parentId });
+  res.render('forgot-password', { submitted: false, error: null, identifier: '', parentId: req.session.parentId });
 });
 
 app.post(['/forgot-password', '/ar/forgot-password'], (req, res) => {
   const { identifier } = req.body;
+  const t = res.locals.t;
+  const trimmed = (identifier || '').trim();
+  // Same shape check the client already does (civilid-or-email) — re-run
+  // here since a direct POST skips the client entirely. Format only: this
+  // never reveals whether the value matches a real account either way.
+  if (!isValidCivilId(trimmed) && !isValidEmail(trimmed)) {
+    return res.render('forgot-password', { submitted: false, error: t('forgotPassword.errIdentifier'), identifier: trimmed, parentId: req.session.parentId });
+  }
   // Demo only — no email is actually sent. Never reveal whether the
   // identifier matches an account, same reasoning as any real reset flow.
   logger.info({ identifier }, 'forgot-password request (demo — no email sent)');
-  res.render('forgot-password', { submitted: true, parentId: req.session.parentId });
+  res.render('forgot-password', { submitted: true, error: null, identifier: '', parentId: req.session.parentId });
 });
 
 app.get(['/register', '/ar/register'], (req, res) => {
@@ -489,7 +506,7 @@ app.get(['/register', '/ar/register'], (req, res) => {
 });
 
 app.post(['/register', '/ar/register'], (req, res) => {
-  const { name, civilId, email, phone, password, confirmPassword } = req.body;
+  const { name, civilId, email, phone, password, confirmPassword, agreeTerms } = req.body;
   const t = res.locals.t;
   // Re-rendered on every failure below with the non-sensitive fields the
   // parent already typed (never the password) so a validation error never
@@ -511,11 +528,16 @@ app.post(['/register', '/ar/register'], (req, res) => {
   if (!isValidPhone(phone)) {
     return res.render('register', { error: t('register.errPhone'), parentId: null, values });
   }
-  if (!/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9\s]).{8,}$/.test(password)) {
+  if (!isStrongPassword(password)) {
     return res.render('register', { error: t('register.errPassword'), parentId: null, values });
   }
   if (password !== confirmPassword) {
     return res.render('register', { error: t('register.errConfirmPassword'), parentId: null, values });
+  }
+  // The Terms checkbox is client-side `required`, which a direct POST
+  // skips entirely — re-check it's actually present here too.
+  if (!agreeTerms) {
+    return res.render('register', { error: t('register.errAgreeTerms'), parentId: null, values });
   }
   if (db.findParentByCivilId(civilId.trim())) {
     return res.render('register', { error: t('register.errDuplicateCivilId'), parentId: null, values });
@@ -551,6 +573,11 @@ app.get('/school-admin/login', (req, res) => {
 
 app.post('/school-admin/login', loginLimiter, (req, res) => {
   const { email, password } = req.body;
+  // Same principle as the parent login's Civil ID check — reject an
+  // obviously malformed email before ever querying the database.
+  if (!isValidEmail(email)) {
+    return res.render('school-admin-login', { error: res.locals.t('schoolAdminLogin.errEmailFormat'), parentId: req.session.parentId });
+  }
   const admin = db.findSchoolAdminByEmail((email || '').trim().toLowerCase());
   if (!admin || !bcrypt.compareSync(password || '', admin.passwordHash)) {
     return res.render('school-admin-login', { error: res.locals.t('schoolAdminLogin.errInvalid'), parentId: req.session.parentId });
@@ -779,7 +806,12 @@ app.post('/students', requireAuth, (req, res) => {
   });
 
   if (!isValidName(name)) return rerenderWithError(t('students.errName'));
+  // school is a <select> offering only the known set — re-check the
+  // posted value is actually one of them, since a direct POST can send
+  // anything regardless of what the dropdown offered.
+  if (!isValidSchool(school)) return rerenderWithError(t('students.errSchool'));
   if (!isValidClassSection(klass) || !isValidClassSection(section)) return rerenderWithError(t('students.errClass'));
+  if (!isValidAllergies(allergies)) return rerenderWithError(t('students.errAllergies'));
   if (!id && !isValidCivilId(civilId)) return rerenderWithError(t('students.errCivilId'));
 
   if (id) {
