@@ -56,9 +56,9 @@
           </div>
           <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= re.confirmPassword || t('register.errConfirmPassword') %></span></div>
         </div>
-        <div class="field <%= re.agreeTerms ? 'invalid' : '' %>" style="display:flex; align-items:flex-start; gap:10px;">
-          <input type="checkbox" id="agreeTerms" name="agreeTerms" required style="margin-top:2px;">
-          <label for="agreeTerms" style="font-weight:400;"><%= t('register.agreeTermsPre') %> <a href="/terms" style="color:var(--leaf-dark); font-weight:600;"><%= t('register.agreeTermsLink') %></a><span class="req">*</span></label>
+        <div class="field <%= re.agreeTerms ? 'invalid' : '' %>" style="display:flex; align-items:center; gap:10px;">
+          <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+          <label for="agreeTerms" style="font-weight:400; margin-bottom:0; line-height:1.3;"><%= t('register.agreeTermsPre') %> <a href="/terms" style="color:var(--leaf-dark); font-weight:600;"><%= t('register.agreeTermsLink') %></a><span class="req">*</span></label>
           <% if (re.agreeTerms) { %><div class="field-error" style="display:flex;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= re.agreeTerms %></span></div><% } %>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('register.submit') %></button>
