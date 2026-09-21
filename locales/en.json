@@ -680,6 +680,17 @@
       "heading": "Because \"Did they eat?\" shouldn't be a guess.",
       "lede": "We help you manage your child's nutrition and dietary preferences, giving you and your child the tools to choose tasty, healthy, and nutritious meals. Evo Meals is one platform that connects parents, schools, and caterers in real time to serve what is best for the child."
     },
+    "connects": {
+      "eyebrow": "What the platform connects",
+      "heading": "One system, three sides of the same school day.",
+      "intro": "Evo Meals isn't a parent app with a school add-on — it's one real-time platform that parents, schools, and caterers all work from at once.",
+      "parentsTitle": "Parents",
+      "parentsBody": "Order and subscribe to a school's meal programme, and get live notifications the moment a meal is collected.",
+      "schoolsTitle": "Schools",
+      "schoolsBody": "See live dashboards and participation analytics for your own programme — real bookings, not a preview.",
+      "caterersTitle": "Caterers",
+      "caterersBody": "Work from a digital order queue with real demand visibility, instead of a phone call or a paper tally."
+    },
     "story": {
       "eyebrow": "Our story",
       "heading": "Evo Meals wasn't built in a boardroom.",

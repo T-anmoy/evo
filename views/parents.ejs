@@ -57,25 +57,11 @@
       <p><%= t('parents.journey.intro') %></p>
     </div>
 
-    <!-- Compact three-phase visual journey (final refinement pass) —
-         replaces the previous "text blocks + nine journey pills" version
-         of this section with a single scannable before/at/after strip,
-         plus the four real operational steps kept below it. -->
-    <div class="mini-journey" data-reveal>
-      <div class="mini-journey-step">
-        <span class="mini-journey-phase"><%= t('parents.journey.phase1Label') %></span>
-        <strong><%= t('parents.journey.phase1Body') %></strong>
-      </div>
-      <div class="mini-journey-step">
-        <span class="mini-journey-phase"><%= t('parents.journey.phase2Label') %></span>
-        <strong><%= t('parents.journey.phase2Body') %></strong>
-      </div>
-      <div class="mini-journey-step">
-        <span class="mini-journey-phase"><%= t('parents.journey.phase3Label') %></span>
-        <strong><%= t('parents.journey.phase3Body') %></strong>
-      </div>
-    </div>
-
+    <!-- One coherent Book -> Pay -> Tap -> Notified journey (the previous
+         "before/at/after" mini-journey strip duplicated this same content
+         a second time with its own numbering — removed in favor of a
+         single journey with real color semantics: Tap is the attention
+         moment (School Yellow), Notified is the completion moment (Leaf). -->
     <div class="steps">
       <div class="step" data-reveal data-reveal-group="psteps">
         <div class="step-num"><%= t('parents.journey.step1Label') %></div>
@@ -87,12 +73,12 @@
         <h3><%= t('parents.journey.step2Title') %></h3>
         <p><%= t('parents.journey.step2Body') %></p>
       </div>
-      <div class="step" data-reveal data-reveal-group="psteps">
+      <div class="step step-attention" data-reveal data-reveal-group="psteps">
         <div class="step-num"><%= t('parents.journey.step3Label') %></div>
         <h3><%= t('parents.journey.step3Title') %></h3>
         <p><%= t('parents.journey.step3Body') %></p>
       </div>
-      <div class="step" data-reveal data-reveal-group="psteps">
+      <div class="step step-done" data-reveal data-reveal-group="psteps">
         <div class="step-num"><%= t('parents.journey.step4Label') %></div>
         <h3><%= t('parents.journey.step4Title') %></h3>
         <p><%= t('parents.journey.step4Body') %></p>

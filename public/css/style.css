@@ -819,14 +819,18 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
 .menu-featured .menu-thumb-wide{width:180px;}
 @media (max-width:560px){
   .menu-featured{flex-direction:column;}
-  .menu-featured .menu-thumb-wide{width:100%; aspect-ratio:16/9; border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
+  /* Stays aspect-ratio:1/1 (inherited from .menu-thumb-wide) — the source
+     photography is a true 800x800 square; forcing 16:9 here would crop a
+     third of the dish out of frame instead of just resizing the box. */
+  .menu-featured .menu-thumb-wide{width:100%; border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
 }
 /* Secondary dishes: small preview strip, not another row of equal cards —
    compact enough to scan in one glance rather than compete with the
    featured dish above it. */
 .menu-preview-strip{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px;}
 .menu-preview-card{background:var(--white); border:1px solid var(--line); border-radius:var(--radius-sm); overflow:hidden;}
-.menu-preview-card .menu-thumb{aspect-ratio:4/3;}
+/* Stays the base .menu-thumb aspect-ratio:1/1 — matches the source dish
+   photography exactly, so nothing is cropped out of frame. */
 .menu-preview-body{padding:10px 12px;}
 .menu-preview-body h4{font-size:16px; margin:0 0 4px;}
 .menu-preview-body span{font-size:16px; color:var(--muted);}
@@ -1116,14 +1120,19 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .hero-copy h1 em{font-style:normal; color:var(--leaf-light);}
 .hero-copy p.lede{color:rgba(255,255,255,0.72); font-size:16.5px; line-height:1.6; margin-bottom:32px; max-width:460px;}
 .hero-actions{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:40px;}
-.hero-actions a.btn-outline{color:#fff; border-color:rgba(255,255,255,0.28);}
-.hero-actions a.btn-outline:hover{background:rgba(255,255,255,0.08);}
+/* Scoped to an actual dark .hero ancestor (excluding .hero-light) — this
+   is a reusable button-row utility, also reused on plain white surfaces
+   elsewhere (e.g. the homepage's closing "Ready when you are" cards), so
+   the dark-surface color inversion below must not apply unconditionally
+   to every .hero-actions on the page, only to the real dark hero. */
+.hero:not(.hero-light) .hero-actions a.btn-outline{color:#fff; border-color:rgba(255,255,255,0.28);}
+.hero:not(.hero-light) .hero-actions a.btn-outline:hover{background:rgba(255,255,255,0.08);}
 /* .btn-primary's forest bg is invisible on this hero's own forest
    background — invert to white bg/forest text so it still reads as the
    trust-colored primary action, distinct from the selective School
    Yellow attention treatment used elsewhere (e.g. the homepage hero). */
-.hero-actions a.btn-primary{background:var(--white); color:var(--forest);}
-.hero-actions a.btn-primary:hover{background:var(--mint); color:var(--forest-secondary); transform:translateY(-1px); box-shadow:none;}
+.hero:not(.hero-light) .hero-actions a.btn-primary{background:var(--white); color:var(--forest);}
+.hero:not(.hero-light) .hero-actions a.btn-primary:hover{background:var(--mint); color:var(--forest-secondary); transform:translateY(-1px); box-shadow:none;}
 
 /* diagonal seam panel that carries the tap demo */
 .hero-visual{
@@ -1279,9 +1288,22 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 /* steps (real sequence: book -> tap -> collected -> notified) */
 .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:24px; counter-reset:step;}
 .step{position:relative; padding-top:8px;}
-.step .step-num{font-family:'Montserrat',sans-serif; font-weight:800; font-size:16px; color:var(--leaf-dark); margin-bottom:14px; display:flex; align-items:center; gap:10px;}
-.step .step-num::before{content:counter(step,decimal-leading-zero); counter-increment:step;}
+.step .step-num{font-family:'Montserrat',sans-serif; font-weight:800; font-size:16px; letter-spacing:0.04em; text-transform:uppercase; color:var(--forest); margin-bottom:14px; display:flex; align-items:center; gap:10px;}
+/* Numbered badge, not plain colored text — a filled circle so the Tap
+   (attention) and Notified (completion) steps can use School
+   Yellow/Leaf backgrounds with proper dark-ink contrast, the same
+   convention as .process-step elsewhere, instead of low-contrast
+   colored text on this section's light background. */
+.step .step-num::before{
+  content:counter(step,decimal-leading-zero); counter-increment:step;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  width:28px; height:28px; border-radius:50%;
+  background:var(--forest); color:var(--leaf-light);
+  font-size:12px; font-variant-numeric:tabular-nums;
+}
 .step .step-num::after{content:""; height:1px; flex:1; background:var(--line-strong);}
+.step-attention .step-num::before{background:var(--school-yellow); color:var(--ink);}
+.step-done .step-num::before{background:var(--leaf); color:var(--ink);}
 .step h3{font-size:16px; margin-bottom:8px;}
 .step p{font-size:16px; line-height:1.6;}
 
@@ -1406,7 +1428,14 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .site-foot-bottom{flex-direction:column; align-items:flex-start; gap:10px;}
 }
 
+/* Fluid two-button hero row (Check My School / Log in): each button gets
+   an equal flex-basis, so the pair sits inline whenever there's room for
+   both at a comfortable width, and — with no breakpoint at all — wraps to
+   one full-width button per row exactly when it no longer fits, instead
+   of only the first button going full-width and stranding the second as
+   a small orphaned control next to empty space. */
 .hero-actions-3{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:32px;}
+.hero-actions-3 .btn{flex:1 1 180px;}
 /* Third hero action, downgraded from a button to a quiet inline link
    (final refinement pass) — "See how it works" doesn't need equal visual
    weight with Check My School / Log in, it just needs to be reachable. */
@@ -1460,36 +1489,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .teaser-list li svg{width:18px; height:18px; color:var(--leaf-dark); flex-shrink:0; margin-top:1px;}
 .operate-list{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:14px; max-width:760px; margin:0 auto;}
 .operate-list li{align-items:center; font-weight:500;}
-
-/* Compact three-phase visual journey (final refinement pass) — replaces
-   the previous nine-pill list with a single before/at/after strip, a
-   connecting line communicating "one continuous flow" the way a wall of
-   equal-weight pills couldn't. */
-.mini-journey{display:flex; align-items:stretch; gap:0; margin:28px 0 40px; counter-reset:phase;}
-.mini-journey-step{
-  flex:1 1 0; position:relative; text-align:center; padding:0 16px 0 0;
-  display:flex; flex-direction:column; gap:8px;
-}
-.mini-journey-step::before{
-  counter-increment:phase; content:counter(phase);
-  display:flex; align-items:center; justify-content:center; margin:0 auto;
-  width:30px; height:30px; border-radius:50%; background:var(--forest); color:var(--leaf-light);
-  font-family:'Montserrat',sans-serif; font-weight:800; font-size:16px; position:relative; z-index:1;
-}
-.mini-journey-step:not(:last-child)::after{
-  content:""; position:absolute; top:15px; left:calc(50% + 24px); right:calc(-50% + 24px);
-  height:2px; background:var(--line-strong);
-}
-.mini-journey-phase{font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted);}
-.mini-journey-step strong{font-size:16px; color:var(--forest);}
-[dir="rtl"] .mini-journey-step:not(:last-child)::after{left:calc(-50% + 24px); right:calc(50% + 24px);}
-@media (max-width:700px){
-  .mini-journey{flex-direction:column; gap:18px; text-align:left;}
-  .mini-journey-step{flex-direction:row; align-items:center; text-align:left; padding:0; gap:12px;}
-  .mini-journey-step::before{margin:0; flex-shrink:0;}
-  .mini-journey-step:not(:last-child)::after{display:none;}
-  [dir="rtl"] .mini-journey-step{text-align:right;}
-}
 
 /* ---------- role journey / process rail (final refinement pass) ----------
    Replaces the old "Book → Pay → Tap → Notified" pill row, which relied on
@@ -1718,6 +1717,27 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 }
 .benefit-card h3{font-size:16px; margin-bottom:8px;}
 .benefit-card p{font-size:16px; line-height:1.7; color:var(--forest-secondary);}
+/* "Ready when you are" cards (cta-band): CTA row pinned to the bottom of
+   each card via margin-top:auto, so a card with a longer body or an
+   extra button (Parent: Register + Log in, vs one button for School/
+   Caterer) never leaves its CTA sitting at a different height than its
+   neighbors' — the grid already equalizes card height, this equalizes
+   where the action sits inside it. */
+.cta-band .benefit-card{display:flex; flex-direction:column;}
+.cta-band .benefit-card > a.btn{margin-top:auto;}
+/* .hero-actions still carries its original margin-bottom:40px (sized for
+   its usual full-page hero context) — reset it here, or that fixed
+   margin eats the free space margin-top:auto needs to push this row to
+   the card's bottom. */
+.cta-band .benefit-card .hero-actions{margin:auto 0 0;}
+/* This is exactly 3 cards — the shared .grid-3's tablet step (three
+   columns down to two, leaving the third card alone on its own half-
+   width row) reads as a broken layout for a group this small, not a
+   deliberate composition. Skip straight from three columns to one. */
+.cta-band .grid-3{grid-template-columns:repeat(3,1fr);}
+@media (max-width:900px){
+  .cta-band .grid-3{grid-template-columns:minmax(0,1fr);}
+}
 
 /* ---------- partner contact forms (Schools / Caterers) ---------- */
 .partner-form-wrap{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:48px; align-items:start;}
@@ -1817,14 +1837,11 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .steps, .steps-6{grid-template-columns:minmax(0,1fr);}
   .hero-actions{flex-direction:column; align-items:stretch;}
   .hero-actions .btn{width:100%;}
-  /* Mobile hero priority (final refinement pass): only the primary action
-     (Check My School) takes the full-width "important button" treatment.
-     Login stays a compact secondary pill next to it rather than another
-     equally-weighted full-width block — two visually equal CTAs read as
-     indecision, not priority. */
-  .hero-actions-3{flex-direction:row; flex-wrap:wrap; align-items:center; gap:10px;}
-  .hero-actions-3 .btn-hero-primary{flex:1 1 100%;}
-  .hero-actions-3 .btn:not(.btn-hero-primary){flex:0 0 auto; width:auto;}
+  /* .hero-actions-3 (Check My School / Log in) opts back out of the
+     column stack above — its own fluid flex-basis rule (see base rule)
+     already wraps each button to full width exactly when it stops
+     fitting inline, at any width, not just below this breakpoint. */
+  .hero-actions-3{flex-direction:row; align-items:stretch;}
   h1{font-size:26px;}
   .page-head h1{font-size:25px;}
   .trustbar-grid{grid-template-columns:minmax(0,1fr);}
