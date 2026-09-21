@@ -273,8 +273,22 @@ const SHOW_TRUST_STATS = false;
     <div data-reveal>
       <span class="eyebrow"><%= t('home.app.eyebrow') %></span>
       <h2><%= t('home.app.headingLine1') %><br><%= t('home.app.headingLine2') %></h2>
-      <div class="app-flow">
-        <span><%= t('home.app.flowMenu') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('home.app.flowChoose') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('home.app.flowPay') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('home.app.flowCollect') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('home.app.flowNotified') %></span>
+      <p class="app-flow-intro"><%= t('home.app.flowIntro') %></p>
+      <div class="app-steps">
+        <div class="app-step">
+          <span class="app-step-num">01</span>
+          <span class="app-step-label"><%= t('home.app.flowMenu') %></span>
+        </div>
+        <span class="app-step-connector" aria-hidden="true"></span>
+        <div class="app-step">
+          <span class="app-step-num">02</span>
+          <span class="app-step-label"><%= t('home.app.flowSubscription') %></span>
+        </div>
+        <span class="app-step-connector" aria-hidden="true"></span>
+        <div class="app-step">
+          <span class="app-step-num">03</span>
+          <span class="app-step-label"><%= t('home.app.flowOrder') %></span>
+        </div>
       </div>
       <p class="app-download-cta" style="font-weight:700; margin-bottom:10px;"><%= t('home.app.downloadCta') %></p>
       <div class="store-badges">

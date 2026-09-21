@@ -183,11 +183,10 @@
       "eyebrow": "تطبيق Evo Meals",
       "headingLine1": "وجبات طفلك،",
       "headingLine2": "بين يديك في أي وقت.",
+      "flowIntro": "تصفح القائمة. أدر اشتراكك. اطلب وجباتك.",
       "flowMenu": "القائمة",
-      "flowChoose": "اختر",
-      "flowPay": "ادفع",
-      "flowCollect": "استلم",
-      "flowNotified": "إشعار",
+      "flowSubscription": "الاشتراك",
+      "flowOrder": "الطلب",
       "downloadCta": "حمّل التطبيق الآن!"
     },
     "faq": {

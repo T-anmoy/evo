@@ -1712,9 +1712,17 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .app-section-wrap{max-width:640px; text-align:center; margin:0 auto;}
 .app-section-wrap h2{font-size:clamp(28px,4vw,40px); margin:14px 0;}
 .app-section-wrap p{font-size:16px; color:var(--forest-secondary); max-width:440px; margin:0 auto 28px;}
-.app-flow{display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; color:var(--forest-secondary); margin-bottom:32px;}
-.app-flow span:not(.app-flow-arrow){background:var(--white); border:1px solid var(--line); border-radius:100px; padding:8px 16px;}
-.app-flow-arrow{color:var(--leaf-hover); font-weight:400;}
+.app-flow-intro{font-weight:600; color:var(--forest-secondary);}
+.app-steps{display:flex; align-items:flex-start; justify-content:center; gap:0; margin:8px auto 32px; max-width:520px;}
+.app-step{display:flex; flex-direction:column; align-items:center; gap:10px; flex:0 1 120px;}
+.app-step-num{font-family:'Montserrat',sans-serif; font-weight:800; font-size:15px; letter-spacing:0.02em; color:var(--white); background:var(--forest); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-sm);}
+.app-step-label{font-family:'Montserrat',sans-serif; font-weight:700; font-size:15px; color:var(--forest-secondary);}
+.app-step-connector{flex:1 1 40px; height:2px; background:var(--line-strong); margin-top:20px; min-width:24px; max-width:80px;}
+@media (max-width:560px){
+  .app-steps{gap:0;}
+  .app-step{flex-basis:84px;}
+  .app-step-connector{min-width:14px;}
+}
 .store-badges{display:flex; justify-content:center; gap:14px; flex-wrap:wrap;}
 .store-badge{display:flex; align-items:center; gap:10px; background:var(--forest); color:#fff; border-radius:12px; padding:10px 18px; transition:transform var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), background var(--dur-standard) var(--ease-standard);}
 .store-badge:hover, .store-badge:focus-visible{transform:translateY(-3px); box-shadow:var(--shadow-sm); background:var(--forest-secondary);}

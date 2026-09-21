@@ -183,11 +183,10 @@
       "eyebrow": "The Evo Meals app",
       "headingLine1": "Your child's meals.",
       "headingLine2": "At your fingertips.",
+      "flowIntro": "Browse the menu. Manage your subscription. Place orders.",
       "flowMenu": "Menu",
-      "flowChoose": "Choose",
-      "flowPay": "Pay",
-      "flowCollect": "Collect",
-      "flowNotified": "Notified",
+      "flowSubscription": "Subscription",
+      "flowOrder": "Order",
       "downloadCta": "Download the app!"
     },
     "faq": {
