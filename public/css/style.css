@@ -1388,6 +1388,13 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .cta-band::before{
   content:""; position:absolute; top:0; left:0; width:100%; height:100%;
   background:linear-gradient(100deg, transparent 62%, rgba(94,157,110,0.10) 62%, rgba(94,157,110,0.10) 64%, transparent 64%);
+  /* Purely decorative — .wrap (the real content) is position:static, so
+     without this, this absolutely-positioned full-cover stripe paints
+     (and receives clicks) above it regardless of DOM order, silently
+     swallowing every click on the CTA band's buttons even where the
+     stripe itself is transparent. Confirmed live: elementFromPoint() at
+     the button's center returned this pseudo-element, not the button. */
+  pointer-events:none;
 }
 
 .site-foot{background:var(--forest); color:rgba(255,255,255,0.55); padding:64px 0 0; font-size:16px; border-top:1px solid rgba(255,255,255,0.08);}
