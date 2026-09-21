@@ -821,8 +821,13 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
   .menu-featured{flex-direction:column;}
   /* Stays aspect-ratio:1/1 (inherited from .menu-thumb-wide) — the source
      photography is a true 800x800 square; forcing 16:9 here would crop a
-     third of the dish out of frame instead of just resizing the box. */
-  .menu-featured .menu-thumb-wide{width:100%; border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
+     third of the dish out of frame instead of just resizing the box.
+     height:auto is required here, not just cosmetic — the generic
+     .menu-thumb-wide rule below (same breakpoint, for the compact /menu
+     page list thumbnails) sets a fixed height:70px that would otherwise
+     win over aspect-ratio and squash this full-width featured image into
+     a 70px-tall cropped strip. */
+  .menu-featured .menu-thumb-wide{width:100%; height:auto; border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
 }
 /* Secondary dishes: small preview strip, not another row of equal cards —
    compact enough to scan in one glance rather than compete with the
