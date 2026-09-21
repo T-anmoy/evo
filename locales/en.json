@@ -2,7 +2,7 @@
   "meta": {
     "siteName": "Evo Meals",
     "home": { "title": "Evo Meals — School Meal Programme, Kuwait", "description": "Evo Meals runs the school meal programme for schools, parents, and catering partners in Kuwait — real menus, calendar-accurate pricing, and a notification the moment your child collects lunch." },
-    "parents": { "title": "For Parents — Evo Meals", "description": "Book school meals, manage subscriptions, and know the moment your child collects lunch — all from the Evo Meals parent account. Real-time notifications, allergen-checked menus, and calendar-accurate KNET payments." },
+    "parents": { "title": "For Parents — Evo Meals", "description": "Book school meals, manage subscriptions, and know the moment your child collects lunch — all from the Evo Meals parent account. Real-time notifications, dish-level allergen information, and calendar-accurate KNET payments." },
     "schools": { "title": "For Schools — Evo Meals School Meal Management Platform", "description": "Evo Meals partners with schools to run their school meal program in Kuwait digitally — automated subscriptions and orders, student-level meal accuracy, real-time dashboards, and a revenue-sharing partnership model." },
     "howItWorks": { "title": "How It Works — Evo Meals", "description": "How a meal moves through Evo Meals — from a school's program, through a parent's subscription, to a student's tap-to-collect at the counter." },
     "features": { "title": "Features — Evo Meals", "description": "Everything live in the Evo Meals platform today, organized by who uses it — parents, schools, caterers, students, and administrators." },
@@ -35,6 +35,16 @@
     "protein": "protein",
     "sending": "Sending…",
     "pleaseWait": "Please wait…",
+    "valRequired": "This field is required.",
+    "valEmailRequired": "Email is required.",
+    "valEmailInvalid": "Enter a valid email address.",
+    "valNameRequired": "Full name is required.",
+    "valNameInvalid": "Enter a valid name (letters only, at least 2 characters).",
+    "valPhoneRequired": "Mobile number is required.",
+    "valPhoneInvalid": "Enter a valid phone number (8–15 digits).",
+    "valPasswordRequired": "Password is required.",
+    "valConfirmPasswordRequired": "Please confirm your password.",
+    "valCivilIdOrEmailRequired": "Enter your Civil ID or email.",
     "justNow": "just now",
     "minUnitOne": "minute", "minUnitOther": "minutes",
     "hourUnitOne": "hour", "hourUnitOther": "hours",
@@ -56,7 +66,8 @@
     "menuToggle": "Menu",
     "closeMenu": "Close menu",
     "closeLabel": "Close",
-    "langSwitchLabel": "Switch language"
+    "langSwitchLabel": "Switch language",
+    "checkMySchool": "Check My School"
   },
 
   "footer": {
@@ -214,7 +225,7 @@
     "intro": "How a meal moves through the system, in six steps.",
     "step1Role": "School", "step1Title": "Sets the programme", "step1Body": "Partners with Evo Meals and onboards its parent community.",
     "step2Role": "Parent", "step2Title": "Books & pays", "step2Body": "Books a plan and pays only for real school days.",
-    "step3Role": "Evo Meals", "step3Title": "Routes the order", "step3Body": "Matches each order to the right student and allergy profile.",
+    "step3Role": "Evo Meals", "step3Title": "Routes the order", "step3Body": "Matches each order to the right student, with any allergy notes on file passed along.",
     "step4Role": "Caterer", "step4Title": "Prepares the meal", "step4Body": "Sees real orders and prepares exactly what's booked.",
     "step5Role": "Student", "step5Title": "Taps & collects", "step5Body": "One tap at the counter confirms the meal.",
     "step6Role": "Parent", "step6Title": "Gets notified", "step6Body": "You see which meal, and when it was collected."
@@ -248,7 +259,7 @@
     "parentsTitle": "Parents", "parentsChip1": "Order & Subscribe", "parentsChip2": "Live Notifications",
     "schoolsTitle": "Schools", "schoolsChip1": "Live Dashboards", "schoolsChip2": "Participation Analytics",
     "caterersTitle": "Caterers", "caterersChip1": "Digital Order Queue", "caterersChip2": "Demand Visibility",
-    "studentsTitle": "Students", "studentsChip1": "Allergy-Matched Meals", "studentsChip2": "Tap-to-Collect",
+    "studentsTitle": "Students", "studentsChip1": "Dish-Level Allergen Info", "studentsChip2": "Tap-to-Collect",
     "adminsTitle": "Administrators", "adminsChip1": "Centralized Management", "adminsChip2": "Revenue Reporting"
   },
 
@@ -260,7 +271,7 @@
   "parents": {
     "hero": {
       "eyebrow": "For Parents",
-      "headline1": "Know they ate.", "headline2": "Know what they ate.", "headlineEm": "Never have to ask.",
+      "headline1": "Know what they'll eat.", "headline2": "Know when they collect it.", "headlineEm": "Every school day.",
       "lede": "One account for every child, every meal. Book a plan, pay only for the real school days it covers, and see the exact moment they've collected lunch — dish, time, done.",
       "toastTitle": "Ahmed tapped in — lunch collected",
       "toastSub": "12:14 PM · Arabiatta Chicken Pasta · illustrative example"
@@ -274,14 +285,14 @@
       "step2Label": "Pay", "step2Title": "Pay via KNET", "step2Body": "Pay the exact amount. No wallet, no top-ups, no forgotten lunch money.",
       "step3Label": "Tap", "step3Title": "Your child taps in", "step3Body": "One tap at the counter. No PIN, no cash queue.",
       "step4Label": "Notified", "step4Title": "You see it happen", "step4Body": "The moment they tap, you know — which meal, what time.",
-      "journeyLabel": "Your complete parent journey — not just booking",
-      "pill1": "View the menu", "pill2": "Check nutritional info", "pill3": "Subscribe to a plan", "pill4": "Select meals",
-      "pill5": "Pay securely", "pill6": "Track orders", "pill7": "Get notifications", "pill8": "Manage multiple children", "pill9": "Renew your subscription"
+      "phase1Label": "Before school", "phase1Body": "Choose the meal",
+      "phase2Label": "At school", "phase2Body": "Child collects",
+      "phase3Label": "After collection", "phase3Body": "You see the confirmation"
     },
     "menu": {
       "eyebrow": "This week's menu",
       "heading": "Real meals, real nutrition, on the record.",
-      "intro": "Every dish is checked against your child's allergy profile before it's ever offered as an option.",
+      "intro": "See what's in every dish — ingredients, nutrition, and dish-specific allergen information — before you ever book it.",
       "allergenPill": "Allergen information available per dish",
       "footnote": "Allergen and dietary claims are per-dish information, not an independently verified guarantee — check each dish's own detail if your child has a specific allergy. Full ingredients and carb/fat breakdowns are on every dish once you're logged in."
     },
@@ -421,9 +432,10 @@
       "labelMessage": "Tell us more",
       "placeholderMessage": "Anything else that would help us prepare for the conversation...",
       "submit": "Send to our partnerships team",
-      "errSchoolName": "School name is required.",
-      "errContactName": "Contact person is required.",
+      "errSchoolName": "Enter your school's name (not digits-only).",
+      "errContactName": "Enter a contact name (letters only, at least 2 characters).",
       "errEmail": "A valid email address is required.",
+      "errPhone": "Enter a valid phone number (8–15 digits).",
       "errMessage": "Tell us a little more — at least 10 characters."
     },
     "finalCta": {
@@ -463,8 +475,8 @@
     "placeholderEmail": "you@example.com",
     "errEmail": "Enter a valid email address.",
     "labelPhone": "Mobile number",
-    "placeholderPhone": "+965 ...",
-    "errPhone": "Enter a phone number with 10–15 digits.",
+    "placeholderPhone": "e.g. +965 1234 5678",
+    "errPhone": "Enter a valid phone number (8–15 digits, e.g. +965 1234 5678).",
     "labelPassword": "Password",
     "placeholderPassword": "At least 8 characters",
     "showPassword": "Show password",
@@ -539,7 +551,7 @@
     "intro": "Every dish here shows full nutrition information, so you always know what's in the meal before you book it.",
     "allergenBanner": "Allergen information available per dish",
     "commitment1": "Special dietary claims — nut-free, shellfish-free, sesame-free, soy-free, egg-free, gluten-free, lactose-free — apply to specific meal preparations, not a blanket guarantee across every dish, and aren't independently verified by Evo Meals. Check each dish's own detail before booking if your child has a specific allergy.",
-    "commitment2": "Portions and protein content shown are the base recipe — each student's actual serving is matched to their registered grade when you book.",
+    "commitment2": "Portions and protein content shown are for the base recipe as prepared — the same figures for every student who orders that dish.",
     "ingredientsLabel": "Ingredients:",
     "kcal": "kcal",
     "protein": "Protein",
@@ -569,7 +581,7 @@
     "totalDue": "Total due",
     "confirmCta": "Confirm & Pay via KNET (demo)",
     "knetHint": "KNET is Kuwait's national payment network — the same one your bank card already uses. Demo only here, no real payment is processed.",
-    "agePortionHint": "Portion and protein content matched to {className}.",
+    "agePortionHint": "Booking for {className}.",
     "noSchoolDaysNote": "No school days left at {school} between {startDate} and the end of that month — try a later start date.",
     "realSchoolDayUnitOne": "real school day", "realSchoolDayUnitOther": "real school days",
     "realSchoolDaysNote": "{count} {unit} at {school}, from {startDate} through {monthEnd}.",
@@ -651,9 +663,10 @@
       "labelMessage": "Tell us about your kitchen",
       "placeholderMessage": "Schools you currently serve (if any), cuisine specialties, anything else useful...",
       "submit": "Send to our partnerships team",
-      "errOrgName": "Company name is required.",
-      "errContactName": "Contact person is required.",
+      "errOrgName": "Enter your company's name (not digits-only).",
+      "errContactName": "Enter a contact name (letters only, at least 2 characters).",
       "errEmail": "A valid email address is required.",
+      "errPhone": "Enter a valid phone number (8–15 digits).",
       "errMessage": "Tell us a little more — at least 10 characters."
     }
   },
@@ -695,7 +708,10 @@
       "submit": "Send message",
       "secureHint": "Handled securely — never shared beyond our team.",
       "footnote": "You can also reach us directly using the contact details in the footer below.",
-      "errRequired": "Name, email, and a short message are required."
+      "errRequired": "Name, email, and a short message are required.",
+      "errName": "Enter your full name (letters only, at least 2 characters).",
+      "errEmail": "Enter a valid email address.",
+      "errMessage": "Add a little more detail — at least 10 characters."
     }
   },
 
@@ -706,6 +722,7 @@
     "addTitle": "Add a student",
     "editTitle": "Edit student",
     "labelName": "Full name",
+    "errName": "Enter a full name (letters only, at least 2 characters).",
     "labelCivilId": "Civil ID",
     "hintCivilIdEditing": "Their 12-digit government ID. Masked here, and everywhere else it's shown — it can't be changed once added.",
     "hintCivilIdNew": "Their 12-digit government ID. It'll be masked everywhere it's shown from now on.",
@@ -715,13 +732,14 @@
     "hintDefaultSchool": "Defaulted to {name}'s school — change it if this child is somewhere else.",
     "labelClass": "Class",
     "placeholderClass": "e.g. Grade 3",
+    "errClass": "Use a shorter class/section value (letters, numbers, spaces).",
     "labelSection": "Section",
     "placeholderSection": "e.g. B",
     "labelGender": "Gender",
     "male": "Male", "female": "Female",
     "labelAllergies": "Allergies (optional)",
     "placeholderAllergies": "e.g. Peanuts, Shellfish",
-    "hintAllergies": "Every meal is checked against this automatically.",
+    "hintAllergies": "Recorded on their profile for reference — check each dish's own allergen information before booking rather than relying on this alone.",
     "saveChanges": "Save changes",
     "addStudent": "Add student",
     "cancel": "Cancel",
@@ -755,8 +773,11 @@
     "civilIdLine": "Civil ID: {civilId} (masked, cannot be changed here)",
     "savedMsg": "Saved — your profile is up to date.",
     "labelName": "Full name",
+    "errName": "Enter a valid full name (letters only, at least 2 characters).",
     "labelEmail": "Email",
+    "errEmail": "Enter a valid email address.",
     "labelPhone": "Mobile number",
+    "errPhone": "Enter a valid phone number (8–15 digits).",
     "saveChanges": "Save changes"
   },
 

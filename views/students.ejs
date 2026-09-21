@@ -16,13 +16,17 @@
   <div class="grid-2">
     <div class="card">
       <h3 style="font-size:15px; margin-bottom:16px;"><%= editing ? t('students.editTitle') : t('students.addTitle') %></h3>
-      <form method="POST" action="/students">
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-error"><%= error %></div>
+      <% } %>
+      <form method="POST" action="/students" novalidate>
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <% if (editing) { %><input type="hidden" name="id" value="<%= editing.id %>"><% } %>
         <div class="form-row">
           <div class="field">
             <label><%= t('students.labelName') %></label>
-            <input type="text" name="name" value="<%= editing ? editing.name : '' %>" required>
+            <input type="text" name="name" value="<%= editing ? editing.name : '' %>" data-validate="name" maxlength="60" required>
+            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('students.errName') %></span></div>
           </div>
           <div class="field">
             <label for="studentCivilId"><%= t('students.labelCivilId') %></label>

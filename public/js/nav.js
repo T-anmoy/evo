@@ -45,11 +45,14 @@
       panel.classList.toggle('open', open);
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (toggleIcon) toggleIcon.querySelector('path').setAttribute('d', open ? closePath : hamburgerPath);
-      if (toggleLabel) {
-        toggleLabel.textContent = open
-          ? (toggle.dataset.openLabel || 'Close')
-          : (toggle.dataset.closedLabel || 'Menu');
-      }
+      var labelText = open
+        ? (toggle.dataset.openLabel || 'Close')
+        : (toggle.dataset.closedLabel || 'Menu');
+      if (toggleLabel) toggleLabel.textContent = labelText;
+      // Visible label text can be hidden at the narrowest widths (see
+      // .nav-toggle span in style.css) — aria-label keeps the accessible
+      // name correct either way, in sync with whichever state it's in.
+      toggle.setAttribute('aria-label', labelText);
       if (open) {
         lockBodyScroll();
         panel.scrollTop = 0;

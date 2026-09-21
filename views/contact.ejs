@@ -55,30 +55,34 @@
       <div class="alert alert-error"><%= error %></div>
     <% } %>
     <div class="card" data-reveal>
-      <form method="POST" action="/contact">
+      <% var cv = (typeof values !== 'undefined' && values) ? values : {}; %>
+      <form method="POST" action="/contact" novalidate>
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <div class="field">
           <label for="contactName"><%= t('contact.form.labelName') %></label>
-          <input type="text" id="contactName" name="name" required>
+          <input type="text" id="contactName" name="name" value="<%= cv.name || '' %>" data-validate="name" required>
+          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('contact.form.errName') %></span></div>
         </div>
         <div class="form-row">
           <div class="field">
             <label for="contactEmail"><%= t('contact.form.labelEmail') %></label>
-            <input type="email" id="contactEmail" name="email" inputmode="email" required>
+            <input type="email" id="contactEmail" name="email" value="<%= cv.email || '' %>" inputmode="email" data-validate="email" required>
+            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('contact.form.errEmail') %></span></div>
           </div>
           <div class="field">
             <label for="contactRole"><%= t('contact.form.labelRole') %></label>
             <select id="contactRole" name="role">
-              <option value="Parent"><%= t('contact.form.optParent') %></option>
-              <option value="School"><%= t('contact.form.optSchool') %></option>
-              <option value="Caterer"><%= t('contact.form.optCaterer') %></option>
-              <option value="Other"><%= t('contact.form.optOther') %></option>
+              <option value="Parent" <%= cv.role === 'Parent' ? 'selected' : '' %>><%= t('contact.form.optParent') %></option>
+              <option value="School" <%= cv.role === 'School' ? 'selected' : '' %>><%= t('contact.form.optSchool') %></option>
+              <option value="Caterer" <%= cv.role === 'Caterer' ? 'selected' : '' %>><%= t('contact.form.optCaterer') %></option>
+              <option value="Other" <%= cv.role === 'Other' ? 'selected' : '' %>><%= t('contact.form.optOther') %></option>
             </select>
           </div>
         </div>
         <div class="field">
           <label for="contactMessage"><%= t('contact.form.labelMessage') %></label>
-          <textarea id="contactMessage" name="message" rows="5" required placeholder="<%= t('contact.form.placeholderMessage') %>"></textarea>
+          <textarea id="contactMessage" name="message" rows="5" required minlength="10" placeholder="<%= t('contact.form.placeholderMessage') %>"><%= cv.message || '' %></textarea>
+          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('contact.form.errMessage') %></span></div>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('contact.form.submit') %></button>
         <div class="hint hint-secure" style="justify-content:center; margin-top:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span><%= t('contact.form.secureHint') %></span></div>

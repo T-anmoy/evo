@@ -57,13 +57,24 @@
       <p><%= t('parents.journey.intro') %></p>
     </div>
 
-    <ul class="value-checklist" data-reveal>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('parents.journey.checklist1') %></li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('parents.journey.checklist2') %></li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('parents.journey.checklist3') %></li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('parents.journey.checklist4') %></li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('parents.journey.checklist5') %></li>
-    </ul>
+    <!-- Compact three-phase visual journey (final refinement pass) —
+         replaces the previous "text blocks + nine journey pills" version
+         of this section with a single scannable before/at/after strip,
+         plus the four real operational steps kept below it. -->
+    <div class="mini-journey" data-reveal>
+      <div class="mini-journey-step">
+        <span class="mini-journey-phase"><%= t('parents.journey.phase1Label') %></span>
+        <strong><%= t('parents.journey.phase1Body') %></strong>
+      </div>
+      <div class="mini-journey-step">
+        <span class="mini-journey-phase"><%= t('parents.journey.phase2Label') %></span>
+        <strong><%= t('parents.journey.phase2Body') %></strong>
+      </div>
+      <div class="mini-journey-step">
+        <span class="mini-journey-phase"><%= t('parents.journey.phase3Label') %></span>
+        <strong><%= t('parents.journey.phase3Body') %></strong>
+      </div>
+    </div>
 
     <div class="steps">
       <div class="step" data-reveal data-reveal-group="psteps">
@@ -88,20 +99,6 @@
       </div>
     </div>
 
-    <div class="journey-block" data-reveal>
-      <span class="journey-label"><%= t('parents.journey.journeyLabel') %></span>
-      <ul class="journey-pills">
-        <li><%= t('parents.journey.pill1') %></li>
-        <li><%= t('parents.journey.pill2') %></li>
-        <li><%= t('parents.journey.pill3') %></li>
-        <li><%= t('parents.journey.pill4') %></li>
-        <li><%= t('parents.journey.pill5') %></li>
-        <li><%= t('parents.journey.pill6') %></li>
-        <li><%= t('parents.journey.pill7') %></li>
-        <li class="journey-pill-emphasis"><%= t('parents.journey.pill8') %></li>
-        <li class="journey-pill-emphasis"><%= t('parents.journey.pill9') %></li>
-      </ul>
-    </div>
   </div>
 </section>
 
@@ -116,20 +113,40 @@
     <div class="allergen-row" style="justify-content:center;">
       <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg> <%= t('parents.menu.allergenPill') %></span>
     </div>
-    <div class="grid-4">
-      <% menuItems.forEach(m => { %>
-        <div class="menu-card" data-reveal data-reveal-group="pmenu">
-          <div class="menu-thumb">
-            <%- include('partials/dish-image', { m: m }) %>
-          </div>
-          <div class="menu-card-body">
-            <span class="tag"><%= m.tag %></span>
-            <h3><%= m.name %></h3>
-            <div class="menu-nutri"><span><bdi><%= m.calories %> <%= t('common.kcal') %></bdi></span><span>·</span><span><bdi><%= m.protein %>g <%= t('common.protein') %></bdi></span></div>
+    <% const __featured = menuItems[0]; const __rest = menuItems.slice(1); %>
+    <% if (__featured) { %>
+    <!-- One dish shown in full detail (name, category, macros, ingredients)
+         instead of another equal card in a grid — a featured-detail
+         composition communicates more, faster, than four identical cards
+         (final refinement pass, spec section 7C). -->
+    <div class="menu-card menu-card-full menu-featured" data-reveal>
+      <div class="menu-thumb menu-thumb-wide">
+        <%- include('partials/dish-image', { m: __featured, eager: true }) %>
+      </div>
+      <div class="menu-card-body">
+        <span class="tag"><%= __featured.tag %></span>
+        <h3><%= __featured.name %></h3>
+        <p class="menu-ingredients"><strong><%= t('menu.ingredientsLabel') %></strong> <%= __featured.ingredients %></p>
+        <div class="menu-nutri-grid">
+          <div><span class="menu-nutri-val data-num"><%= __featured.calories %></span><span class="menu-nutri-key"><%= t('menu.kcal') %></span></div>
+          <div><span class="menu-nutri-val data-num"><bdi><%= __featured.protein %>g</bdi></span><span class="menu-nutri-key"><%= t('menu.protein') %></span></div>
+        </div>
+      </div>
+    </div>
+    <% } %>
+    <% if (__rest.length) { %>
+    <div class="menu-preview-strip">
+      <% __rest.forEach(m => { %>
+        <div class="menu-preview-card" data-reveal data-reveal-group="pmenu">
+          <div class="menu-thumb"><%- include('partials/dish-image', { m: m }) %></div>
+          <div class="menu-preview-body">
+            <h4><%= m.name %></h4>
+            <span><bdi><%= m.calories %> <%= t('common.kcal') %></bdi></span>
           </div>
         </div>
       <% }) %>
     </div>
+    <% } %>
     <p class="nutrition-more" data-reveal><%= t('parents.menu.footnote') %></p>
   </div>
 </section>

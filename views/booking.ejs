@@ -167,6 +167,21 @@
       ageHint.textContent = klass ? fmt(T.agePortionHint, { className: klass }) : '';
     }
 
+    // Purposeful animation: a brief opacity/scale pulse on the total
+    // whenever it actually changes, so the recalculation reads as cause
+    // → effect rather than a silent text swap. Respects
+    // prefers-reduced-motion via the CSS transition itself being a noop
+    // there (see .total-updated in style.css).
+    var totalEl = document.getElementById('totalAmt');
+    function setTotal(text) {
+      if (totalEl.textContent === text) return;
+      totalEl.textContent = text;
+      totalEl.classList.remove('total-updated');
+      // eslint-disable-next-line no-unused-expressions
+      void totalEl.offsetWidth; // restart the CSS transition on repeat updates
+      totalEl.classList.add('total-updated');
+    }
+
     if (plan === 'monthly') {
       daysField.style.display = 'none';
       var selectedOption = studentSelect.options[studentSelect.selectedIndex];
@@ -176,7 +191,7 @@
         var monthEndISO = endOfMonthISO(startISO);
         var realDays = schoolDaysInRange(school, startISO, monthEndISO);
         var total = Math.round(realDays.length * DAILY_RATE * 1000) / 1000;
-        document.getElementById('totalAmt').textContent = 'KWD ' + total.toFixed(3);
+        setTotal('KWD ' + total.toFixed(3));
         if (realDays.length === 0) {
           note.textContent = fmt(T.noSchoolDaysNote, { school: school, startDate: startISO });
           confirmBtn.disabled = true;
@@ -197,7 +212,7 @@
       note.textContent = '';
       confirmBtn.disabled = false;
       var d = Math.max(1, parseInt(daysInput.value, 10) || 1);
-      document.getElementById('totalAmt').textContent = 'KWD ' + (d * DAILY_RATE).toFixed(3);
+      setTotal('KWD ' + (d * DAILY_RATE).toFixed(3));
     }
   }
   document.querySelectorAll('input[name="planType"]').forEach(function(el){ el.addEventListener('change', recalc); });

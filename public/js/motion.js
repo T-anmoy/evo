@@ -1,6 +1,22 @@
 (function () {
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Client-side mirror of lib/validate.js's NAME_RE — server-side stays
+  // authoritative, this is only for immediate typing feedback. Built with
+  // `new RegExp` inside a try/catch, not a literal, because a literal using
+  // \p{L} would throw a SyntaxError while this whole file is parsed in a
+  // browser old enough not to support Unicode property escapes, breaking
+  // every other script on the page along with it. The fallback below still
+  // catches the one thing the old name regex actively got wrong (rejecting
+  // non-Latin names) by not restricting the character set at all — it just
+  // requires a letter to be present and rejects digit-only input.
+  var NAME_PATTERN;
+  try {
+    NAME_PATTERN = new RegExp("^(?=.*\\p{L})[\\p{L}\\p{M}\\s'’-]{2,60}$", 'u');
+  } catch (e) {
+    NAME_PATTERN = /^(?=.*[^\d\s])[^\d]{2,60}$/;
+  }
+
   // ---------- entrance choreography ----------
   // Elements marked [data-reveal] fade/rise in once, staggered by their
   // position among siblings sharing the same [data-reveal-group] (or
@@ -220,6 +236,12 @@
     span.textContent = text || span.dataset.defaultText;
   }
 
+  // Localized validation copy, injected per-page by partials/head.ejs from
+  // the active locale — falls back to English if EVO_I18N wasn't loaded
+  // (e.g. a page that doesn't include head.ejs) so validation never breaks.
+  var I18N = window.EVO_I18N || {};
+  function vi18n(key, fallback) { return I18N[key] || fallback; }
+
   function validateGenericField(input) {
     var field = input.closest('.field');
     if (!field) return true;
@@ -232,27 +254,28 @@
 
     if (rule === 'required') {
       valid = value.length > 0;
+      if (!valid) message = vi18n('valRequired', 'This field is required.');
     } else if (rule === 'email') {
-      if (isEmptyRequired) { valid = false; message = 'Email is required.'; }
-      else valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      if (isEmptyRequired) { valid = false; message = vi18n('valEmailRequired', 'Email is required.'); }
+      else { valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value); if (!valid) message = vi18n('valEmailInvalid', 'Enter a valid email address.'); }
     } else if (rule === 'civilid-or-email') {
-      if (isEmptyRequired) { valid = false; message = 'Enter your Civil ID or email.'; }
+      if (isEmptyRequired) { valid = false; message = vi18n('valCivilIdOrEmailRequired', 'Enter your Civil ID or email.'); }
       else valid = /^\d{12}$/.test(value) || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
     } else if (rule === 'name') {
-      if (isEmptyRequired) { valid = false; message = 'Full name is required.'; }
-      else valid = /^[A-Za-z\s]{2,60}$/.test(value);
+      if (isEmptyRequired) { valid = false; message = vi18n('valNameRequired', 'Full name is required.'); }
+      else { valid = NAME_PATTERN.test(value); if (!valid) message = vi18n('valNameInvalid', 'Enter a valid name.'); }
     } else if (rule === 'phone') {
-      if (isEmptyRequired) { valid = false; message = 'Mobile number is required.'; }
-      else { var digits = value.replace(/\D/g, ''); valid = digits.length >= 10 && digits.length <= 15; }
+      if (isEmptyRequired) { valid = false; message = vi18n('valPhoneRequired', 'Mobile number is required.'); }
+      else { var digits = value.replace(/\D/g, ''); valid = digits.length >= 8 && digits.length <= 15 && !/[^\d\s+()-]/.test(value); if (!valid) message = vi18n('valPhoneInvalid', 'Enter a valid phone number.'); }
     } else if (rule === 'password') {
-      if (isEmptyRequired) { valid = false; message = 'Password is required.'; }
+      if (isEmptyRequired) { valid = false; message = vi18n('valPasswordRequired', 'Password is required.'); }
       else valid = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9\s]).{8,}$/.test(rawValue) && rawValue.trim().length > 0;
       // Re-check the confirm field too, since its match depends on this value.
       var confirmInput = document.getElementById('confirmPassword');
       if (confirmInput && confirmInput.value.length > 0) validateGenericField(confirmInput);
     } else if (rule === 'confirm-password') {
       var matchInput = document.getElementById(input.getAttribute('data-match'));
-      if (isEmptyRequired) { valid = false; message = 'Please confirm your password.'; }
+      if (isEmptyRequired) { valid = false; message = vi18n('valConfirmPasswordRequired', 'Please confirm your password.'); }
       else valid = matchInput && rawValue === matchInput.value;
     } else if (rule && rule.indexOf('minlength:') === 0) {
       var min = parseInt(rule.split(':')[1], 10) || 0;

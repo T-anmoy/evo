@@ -221,7 +221,7 @@
           <div class="form-row">
             <div class="field <%= errs.contactName ? 'invalid' : '' %>">
               <label for="schoolContactName"><%= t('schools.partnerForm.labelContactName') %></label>
-              <input type="text" id="schoolContactName" name="contactName" value="<%= fd.contactName || '' %>" required data-validate="required">
+              <input type="text" id="schoolContactName" name="contactName" value="<%= fd.contactName || '' %>" required data-validate="name">
               <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.contactName || t('schools.partnerForm.errContactName') %></span></div>
             </div>
             <div class="field">
@@ -235,9 +235,10 @@
               <input type="email" id="schoolContactEmail" name="email" value="<%= fd.email || '' %>" inputmode="email" required data-validate="email">
               <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.email || t('schools.partnerForm.errEmail') %></span></div>
             </div>
-            <div class="field">
+            <div class="field <%= errs.phone ? 'invalid' : '' %>">
               <label for="schoolContactPhone"><%= t('schools.partnerForm.labelPhone') %></label>
-              <input type="tel" id="schoolContactPhone" name="phone" value="<%= fd.phone || '' %>" inputmode="tel">
+              <input type="tel" id="schoolContactPhone" name="phone" value="<%= fd.phone || '' %>" inputmode="tel" data-validate="phone" placeholder="+965 ...">
+              <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.phone || t('schools.partnerForm.errPhone') %></span></div>
             </div>
           </div>
           <div class="form-row">

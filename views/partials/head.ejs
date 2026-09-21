@@ -41,7 +41,17 @@
   // reach through res.locals.t itself (plain static files, not templates).
   window.EVO_I18N = {
     sending: <%- JSON.stringify(t('common.sending')) %>,
-    pleaseWait: <%- JSON.stringify(t('common.pleaseWait')) %>
+    pleaseWait: <%- JSON.stringify(t('common.pleaseWait')) %>,
+    valRequired: <%- JSON.stringify(t('common.valRequired')) %>,
+    valEmailRequired: <%- JSON.stringify(t('common.valEmailRequired')) %>,
+    valEmailInvalid: <%- JSON.stringify(t('common.valEmailInvalid')) %>,
+    valNameRequired: <%- JSON.stringify(t('common.valNameRequired')) %>,
+    valNameInvalid: <%- JSON.stringify(t('common.valNameInvalid')) %>,
+    valPhoneRequired: <%- JSON.stringify(t('common.valPhoneRequired')) %>,
+    valPhoneInvalid: <%- JSON.stringify(t('common.valPhoneInvalid')) %>,
+    valPasswordRequired: <%- JSON.stringify(t('common.valPasswordRequired')) %>,
+    valConfirmPasswordRequired: <%- JSON.stringify(t('common.valConfirmPasswordRequired')) %>,
+    valCivilIdOrEmailRequired: <%- JSON.stringify(t('common.valCivilIdOrEmailRequired')) %>
   };
 </script>
 <script src="/js/motion.js" defer></script>

@@ -178,7 +178,7 @@
           </div>
           <div class="field <%= errs.contactName ? 'invalid' : '' %>">
             <label for="catererContactName"><%= t('caterers.form.labelContactName') %></label>
-            <input type="text" id="catererContactName" name="contactName" value="<%= fd.contactName || '' %>" required data-validate="required">
+            <input type="text" id="catererContactName" name="contactName" value="<%= fd.contactName || '' %>" required data-validate="name">
             <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.contactName || t('caterers.form.errContactName') %></span></div>
           </div>
           <div class="form-row">
@@ -187,9 +187,10 @@
               <input type="email" id="catererContactEmail" name="email" value="<%= fd.email || '' %>" inputmode="email" required data-validate="email">
               <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.email || t('caterers.form.errEmail') %></span></div>
             </div>
-            <div class="field">
+            <div class="field <%= errs.phone ? 'invalid' : '' %>">
               <label for="catererContactPhone"><%= t('caterers.form.labelPhone') %></label>
-              <input type="tel" id="catererContactPhone" name="phone" value="<%= fd.phone || '' %>" inputmode="tel">
+              <input type="tel" id="catererContactPhone" name="phone" value="<%= fd.phone || '' %>" inputmode="tel" data-validate="phone" placeholder="+965 ...">
+              <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.phone || t('caterers.form.errPhone') %></span></div>
             </div>
           </div>
           <div class="field">

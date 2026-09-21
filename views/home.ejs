@@ -37,10 +37,10 @@ const SHOW_TRUST_STATS = false;
       <h1><%= t('home.hero.headlinePre') %> <em><%= t('home.hero.headlineEm') %></em></h1>
       <p class="lede"><%= t('home.hero.lede') %></p>
       <div class="hero-actions hero-actions-3">
-        <a href="#supported-schools" class="btn btn-primary btn-hero-primary" data-magnetic><%= t('home.hero.ctaCheckSchool') %></a>
-        <a href="<%= locale === 'ar' ? '/ar/how-it-works' : '/how-it-works' %>" class="btn btn-outline-lime btn-sm"><%= t('home.hero.ctaHowItWorks') %></a>
-        <a href="#app" class="btn btn-ghost btn-sm"><%= t('common.downloadApp') %></a>
+        <a href="#supported-schools" class="btn btn-school-yellow btn-hero-primary" data-magnetic><%= t('home.hero.ctaCheckSchool') %></a>
+        <a href="<%= locale === 'ar' ? '/ar/login' : '/login' %>" class="btn btn-outline-lime btn-sm"><%= t('common.login') %></a>
       </div>
+      <a href="<%= locale === 'ar' ? '/ar/how-it-works' : '/how-it-works' %>" class="hero-quiet-link"><%= t('home.hero.ctaHowItWorks') %> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a>
     </div>
     <div class="hero-media-wrap" data-parallax>
       <div class="hero-media">
