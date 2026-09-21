@@ -1120,19 +1120,29 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .hero-copy h1 em{font-style:normal; color:var(--leaf-light);}
 .hero-copy p.lede{color:rgba(255,255,255,0.72); font-size:16.5px; line-height:1.6; margin-bottom:32px; max-width:460px;}
 .hero-actions{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:40px;}
-/* Scoped to an actual dark .hero ancestor (excluding .hero-light) — this
-   is a reusable button-row utility, also reused on plain white surfaces
-   elsewhere (e.g. the homepage's closing "Ready when you are" cards), so
-   the dark-surface color inversion below must not apply unconditionally
-   to every .hero-actions on the page, only to the real dark hero. */
-.hero:not(.hero-light) .hero-actions a.btn-outline{color:#fff; border-color:rgba(255,255,255,0.28);}
-.hero:not(.hero-light) .hero-actions a.btn-outline:hover{background:rgba(255,255,255,0.08);}
+/* Scoped to an actual dark surface ancestor (a non-light .hero, or a
+   .cta-band — e.g. the Parents page's closing "Create your account /
+   Log in" row) — this is a reusable button-row utility, also reused on
+   plain white surfaces elsewhere (e.g. the homepage's closing "Ready
+   when you are" cards), so the dark-surface color inversion below must
+   not apply unconditionally to every .hero-actions on the page, only to
+   an actual dark one. Without this scoping, .btn-outline's default
+   forest-on-transparent styling is invisible on these dark backgrounds —
+   confirmed live: a "Log in" link rendered forest-text-on-forest-bg,
+   which also visually "un-centers" the visible button next to it, since
+   the invisible one still occupies its own space in the flex row. */
+.hero:not(.hero-light) .hero-actions a.btn-outline,
+.cta-band .hero-actions a.btn-outline{color:#fff; border-color:rgba(255,255,255,0.28);}
+.hero:not(.hero-light) .hero-actions a.btn-outline:hover,
+.cta-band .hero-actions a.btn-outline:hover{background:rgba(255,255,255,0.08);}
 /* .btn-primary's forest bg is invisible on this hero's own forest
    background — invert to white bg/forest text so it still reads as the
    trust-colored primary action, distinct from the selective School
    Yellow attention treatment used elsewhere (e.g. the homepage hero). */
-.hero:not(.hero-light) .hero-actions a.btn-primary{background:var(--white); color:var(--forest);}
-.hero:not(.hero-light) .hero-actions a.btn-primary:hover{background:var(--mint); color:var(--forest-secondary); transform:translateY(-1px); box-shadow:none;}
+.hero:not(.hero-light) .hero-actions a.btn-primary,
+.cta-band .hero-actions a.btn-primary{background:var(--white); color:var(--forest);}
+.hero:not(.hero-light) .hero-actions a.btn-primary:hover,
+.cta-band .hero-actions a.btn-primary:hover{background:var(--mint); color:var(--forest-secondary); transform:translateY(-1px); box-shadow:none;}
 
 /* diagonal seam panel that carries the tap demo */
 .hero-visual{
