@@ -26,7 +26,7 @@
           <label for="password"><%= t('login.labelPassword') %></label>
           <input type="password" id="password" name="password" autocomplete="current-password" placeholder="<%= t('login.placeholderPassword') %>" required data-validate="required">
           <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('common.valRequired') %></span></div>
-          <div style="text-align:end; margin-top:6px;"><a href="<%= locale === 'ar' ? '/ar/forgot-password' : '/forgot-password' %>" style="color:var(--lime-700); font-weight:600; font-size:15px;"><%= t('login.forgotPassword') %></a></div>
+          <div style="text-align:end; margin-top:6px;"><a href="<%= locale === 'ar' ? '/ar/forgot-password' : '/forgot-password' %>" style="color:var(--leaf-dark); font-weight:600; font-size:15px;"><%= t('login.forgotPassword') %></a></div>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('login.submit') %></button>
       </form>
@@ -34,7 +34,7 @@
       <!-- Demo credentials (Civil ID 111111111111 / demo1234) intentionally not
            shown here — this is a public-facing page. The login itself still
            accepts them; see README/project notes for the test account. -->
-      <div class="auth-foot"><%= t('login.noAccount') %> <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" style="color:var(--lime-700); font-weight:600;"><%= t('login.signUp') %></a></div>
+      <div class="auth-foot"><%= t('login.noAccount') %> <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" style="color:var(--leaf-dark); font-weight:600;"><%= t('login.signUp') %></a></div>
     </div>
   </main>
 </body>

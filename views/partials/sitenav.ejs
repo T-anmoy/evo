@@ -20,8 +20,8 @@
           <a href="<%= locale === 'ar' ? currentPath : altLocalePath %>" lang="ar" hreflang="ar" aria-current="<%= locale === 'ar' ? 'true' : 'false' %>" class="<%= locale === 'ar' ? 'is-current' : '' %>">العربية</a>
         </div>
       <% } %>
-      <a href="<%= p %>/login" class="btn btn-ghost btn-sm nav-login-action"><%= t('common.login') %></a>
-      <a href="<%= p %>/register" class="btn btn-outline-lime btn-sm nav-secondary-action"><%= t('common.register') %></a>
+      <a href="<%= p %>/login" class="btn btn-outline btn-sm nav-login-action"><%= t('common.login') %></a>
+      <a href="<%= p %>/register" class="btn btn-outline btn-sm nav-secondary-action"><%= t('common.register') %></a>
       <a href="<%= p === '' ? '/' : p %>#app" class="btn btn-primary btn-sm nav-secondary-action"><%= t('common.downloadApp') %></a>
       <button type="button" class="nav-toggle" id="siteNavToggle" aria-expanded="false" aria-controls="siteLinksMobile" aria-label="<%= t('nav.menuToggle') %>" data-open-label="<%= t('nav.closeLabel') %>" data-closed-label="<%= t('nav.menuToggle') %>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -38,10 +38,10 @@
     </div>
     <div class="site-links-mobile-priority">
       <a href="<%= p === '' ? '/' : p %>#supported-schools" class="btn btn-school-yellow"><%= t('nav.checkMySchool') %></a>
-      <a href="<%= p %>/login" class="btn btn-outline-lime"><%= t('common.login') %></a>
+      <a href="<%= p %>/login" class="btn btn-outline"><%= t('common.login') %></a>
     </div>
     <div class="site-links-mobile-secondary">
-      <a href="<%= p %>/register" class="btn btn-ghost"><%= t('common.register') %></a>
+      <a href="<%= p %>/register" class="btn btn-outline"><%= t('common.register') %></a>
     </div>
     <div class="site-links-mobile-nav">
       <a href="<%= p === '' ? '/' : p %>" class="<%= active === 'home' ? 'active' : '' %>" <%= active === 'home' ? 'aria-current="page"' : '' %>><%= t('nav.home') %></a>
@@ -61,7 +61,7 @@
           <a href="<%= locale === 'ar' ? currentPath : altLocalePath %>" lang="ar" hreflang="ar" aria-current="<%= locale === 'ar' ? 'true' : 'false' %>" class="<%= locale === 'ar' ? 'is-current' : '' %>">العربية</a>
         </div>
       <% } %>
-      <a href="<%= p === '' ? '/' : p %>#app" class="btn btn-ghost btn-sm"><%= t('common.downloadApp') %></a>
+      <a href="<%= p === '' ? '/' : p %>#app" class="btn btn-outline btn-sm"><%= t('common.downloadApp') %></a>
     </div>
   </nav>
 </header>

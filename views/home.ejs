@@ -38,7 +38,7 @@ const SHOW_TRUST_STATS = false;
       <p class="lede"><%= t('home.hero.lede') %></p>
       <div class="hero-actions hero-actions-3">
         <a href="#supported-schools" class="btn btn-school-yellow on-light btn-hero-primary" data-magnetic><%= t('home.hero.ctaCheckSchool') %></a>
-        <a href="<%= locale === 'ar' ? '/ar/login' : '/login' %>" class="btn btn-outline-lime btn-sm"><%= t('common.login') %></a>
+        <a href="<%= locale === 'ar' ? '/ar/login' : '/login' %>" class="btn btn-outline btn-sm"><%= t('common.login') %></a>
       </div>
       <a href="<%= locale === 'ar' ? '/ar/how-it-works' : '/how-it-works' %>" class="hero-quiet-link"><%= t('home.hero.ctaHowItWorks') %> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a>
     </div>
@@ -223,7 +223,7 @@ const SHOW_TRUST_STATS = false;
     </div>
     <div class="card" data-reveal style="max-width:480px;">
       <div class="dash-preview-head" style="padding:0 0 14px;">
-        <strong style="font-family:'Montserrat',Arial,sans-serif; font-size:15px; color:var(--navy-950);"><%= t('home.multipleChildren.cardTitle') %></strong>
+        <strong style="font-family:'Montserrat',Arial,sans-serif; font-size:15px; color:var(--forest);"><%= t('home.multipleChildren.cardTitle') %></strong>
         <span class="sample-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> <%= t('home.multipleChildren.sampleView') %></span>
       </div>
       <div class="student-row">
@@ -255,13 +255,13 @@ const SHOW_TRUST_STATS = false;
         <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9l8-5 8 5v12"/><path d="M9 21v-6h6v6"/></svg></div>
         <h3><%= t('home.b2b.schoolsTitle') %></h3>
         <p><%= t('home.b2b.schoolsBody') %></p>
-        <a href="<%= locale === 'ar' ? '/ar/schools' : '/schools' %>" class="btn btn-dark btn-sm"><%= t('home.b2b.schoolsCta') %></a>
+        <a href="<%= locale === 'ar' ? '/ar/schools' : '/schools' %>" class="btn btn-primary btn-sm"><%= t('home.b2b.schoolsCta') %></a>
       </div>
       <div class="benefit-card" data-reveal data-reveal-group="b2b">
         <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8 12 4l8 4-8 4-8-4Z"/><path d="M4 8v8l8 4 8-4V8"/></svg></div>
         <h3><%= t('home.b2b.caterersTitle') %></h3>
         <p><%= t('home.b2b.caterersBody') %></p>
-        <a href="/caterers" class="btn btn-dark btn-sm"><%= t('home.b2b.caterersCta') %></a>
+        <a href="/caterers" class="btn btn-primary btn-sm"><%= t('home.b2b.caterersCta') %></a>
       </div>
     </div>
   </div>
