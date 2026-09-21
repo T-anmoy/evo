@@ -15,24 +15,25 @@
 
   <% if (success) { %><div class="alert alert-success"><%- include('partials/success-icon') %><span><%= t('profile.savedMsg') %></span></div><% } %>
   <% if (typeof error !== 'undefined' && error) { %><div class="alert alert-error"><%= error %></div><% } %>
+  <% var pe = (typeof errors !== 'undefined' && errors) ? errors : {}; %>
 
   <div class="card" data-reveal>
     <form method="POST" action="/profile" novalidate>
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <div class="field">
+      <div class="field <%= pe.name ? 'invalid' : '' %>">
         <label for="profileName"><%= t('profile.labelName') %></label>
         <input type="text" id="profileName" name="name" value="<%= parent.name %>" data-validate="name" required>
-        <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('profile.errName') %></span></div>
+        <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= pe.name || t('profile.errName') %></span></div>
       </div>
-      <div class="field">
+      <div class="field <%= pe.email ? 'invalid' : '' %>">
         <label for="profileEmail"><%= t('profile.labelEmail') %></label>
         <input type="email" id="profileEmail" name="email" inputmode="email" value="<%= parent.email %>" data-validate="email">
-        <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('profile.errEmail') %></span></div>
+        <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= pe.email || t('profile.errEmail') %></span></div>
       </div>
-      <div class="field">
+      <div class="field <%= pe.phone ? 'invalid' : '' %>">
         <label for="profilePhone"><%= t('profile.labelPhone') %></label>
         <input type="tel" id="profilePhone" name="phone" inputmode="tel" value="<%= parent.phone %>" data-validate="phone">
-        <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('profile.errPhone') %></span></div>
+        <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= pe.phone || t('profile.errPhone') %></span></div>
       </div>
       <button type="submit" class="btn btn-primary"><%= t('profile.saveChanges') %></button>
     </form>

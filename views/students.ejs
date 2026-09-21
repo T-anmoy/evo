@@ -19,16 +19,17 @@
       <% if (typeof error !== 'undefined' && error) { %>
         <div class="alert alert-error"><%= error %></div>
       <% } %>
+      <% var se = (typeof errors !== 'undefined' && errors) ? errors : {}; %>
       <form method="POST" action="/students" novalidate>
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <% if (editing) { %><input type="hidden" name="id" value="<%= editing.id %>"><% } %>
         <div class="form-row">
-          <div class="field">
+          <div class="field <%= se.name ? 'invalid' : '' %>">
             <label><%= t('students.labelName') %></label>
             <input type="text" name="name" value="<%= editing ? editing.name : '' %>" data-validate="name" maxlength="60" required>
-            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('students.errName') %></span></div>
+            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= se.name || t('students.errName') %></span></div>
           </div>
-          <div class="field">
+          <div class="field <%= se.civilId ? 'invalid' : '' %>">
             <label for="studentCivilId"><%= t('students.labelCivilId') %></label>
             <% if (editing) { %>
               <input type="text" id="studentCivilId" value="<%= maskCivilId(editing.civilId) %>" disabled>
@@ -36,7 +37,7 @@
             <% } else { %>
               <input type="text" id="studentCivilId" name="civilId" value="" placeholder="<%= t('students.placeholderCivilId') %>" inputmode="numeric" maxlength="12" pattern="\d{12}" data-validate="civilid" required aria-describedby="studentCivilIdHint">
               <div class="hint" id="studentCivilIdHint"><%= t('students.hintCivilIdNew') %></div>
-              <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('students.errCivilId') %></span></div>
+              <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= se.civilId || t('students.errCivilId') %></span></div>
             <% } %>
           </div>
         </div>
@@ -47,7 +48,7 @@
            const lastStudent = students.length ? students.reduce((a, b) => (b.id > a.id ? b : a)) : null;
            const defaultSchool = editing ? editing.school : (lastStudent ? lastStudent.school : null);
         %>
-        <div class="field">
+        <div class="field <%= se.school ? 'invalid' : '' %>">
           <label><%= t('students.labelSchool') %></label>
           <select name="school" required>
             <% ['Kuwait English School','American Creativity Academy','The English School'].forEach(s => { %>
@@ -55,11 +56,13 @@
             <% }) %>
           </select>
           <% if (!editing && lastStudent) { %><div class="hint"><%= t('students.hintDefaultSchool', { name: lastStudent.name }) %></div><% } %>
+          <% if (se.school) { %><div class="field-error" style="display:flex;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= se.school %></span></div><% } %>
         </div>
         <div class="form-row">
-          <div class="field">
+          <div class="field <%= se.class ? 'invalid' : '' %>">
             <label><%= t('students.labelClass') %></label>
             <input type="text" name="class" value="<%= editing ? editing.class : '' %>" placeholder="<%= t('students.placeholderClass') %>">
+            <% if (se.class) { %><div class="field-error" style="display:flex;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= se.class %></span></div><% } %>
           </div>
           <div class="field">
             <label><%= t('students.labelSection') %></label>
@@ -73,11 +76,11 @@
             <option <%= editing && editing.gender === 'Female' ? 'selected' : '' %> value="Female"><%= t('students.female') %></option>
           </select>
         </div>
-        <div class="field">
+        <div class="field <%= se.allergies ? 'invalid' : '' %>">
           <label><%= t('students.labelAllergies') %></label>
           <input type="text" name="allergies" value="<%= editing ? editing.allergies : '' %>" placeholder="<%= t('students.placeholderAllergies') %>" maxlength="200" data-validate="allergies">
           <div class="hint"><%= t('students.hintAllergies') %></div>
-          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('students.errAllergies') %></span></div>
+          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= se.allergies || t('students.errAllergies') %></span></div>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;"><%= editing ? t('students.saveChanges') : t('students.addStudent') %></button>
         <% if (editing) { %><a href="/students" class="btn btn-ghost" style="width:100%; margin-top:8px;"><%= t('students.cancel') %></a><% } %>

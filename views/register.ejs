@@ -16,48 +16,50 @@
 
       <form method="POST" action="<%= locale === 'ar' ? '/ar/register' : '/register' %>" novalidate>
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-        <div class="field">
+        <% var re = (typeof errors !== 'undefined' && errors) ? errors : {}; %>
+        <div class="field <%= re.name ? 'invalid' : '' %>">
           <label for="name"><%= t('register.labelName') %><span class="req">*</span></label>
           <input type="text" id="name" name="name" autocomplete="name" placeholder="<%= t('register.placeholderName') %>" maxlength="60" data-validate="name" value="<%= values ? values.name : '' %>" required autofocus>
-          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('register.errName') %></span></div>
+          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= re.name || t('register.errName') %></span></div>
         </div>
-        <div class="field">
+        <div class="field <%= re.civilId ? 'invalid' : '' %>">
           <label for="civilId"><%= t('register.labelCivilId') %><span class="req">*</span></label>
           <input type="text" id="civilId" name="civilId" placeholder="<%= t('register.placeholderCivilId') %>" inputmode="numeric" autocomplete="username" maxlength="12" pattern="\d{12}" data-validate="civilid" value="<%= values ? values.civilId : '' %>" required aria-describedby="civilIdHint">
           <div class="hint hint-secure" id="civilIdHint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span><%= t('register.hintCivilId') %></span></div>
-          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('register.errCivilId') %></span></div>
+          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= re.civilId || t('register.errCivilId') %></span></div>
         </div>
         <div class="form-row">
-          <div class="field">
+          <div class="field <%= re.email ? 'invalid' : '' %>">
             <label for="email"><%= t('register.labelEmail') %><span class="req">*</span></label>
             <input type="email" id="email" name="email" autocomplete="email" placeholder="<%= t('register.placeholderEmail') %>" data-validate="email" value="<%= values ? values.email : '' %>" required>
-            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('register.errEmail') %></span></div>
+            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= re.email || t('register.errEmail') %></span></div>
           </div>
-          <div class="field">
+          <div class="field <%= re.phone ? 'invalid' : '' %>">
             <label for="phone"><%= t('register.labelPhone') %><span class="req">*</span></label>
             <input type="tel" id="phone" name="phone" inputmode="tel" autocomplete="tel" placeholder="<%= t('register.placeholderPhone') %>" data-validate="phone" value="<%= values ? values.phone : '' %>" required>
-            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('register.errPhone') %></span></div>
+            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= re.phone || t('register.errPhone') %></span></div>
           </div>
         </div>
-        <div class="field">
+        <div class="field <%= re.password ? 'invalid' : '' %>">
           <label for="password"><%= t('register.labelPassword') %><span class="req">*</span></label>
           <div class="password-field">
             <input type="password" id="password" name="password" autocomplete="new-password" placeholder="<%= t('register.placeholderPassword') %>" data-validate="password" required>
             <button type="button" class="password-toggle" data-toggle-for="password" aria-label="<%= t('register.showPassword') %>" data-show-label="<%= t('register.showPassword') %>" data-hide-label="<%= t('register.hidePassword') %>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
           </div>
-          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('register.errPassword') %></span></div>
+          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= re.password || t('register.errPassword') %></span></div>
         </div>
-        <div class="field">
+        <div class="field <%= re.confirmPassword ? 'invalid' : '' %>">
           <label for="confirmPassword"><%= t('register.labelConfirmPassword') %><span class="req">*</span></label>
           <div class="password-field">
             <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" placeholder="<%= t('register.placeholderConfirmPassword') %>" data-validate="confirm-password" data-match="password" required>
             <button type="button" class="password-toggle" data-toggle-for="confirmPassword" aria-label="<%= t('register.showPassword') %>" data-show-label="<%= t('register.showPassword') %>" data-hide-label="<%= t('register.hidePassword') %>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
           </div>
-          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('register.errConfirmPassword') %></span></div>
+          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= re.confirmPassword || t('register.errConfirmPassword') %></span></div>
         </div>
-        <div class="field" style="display:flex; align-items:flex-start; gap:10px;">
+        <div class="field <%= re.agreeTerms ? 'invalid' : '' %>" style="display:flex; align-items:flex-start; gap:10px;">
           <input type="checkbox" id="agreeTerms" name="agreeTerms" required style="margin-top:2px;">
           <label for="agreeTerms" style="font-weight:400;"><%= t('register.agreeTermsPre') %> <a href="/terms" style="color:var(--lime-700); font-weight:600;"><%= t('register.agreeTermsLink') %></a><span class="req">*</span></label>
+          <% if (re.agreeTerms) { %><div class="field-error" style="display:flex;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= re.agreeTerms %></span></div><% } %>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('register.submit') %></button>
       </form>

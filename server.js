@@ -367,24 +367,25 @@ app.get('/terms', (req, res) => {
 });
 
 app.get(['/contact', '/ar/contact'], (req, res) => {
-  res.render('contact', { parentId: req.session.parentId, success: req.query.success || null, error: null, values: null });
+  res.render('contact', { parentId: req.session.parentId, success: req.query.success || null, error: null, errors: {}, values: null });
 });
 
 app.post(['/contact', '/ar/contact'], (req, res) => {
   const { name, email, role, message } = req.body;
   const t = res.locals.t;
   const values = { name: (name || '').trim(), email: (email || '').trim(), role: (role || '').trim(), message: (message || '').trim() };
+  const rerender = (error, errors) => res.render('contact', { parentId: req.session.parentId, success: null, error: error || null, errors: errors || {}, values });
   if (!name || !email || !message) {
-    return res.render('contact', { parentId: req.session.parentId, success: null, error: t('contact.form.errRequired'), values });
+    return rerender(t('contact.form.errRequired'));
   }
   if (!isValidName(name)) {
-    return res.render('contact', { parentId: req.session.parentId, success: null, error: t('contact.form.errName'), values });
+    return rerender(null, { name: t('contact.form.errName') });
   }
   if (!isValidEmail(email)) {
-    return res.render('contact', { parentId: req.session.parentId, success: null, error: t('contact.form.errEmail'), values });
+    return rerender(null, { email: t('contact.form.errEmail') });
   }
   if (message.trim().length < 10 || message.trim().length > 2000) {
-    return res.render('contact', { parentId: req.session.parentId, success: null, error: t('contact.form.errMessage'), values });
+    return rerender(null, { message: t('contact.form.errMessage') });
   }
   // Demo only — no email/CRM integration wired up yet. In production this
   // would notify the partnerships team (see the note in views/contact.ejs).
@@ -459,7 +460,7 @@ Sitemap: ${base}/sitemap.xml
 });
 
 app.get(['/login', '/ar/login'], (req, res) => {
-  res.render('login', { error: null, parentId: req.session.parentId });
+  res.render('login', { error: null, errors: {}, parentId: req.session.parentId });
 });
 
 app.post(['/login', '/ar/login'], loginLimiter, (req, res) => {
@@ -468,11 +469,13 @@ app.post(['/login', '/ar/login'], loginLimiter, (req, res) => {
   // database — the client-side check on this field can always be
   // bypassed by posting directly, so this is the one that actually holds.
   if (!isValidCivilId(civilId)) {
-    return res.render('login', { error: res.locals.t('login.errCivilIdFormat'), parentId: null });
+    return res.render('login', { error: null, errors: { civilId: res.locals.t('login.errCivilIdFormat') }, parentId: null });
   }
   const parent = db.findParentByCivilId((civilId || '').trim());
   if (!parent || !bcrypt.compareSync(password || '', parent.passwordHash)) {
-    return res.render('login', { error: res.locals.t('login.errInvalid'), parentId: null });
+    // Deliberately not attributed to one field — confirming which of the
+    // two was wrong would help an attacker enumerate valid Civil IDs.
+    return res.render('login', { error: res.locals.t('login.errInvalid'), errors: {}, parentId: null });
   }
   req.session.parentId = parent.id;
   // Carry the language they logged in with into the authenticated app,
@@ -482,7 +485,7 @@ app.post(['/login', '/ar/login'], loginLimiter, (req, res) => {
 });
 
 app.get(['/forgot-password', '/ar/forgot-password'], (req, res) => {
-  res.render('forgot-password', { submitted: false, error: null, identifier: '', parentId: req.session.parentId });
+  res.render('forgot-password', { submitted: false, error: null, errors: {}, identifier: '', parentId: req.session.parentId });
 });
 
 app.post(['/forgot-password', '/ar/forgot-password'], (req, res) => {
@@ -493,16 +496,16 @@ app.post(['/forgot-password', '/ar/forgot-password'], (req, res) => {
   // here since a direct POST skips the client entirely. Format only: this
   // never reveals whether the value matches a real account either way.
   if (!isValidCivilId(trimmed) && !isValidEmail(trimmed)) {
-    return res.render('forgot-password', { submitted: false, error: t('forgotPassword.errIdentifier'), identifier: trimmed, parentId: req.session.parentId });
+    return res.render('forgot-password', { submitted: false, error: null, errors: { identifier: t('forgotPassword.errIdentifier') }, identifier: trimmed, parentId: req.session.parentId });
   }
   // Demo only — no email is actually sent. Never reveal whether the
   // identifier matches an account, same reasoning as any real reset flow.
   logger.info({ identifier }, 'forgot-password request (demo — no email sent)');
-  res.render('forgot-password', { submitted: true, error: null, identifier: '', parentId: req.session.parentId });
+  res.render('forgot-password', { submitted: true, error: null, errors: {}, identifier: '', parentId: req.session.parentId });
 });
 
 app.get(['/register', '/ar/register'], (req, res) => {
-  res.render('register', { error: null, parentId: req.session.parentId, values: null });
+  res.render('register', { error: null, errors: {}, parentId: req.session.parentId, values: null });
 });
 
 app.post(['/register', '/ar/register'], (req, res) => {
@@ -513,34 +516,35 @@ app.post(['/register', '/ar/register'], (req, res) => {
   // means retyping the whole form — spec requirement: preserve valid
   // entered values on validation failure.
   const values = { name: (name || '').trim(), civilId: (civilId || '').trim(), email: (email || '').trim(), phone: (phone || '').trim() };
+  const rerender = (error, errors) => res.render('register', { error: error || null, errors: errors || {}, parentId: null, values });
   if (!name || !civilId || !email || !phone || !password || !confirmPassword) {
-    return res.render('register', { error: t('register.errAllFields'), parentId: null, values });
+    return rerender(t('register.errAllFields'));
   }
   if (!isValidName(name)) {
-    return res.render('register', { error: t('register.errName'), parentId: null, values });
+    return rerender(null, { name: t('register.errName') });
   }
   if (!isValidCivilId(civilId)) {
-    return res.render('register', { error: t('register.errCivilId'), parentId: null, values });
+    return rerender(null, { civilId: t('register.errCivilId') });
   }
   if (!isValidEmail(email)) {
-    return res.render('register', { error: t('register.errEmail'), parentId: null, values });
+    return rerender(null, { email: t('register.errEmail') });
   }
   if (!isValidPhone(phone)) {
-    return res.render('register', { error: t('register.errPhone'), parentId: null, values });
+    return rerender(null, { phone: t('register.errPhone') });
   }
   if (!isStrongPassword(password)) {
-    return res.render('register', { error: t('register.errPassword'), parentId: null, values });
+    return rerender(null, { password: t('register.errPassword') });
   }
   if (password !== confirmPassword) {
-    return res.render('register', { error: t('register.errConfirmPassword'), parentId: null, values });
+    return rerender(null, { confirmPassword: t('register.errConfirmPassword') });
   }
   // The Terms checkbox is client-side `required`, which a direct POST
   // skips entirely — re-check it's actually present here too.
   if (!agreeTerms) {
-    return res.render('register', { error: t('register.errAgreeTerms'), parentId: null, values });
+    return rerender(null, { agreeTerms: t('register.errAgreeTerms') });
   }
   if (db.findParentByCivilId(civilId.trim())) {
-    return res.render('register', { error: t('register.errDuplicateCivilId'), parentId: null, values });
+    return rerender(null, { civilId: t('register.errDuplicateCivilId') });
   }
   const parent = db.createParent({
     name: name.trim(),
@@ -568,7 +572,7 @@ function currentSchoolAdmin(req) {
 }
 
 app.get('/school-admin/login', (req, res) => {
-  res.render('school-admin-login', { error: null, parentId: req.session.parentId });
+  res.render('school-admin-login', { error: null, errors: {}, parentId: req.session.parentId });
 });
 
 app.post('/school-admin/login', loginLimiter, (req, res) => {
@@ -576,11 +580,12 @@ app.post('/school-admin/login', loginLimiter, (req, res) => {
   // Same principle as the parent login's Civil ID check — reject an
   // obviously malformed email before ever querying the database.
   if (!isValidEmail(email)) {
-    return res.render('school-admin-login', { error: res.locals.t('schoolAdminLogin.errEmailFormat'), parentId: req.session.parentId });
+    return res.render('school-admin-login', { error: null, errors: { email: res.locals.t('schoolAdminLogin.errEmailFormat') }, parentId: req.session.parentId });
   }
   const admin = db.findSchoolAdminByEmail((email || '').trim().toLowerCase());
   if (!admin || !bcrypt.compareSync(password || '', admin.passwordHash)) {
-    return res.render('school-admin-login', { error: res.locals.t('schoolAdminLogin.errInvalid'), parentId: req.session.parentId });
+    // Not attributed to one field, same reasoning as parent login.
+    return res.render('school-admin-login', { error: res.locals.t('schoolAdminLogin.errInvalid'), errors: {}, parentId: req.session.parentId });
   }
   req.session.schoolAdminId = admin.id;
   res.redirect('/school-admin/dashboard');
@@ -773,7 +778,7 @@ app.post('/booking/:id/renew', requireAuth, (req, res) => {
 app.get('/students', requireAuth, (req, res) => {
   const parent = currentParent(req);
   const students = db.getStudentsByParent(parent.id);
-  res.render('students', { students, parent, parentId: parent.id, editing: null, error: null });
+  res.render('students', { students, parent, parentId: parent.id, editing: null, error: null, errors: {} });
 });
 
 app.get('/students/:id/edit', requireAuth, (req, res) => {
@@ -781,7 +786,7 @@ app.get('/students/:id/edit', requireAuth, (req, res) => {
   const students = db.getStudentsByParent(parent.id);
   const editing = db.findStudentById(Number(req.params.id));
   if (!editing || editing.parentId !== parent.id) return res.redirect('/students');
-  res.render('students', { students, parent, parentId: parent.id, editing, error: null });
+  res.render('students', { students, parent, parentId: parent.id, editing, error: null, errors: {} });
 });
 
 app.post('/students', requireAuth, (req, res) => {
@@ -800,19 +805,19 @@ app.post('/students', requireAuth, (req, res) => {
   // typed (as a synthetic "editing" record) rather than bouncing them
   // back to a blank form.
   const students = db.getStudentsByParent(parent.id);
-  const rerenderWithError = (error) => res.render('students', {
-    students, parent, parentId: parent.id, error,
+  const rerenderWithError = (errors) => res.render('students', {
+    students, parent, parentId: parent.id, error: null, errors,
     editing: id ? { id: Number(id), ...fields, civilId: db.findStudentById(Number(id)) ? db.findStudentById(Number(id)).civilId : '' } : { ...fields, civilId }
   });
 
-  if (!isValidName(name)) return rerenderWithError(t('students.errName'));
+  if (!isValidName(name)) return rerenderWithError({ name: t('students.errName') });
   // school is a <select> offering only the known set — re-check the
   // posted value is actually one of them, since a direct POST can send
   // anything regardless of what the dropdown offered.
-  if (!isValidSchool(school)) return rerenderWithError(t('students.errSchool'));
-  if (!isValidClassSection(klass) || !isValidClassSection(section)) return rerenderWithError(t('students.errClass'));
-  if (!isValidAllergies(allergies)) return rerenderWithError(t('students.errAllergies'));
-  if (!id && !isValidCivilId(civilId)) return rerenderWithError(t('students.errCivilId'));
+  if (!isValidSchool(school)) return rerenderWithError({ school: t('students.errSchool') });
+  if (!isValidClassSection(klass) || !isValidClassSection(section)) return rerenderWithError({ class: t('students.errClass') });
+  if (!isValidAllergies(allergies)) return rerenderWithError({ allergies: t('students.errAllergies') });
+  if (!id && !isValidCivilId(civilId)) return rerenderWithError({ civilId: t('students.errCivilId') });
 
   if (id) {
     // Civil ID is masked and read-only in the edit form (see students.ejs) —
@@ -953,7 +958,7 @@ app.post('/history/:id/cancel', requireAuth, (req, res) => {
 
 app.get('/profile', requireAuth, (req, res) => {
   const parent = currentParent(req);
-  res.render('profile', { parent, parentId: parent.id, success: req.query.success || null, error: null });
+  res.render('profile', { parent, parentId: parent.id, success: req.query.success || null, error: null, errors: {} });
 });
 
 app.post('/profile', requireAuth, (req, res) => {
@@ -961,14 +966,15 @@ app.post('/profile', requireAuth, (req, res) => {
   const t = res.locals.t;
   const { name, email, phone } = req.body;
   const values = { name: (name || '').trim(), email: (email || '').trim(), phone: (phone || '').trim() };
+  const rerender = (errors) => res.render('profile', { parent: { ...parent, ...values }, parentId: parent.id, success: null, error: null, errors });
   if (!isValidName(name)) {
-    return res.render('profile', { parent: { ...parent, ...values }, parentId: parent.id, success: null, error: t('profile.errName') });
+    return rerender({ name: t('profile.errName') });
   }
   if (email && !isValidEmail(email)) {
-    return res.render('profile', { parent: { ...parent, ...values }, parentId: parent.id, success: null, error: t('profile.errEmail') });
+    return rerender({ email: t('profile.errEmail') });
   }
   if (phone && !isValidPhone(phone)) {
-    return res.render('profile', { parent: { ...parent, ...values }, parentId: parent.id, success: null, error: t('profile.errPhone') });
+    return rerender({ phone: t('profile.errPhone') });
   }
   db.updateParent(parent.id, values);
   res.redirect('/profile?success=1');
