@@ -43,7 +43,7 @@
           <label for="password"><%= t('register.labelPassword') %><span class="req">*</span></label>
           <div class="password-field">
             <input type="password" id="password" name="password" autocomplete="new-password" placeholder="<%= t('register.placeholderPassword') %>" data-validate="password" required>
-            <button type="button" class="password-toggle" data-toggle-for="password" aria-label="<%= t('register.showPassword') %>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            <button type="button" class="password-toggle" data-toggle-for="password" aria-label="<%= t('register.showPassword') %>" data-show-label="<%= t('register.showPassword') %>" data-hide-label="<%= t('register.hidePassword') %>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
           </div>
           <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('register.errPassword') %></span></div>
         </div>
@@ -51,7 +51,7 @@
           <label for="confirmPassword"><%= t('register.labelConfirmPassword') %><span class="req">*</span></label>
           <div class="password-field">
             <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" placeholder="<%= t('register.placeholderConfirmPassword') %>" data-validate="confirm-password" data-match="password" required>
-            <button type="button" class="password-toggle" data-toggle-for="confirmPassword" aria-label="<%= t('register.showPassword') %>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            <button type="button" class="password-toggle" data-toggle-for="confirmPassword" aria-label="<%= t('register.showPassword') %>" data-show-label="<%= t('register.showPassword') %>" data-hide-label="<%= t('register.hidePassword') %>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
           </div>
           <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('register.errConfirmPassword') %></span></div>
         </div>

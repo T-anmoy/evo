@@ -315,7 +315,7 @@
         if (submitBtn && !submitBtn.disabled) {
           submitBtn.dataset.originalText = submitBtn.textContent;
           submitBtn.disabled = true;
-          submitBtn.textContent = 'Sending…';
+          submitBtn.textContent = (window.EVO_I18N && window.EVO_I18N.sending) || 'Sending…';
           submitBtn.classList.add('btn-loading');
         }
       });
@@ -341,9 +341,30 @@
         // the button's own text (e.g. "Confirm & Pay via KNET (demo)") was
         // sized to fit alone, not with a spinner added in front of it too.
         submitBtn.dataset.originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Please wait…';
+        submitBtn.textContent = (window.EVO_I18N && window.EVO_I18N.pleaseWait) || 'Please wait…';
         submitBtn.disabled = true;
         submitBtn.classList.add('btn-loading');
+      });
+    });
+  }
+
+  // A form marked data-confirm-message asks for confirmation before it's
+  // allowed to submit at all (e.g. cancelling a booking in history.ejs).
+  // The message is read from a data attribute rather than built inline
+  // into an onsubmit="confirm('...')" string — a data attribute is decoded
+  // once by the browser as plain text, whereas a value spliced into an
+  // inline JS string literal (even after HTML-escaping) can still break out
+  // of that literal if the interpolated value — e.g. a parent's own child's
+  // name — contains a quote character. Registered before initGenericValidation
+  // / initSubmitFeedback so a "no" here can stop those later handlers via
+  // stopImmediatePropagation, on the same submit event.
+  function initConfirmForms() {
+    document.querySelectorAll('form[data-confirm-message]').forEach(function (form) {
+      form.addEventListener('submit', function (e) {
+        if (!window.confirm(form.dataset.confirmMessage)) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+        }
       });
     });
   }
@@ -371,13 +392,14 @@
       btn.addEventListener('click', function () {
         var showing = input.type === 'text';
         input.type = showing ? 'password' : 'text';
-        btn.setAttribute('aria-label', showing ? 'Show password' : 'Hide password');
+        btn.setAttribute('aria-label', showing ? (btn.dataset.showLabel || 'Show password') : (btn.dataset.hideLabel || 'Hide password'));
         btn.classList.toggle('is-showing', !showing);
       });
     });
   }
 
   document.addEventListener('DOMContentLoaded', function () {
+    initConfirmForms();
     initReveal();
     initCountUp();
     initFaq();

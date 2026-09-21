@@ -45,7 +45,11 @@
       panel.classList.toggle('open', open);
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (toggleIcon) toggleIcon.querySelector('path').setAttribute('d', open ? closePath : hamburgerPath);
-      if (toggleLabel) toggleLabel.textContent = open ? 'Close' : 'Menu';
+      if (toggleLabel) {
+        toggleLabel.textContent = open
+          ? (toggle.dataset.openLabel || 'Close')
+          : (toggle.dataset.closedLabel || 'Menu');
+      }
       if (open) {
         lockBodyScroll();
         panel.scrollTop = 0;

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
 <head>
-<%- include('partials/head', { title: 'Contact — Evo Meals' }) %>
-<meta name="description" content="Get in touch with Evo Meals — parent support, school partnerships, and catering partnerships each have their own contact pathway.">
+<%- include('partials/head', { title: t('meta.contact.title') }) %>
+<meta name="description" content="<%= t('meta.contact.description') %>">
 </head>
 <body>
 
@@ -11,9 +11,9 @@
 <section class="hero hero-inner-page">
   <div class="wrap-wide">
     <div class="hero-copy" data-reveal style="max-width:640px;">
-      <span class="eyebrow on-dark">Contact</span>
-      <h1>Let's talk.</h1>
-      <p class="lede">Parent, school, or caterer — pick the pathway that fits, so your message reaches the right team.</p>
+      <span class="eyebrow on-dark"><%= t('contact.hero.eyebrow') %></span>
+      <h1><%= t('contact.hero.heading') %></h1>
+      <p class="lede"><%= t('contact.hero.lede') %></p>
     </div>
   </div>
 </section>
@@ -23,21 +23,21 @@
     <div class="grid-3">
       <div class="benefit-card" data-reveal data-reveal-group="contactpaths">
         <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"/></svg></div>
-        <h3>Parent support</h3>
-        <p>Questions about booking, payment, allergies, or your account.</p>
-        <a href="#parent-support" class="btn btn-outline btn-sm">Use the form below</a>
+        <h3><%= t('contact.pathways.parentTitle') %></h3>
+        <p><%= t('contact.pathways.parentBody') %></p>
+        <a href="#parent-support" class="btn btn-outline btn-sm"><%= t('contact.pathways.parentCta') %></a>
       </div>
       <div class="benefit-card" data-reveal data-reveal-group="contactpaths">
         <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9l8-5 8 5v12"/><path d="M9 21v-6h6v6"/></svg></div>
-        <h3>School partnership</h3>
-        <p>Bring Evo Meals to your school's meal programme.</p>
-        <a href="/schools#partner-form" class="btn btn-outline btn-sm">Go to school form</a>
+        <h3><%= t('contact.pathways.schoolTitle') %></h3>
+        <p><%= t('contact.pathways.schoolBody') %></p>
+        <a href="<%= locale === 'ar' ? '/ar/schools' : '/schools' %>#partner-form" class="btn btn-outline btn-sm"><%= t('contact.pathways.schoolCta') %></a>
       </div>
       <div class="benefit-card" data-reveal data-reveal-group="contactpaths">
         <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8 12 4l8 4-8 4-8-4Z"/><path d="M4 8v8l8 4 8-4V8"/></svg></div>
-        <h3>Catering partnership</h3>
-        <p>Connect your kitchen to a school's meal programme.</p>
-        <a href="/caterers#caterer-form" class="btn btn-outline btn-sm">Go to catering form</a>
+        <h3><%= t('contact.pathways.catererTitle') %></h3>
+        <p><%= t('contact.pathways.catererBody') %></p>
+        <a href="<%= locale === 'ar' ? '/ar/caterers' : '/caterers' %>#caterer-form" class="btn btn-outline btn-sm"><%= t('contact.pathways.catererCta') %></a>
       </div>
     </div>
   </div>
@@ -46,11 +46,11 @@
 <section class="section on-tint" id="parent-support">
   <div class="wrap" style="max-width:560px;">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">Parent support</span>
-      <h2>Send us a message.</h2>
+      <span class="eyebrow"><%= t('contact.form.eyebrow') %></span>
+      <h2><%= t('contact.form.heading') %></h2>
     </div>
     <% if (success) { %>
-      <div class="alert alert-success"><%- include('partials/success-icon') %><span>Message sent — our team will follow up with you.</span></div>
+      <div class="alert alert-success"><%- include('partials/success-icon') %><span><%= t('contact.form.successMsg') %></span></div>
     <% } %>
     <% if (error) { %>
       <div class="alert alert-error"><%= error %></div>
@@ -59,32 +59,32 @@
       <form method="POST" action="/contact">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <div class="field">
-          <label for="contactName">Your name</label>
+          <label for="contactName"><%= t('contact.form.labelName') %></label>
           <input type="text" id="contactName" name="name" required>
         </div>
         <div class="form-row">
           <div class="field">
-            <label for="contactEmail">Email</label>
+            <label for="contactEmail"><%= t('contact.form.labelEmail') %></label>
             <input type="email" id="contactEmail" name="email" inputmode="email" required>
           </div>
           <div class="field">
-            <label for="contactRole">I am a...</label>
+            <label for="contactRole"><%= t('contact.form.labelRole') %></label>
             <select id="contactRole" name="role">
-              <option value="Parent">Parent</option>
-              <option value="School">School</option>
-              <option value="Caterer">Caterer</option>
-              <option value="Other">Other</option>
+              <option value="Parent"><%= t('contact.form.optParent') %></option>
+              <option value="School"><%= t('contact.form.optSchool') %></option>
+              <option value="Caterer"><%= t('contact.form.optCaterer') %></option>
+              <option value="Other"><%= t('contact.form.optOther') %></option>
             </select>
           </div>
         </div>
         <div class="field">
-          <label for="contactMessage">Message</label>
-          <textarea id="contactMessage" name="message" rows="5" required placeholder="How can we help?"></textarea>
+          <label for="contactMessage"><%= t('contact.form.labelMessage') %></label>
+          <textarea id="contactMessage" name="message" rows="5" required placeholder="<%= t('contact.form.placeholderMessage') %>"></textarea>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;">Send message</button>
-        <div class="hint hint-secure" style="justify-content:center; margin-top:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>Handled securely — never shared beyond our team.</span></div>
+        <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('contact.form.submit') %></button>
+        <div class="hint hint-secure" style="justify-content:center; margin-top:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span><%= t('contact.form.secureHint') %></span></div>
       </form>
-      <p class="nutrition-more" data-reveal style="margin-top:18px;">You can also reach us directly using the contact details in the footer below.</p>
+      <p class="nutrition-more" data-reveal style="margin-top:18px;"><%= t('contact.form.footnote') %></p>
     </div>
   </div>
 </section>

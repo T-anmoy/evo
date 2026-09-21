@@ -6,11 +6,11 @@
     <nav class="site-links">
       <a href="<%= p %>/parents" class="<%= active === 'parents' ? 'active' : '' %>" <%= active === 'parents' ? 'aria-current="page"' : '' %>><%= t('nav.forParents') %></a>
       <a href="<%= p %>/schools" class="<%= active === 'schools' ? 'active' : '' %>" <%= active === 'schools' ? 'aria-current="page"' : '' %>><%= t('nav.forSchools') %></a>
-      <a href="/caterers" class="<%= active === 'caterers' ? 'active' : '' %>" <%= active === 'caterers' ? 'aria-current="page"' : '' %>><%= t('nav.forCaterers') %></a>
+      <a href="<%= p %>/caterers" class="<%= active === 'caterers' ? 'active' : '' %>" <%= active === 'caterers' ? 'aria-current="page"' : '' %>><%= t('nav.forCaterers') %></a>
       <a href="<%= p %>/how-it-works" class="<%= active === 'how-it-works' ? 'active' : '' %>" <%= active === 'how-it-works' ? 'aria-current="page"' : '' %>><%= t('nav.howItWorks') %></a>
       <a href="<%= p %>/features" class="<%= active === 'features' ? 'active' : '' %>" <%= active === 'features' ? 'aria-current="page"' : '' %>><%= t('nav.features') %></a>
-      <a href="/about" class="<%= active === 'about' ? 'active' : '' %>" <%= active === 'about' ? 'aria-current="page"' : '' %>><%= t('nav.about') %></a>
-      <a href="/contact" class="<%= active === 'contact' ? 'active' : '' %>" <%= active === 'contact' ? 'aria-current="page"' : '' %>><%= t('nav.contact') %></a>
+      <a href="<%= p %>/about" class="<%= active === 'about' ? 'active' : '' %>" <%= active === 'about' ? 'aria-current="page"' : '' %>><%= t('nav.about') %></a>
+      <a href="<%= p %>/contact" class="<%= active === 'contact' ? 'active' : '' %>" <%= active === 'contact' ? 'aria-current="page"' : '' %>><%= t('nav.contact') %></a>
     </nav>
     <div class="site-actions">
       <% if (typeof altLocalePath !== 'undefined' && altLocalePath) { %>
@@ -23,7 +23,7 @@
       <a href="<%= p %>/login" class="btn btn-ghost btn-sm"><%= t('common.login') %></a>
       <a href="<%= p %>/register" class="btn btn-outline-lime btn-sm"><%= t('common.register') %></a>
       <a href="<%= p === '' ? '/' : p %>#app" class="btn btn-primary btn-sm"><%= t('common.downloadApp') %></a>
-      <button type="button" class="nav-toggle" id="siteNavToggle" aria-expanded="false" aria-controls="siteLinksMobile">
+      <button type="button" class="nav-toggle" id="siteNavToggle" aria-expanded="false" aria-controls="siteLinksMobile" data-open-label="<%= t('nav.closeLabel') %>" data-closed-label="<%= t('nav.menuToggle') %>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         <span><%= t('nav.menuToggle') %></span>
       </button>
@@ -39,11 +39,11 @@
     <a href="<%= p === '' ? '/' : p %>" class="<%= active === 'home' ? 'active' : '' %>" <%= active === 'home' ? 'aria-current="page"' : '' %>><%= t('nav.home') %></a>
     <a href="<%= p %>/parents" class="<%= active === 'parents' ? 'active' : '' %>" <%= active === 'parents' ? 'aria-current="page"' : '' %>><%= t('nav.forParents') %></a>
     <a href="<%= p %>/schools" class="<%= active === 'schools' ? 'active' : '' %>" <%= active === 'schools' ? 'aria-current="page"' : '' %>><%= t('nav.forSchools') %></a>
-    <a href="/caterers" class="<%= active === 'caterers' ? 'active' : '' %>" <%= active === 'caterers' ? 'aria-current="page"' : '' %>><%= t('nav.forCaterers') %></a>
+    <a href="<%= p %>/caterers" class="<%= active === 'caterers' ? 'active' : '' %>" <%= active === 'caterers' ? 'aria-current="page"' : '' %>><%= t('nav.forCaterers') %></a>
     <a href="<%= p %>/how-it-works" class="<%= active === 'how-it-works' ? 'active' : '' %>" <%= active === 'how-it-works' ? 'aria-current="page"' : '' %>><%= t('nav.howItWorks') %></a>
     <a href="<%= p %>/features" class="<%= active === 'features' ? 'active' : '' %>" <%= active === 'features' ? 'aria-current="page"' : '' %>><%= t('nav.features') %></a>
-    <a href="/about" class="<%= active === 'about' ? 'active' : '' %>" <%= active === 'about' ? 'aria-current="page"' : '' %>><%= t('nav.aboutFull') %></a>
-    <a href="/contact" class="<%= active === 'contact' ? 'active' : '' %>" <%= active === 'contact' ? 'aria-current="page"' : '' %>><%= t('nav.contact') %></a>
+    <a href="<%= p %>/about" class="<%= active === 'about' ? 'active' : '' %>" <%= active === 'about' ? 'aria-current="page"' : '' %>><%= t('nav.aboutFull') %></a>
+    <a href="<%= p %>/contact" class="<%= active === 'contact' ? 'active' : '' %>" <%= active === 'contact' ? 'aria-current="page"' : '' %>><%= t('nav.contact') %></a>
     <div class="site-links-mobile-actions">
       <% if (typeof altLocalePath !== 'undefined' && altLocalePath) { %>
         <div class="lang-switch lang-switch-mobile" role="group" aria-label="<%= t('nav.langSwitchLabel') %>">

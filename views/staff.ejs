@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
 <head>
-<%- include('partials/head', { title: 'Staff Meal Booking — Evo Meals' }) %>
+<%- include('partials/head', { title: t('meta.staff.title') }) %>
 </head>
 <body>
 <%- include('partials/appnav', { active: 'staff' }) %>
 
-<div class="page" style="max-width:640px;">
+<main class="page" id="main-content" style="max-width:640px;">
   <div class="page-head">
-    <span class="eyebrow">Staff meal booking</span>
-    <h1>Book your own meal</h1>
-    <p>The live system's App Store screenshots showed a separate Staff section alongside Student — this page is that section, built out properly.</p>
+    <span class="eyebrow"><%= t('staff.eyebrow') %></span>
+    <h1><%= t('staff.heading') %></h1>
+    <p><%= t('staff.intro') %></p>
   </div>
 
   <div class="card">
     <form method="POST" action="/staff">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <div class="field">
-        <label>Meal</label>
+        <label><%= t('staff.labelMeal') %></label>
         <select name="menuItemId" required>
           <option value="1">Arabiatta Chicken Pasta</option>
           <option value="2">Balsamic Chicken &amp; Beans</option>
@@ -26,35 +26,35 @@
         </select>
       </div>
       <div class="field">
-        <label>Date</label>
+        <label><%= t('staff.labelDate') %></label>
         <input type="date" name="startDate" value="<%= new Date().toISOString().split('T')[0] %>" required>
       </div>
       <div class="confirm-bar" style="flex-direction:row; justify-content:space-between; align-items:center;">
-        <span style="color:rgba(255,255,255,0.65); font-size:13px; font-weight:500;">Staff meal price</span>
-        <strong class="data-num" style="color:var(--lime-300); font-size:18px;">KWD <%= dailyRateKWD.toFixed(3) %></strong>
+        <span style="color:rgba(255,255,255,0.65); font-size:13px; font-weight:500;"><%= t('staff.priceLabel') %></span>
+        <strong class="data-num" style="color:var(--lime-300); font-size:18px;"><bdi><%= fmtKWD(dailyRateKWD) %></bdi></strong>
       </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;">Book Staff Meal</button>
+      <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('staff.submit') %></button>
     </form>
   </div>
 
   <div class="card">
-    <h3 style="font-size:15px; margin-bottom:16px;">Your staff bookings</h3>
+    <h3 style="font-size:15px; margin-bottom:16px;"><%= t('staff.yourBookings') %></h3>
     <% if (bookings.length === 0) { %>
       <div class="empty-state">
         <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></div>
-        <p><strong>No staff meals booked yet</strong>Use the form above to book your first one.</p>
+        <p><strong><%= t('staff.emptyTitle') %></strong><%= t('staff.emptyBody') %></p>
       </div>
     <% } else { %>
       <table>
         <tbody>
           <% bookings.forEach(b => { %>
-            <tr><td class="data-num"><%= fmtDate(b.startDate) %></td><td class="data-num" style="text-align:right;"><%= fmtKWD(b.totalKWD) %></td></tr>
+            <tr><td class="data-num"><%= fmtDate(b.startDate) %></td><td class="data-num" style="text-align:right;"><bdi><%= fmtKWD(b.totalKWD) %></bdi></td></tr>
           <% }) %>
         </tbody>
       </table>
     <% } %>
   </div>
-</div>
+</main>
 
 <%- include('partials/appfoot') %>
 </body>

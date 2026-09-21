@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
 <head>
-<%- include('partials/head', { title: 'For Caterers — Evo Meals School Meal Management Platform' }) %>
-<meta name="description" content="Evo Meals connects school catering partners in Kuwait to a school-specific customer base with predictable digital demand — real orders, a streamlined queue, and far less manual processing.">
+<%- include('partials/head', { title: t('meta.caterers.title') }) %>
+<meta name="description" content="<%= t('meta.caterers.description') %>">
 </head>
 <body>
 
@@ -12,11 +12,11 @@
 <section class="hero hero-inner-page">
   <div class="wrap-wide">
     <div class="hero-copy" data-reveal style="max-width:640px;">
-      <span class="eyebrow on-dark">For Caterers</span>
-      <h1>Kitchens run better on real orders.</h1>
-      <p class="lede">Evo Meals is a genuine operational partner for the kitchens fulfilling school meal programs — not an afterthought bolted onto the parent-facing app. You get predictable, digital demand and a customer base that's already there.</p>
+      <span class="eyebrow on-dark"><%= t('caterers.hero.eyebrow') %></span>
+      <h1><%= t('caterers.hero.heading') %></h1>
+      <p class="lede"><%= t('caterers.hero.lede') %></p>
       <div class="hero-actions">
-        <a href="#caterer-form" class="btn btn-primary">Partner with us</a>
+        <a href="#caterer-form" class="btn btn-primary"><%= t('caterers.hero.cta') %></a>
       </div>
     </div>
   </div>
@@ -26,44 +26,44 @@
 <section class="section" id="order-queue">
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">What lands in your kitchen</span>
-      <h2>One digital queue — student, school, and meal, every time.</h2>
-      <p>The queue below is an illustrative example, not a live feed.</p>
+      <span class="eyebrow"><%= t('caterers.orderQueue.eyebrow') %></span>
+      <h2><%= t('caterers.orderQueue.heading') %></h2>
+      <p><%= t('caterers.orderQueue.intro') %></p>
     </div>
     <div class="card" data-reveal>
       <div class="dash-preview-head" style="padding:0 0 16px;">
-        <strong style="font-family:'Montserrat',Arial,sans-serif; font-size:15px; color:var(--navy-950);">Today's incoming orders</strong>
-        <span class="sample-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> Illustrative example</span>
+        <strong style="font-family:'Montserrat',Arial,sans-serif; font-size:15px; color:var(--navy-950);"><%= t('caterers.orderQueue.cardHeading') %></strong>
+        <span class="sample-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> <%= t('caterers.orderQueue.sampleTag') %></span>
       </div>
       <div class="data-table-view">
         <table>
           <thead>
-            <tr><th>Student</th><th>School</th><th>Meal</th><th>Status</th></tr>
+            <tr><th><%= t('caterers.orderQueue.colStudent') %></th><th><%= t('caterers.orderQueue.colSchool') %></th><th><%= t('caterers.orderQueue.colMeal') %></th><th><%= t('caterers.orderQueue.colStatus') %></th></tr>
           </thead>
           <tbody>
             <tr>
-              <td>Ahmed A.</td>
+              <td><%= t('caterers.orderQueue.row1Student') %></td>
               <td>Kuwait English School</td>
               <td>Arabiatta Chicken Pasta</td>
-              <td><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> Collected</span></td>
+              <td><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('caterers.orderQueue.statusCollected') %></span></td>
             </tr>
             <tr>
-              <td>Sara A.</td>
+              <td><%= t('caterers.orderQueue.row2Student') %></td>
               <td>American Creativity Academy</td>
               <td>BBQ Chicken &amp; Sweet Potato</td>
-              <td><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> Upcoming</span></td>
+              <td><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> <%= t('caterers.orderQueue.statusUpcoming') %></span></td>
             </tr>
             <tr>
-              <td>Student C.</td>
-              <td>The English School</td>
+              <td><%= t('caterers.orderQueue.row3Student') %></td>
+              <td><%= t('caterers.orderQueue.schoolThird') %></td>
               <td>Balsamic Chicken &amp; Beans</td>
-              <td><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> Upcoming</span></td>
+              <td><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> <%= t('caterers.orderQueue.statusUpcoming') %></span></td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-    <p class="nutrition-more" data-reveal>Every row arrives already matched to a student, a school, and a paid order — not a phone call to transcribe.</p>
+    <p class="nutrition-more" data-reveal><%= t('caterers.orderQueue.footnote') %></p>
   </div>
 </section>
 
@@ -71,14 +71,14 @@
 <section class="section on-tint" id="demand-visibility">
   <div class="wrap teaser-wrap">
     <div class="teaser-copy" data-reveal>
-      <span class="eyebrow">Predictable demand</span>
-      <h2>Know what to prepare before service starts.</h2>
-      <p>Bookings are real digital orders, not estimates — placed and paid for ahead of the school day, so your kitchen plans against actual demand rather than guesswork.</p>
+      <span class="eyebrow"><%= t('caterers.demandVisibility.eyebrow') %></span>
+      <h2><%= t('caterers.demandVisibility.heading') %></h2>
+      <p><%= t('caterers.demandVisibility.intro') %></p>
     </div>
     <ul class="teaser-list" data-reveal>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Orders placed and paid for ahead of service</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Quantities visible by school and by meal</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> No estimating from a phone call or a paper tally</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('caterers.demandVisibility.item1') %></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('caterers.demandVisibility.item2') %></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('caterers.demandVisibility.item3') %></li>
     </ul>
   </div>
 </section>
@@ -87,14 +87,14 @@
 <section class="section" id="fulfilment">
   <div class="wrap teaser-wrap teaser-wrap-reverse">
     <ul class="teaser-list" data-reveal>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Orders grouped by the school you're fulfilling for</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Each school's own calendar drives when orders are expected</li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> Every school on the platform is a customer base you don't have to market to separately</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('caterers.fulfilment.item1') %></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('caterers.fulfilment.item2') %></li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('caterers.fulfilment.item3') %></li>
     </ul>
     <div class="teaser-copy" data-reveal>
-      <span class="eyebrow">Fulfilment fits the programme</span>
-      <h2>Built around the school's programme, not a generic delivery queue.</h2>
-      <p>Because every order is tied to a specific school's calendar and student roster, your kitchen fulfils against that school's actual programme — not a one-size-fits-all delivery list.</p>
+      <span class="eyebrow"><%= t('caterers.fulfilment.eyebrow') %></span>
+      <h2><%= t('caterers.fulfilment.heading') %></h2>
+      <p><%= t('caterers.fulfilment.body') %></p>
     </div>
   </div>
 </section>
@@ -103,19 +103,19 @@
 <section class="section on-tint" id="caterer-benefits">
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">What changes for your kitchen</span>
-      <h2>Operational partners, not an afterthought.</h2>
+      <span class="eyebrow"><%= t('caterers.benefits.eyebrow') %></span>
+      <h2><%= t('caterers.benefits.heading') %></h2>
     </div>
     <div class="grid-2">
       <div class="benefit-card" data-reveal data-reveal-group="caterer">
         <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg></div>
-        <h3>Streamlined order management</h3>
-        <p>One digital queue replaces phone calls, paper tickets, and end-of-day reconciliation.</p>
+        <h3><%= t('caterers.benefits.card1Title') %></h3>
+        <p><%= t('caterers.benefits.card1Body') %></p>
       </div>
       <div class="benefit-card" data-reveal data-reveal-group="caterer">
         <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11H5a2 2 0 0 0-2 2v7h6M15 11h4a2 2 0 0 1 2 2v7h-6M9 11V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6M9 21v-6h6v6"/></svg></div>
-        <h3>Reduced manual processing</h3>
-        <p>Orders arrive already matched to a student, a plan, and a payment that's settled.</p>
+        <h3><%= t('caterers.benefits.card2Title') %></h3>
+        <p><%= t('caterers.benefits.card2Body') %></p>
       </div>
     </div>
   </div>
@@ -129,29 +129,29 @@
 <section class="section" id="caterer-onboarding">
   <div class="wrap">
     <div class="section-head" data-reveal>
-      <span class="eyebrow">Getting started</span>
-      <h2>What onboarding actually looks like.</h2>
+      <span class="eyebrow"><%= t('caterers.onboarding.eyebrow') %></span>
+      <h2><%= t('caterers.onboarding.heading') %></h2>
     </div>
     <div class="steps">
       <div class="step" data-reveal data-reveal-group="catereronboarding">
-        <div class="step-num">Apply</div>
-        <h3>Tell us about your kitchen</h3>
-        <p>Use the form below — a member of our partnerships team responds within one business day.</p>
+        <div class="step-num"><%= t('caterers.onboarding.step1Label') %></div>
+        <h3><%= t('caterers.onboarding.step1Title') %></h3>
+        <p><%= t('caterers.onboarding.step1Body') %></p>
       </div>
       <div class="step" data-reveal data-reveal-group="catereronboarding">
-        <div class="step-num">Match</div>
-        <h3>We match you to a school</h3>
-        <p>Based on your capacity, cuisine, and the schools looking for a catering partner.</p>
+        <div class="step-num"><%= t('caterers.onboarding.step2Label') %></div>
+        <h3><%= t('caterers.onboarding.step2Title') %></h3>
+        <p><%= t('caterers.onboarding.step2Body') %></p>
       </div>
       <div class="step" data-reveal data-reveal-group="catereronboarding">
-        <div class="step-num">Connect</div>
-        <h3>Your kitchen joins the queue</h3>
-        <p>Menus and pricing are configured so orders can start arriving digitally.</p>
+        <div class="step-num"><%= t('caterers.onboarding.step3Label') %></div>
+        <h3><%= t('caterers.onboarding.step3Title') %></h3>
+        <p><%= t('caterers.onboarding.step3Body') %></p>
       </div>
       <div class="step" data-reveal data-reveal-group="catereronboarding">
-        <div class="step-num">Fulfil</div>
-        <h3>Service begins</h3>
-        <p>Orders arrive matched to a student and school, ready to prepare.</p>
+        <div class="step-num"><%= t('caterers.onboarding.step4Label') %></div>
+        <h3><%= t('caterers.onboarding.step4Title') %></h3>
+        <p><%= t('caterers.onboarding.step4Body') %></p>
       </div>
     </div>
   </div>
@@ -161,53 +161,53 @@
 <section class="section on-tint" id="caterer-form">
   <div class="wrap partner-form-wrap">
     <div class="section-head" data-reveal style="margin:0;">
-      <span class="eyebrow">Partner with us</span>
-      <h2>Tell us about your kitchen.</h2>
-      <p>We'll match you against schools looking for a catering partner. A member of our partnerships team responds <strong>within one business day</strong>.</p>
+      <span class="eyebrow"><%= t('caterers.form.eyebrow') %></span>
+      <h2><%= t('caterers.form.heading') %></h2>
+      <p><%= t('caterers.form.intro', { strong: '' }) %><strong><%= t('caterers.form.introStrong') %></strong></p>
     </div>
     <div class="card" data-reveal>
       <% if (typeof success !== 'undefined' && success) { %>
-        <div class="alert alert-success"><%- include('partials/success-icon') %><span>Thank you — we've received your application and will be in touch within one business day.</span></div>
+        <div class="alert alert-success"><%- include('partials/success-icon') %><span><%= t('caterers.form.successMsg') %></span></div>
       <% } else { %>
         <% var fd = (typeof formData !== 'undefined' && formData) ? formData : {}; var errs = (typeof errors !== 'undefined' && errors) ? errors : {}; %>
         <form method="POST" action="/caterers/inquiry" id="catererInquiryForm" novalidate>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <div class="field <%= errs.organizationName ? 'invalid' : '' %>">
-            <label for="catererOrgName">Company / kitchen name</label>
+            <label for="catererOrgName"><%= t('caterers.form.labelOrgName') %></label>
             <input type="text" id="catererOrgName" name="organizationName" value="<%= fd.organizationName || '' %>" required data-validate="required">
-            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.organizationName || 'Company name is required.' %></span></div>
+            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.organizationName || t('caterers.form.errOrgName') %></span></div>
           </div>
           <div class="field <%= errs.contactName ? 'invalid' : '' %>">
-            <label for="catererContactName">Contact person</label>
+            <label for="catererContactName"><%= t('caterers.form.labelContactName') %></label>
             <input type="text" id="catererContactName" name="contactName" value="<%= fd.contactName || '' %>" required data-validate="required">
-            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.contactName || 'Contact person is required.' %></span></div>
+            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.contactName || t('caterers.form.errContactName') %></span></div>
           </div>
           <div class="form-row">
             <div class="field <%= errs.email ? 'invalid' : '' %>">
-              <label for="catererContactEmail">Email</label>
+              <label for="catererContactEmail"><%= t('caterers.form.labelEmail') %></label>
               <input type="email" id="catererContactEmail" name="email" value="<%= fd.email || '' %>" inputmode="email" required data-validate="email">
-              <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.email || 'A valid email address is required.' %></span></div>
+              <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.email || t('caterers.form.errEmail') %></span></div>
             </div>
             <div class="field">
-              <label for="catererContactPhone">Phone</label>
+              <label for="catererContactPhone"><%= t('caterers.form.labelPhone') %></label>
               <input type="tel" id="catererContactPhone" name="phone" value="<%= fd.phone || '' %>" inputmode="tel">
             </div>
           </div>
           <div class="field">
-            <label for="catererScale">Current capacity / operation size</label>
+            <label for="catererScale"><%= t('caterers.form.labelScale') %></label>
             <select id="catererScale" name="scaleInfo">
-              <option value="Under 200 meals/day" <%= fd.scaleInfo === 'Under 200 meals/day' ? 'selected' : '' %>>Under 200 meals/day</option>
-              <option value="200–500 meals/day" <%= fd.scaleInfo === '200–500 meals/day' ? 'selected' : '' %>>200–500 meals/day</option>
-              <option value="500–1,500 meals/day" <%= fd.scaleInfo === '500–1,500 meals/day' ? 'selected' : '' %>>500–1,500 meals/day</option>
-              <option value="1,500+ meals/day" <%= fd.scaleInfo === '1,500+ meals/day' ? 'selected' : '' %>>1,500+ meals/day</option>
+              <option value="Under 200 meals/day" <%= fd.scaleInfo === 'Under 200 meals/day' ? 'selected' : '' %>><%= t('caterers.form.optUnder200') %></option>
+              <option value="200–500 meals/day" <%= fd.scaleInfo === '200–500 meals/day' ? 'selected' : '' %>><%= t('caterers.form.opt200to500') %></option>
+              <option value="500–1,500 meals/day" <%= fd.scaleInfo === '500–1,500 meals/day' ? 'selected' : '' %>><%= t('caterers.form.opt500to1500') %></option>
+              <option value="1,500+ meals/day" <%= fd.scaleInfo === '1,500+ meals/day' ? 'selected' : '' %>><%= t('caterers.form.opt1500plus') %></option>
             </select>
           </div>
           <div class="field <%= errs.message ? 'invalid' : '' %>">
-            <label for="catererMessage">Tell us about your kitchen</label>
-            <textarea id="catererMessage" name="message" rows="4" required data-validate="minlength:10" placeholder="Schools you currently serve (if any), cuisine specialties, anything else useful..."><%= fd.message || '' %></textarea>
-            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.message || 'Tell us a little more — at least 10 characters.' %></span></div>
+            <label for="catererMessage"><%= t('caterers.form.labelMessage') %></label>
+            <textarea id="catererMessage" name="message" rows="4" required data-validate="minlength:10" placeholder="<%= t('caterers.form.placeholderMessage') %>"><%= fd.message || '' %></textarea>
+            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.message || t('caterers.form.errMessage') %></span></div>
           </div>
-          <button type="submit" class="btn btn-primary" style="width:100%;">Send to our partnerships team</button>
+          <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('caterers.form.submit') %></button>
         </form>
       <% } %>
     </div>

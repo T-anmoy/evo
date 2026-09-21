@@ -350,27 +350,37 @@ function findBookingById(id) {
   return mapBooking(db.prepare('SELECT * FROM bookings WHERE id = ?').get(id));
 }
 
-function insertNotification({ parentId, type, message, relatedId }) {
+function insertNotification({ parentId, type, message, params, relatedId }) {
   db.prepare(`
-    INSERT INTO notifications (parent_id, type, message, related_id, read, created_at)
-    VALUES (?, ?, ?, ?, 0, ?)
-  `).run(parentId, type, message, relatedId || null, new Date().toISOString());
+    INSERT INTO notifications (parent_id, type, message, params, related_id, read, created_at)
+    VALUES (?, ?, ?, ?, ?, 0, ?)
+  `).run(parentId, type, message, params ? JSON.stringify(params) : null, relatedId || null, new Date().toISOString());
 }
 
 // Atomic: create the booking and log the confirmation notification in one
 // transaction. Payment is a direct simulated charge per period (no wallet
 // to debit) — same "demo only, no real payment processed" simulation the
 // old wallet top-up used, just without a stored balance in between.
-function bookAndCharge({ studentId, menuItemId, planType, startDate, days, totalKWD, parentId, note }) {
+//
+// `message` is always composed in English and stored as a fallback (for
+// legacy display paths and any consumer that isn't locale-aware); `params`
+// carries the structured data so server.js can re-render the same
+// notification in the viewer's current locale (see app.locals.notifMessage).
+function bookAndCharge({ studentId, menuItemId, planType, startDate, days, totalKWD, parentId, detailType }) {
   return db.transaction(() => {
     const booking = createBooking({ studentId, menuItemId, planType, startDate, days, totalKWD });
-    // note arrives as "Student Name — meal detail"; lead the notification
-    // with the name so it can be bolded at a glance, detail stays secondary.
-    const [studentName, ...rest] = note.split(' — ');
-    const detail = rest.join(' — ');
+    const student = findStudentById(studentId);
+    const menuItem = findMenuItem(menuItemId);
+    const studentName = student ? student.name : 'Your child';
+    const mealName = menuItem ? menuItem.name : 'Meal plan';
+    const resolvedDetailType = detailType || (planType === 'monthly' ? 'monthly' : 'single');
+    const detailText = resolvedDetailType === 'renewed'
+      ? 'renewed subscription'
+      : `${days} ${resolvedDetailType === 'monthly' ? 'real school day(s) this month' : 'day(s)'}`;
     insertNotification({
       parentId, type: 'booking_confirmed', relatedId: booking.id,
-      message: `${studentName} — Booking confirmed: ${detail}, KWD ${totalKWD.toFixed(3)} charged.`
+      message: `${studentName} — Booking confirmed: ${mealName}, ${detailText}, KWD ${totalKWD.toFixed(3)} charged.`,
+      params: { studentName, mealName, detailType: resolvedDetailType, days, amountKWD: totalKWD }
     });
     return booking;
   })();
@@ -388,7 +398,8 @@ function cancelAndRefund({ bookingId, parentId }) {
     const studentName = student ? student.name : 'Booking';
     insertNotification({
       parentId, type: 'booking_cancelled', relatedId: booking.id,
-      message: `${studentName} — Booking cancelled: KWD ${booking.totalKWD.toFixed(3)} refunded to your original payment method (demo — simulated).`
+      message: `${studentName} — Booking cancelled: KWD ${booking.totalKWD.toFixed(3)} refunded to your original payment method (demo — simulated).`,
+      params: { studentName, amountKWD: booking.totalKWD }
     });
     return findBookingById(bookingId);
   })();
@@ -400,6 +411,7 @@ function getNotificationsForParent(parentId, limit) {
     .all(parentId, limit || 20);
   return rows.map(r => ({
     id: r.id, parentId: r.parent_id, type: r.type, message: r.message,
+    params: r.params ? JSON.parse(r.params) : null,
     relatedId: r.related_id, read: !!r.read, createdAt: r.created_at
   }));
 }
@@ -414,10 +426,11 @@ function markAllNotificationsRead(parentId) {
 }
 // Ensures exactly one unread renewal reminder exists per booking — called
 // on dashboard load so re-visiting the page doesn't spam duplicate reminders.
-function ensureRenewalNotification({ parentId, bookingId, message }) {
+function ensureRenewalNotification({ parentId, bookingId, studentName, daysLeft }) {
   const existing = db.prepare('SELECT id FROM notifications WHERE related_id = ? AND type = ?').get(bookingId, 'renewal_due');
   if (existing) return;
-  insertNotification({ parentId, type: 'renewal_due', relatedId: bookingId, message });
+  const message = `${studentName} — Subscription ending in ${daysLeft} day${daysLeft === 1 ? '' : 's'}: renew to keep meals booked without a gap.`;
+  insertNotification({ parentId, type: 'renewal_due', relatedId: bookingId, message, params: { studentName, daysLeft } });
 }
 
 // ---------- Staff bookings (separate section, mirrors real app's Staff area) ----------

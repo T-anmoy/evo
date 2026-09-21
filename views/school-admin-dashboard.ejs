@@ -1,80 +1,80 @@
 <!DOCTYPE html>
 <html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
 <head>
-<%- include('partials/head', { title: 'Dashboard — School Admin — Evo Meals' }) %>
+<%- include('partials/head', { title: t('meta.schoolAdminDashboard.title') }) %>
 </head>
 <body>
 <%- include('partials/adminnav', { admin: admin }) %>
 
-<div class="page">
+<main class="page" id="main-content">
   <div class="page-head admin-page-head">
     <div>
-      <span class="eyebrow">Meal program overview</span>
+      <span class="eyebrow"><%= t('schoolAdminDashboard.eyebrow') %></span>
       <h1><%= admin.school %></h1>
-      <p>Real-time data from your school's program — not a preview.</p>
+      <p><%= t('schoolAdminDashboard.intro') %></p>
     </div>
-    <span class="live-data-tag"><span class="live-dot"></span> Live data</span>
+    <span class="live-data-tag"><span class="live-dot"></span> <%= t('schoolAdminDashboard.liveData') %></span>
   </div>
 
   <div class="grid-3" style="margin-bottom:24px;">
     <div class="stat lime" data-reveal data-reveal-group="adminstats">
       <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
-      <div class="label">Active subscriptions</div>
+      <div class="label"><%= t('schoolAdminDashboard.statActiveSubs') %></div>
       <div class="value lime data-num" data-countup="<%= activeSubscriptions %>">0</div>
     </div>
     <div class="stat" data-reveal data-reveal-group="adminstats">
       <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8 12 4l8 4-8 4-8-4Z"/><path d="M4 8v8l8 4 8-4V8"/></svg></div>
-      <div class="label">Today's meals</div>
+      <div class="label"><%= t('schoolAdminDashboard.statTodaysMeals') %></div>
       <div class="value data-num" data-countup="<%= todaysMeals %>">0</div>
     </div>
     <div class="stat" data-reveal data-reveal-group="adminstats">
       <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg></div>
-      <div class="label">Pending orders</div>
+      <div class="label"><%= t('schoolAdminDashboard.statPendingOrders') %></div>
       <div class="value data-num" data-countup="<%= pendingOrders %>">0</div>
     </div>
   </div>
 
   <div class="card" style="margin-bottom:24px;" data-reveal>
-    <h3 style="font-size:15px; margin-bottom:4px;">Bookings, last 14 days</h3>
-    <p style="font-size:12.5px; color:var(--muted); margin-bottom:20px;">Every bar is a real count of non-cancelled bookings starting that day.</p>
+    <h3 style="font-size:15px; margin-bottom:4px;"><%= t('schoolAdminDashboard.trendHeading') %></h3>
+    <p style="font-size:12.5px; color:var(--muted); margin-bottom:20px;"><%= t('schoolAdminDashboard.trendIntro') %></p>
     <div class="trend-chart">
-      <% trend.forEach(t => { %>
+      <% trend.forEach(t2 => { %>
         <div class="trend-bar-col">
           <div class="trend-bar-track">
-            <div class="trend-bar-fill" style="--pct:<%= Math.max(0.03, t.count / trendMax) %>;" title="<%= t.date %>: <%= t.count %>"></div>
+            <div class="trend-bar-fill" style="--pct:<%= Math.max(0.03, t2.count / trendMax) %>;" title="<%= t2.date %>: <%= t2.count %>"></div>
           </div>
-          <span class="trend-bar-count data-num"><%= t.count %></span>
-          <span class="trend-bar-label"><%= new Date(t.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) %></span>
+          <span class="trend-bar-count data-num"><%= t2.count %></span>
+          <span class="trend-bar-label"><%= new Date(t2.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) %></span>
         </div>
       <% }) %>
     </div>
   </div>
 
   <div class="card" data-reveal>
-    <h3 style="font-size:15px; margin-bottom:16px;">Recent booking activity</h3>
+    <h3 style="font-size:15px; margin-bottom:16px;"><%= t('schoolAdminDashboard.recentActivity') %></h3>
     <% if (recentActivity.length === 0) { %>
       <div class="empty-state">
         <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></div>
-        <p><strong>No bookings yet</strong>Once parents at your school start booking meals, activity will show up here.</p>
+        <p><strong><%= t('schoolAdminDashboard.emptyTitle') %></strong><%= t('schoolAdminDashboard.emptyBody') %></p>
       </div>
     <% } else { %>
       <div class="data-table-view">
         <table>
           <thead>
-            <tr><th>Student</th><th>Meal</th><th>Plan</th><th>Date</th><th>Total</th><th>Status</th></tr>
+            <tr><th><%= t('schoolAdminDashboard.colStudent') %></th><th><%= t('schoolAdminDashboard.colMeal') %></th><th><%= t('schoolAdminDashboard.colPlan') %></th><th><%= t('schoolAdminDashboard.colDate') %></th><th><%= t('schoolAdminDashboard.colTotal') %></th><th><%= t('schoolAdminDashboard.colStatus') %></th></tr>
           </thead>
           <tbody>
             <% recentActivity.forEach(b => { %>
               <tr>
                 <td><%= b.student ? b.student.name : '—' %></td>
                 <td><%= b.menuItem ? b.menuItem.name : '—' %></td>
-                <td><%= b.planType === 'monthly' ? 'Monthly' : b.days + ' day(s)' %></td>
-                <td class="data-num"><%= new Date(b.startDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) %></td>
-                <td class="data-num">KWD <%= b.totalKWD.toFixed(3) %></td>
+                <td><%= b.planType === 'monthly' ? t('schoolAdminDashboard.planMonthly') : t('schoolAdminDashboard.planDays', { days: b.days, unit: t(b.days === 1 ? 'dashboard.dayUnitOne' : 'dashboard.dayUnitOther') }) %></td>
+                <td class="data-num"><bdi><%= new Date(b.startDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) %></bdi></td>
+                <td class="data-num"><bdi><%= fmtKWD(b.totalKWD) %></bdi></td>
                 <td>
-                  <% if (b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> Collected</span>
-                  <% } else if (b.status === 'cancelled') { %><span class="badge badge-cancelled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg> Cancelled</span>
-                  <% } else { %><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> Upcoming</span><% } %>
+                  <% if (b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schoolAdminDashboard.statusCollected') %></span>
+                  <% } else if (b.status === 'cancelled') { %><span class="badge badge-cancelled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg> <%= t('schoolAdminDashboard.statusCancelled') %></span>
+                  <% } else { %><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> <%= t('schoolAdminDashboard.statusUpcoming') %></span><% } %>
                 </td>
               </tr>
             <% }) %>
@@ -89,20 +89,20 @@
                 <strong><%= b.student ? b.student.name : '—' %></strong>
                 <span><%= b.menuItem ? b.menuItem.name : '—' %></span>
               </div>
-              <% if (b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> Collected</span>
-              <% } else if (b.status === 'cancelled') { %><span class="badge badge-cancelled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg> Cancelled</span>
-              <% } else { %><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> Upcoming</span><% } %>
+              <% if (b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schoolAdminDashboard.statusCollected') %></span>
+              <% } else if (b.status === 'cancelled') { %><span class="badge badge-cancelled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg> <%= t('schoolAdminDashboard.statusCancelled') %></span>
+              <% } else { %><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> <%= t('schoolAdminDashboard.statusUpcoming') %></span><% } %>
             </div>
-            <div class="data-card-row"><span class="k">Plan</span><span class="v"><%= b.planType === 'monthly' ? 'Monthly' : b.days + ' day(s)' %></span></div>
-            <div class="data-card-row"><span class="k">Date</span><span class="v data-num"><%= new Date(b.startDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) %></span></div>
-            <div class="data-card-row"><span class="k">Total</span><span class="v data-num">KWD <%= b.totalKWD.toFixed(3) %></span></div>
+            <div class="data-card-row"><span class="k"><%= t('schoolAdminDashboard.colPlan') %></span><span class="v"><%= b.planType === 'monthly' ? t('schoolAdminDashboard.planMonthly') : t('schoolAdminDashboard.planDays', { days: b.days, unit: t(b.days === 1 ? 'dashboard.dayUnitOne' : 'dashboard.dayUnitOther') }) %></span></div>
+            <div class="data-card-row"><span class="k"><%= t('schoolAdminDashboard.colDate') %></span><span class="v data-num"><bdi><%= new Date(b.startDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) %></bdi></span></div>
+            <div class="data-card-row"><span class="k"><%= t('schoolAdminDashboard.colTotal') %></span><span class="v data-num"><bdi><%= fmtKWD(b.totalKWD) %></bdi></span></div>
           </div>
         <% }) %>
       </div>
     <% } %>
   </div>
-</div>
+</main>
 
-<footer class="app-foot">Evo Meals · School Admin · <%= students.length %> student<%= students.length === 1 ? '' : 's' %> on record at <%= admin.school %></footer>
+<footer class="app-foot"><%= t('schoolAdminDashboard.footerLine', { count: students.length, unit: t(students.length === 1 ? 'schoolAdminDashboard.footerStudentUnitOne' : 'schoolAdminDashboard.footerStudentUnitOther'), school: admin.school }) %></footer>
 </body>
 </html>

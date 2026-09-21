@@ -1,9 +1,15 @@
+<a href="#main-content" class="skip-link"><%= t('a11y.skipToContent') %></a>
 <header class="app-header">
   <div class="wrap app-nav">
-    <a href="/school-admin/dashboard" class="app-logo"><span>Evo <span class="dot">Meals</span></span> <span class="admin-nav-tag">School Admin</span></a>
+    <a href="/school-admin/dashboard" class="app-logo"><span>Evo <span class="dot">Meals</span></span> <span class="admin-nav-tag"><%= t('adminNav.tag') %></span></a>
     <div class="app-user">
+      <div class="lang-switch" role="group" aria-label="<%= t('nav.langSwitchLabel') %>">
+        <a href="/locale/en?returnTo=<%= encodeURIComponent(currentPath) %>" lang="en" hreflang="en" aria-current="<%= locale === 'en' ? 'true' : 'false' %>" class="<%= locale === 'en' ? 'is-current' : '' %>">EN</a>
+        <span class="lang-switch-divider" aria-hidden="true">|</span>
+        <a href="/locale/ar?returnTo=<%= encodeURIComponent(currentPath) %>" lang="ar" hreflang="ar" aria-current="<%= locale === 'ar' ? 'true' : 'false' %>" class="<%= locale === 'ar' ? 'is-current' : '' %>">AR</a>
+      </div>
       <span><%= admin.name %> · <%= admin.school %></span>
-      <a href="/school-admin/logout" class="btn btn-sm" style="background:rgba(255,255,255,0.1); color:#fff;">Log out</a>
+      <a href="/school-admin/logout" class="btn btn-sm" style="background:rgba(255,255,255,0.1); color:#fff;"><%= t('adminNav.logout') %></a>
     </div>
   </div>
 </header>

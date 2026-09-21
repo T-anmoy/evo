@@ -839,6 +839,12 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    colors (light text) are already correct here; this modifier only
    adjusts layout, not color. */
 .lang-switch-mobile{width:100%; justify-content:center; margin-bottom:4px; padding:10px 0;}
+/* Auth cards (login/register/school-admin login) sit on a white card, not
+   the dark navy header/drawer the base .lang-switch colors assume — same
+   component, light-background colors. */
+.auth-card .lang-switch a{color:var(--muted);}
+.auth-card .lang-switch a:hover{color:var(--navy-800);}
+.auth-card .lang-switch a[aria-current="true"]{color:var(--navy-950);}
 .site-actions .btn-sm{padding:9px 15px;}
 .site-actions a.btn-ghost{color:#fff; border-color:rgba(255,255,255,0.28);}
 .site-actions a.btn-ghost:hover{background:rgba(255,255,255,0.08);}

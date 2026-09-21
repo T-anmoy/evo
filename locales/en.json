@@ -11,7 +11,17 @@
     "forgotPassword": { "title": "Forgot password — Evo Meals" },
     "dashboard": { "title": "Dashboard — Evo Meals" },
     "menu": { "title": "Menu — Evo Meals" },
-    "booking": { "title": "Book a Meal — Evo Meals" }
+    "booking": { "title": "Book a Meal — Evo Meals" },
+    "caterers": { "title": "For Caterers — Evo Meals School Meal Management Platform", "description": "Evo Meals connects school catering partners in Kuwait to a school-specific customer base with predictable digital demand — real orders, a streamlined queue, and far less manual processing." },
+    "about": { "title": "About — Evo Meals", "description": "Evo Meals is a Kuwait-based school meal management platform connecting schools, parents, students, and catering partners through subscriptions, digital ordering, tap-to-collect, and real-time reporting." },
+    "contact": { "title": "Contact — Evo Meals", "description": "Get in touch with Evo Meals — parent support, school partnerships, and catering partnerships each have their own contact pathway." },
+    "students": { "title": "Students — Evo Meals" },
+    "history": { "title": "Booking History — Evo Meals" },
+    "profile": { "title": "Profile — Evo Meals" },
+    "staff": { "title": "Staff Meal Booking — Evo Meals" },
+    "schoolAdminLogin": { "title": "School Admin Login — Evo Meals" },
+    "schoolAdminDashboard": { "title": "Dashboard — School Admin — Evo Meals" },
+    "notFound": { "title": "Page not found — Evo Meals" }
   },
 
   "common": {
@@ -22,7 +32,15 @@
     "appStore": "App Store",
     "googlePlay": "Google Play",
     "kcal": "kcal",
-    "protein": "protein"
+    "protein": "protein",
+    "sending": "Sending…",
+    "pleaseWait": "Please wait…",
+    "justNow": "just now",
+    "minUnitOne": "minute", "minUnitOther": "minutes",
+    "hourUnitOne": "hour", "hourUnitOther": "hours",
+    "timeAgo": "{count} {unit} ago",
+    "tooManyAttempts": "Too many login attempts. Please wait a few minutes and try again.",
+    "formSessionExpired": "Form session expired. Please go back, refresh the page, and try again."
   },
 
   "nav": {
@@ -37,6 +55,7 @@
     "contact": "Contact",
     "menuToggle": "Menu",
     "closeMenu": "Close menu",
+    "closeLabel": "Close",
     "langSwitchLabel": "Switch language"
   },
 
@@ -449,6 +468,7 @@
     "labelPassword": "Password",
     "placeholderPassword": "At least 8 characters",
     "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "errPassword": "At least 8 characters, with a letter, a number, and a special character.",
     "labelConfirmPassword": "Confirm Password",
     "placeholderConfirmPassword": "Re-enter your password",
@@ -556,5 +576,246 @@
     "errInvalidStudent": "Choose a valid student.",
     "errNoSchoolDaysServer": "{school} has no school days left between {startDate} and the end of that month. Try a start date next month instead.",
     "successMsg": "Booking confirmed for {name} — {amount} charged via KNET (demo — no real payment processed)."
+  },
+
+  "notifications": {
+    "bookingConfirmedRenewed": "{student} — Booking confirmed: {meal}, renewed subscription, {amount} charged.",
+    "bookingConfirmedCount": "{student} — Booking confirmed: {meal}, {count} {unit}, {amount} charged.",
+    "bookingCancelled": "{student} — Booking cancelled: {amount} refunded to your original payment method (demo — simulated).",
+    "renewalDue": "{student} — Subscription ending in {days} {unit}: renew to keep meals booked without a gap."
+  },
+
+  "caterers": {
+    "hero": {
+      "eyebrow": "For Caterers",
+      "heading": "Kitchens run better on real orders.",
+      "lede": "Evo Meals is a genuine operational partner for the kitchens fulfilling school meal programs — not an afterthought bolted onto the parent-facing app. You get predictable, digital demand and a customer base that's already there.",
+      "cta": "Partner with us"
+    },
+    "orderQueue": {
+      "eyebrow": "What lands in your kitchen",
+      "heading": "One digital queue — student, school, and meal, every time.",
+      "intro": "The queue below is an illustrative example, not a live feed.",
+      "cardHeading": "Today's incoming orders",
+      "sampleTag": "Illustrative example",
+      "colStudent": "Student", "colSchool": "School", "colMeal": "Meal", "colStatus": "Status",
+      "statusCollected": "Collected", "statusUpcoming": "Upcoming",
+      "row1Student": "Ahmed A.", "row2Student": "Sara A.", "row3Student": "Student C.",
+      "schoolThird": "The English School",
+      "footnote": "Every row arrives already matched to a student, a school, and a paid order — not a phone call to transcribe."
+    },
+    "demandVisibility": {
+      "eyebrow": "Predictable demand",
+      "heading": "Know what to prepare before service starts.",
+      "intro": "Bookings are real digital orders, not estimates — placed and paid for ahead of the school day, so your kitchen plans against actual demand rather than guesswork.",
+      "item1": "Orders placed and paid for ahead of service",
+      "item2": "Quantities visible by school and by meal",
+      "item3": "No estimating from a phone call or a paper tally"
+    },
+    "fulfilment": {
+      "item1": "Orders grouped by the school you're fulfilling for",
+      "item2": "Each school's own calendar drives when orders are expected",
+      "item3": "Every school on the platform is a customer base you don't have to market to separately",
+      "eyebrow": "Fulfilment fits the programme",
+      "heading": "Built around the school's programme, not a generic delivery queue.",
+      "body": "Because every order is tied to a specific school's calendar and student roster, your kitchen fulfils against that school's actual programme — not a one-size-fits-all delivery list."
+    },
+    "benefits": {
+      "eyebrow": "What changes for your kitchen",
+      "heading": "Operational partners, not an afterthought.",
+      "card1Title": "Streamlined order management",
+      "card1Body": "One digital queue replaces phone calls, paper tickets, and end-of-day reconciliation.",
+      "card2Title": "Reduced manual processing",
+      "card2Body": "Orders arrive already matched to a student, a plan, and a payment that's settled."
+    },
+    "onboarding": {
+      "eyebrow": "Getting started",
+      "heading": "What onboarding actually looks like.",
+      "step1Label": "Apply", "step1Title": "Tell us about your kitchen", "step1Body": "Use the form below — a member of our partnerships team responds within one business day.",
+      "step2Label": "Match", "step2Title": "We match you to a school", "step2Body": "Based on your capacity, cuisine, and the schools looking for a catering partner.",
+      "step3Label": "Connect", "step3Title": "Your kitchen joins the queue", "step3Body": "Menus and pricing are configured so orders can start arriving digitally.",
+      "step4Label": "Fulfil", "step4Title": "Service begins", "step4Body": "Orders arrive matched to a student and school, ready to prepare."
+    },
+    "form": {
+      "eyebrow": "Partner with us",
+      "heading": "Tell us about your kitchen.",
+      "intro": "We'll match you against schools looking for a catering partner. A member of our partnerships team responds {strong}.",
+      "introStrong": "within one business day",
+      "successMsg": "Thank you — we've received your application and will be in touch within one business day.",
+      "labelOrgName": "Company / kitchen name",
+      "labelContactName": "Contact person",
+      "labelEmail": "Email",
+      "labelPhone": "Phone",
+      "labelScale": "Current capacity / operation size",
+      "optUnder200": "Under 200 meals/day", "opt200to500": "200–500 meals/day", "opt500to1500": "500–1,500 meals/day", "opt1500plus": "1,500+ meals/day",
+      "labelMessage": "Tell us about your kitchen",
+      "placeholderMessage": "Schools you currently serve (if any), cuisine specialties, anything else useful...",
+      "submit": "Send to our partnerships team",
+      "errOrgName": "Company name is required.",
+      "errContactName": "Contact person is required.",
+      "errEmail": "A valid email address is required.",
+      "errMessage": "Tell us a little more — at least 10 characters."
+    }
+  },
+
+  "about": {
+    "hero": {
+      "eyebrow": "About Evo Meals",
+      "heading": "Because \"Did they eat?\" shouldn't be a guess.",
+      "lede": "We help you manage your child's nutrition and dietary preferences, giving you and your child the tools to choose tasty, healthy, and nutritious meals. Evo Meals is one platform that connects parents, schools, and caterers in real time to serve what is best for the child."
+    },
+    "story": {
+      "eyebrow": "Our story",
+      "heading": "Evo Meals wasn't built in a boardroom.",
+      "intro": "Shaped by real feedback from parents and schools — now one real-time system connecting the whole school community.",
+      "pillar1Label": "Our approach", "pillar1Body": "Build partnerships that are strengthened through feedback and constant learning, with every meal served.",
+      "pillar2Label": "Our focus", "pillar2Body": "Deliver a seamless experience for parents, schools, and caterers.",
+      "pillar3Label": "Our standard", "pillar3Body": "Reliable data, honest information — so every decision is an informed one."
+    },
+    "cta": { "eyebrow": "Get in touch", "heading": "Whether you're a parent, a school, or a caterer —", "body": "We'd like to hear from you.", "button": "Contact us" }
+  },
+
+  "contact": {
+    "hero": { "eyebrow": "Contact", "heading": "Let's talk.", "lede": "Parent, school, or caterer — pick the pathway that fits, so your message reaches the right team." },
+    "pathways": {
+      "parentTitle": "Parent support", "parentBody": "Questions about booking, payment, allergies, or your account.", "parentCta": "Use the form below",
+      "schoolTitle": "School partnership", "schoolBody": "Bring Evo Meals to your school's meal programme.", "schoolCta": "Go to school form",
+      "catererTitle": "Catering partnership", "catererBody": "Connect your kitchen to a school's meal programme.", "catererCta": "Go to catering form"
+    },
+    "form": {
+      "eyebrow": "Parent support",
+      "heading": "Send us a message.",
+      "successMsg": "Message sent — our team will follow up with you.",
+      "labelName": "Your name",
+      "labelEmail": "Email",
+      "labelRole": "I am a...",
+      "optParent": "Parent", "optSchool": "School", "optCaterer": "Caterer", "optOther": "Other",
+      "labelMessage": "Message",
+      "placeholderMessage": "How can we help?",
+      "submit": "Send message",
+      "secureHint": "Handled securely — never shared beyond our team.",
+      "footnote": "You can also reach us directly using the contact details in the footer below.",
+      "errRequired": "Name, email, and a short message are required."
+    }
+  },
+
+  "students": {
+    "eyebrow": "Manage children",
+    "heading": "Registered students",
+    "intro": "Civil ID numbers are masked here by default — this fixes an exposure issue found in the earlier version of this system.",
+    "addTitle": "Add a student",
+    "editTitle": "Edit student",
+    "labelName": "Full name",
+    "labelCivilId": "Civil ID",
+    "hintCivilIdEditing": "Their 12-digit government ID. Masked here, and everywhere else it's shown — it can't be changed once added.",
+    "hintCivilIdNew": "Their 12-digit government ID. It'll be masked everywhere it's shown from now on.",
+    "placeholderCivilId": "e.g. 987654321098",
+    "errCivilId": "Civil ID should be exactly 12 digits.",
+    "labelSchool": "School",
+    "hintDefaultSchool": "Defaulted to {name}'s school — change it if this child is somewhere else.",
+    "labelClass": "Class",
+    "placeholderClass": "e.g. Grade 3",
+    "labelSection": "Section",
+    "placeholderSection": "e.g. B",
+    "labelGender": "Gender",
+    "male": "Male", "female": "Female",
+    "labelAllergies": "Allergies (optional)",
+    "placeholderAllergies": "e.g. Peanuts, Shellfish",
+    "hintAllergies": "Every meal is checked against this automatically.",
+    "saveChanges": "Save changes",
+    "addStudent": "Add student",
+    "cancel": "Cancel",
+    "allStudents": "All students",
+    "emptyTitle": "No students registered yet",
+    "emptyBody": "Add your first child using the form on the left.",
+    "allergiesTitle": "Allergies: {allergies}",
+    "hasAllergiesLabel": "Has allergies on file",
+    "edit": "Edit"
+  },
+
+  "history": {
+    "eyebrow": "Order history",
+    "heading": "Bookings & meal history",
+    "intro": "Every booking is listed here — with a real cancellation option, fixing a policy gap flagged in the earlier system.",
+    "emptyTitle": "No bookings yet",
+    "emptyBody": "Once you book a meal, it'll show up here — with a one-tap cancel and refund if plans change.",
+    "emptyCta": "Book your first meal",
+    "colStudent": "Student", "colMeal": "Meal", "colPlan": "Plan", "colDate": "Date", "colTotal": "Total", "colStatus": "Status",
+    "planMonthly": "Monthly",
+    "planDays": "{days} {unit}",
+    "statusCollected": "Collected", "statusCancelled": "Cancelled", "statusUpcoming": "Upcoming",
+    "cancelBooking": "Cancel booking",
+    "confirmCancel": "Cancel this booking for {name}?\n\n{amount} will be refunded to your original payment method immediately (demo — simulated). This can't be undone — you'll need to book again if you change your mind.",
+    "confirmCancelFallback": "this student"
+  },
+
+  "profile": {
+    "eyebrow": "Your account",
+    "heading": "Profile",
+    "civilIdLine": "Civil ID: {civilId} (masked, cannot be changed here)",
+    "savedMsg": "Saved — your profile is up to date.",
+    "labelName": "Full name",
+    "labelEmail": "Email",
+    "labelPhone": "Mobile number",
+    "saveChanges": "Save changes"
+  },
+
+  "staff": {
+    "eyebrow": "Staff meal booking",
+    "heading": "Book your own meal",
+    "intro": "The live system's App Store screenshots showed a separate Staff section alongside Student — this page is that section, built out properly.",
+    "labelMeal": "Meal",
+    "labelDate": "Date",
+    "priceLabel": "Staff meal price",
+    "submit": "Book Staff Meal",
+    "yourBookings": "Your staff bookings",
+    "emptyTitle": "No staff meals booked yet",
+    "emptyBody": "Use the form above to book your first one."
+  },
+
+  "schoolAdminLogin": {
+    "eyebrow": "School Admin",
+    "heading": "Sign in to your dashboard",
+    "subtitle": "Real-time visibility into your school's meal program.",
+    "labelEmail": "Email",
+    "placeholderEmail": "admin@yourschool.edu.kw",
+    "labelPassword": "Password",
+    "placeholderPassword": "Enter your password",
+    "submit": "Sign in",
+    "notAdminPre": "Parent, not a school administrator?",
+    "goToParentLogin": "Go to parent login",
+    "errInvalid": "Email or password is incorrect. Try the demo login shown below."
+  },
+
+  "schoolAdminDashboard": {
+    "eyebrow": "Meal program overview",
+    "intro": "Real-time data from your school's program — not a preview.",
+    "liveData": "Live data",
+    "statActiveSubs": "Active subscriptions",
+    "statTodaysMeals": "Today's meals",
+    "statPendingOrders": "Pending orders",
+    "trendHeading": "Bookings, last 14 days",
+    "trendIntro": "Every bar is a real count of non-cancelled bookings starting that day.",
+    "recentActivity": "Recent booking activity",
+    "emptyTitle": "No bookings yet",
+    "emptyBody": "Once parents at your school start booking meals, activity will show up here.",
+    "colStudent": "Student", "colMeal": "Meal", "colPlan": "Plan", "colDate": "Date", "colTotal": "Total", "colStatus": "Status",
+    "planMonthly": "Monthly", "planDays": "{days} {unit}",
+    "statusCollected": "Collected", "statusCancelled": "Cancelled", "statusUpcoming": "Upcoming",
+    "footerStudentUnitOne": "student", "footerStudentUnitOther": "students",
+    "footerLine": "Evo Meals · School Admin · {count} {unit} on record at {school}"
+  },
+
+  "adminNav": {
+    "tag": "School Admin",
+    "logout": "Log out"
+  },
+
+  "notFound": {
+    "heading": "This reader didn't recognize that page.",
+    "body": "The link might be old, or the address might be off by a character. Either way, nothing tapped — let's get you back to somewhere real.",
+    "backToDashboard": "Back to your dashboard",
+    "backToHome": "Back to the homepage",
+    "login": "Log in"
   }
 }

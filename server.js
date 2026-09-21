@@ -56,15 +56,6 @@ app.use(session({
   cookie: { maxAge: 1000 * 60 * 60 * 24 * 30, httpOnly: true, sameSite: 'lax' }
 }));
 
-const { csrfSynchronisedProtection } = csrfSync({
-  getTokenFromRequest: (req) => req.body && req.body._csrf
-});
-app.use(csrfSynchronisedProtection);
-app.use((req, res, next) => {
-  res.locals.csrfToken = req.csrfToken();
-  next();
-});
-
 // ---------- localization ----------
 // Two locale mechanisms, matched to how each route group is reached:
 //  - Public marketing pages + pre-auth forms (home, parents, schools,
@@ -122,6 +113,20 @@ app.use((req, res, next) => {
   next();
 });
 
+// CSRF protection is registered after locale resolution (rather than
+// before, as in earlier revisions) so that res.locals.t is already set on
+// this same request/response by the time a CSRF failure reaches the error
+// handler at the bottom of this file — otherwise a rejected token would
+// always fall back to English regardless of the page's actual language.
+const { csrfSynchronisedProtection } = csrfSync({
+  getTokenFromRequest: (req) => req.body && req.body._csrf
+});
+app.use(csrfSynchronisedProtection);
+app.use((req, res, next) => {
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
 // Session-locale switch: only for the authenticated app / school-admin
 // area (see SESSION_LOCALE_PATH_PREFIXES above). A plain GET so it works
 // as a real, keyboard-reachable <a href> with no JS required; it only
@@ -140,12 +145,16 @@ app.get('/locale/:lang', (req, res) => {
   res.redirect(safeReturnTo);
 });
 
+// express-rate-limit's `message` can be a function of (req, res) — used
+// here instead of a fixed string so the response is localized using the
+// same res.locals.t the rest of this request would have had (the locale
+// middleware above already ran by the time this fires).
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 10,
   standardHeaders: true,
   legacyHeaders: false,
-  message: 'Too many login attempts. Please wait a few minutes and try again.'
+  message: (req, res) => res.locals.t('common.tooManyAttempts')
 });
 
 // ---------- helpers ----------
@@ -161,16 +170,49 @@ app.locals.splitNotif = (message) => {
 app.locals.fmtKWD = (n) => `KWD ${Number(n).toFixed(3)}`;
 app.locals.fmtDate = (iso) => new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 app.locals.fmtTime = (iso) => new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-app.locals.timeAgo = (iso) => {
+// Takes `t` explicitly (rather than reading res.locals itself) since it's
+// called from templates, where the request's own `t` is already in scope.
+app.locals.timeAgo = (iso, t) => {
   const diffMs = Date.now() - new Date(iso).getTime();
   const mins = Math.floor(diffMs / 60000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 1) return t('common.justNow');
+  if (mins < 60) return t('common.timeAgo', { count: mins, unit: t(mins === 1 ? 'common.minUnitOne' : 'common.minUnitOther') });
   const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return t('common.timeAgo', { count: hours, unit: t(hours === 1 ? 'common.hourUnitOne' : 'common.hourUnitOther') });
   const days = Math.floor(hours / 24);
-  if (days < 7) return `${days}d ago`;
+  if (days < 7) return t('common.timeAgo', { count: days, unit: t(days === 1 ? 'dashboard.dayUnitOne' : 'dashboard.dayUnitOther') });
   return app.locals.fmtDate(iso);
+};
+// Re-renders a notification's stored `type` + `params` (see db.js) in the
+// viewer's current locale. Falls back to the notification's stored English
+// `message` for legacy/seed rows that predate the `params` column, or for
+// any type this switch doesn't recognize — never a blank body.
+//
+// The final string is always rendered with the template's escaped `<%=`,
+// never `<%-` — studentName is user-entered (a parent's own child's name),
+// so it can't safely be mixed into an unescaped render even alongside
+// trusted numeric data, the way dashboard.ejs's <bdi>-wrapped amounts are.
+app.locals.notifMessage = (n, t, fmtKWD) => {
+  if (!n.params) return n.message;
+  const p = n.params;
+  if (n.type === 'booking_confirmed') {
+    const amount = fmtKWD(p.amountKWD);
+    if (p.detailType === 'renewed') {
+      return t('notifications.bookingConfirmedRenewed', { student: p.studentName, meal: p.mealName, amount });
+    }
+    const unitKey = p.detailType === 'monthly'
+      ? (p.days === 1 ? 'booking.realSchoolDayUnitOne' : 'booking.realSchoolDayUnitOther')
+      : (p.days === 1 ? 'dashboard.dayUnitOne' : 'dashboard.dayUnitOther');
+    return t('notifications.bookingConfirmedCount', { student: p.studentName, meal: p.mealName, count: p.days, unit: t(unitKey), amount });
+  }
+  if (n.type === 'booking_cancelled') {
+    return t('notifications.bookingCancelled', { student: p.studentName, amount: fmtKWD(p.amountKWD) });
+  }
+  if (n.type === 'renewal_due') {
+    const unit = t(p.daysLeft === 1 ? 'dashboard.dayUnitOne' : 'dashboard.dayUnitOther');
+    return t('notifications.renewalDue', { student: p.studentName, days: p.daysLeft, unit });
+  }
+  return n.message;
 };
 
 // Placeholder dish illustrations (public/images/menu/) — matched by exact
@@ -261,21 +303,18 @@ app.get(['/parents', '/ar/parents'], (req, res) => {
   });
 });
 
-// /caterers has no Arabic translation yet (not in this phase's scope —
-// see docs/evo-implementation/PHASE-04-LOCALIZATION-RESPONSIVE.md) — no
-// /ar/caterers route is registered, rather than serving an RTL page shell
-// around untranslated English copy.
-app.get('/caterers', (req, res) => {
+app.get(['/caterers', '/ar/caterers'], (req, res) => {
   res.render('caterers', { parentId: req.session.parentId, success: req.query.success || null, errors: null, formData: null });
 });
 
-app.post('/caterers/inquiry', (req, res) => {
+app.post(['/caterers/inquiry', '/ar/caterers/inquiry'], (req, res) => {
   const { organizationName, contactName, email, phone, scaleInfo, message } = req.body;
+  const t = res.locals.t;
   const errors = {};
-  if (!organizationName || !organizationName.trim()) errors.organizationName = 'Company name is required.';
-  if (!contactName || !contactName.trim()) errors.contactName = 'Contact person is required.';
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errors.email = 'A valid email address is required.';
-  if (!message || message.trim().length < 10) errors.message = 'Tell us a little more — at least 10 characters.';
+  if (!organizationName || !organizationName.trim()) errors.organizationName = t('caterers.form.errOrgName');
+  if (!contactName || !contactName.trim()) errors.contactName = t('caterers.form.errContactName');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errors.email = t('caterers.form.errEmail');
+  if (!message || message.trim().length < 10) errors.message = t('caterers.form.errMessage');
 
   if (Object.keys(errors).length) {
     return res.render('caterers', { parentId: req.session.parentId, success: null, errors, formData: req.body });
@@ -287,7 +326,7 @@ app.post('/caterers/inquiry', (req, res) => {
     scaleInfo: (scaleInfo || '').trim(), currentArrangement: '', message: message.trim()
   });
   logger.info({ organizationName }, 'caterer application received');
-  res.redirect('/caterers?success=1');
+  res.redirect((req.path.startsWith('/ar') ? '/ar/caterers' : '/caterers') + '?success=1');
 });
 
 app.get(['/how-it-works', '/ar/how-it-works'], (req, res) => {
@@ -298,10 +337,13 @@ app.get(['/features', '/ar/features'], (req, res) => {
   res.render('features', { parentId: req.session.parentId });
 });
 
-app.get('/about', (req, res) => {
+app.get(['/about', '/ar/about'], (req, res) => {
   res.render('about', { parentId: req.session.parentId });
 });
 
+// /privacy and /terms have no Arabic translation — per this phase's own
+// instruction not to invent legal Arabic without a professional/legal
+// review, so no /ar/privacy or /ar/terms route is registered.
 app.get('/privacy', (req, res) => {
   res.render('privacy', { parentId: req.session.parentId });
 });
@@ -310,32 +352,30 @@ app.get('/terms', (req, res) => {
   res.render('terms', { parentId: req.session.parentId });
 });
 
-// /contact has no Arabic translation yet — same reasoning as /caterers above.
-app.get('/contact', (req, res) => {
+app.get(['/contact', '/ar/contact'], (req, res) => {
   res.render('contact', { parentId: req.session.parentId, success: req.query.success || null, error: null });
 });
 
-app.post('/contact', (req, res) => {
+app.post(['/contact', '/ar/contact'], (req, res) => {
   const { name, email, role, message } = req.body;
   if (!name || !email || !message) {
     return res.render('contact', {
       parentId: req.session.parentId, success: null,
-      error: 'Name, email, and a short message are required.'
+      error: res.locals.t('contact.form.errRequired')
     });
   }
   // Demo only — no email/CRM integration wired up yet. In production this
   // would notify the partnerships team (see the note in views/contact.ejs).
   logger.info({ name, email, role }, 'contact form submission (demo — not sent anywhere)');
-  res.redirect('/contact?success=1');
+  res.redirect((req.path.startsWith('/ar') ? '/ar/contact' : '/contact') + '?success=1');
 });
 
-// Pages with a real, translated /ar/... counterpart. Everything else
-// (/caterers, /about, /contact, /privacy, /terms) has no Arabic route
-// registered at all yet (see the locale middleware section above), so it
-// gets exactly one <url> entry and no hreflang alternates — no fake
-// bilingual claim to a crawler for a page that isn't actually translated.
-const BILINGUAL_PAGES = ['/', '/schools', '/parents', '/how-it-works', '/features', '/login', '/register', '/forgot-password'];
-const ENGLISH_ONLY_PAGES = ['/caterers', '/about', '/contact', '/privacy', '/terms'];
+// Pages with a real, translated /ar/... counterpart. /privacy and /terms
+// have no Arabic route registered at all (see above), so they get exactly
+// one <url> entry and no hreflang alternates — no fake bilingual claim to
+// a crawler for a page that isn't actually translated.
+const BILINGUAL_PAGES = ['/', '/schools', '/parents', '/how-it-works', '/features', '/login', '/register', '/forgot-password', '/caterers', '/about', '/contact'];
+const ENGLISH_ONLY_PAGES = ['/privacy', '/terms'];
 
 app.get('/sitemap.xml', (req, res) => {
   const base = `${req.protocol}://${req.get('host')}`;
@@ -371,12 +411,15 @@ Allow: /ar/schools
 Allow: /parents
 Allow: /ar/parents
 Allow: /caterers
+Allow: /ar/caterers
 Allow: /how-it-works
 Allow: /ar/how-it-works
 Allow: /features
 Allow: /ar/features
 Allow: /about
+Allow: /ar/about
 Allow: /contact
+Allow: /ar/contact
 Allow: /privacy
 Allow: /terms
 Disallow: /dashboard
@@ -485,7 +528,7 @@ app.post('/school-admin/login', loginLimiter, (req, res) => {
   const { email, password } = req.body;
   const admin = db.findSchoolAdminByEmail((email || '').trim().toLowerCase());
   if (!admin || !bcrypt.compareSync(password || '', admin.passwordHash)) {
-    return res.render('school-admin-login', { error: 'Email or password is incorrect. Try the demo login shown below.', parentId: req.session.parentId });
+    return res.render('school-admin-login', { error: res.locals.t('schoolAdminLogin.errInvalid'), parentId: req.session.parentId });
   }
   req.session.schoolAdminId = admin.id;
   res.redirect('/school-admin/dashboard');
@@ -617,7 +660,7 @@ app.get('/dashboard', requireAuth, (req, res) => {
       const menuItem = db.findMenuItem(booking.menuItemId);
       db.ensureRenewalNotification({
         parentId: parent.id, bookingId: booking.id,
-        message: `${student ? student.name : 'Your child'} — Subscription ending in ${daysLeft} day${daysLeft === 1 ? '' : 's'}: renew to keep meals booked without a gap.`
+        studentName: student ? student.name : 'Your child', daysLeft
       });
       return {
         bookingId: booking.id, daysLeft,
@@ -667,11 +710,10 @@ app.post('/booking/:id/renew', requireAuth, (req, res) => {
     return res.redirect('/dashboard?norenewaldays=1');
   }
 
-  const menuItem = db.findMenuItem(original.menuItemId);
   db.bookAndCharge({
     studentId: student.id, menuItemId: original.menuItemId, planType: original.planType,
     startDate: newStartDate, days, totalKWD: total, parentId: parent.id,
-    note: `${student.name} — ${menuItem ? menuItem.name : 'Meal plan'}, renewed subscription`
+    detailType: 'renewed'
   });
   res.redirect('/dashboard?renewed=1');
 });
@@ -796,7 +838,6 @@ app.post('/booking', requireAuth, (req, res) => {
     ({ total, days: resolvedDays } = calculateBookingTotal({ planType, days, plans }));
   }
 
-  const menuItem = db.findMenuItem(Number(menuItemId));
   db.bookAndCharge({
     studentId: student.id,
     menuItemId: Number(menuItemId),
@@ -805,7 +846,7 @@ app.post('/booking', requireAuth, (req, res) => {
     days: resolvedDays,
     totalKWD: total,
     parentId: parent.id,
-    note: `${student.name} — ${menuItem ? menuItem.name : 'Meal plan'}, ${planType === 'monthly' ? resolvedDays + ' real school day(s) this month' : resolvedDays + ' day(s)'}`
+    detailType: planType === 'monthly' ? 'monthly' : 'single'
   });
 
   res.render('booking', {
@@ -877,7 +918,8 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   if (err && err.code === 'EBADCSRFTOKEN') {
     logger.warn({ url: req.originalUrl }, 'rejected request with invalid/missing CSRF token');
-    return res.status(403).send('Form session expired. Please go back, refresh the page, and try again.');
+    const t = res.locals.t || ((key) => translate('en', key));
+    return res.status(403).send(t('common.formSessionExpired'));
   }
   next(err);
 });

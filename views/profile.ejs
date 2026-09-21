@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 <html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
 <head>
-<%- include('partials/head', { title: 'Profile — Evo Meals' }) %>
+<%- include('partials/head', { title: t('meta.profile.title') }) %>
 </head>
 <body>
 <%- include('partials/appnav', { active: 'profile' }) %>
 
-<div class="page" style="max-width:560px;">
+<main class="page" id="main-content" style="max-width:560px;">
   <div class="page-head">
-    <span class="eyebrow">Your account</span>
-    <h1>Profile</h1>
-    <p>Civil ID: <strong><%= maskCivilId(parent.civilId) %></strong> (masked, cannot be changed here)</p>
+    <span class="eyebrow"><%= t('profile.eyebrow') %></span>
+    <h1><%= t('profile.heading') %></h1>
+    <p><%- t('profile.civilIdLine', { civilId: `<strong>${maskCivilId(parent.civilId)}</strong>` }) %></p>
   </div>
 
-  <% if (success) { %><div class="alert alert-success"><%- include('partials/success-icon') %><span>Saved — your profile is up to date.</span></div><% } %>
+  <% if (success) { %><div class="alert alert-success"><%- include('partials/success-icon') %><span><%= t('profile.savedMsg') %></span></div><% } %>
 
   <div class="card" data-reveal>
     <form method="POST" action="/profile">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <div class="field">
-        <label for="profileName">Full name</label>
+        <label for="profileName"><%= t('profile.labelName') %></label>
         <input type="text" id="profileName" name="name" value="<%= parent.name %>" required>
       </div>
       <div class="field">
-        <label for="profileEmail">Email</label>
+        <label for="profileEmail"><%= t('profile.labelEmail') %></label>
         <input type="email" id="profileEmail" name="email" inputmode="email" value="<%= parent.email %>">
       </div>
       <div class="field">
-        <label for="profilePhone">Mobile number</label>
+        <label for="profilePhone"><%= t('profile.labelPhone') %></label>
         <input type="tel" id="profilePhone" name="phone" inputmode="tel" value="<%= parent.phone %>">
       </div>
-      <button type="submit" class="btn btn-primary">Save changes</button>
+      <button type="submit" class="btn btn-primary"><%= t('profile.saveChanges') %></button>
     </form>
   </div>
-</div>
+</main>
 
 <%- include('partials/appfoot') %>
 </body>
