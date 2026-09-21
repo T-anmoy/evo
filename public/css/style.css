@@ -8,8 +8,8 @@
   /* ============================================================
      Canonical color system (final refinement pass) — single source of
      truth. Named tokens below (--forest, --leaf, --school-yellow, …) are
-     the real definitions; the old --green-950/--navy-*/--lime-*/
-     --yellow-500 names are kept as aliases pointing at them, the same mechanism used for the earlier
+     the real definitions; the old --navy-*/--lime-* names are kept as
+     aliases pointing at them, the same mechanism used for the earlier
      teal/coral -> green re-theme, so ~150+ existing call sites re-theme
      without touching each one. The old two-tier yellow (bright-on-dark
      vs amber-on-light) and the saffron/amber family are retired here —
@@ -23,9 +23,7 @@
      replacing the old unrelated "Playground Blue"). */
   --forest:#163F31;
   --forest-secondary:#1F604A;
-  --green-950:var(--forest);
   --navy-950:var(--forest);
-  --green-800:var(--forest-secondary);
   --navy-800:var(--forest-secondary);
   /* mid forest, borders/dividers on dark — extends the forest ramp for
      dark-on-dark gradients (auth-shell, notfound-shell, menu-thumb). */
@@ -61,8 +59,6 @@
      the featured subscription plan, the "Tap" step), never a default
      button color. Always Ink text, never white. */
   --school-yellow:#F2C94C;
-  --school-yellow-soft:#FFF3C7;
-  --yellow-500:var(--school-yellow);
 
   /* Warmth/calm surfaces — Cream + Mint + White dominate the page (the
      65-75% of visual weight the brand balance calls for), forest is
@@ -73,7 +69,6 @@
   --ice-100:var(--mint-100);
 
   --cream:#FFFBF3;
-  --cream-100:#FBF1DC;
   --cream-line:rgba(90,70,10,0.12);
   --cream-50:var(--cream);
 
@@ -127,12 +122,9 @@
   /* A small spacing scale — used for new Phase 3 components (slim proof
      rows, connectors, sample tags) rather than a wholesale retrofit of
      every existing hand-tuned spacing value in this file. */
-  --space-1:8px;
   --space-2:12px;
   --space-3:16px;
   --space-4:24px;
-  --space-5:32px;
-  --space-6:48px;
 
   /* Fluid heading scale for body-copy sections (hero h1 already had its
      own clamp()). Base h1/h2 stay as page-title sizes; this pair is for
@@ -245,9 +237,8 @@ textarea:focus-visible,
 .notif-bell, .notif-badge, .notif-dropdown-head, .notif-viewall,
 .profile-link, .nav-toggle,
 .btn,
-.badge, .badge-save, .check-badge,
+.badge, .check-badge,
 .allergen-pill, .allergen-banner-item,
-.hero-proof .schools span,
 .price-tag,
 .tag,
 .store-badge,
@@ -298,18 +289,14 @@ a, button, .btn{
    motion system — defined once here rather than each section inventing
    its own. Icons that sit inside these cards get a small sympathetic
    scale, same trigger, same timing. */
-.menu-card, .menu-preview-card, .trust-card, .price-card, .what-is-pillar, .feature-role, .testimonial-card, .allergen-banner-item, .benefit-card, .why-card{
+.menu-card, .menu-preview-card, .price-card, .what-is-pillar, .allergen-banner-item, .benefit-card{
   transition:transform var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), border-color var(--dur-standard) var(--ease-standard);
 }
 .menu-card:hover, .menu-card:focus-within,
 .menu-preview-card:hover, .menu-preview-card:focus-within,
-.trust-card:hover, .trust-card:focus-within,
 .price-card:hover, .price-card:focus-within,
 .what-is-pillar:hover, .what-is-pillar:focus-within,
-.feature-role:hover, .feature-role:focus-within,
-.testimonial-card:hover, .testimonial-card:focus-within,
-.benefit-card:hover, .benefit-card:focus-within,
-.why-card:hover, .why-card:focus-within{
+.benefit-card:hover, .benefit-card:focus-within{
   transform:translateY(-4px);
   box-shadow:var(--shadow-sm);
   border-color:var(--line-strong);
@@ -326,13 +313,11 @@ a, button, .btn{
     transform:scale(1.035);
   }
 }
-.trust-card:hover .trust-icon, .trust-card:focus-within .trust-icon{transform:scale(1.08);}
-.trust-icon{transition:transform var(--dur-standard) var(--ease-spring);}
 .benefit-card:hover .benefit-card-icon, .benefit-card:focus-within .benefit-card-icon{transform:scale(1.08);}
 .benefit-card-icon{transition:transform var(--dur-standard) var(--ease-spring);}
 @media (prefers-reduced-motion: reduce){
-  .menu-card, .menu-preview-card, .trust-card, .price-card, .what-is-pillar, .feature-role, .testimonial-card, .trust-icon, .benefit-card, .why-card, .benefit-card-icon{transition:none;}
-  .menu-card:hover, .menu-preview-card:hover, .trust-card:hover, .price-card:hover, .what-is-pillar:hover, .feature-role:hover, .testimonial-card:hover, .benefit-card:hover, .why-card:hover{transform:none;}
+  .menu-card, .menu-preview-card, .price-card, .what-is-pillar, .benefit-card, .benefit-card-icon{transition:none;}
+  .menu-card:hover, .menu-preview-card:hover, .price-card:hover, .what-is-pillar:hover, .benefit-card:hover{transform:none;}
   .benefit-card:hover .benefit-card-icon{transform:none;}
   .menu-card .menu-thumb picture img, .menu-preview-card .menu-thumb picture img{transition:none;}
   .menu-card:hover .menu-thumb picture img, .menu-preview-card:hover .menu-thumb picture img{transform:none;}
@@ -346,7 +331,7 @@ a, button, .btn{
    One curve (--ease-out), one duration (--dur-hero), staggered by 80ms —
    same system, just the top of its hierarchy. */
 @keyframes hero-rise-in{from{opacity:0; transform:translateY(22px);} to{opacity:1; transform:translateY(0);}}
-.hero-copy > .eyebrow, .hero-copy > h1, .hero-copy > p.lede, .hero-copy > .hero-actions, .hero-copy > .hero-proof, .hero-media-wrap{
+.hero-copy > .eyebrow, .hero-copy > h1, .hero-copy > p.lede, .hero-copy > .hero-actions, .hero-media-wrap{
   animation:hero-rise-in var(--dur-hero) var(--ease-out) both;
 }
 .hero-copy > .eyebrow{animation-delay:0ms;}
@@ -354,9 +339,8 @@ a, button, .btn{
 .hero-copy > p.lede{animation-delay:180ms;}
 .hero-copy > .hero-actions{animation-delay:270ms;}
 .hero-media-wrap{animation-delay:220ms;}
-.hero-copy > .hero-proof{animation-delay:360ms;}
 @media (prefers-reduced-motion: reduce){
-  .hero-copy > .eyebrow, .hero-copy > h1, .hero-copy > p.lede, .hero-copy > .hero-actions, .hero-copy > .hero-proof, .hero-media-wrap{
+  .hero-copy > .eyebrow, .hero-copy > h1, .hero-copy > p.lede, .hero-copy > .hero-actions, .hero-media-wrap{
     animation:none; opacity:1; transform:none;
   }
 }
@@ -1051,9 +1035,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    but this hero is now light, so swap in the text-safe lime-700 here. */
 .hero-light .hero-actions a.btn-outline-lime{color:var(--lime-700); border-color:rgba(46,107,69,0.4);}
 .hero-light .hero-actions a.btn-outline-lime:hover{background:rgba(46,107,69,0.08); border-color:var(--lime-700);}
-.hero-light .hero-proof .proof-label{color:var(--muted);}
-.hero-light .hero-proof .schools span{color:var(--navy-800); border-color:var(--line-strong); background:rgba(255,255,255,0.55);}
-
 /* The hero image sits in its own column on desktop (stretched to match the
    copy column's height, cropped via object-fit:cover — not ratio-locked
    by design, since the two-column layout's height is driven by the text).
@@ -1108,7 +1089,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .hero-copy > .hero-actions{order:4;}
   .hero-copy > .hero-quiet-link{order:4;}
   .hero-media-wrap{order:5; margin-top:28px;}
-  .hero-copy > .hero-proof{order:6; margin-top:28px;}
 
   .hero-media-wrap::before{top:8px; right:-14px; bottom:-16px; left:-8px; border-radius:58% 42% 48% 52% / 40% 55% 45% 60%;}
   .hero-media{min-height:0; aspect-ratio:3/4; height:auto; border-radius:var(--radius); box-shadow:var(--shadow);}
@@ -1117,7 +1097,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
      below the header" and "no max-width cap" that used to live on it move
      to .hero-inner (a real box) and its now-direct child elements. */
   .hero-light .hero-inner{padding-top:20px;}
-  .hero-copy > .eyebrow, .hero-copy > h1, .hero-copy > p.lede, .hero-copy > .hero-actions, .hero-copy > .hero-proof, .hero-copy > .hero-quiet-link{max-width:none;}
+  .hero-copy > .eyebrow, .hero-copy > h1, .hero-copy > p.lede, .hero-copy > .hero-actions, .hero-copy > .hero-quiet-link{max-width:none;}
   .hero-light .hero-copy h1{margin-bottom:14px;}
   .hero-light .hero-copy p.lede{margin-bottom:20px;}
   .hero-light .hero-actions.hero-actions-3{margin-bottom:0;}
@@ -1131,11 +1111,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .hero-actions{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:40px;}
 .hero-actions a.btn-ghost{color:#fff; border-color:rgba(255,255,255,0.28);}
 .hero-actions a.btn-ghost:hover{background:rgba(255,255,255,0.08);}
-
-.hero-proof{display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
-.hero-proof .proof-label{font-size:16px; text-transform:uppercase; letter-spacing:0.1em; color:rgba(255,255,255,0.62); font-weight:600;}
-.hero-proof .schools{display:flex; gap:10px; flex-wrap:wrap;}
-.hero-proof .schools span{font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; color:rgba(255,255,255,0.85); padding:7px 13px; border:1px solid rgba(255,255,255,0.18); border-radius:100px;}
 
 /* diagonal seam panel that carries the tap demo */
 .hero-visual{
@@ -1250,27 +1225,11 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .section-head{max-width:600px; margin:0 auto 44px; text-align:center;}
 .section-head .eyebrow{justify-content:center; margin-bottom:14px;}
 .section-head h2{margin-bottom:12px;}
-.section-tagline{font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; color:var(--lime-700); margin:8px 0 4px;}
 .section-head p{font-size:16px;}
 .section.on-tint{background:var(--ice-100);}
 /* Food-forward sections only (see --cream tokens) — warm, not the cool
    ice-50/100 used for structural/B2B sections. */
 .section.on-cream{background:var(--cream-50);}
-
-.trust-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:24px;}
-.trust-grid-4{grid-template-columns:repeat(4,minmax(0,1fr));}
-.trust-card{background:var(--white); border:1px solid var(--cream-line); border-radius:var(--radius); padding:28px 24px; text-align:center;}
-.trust-icon{width:52px; height:52px; margin:0 auto 18px; border-radius:50%; background:rgba(46,107,69,0.1); color:var(--lime-700); display:flex; align-items:center; justify-content:center;}
-.trust-icon svg{width:24px; height:24px;}
-.trust-card h3{font-size:16.5px; margin-bottom:0;}
-.trust-card p{font-size:16px; line-height:1.6; margin-top:10px;}
-@media (max-width:1180px){
-  .trust-grid, .trust-grid-4{grid-template-columns:repeat(2,minmax(0,1fr));}
-}
-@media (max-width:700px){
-  .trust-grid{grid-template-columns:minmax(0,1fr); gap:16px;}
-  .trust-grid-4{grid-template-columns:minmax(0,1fr);}
-}
 
 /* ---------- proof row (Phase 3) ----------
    A slim, divided horizontal row — the anti-card-wall alternative to a
@@ -1325,13 +1284,8 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .price-card .price-amt span{font-size:16px; font-weight:600; color:var(--muted);}
 .price-card.featured .price-amt span{color:rgba(255,255,255,0.55);}
 .price-card p{font-size:16px; margin-bottom:22px;}
-.price-card .badge-save{display:inline-block; background:var(--lime-500); color:var(--ink-900); font-size:16px; font-weight:700; padding:4px 12px; border-radius:100px; margin-bottom:14px;}
 
 /* FAQ (button + CSS grid-rows accordion — smooth height with zero JS measuring) */
-.faq-groups{max-width:720px; margin:0 auto; display:flex; flex-direction:column; gap:32px;}
-.faq-group-head{display:flex; align-items:center; gap:10px; margin-bottom:6px;}
-.faq-group-head svg{width:20px; height:20px; color:var(--lime-700); flex-shrink:0;}
-.faq-group-head h3{font-size:14px; text-transform:uppercase; letter-spacing:0.06em; color:var(--navy-800); margin:0;}
 .faq-list{margin:0;}
 .faq-item{border-bottom:1px solid var(--line);}
 .faq-summary{
@@ -1377,15 +1331,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .proof-name{font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:clamp(22px,3.4vw,38px); letter-spacing:-0.01em; color:#fff; line-height:1.1;}
 .proof-tag{font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--lime-300); flex-shrink:0;}
 
-/* A second, lightweight chance to act roughly midway down the page — a
-   parent convinced by this point shouldn't have to scroll back to the
-   hero or all the way to the closing band to book. Deliberately quiet
-   next to the full-weight hero and closing cta-band. */
-.mid-cta{background:var(--ice-100); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
-.mid-cta-row{display:flex; align-items:center; justify-content:center; gap:24px; flex-wrap:wrap; padding-top:28px; padding-bottom:28px; text-align:center;}
-.mid-cta-row p{margin:0; font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; color:var(--navy-950);}
-@media (max-width:560px){.mid-cta-row{flex-direction:column; gap:14px; padding:24px 0;}}
-
 /* final CTA with diagonal seam */
 /* The closing section carries the same creative weight as the hero — it's
    the last thing a visitor feels before deciding to act (peak-end rule).
@@ -1399,22 +1344,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   content:""; position:absolute; top:0; left:0; width:100%; height:100%;
   background:linear-gradient(100deg, transparent 62%, rgba(94,157,110,0.10) 62%, rgba(94,157,110,0.10) 64%, transparent 64%);
 }
-.cta-inner{display:grid; grid-template-columns:1.2fr 1fr; gap:48px; align-items:center; position:relative; z-index:1;}
-.cta-copy h2{color:#fff; font-size:clamp(30px,4vw,46px); line-height:1.1; margin:16px 0 16px;}
-.cta-copy p{color:rgba(255,255,255,0.65); max-width:420px; margin:0 0 28px;}
-.cta-echo{display:flex; flex-direction:column; align-items:flex-start; gap:14px;}
-.cta-echo-label{font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.4);}
-.cta-echo-toast{
-  background:var(--white); border-radius:14px; padding:16px 18px; display:flex; align-items:center; gap:12px;
-  box-shadow:var(--shadow-lg); max-width:320px;
-}
-@media (min-width:768px){
-  .cta-echo-toast{max-width:400px;}
-}
-.cta-echo-icon{width:32px; height:32px; border-radius:50%; background:var(--success-bg); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
-.cta-echo-icon svg{width:15px; height:15px; color:var(--lime-700);}
-.cta-echo-title{font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; color:var(--navy-950);}
-.cta-echo-sub{font-size:16px; color:var(--muted); margin-top:2px;}
 
 .site-foot{background:var(--navy-950); color:rgba(255,255,255,0.55); padding:64px 0 0; font-size:16px; border-top:1px solid rgba(255,255,255,0.08);}
 .site-foot a{color:rgba(255,255,255,0.75); text-decoration:none; transition:color var(--dur-micro) var(--ease-standard);}
@@ -1507,15 +1436,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .what-is-pillar strong{display:block; font-family:'Montserrat',sans-serif; font-size:16px; color:var(--navy-950); margin-bottom:6px;}
 .what-is-pillar span{font-size:16px; color:var(--muted); line-height:1.6;}
 
-/* ---------- why Evo Meals (six reasons) ---------- */
-.why-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
-.why-card{background:var(--white); border:1px solid var(--line); border-radius:var(--radius-sm); padding:24px;}
-.why-icon{width:44px; height:44px; border-radius:12px; background:var(--ice-100); color:var(--lime-700); display:flex; align-items:center; justify-content:center; margin-bottom:16px;}
-.why-icon svg{width:20px; height:20px;}
-.why-card h3{font-size:16px; margin-bottom:8px;}
-.why-card p{font-size:16px; line-height:1.65; color:var(--navy-800);}
-
-.steps-5{grid-template-columns:repeat(5,1fr);}
 .steps-6{grid-template-columns:repeat(6,1fr);}
 
 /* ---------- teaser sections (Schools / Caterers) ---------- */
@@ -1527,10 +1447,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .teaser-list li svg{width:18px; height:18px; color:var(--lime-700); flex-shrink:0; margin-top:1px;}
 .operate-list{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:14px; max-width:760px; margin:0 auto;}
 .operate-list li{align-items:center; font-weight:500;}
-
-.value-checklist{display:flex; flex-wrap:wrap; justify-content:center; gap:12px 28px; margin-bottom:36px;}
-.value-checklist li{display:flex; align-items:center; gap:8px; font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; color:var(--navy-950);}
-.value-checklist svg{width:18px; height:18px; color:var(--lime-700); flex-shrink:0;}
 
 /* Compact three-phase visual journey (final refinement pass) — replaces
    the previous nine-pill list with a single before/at/after strip, a
@@ -1700,18 +1616,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .flow-caption.on-dark span{color:var(--lime-300);}
 .flow-caption.on-dark .flow-caption-arrow{color:rgba(255,255,255,0.4);}
 
-/* ---------- platform features ---------- */
-/* Kept for compatibility if any other view still references it directly;
-   the current /features page (below) no longer uses .feature-roles. */
-.feature-roles{display:grid; grid-template-columns:repeat(5,1fr); gap:16px;}
-.feature-role{background:var(--white); border:1px solid var(--line); border-radius:var(--radius-sm); padding:20px 18px;}
-.feature-role-icon{width:34px; height:34px; border-radius:10px; background:var(--ice-100); color:var(--lime-700); display:flex; align-items:center; justify-content:center; margin-bottom:12px;}
-.feature-role-icon svg{width:17px; height:17px;}
-.feature-role h3{font-size:16px; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid var(--line);}
-.feature-chip-list{display:flex; flex-direction:column; gap:8px;}
-.feature-chip-list li{display:flex; align-items:center; gap:8px; font-size:16px; font-weight:600; color:var(--navy-800); line-height:1.3;}
-.feature-chip-list li svg{width:16px; height:16px; color:var(--lime-700); flex-shrink:0;}
-
 /* ---------- role rows (Phase 3) ----------
    Anti-card-wall replacement for the five identical white "role" cards:
    one continuous divided list instead of a 5-up card grid. Each row pairs
@@ -1734,15 +1638,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .allergen-banner{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:32px;}
 .allergen-banner-item{display:flex; align-items:center; gap:8px; background:var(--navy-950); color:#fff; padding:12px 20px; border-radius:100px; font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px;}
 .allergen-banner-item svg{width:15px; height:15px; color:var(--lime-300); flex-shrink:0;}
-
-.age-portion-note{display:flex; align-items:center; justify-content:center; gap:16px; max-width:680px; margin:0 auto 40px; background:var(--white); border:1px solid var(--cream-line); border-radius:var(--radius); padding:18px 24px;}
-.age-portion-icon{flex-shrink:0; width:42px; height:42px; border-radius:50%; background:rgba(46,107,69,0.1); color:var(--lime-700); display:flex; align-items:center; justify-content:center;}
-.age-portion-icon svg{width:20px; height:20px;}
-.age-portion-note strong{display:block; font-size:16px; color:var(--navy-950); margin-bottom:3px;}
-.age-portion-note span{font-size:16px; color:var(--muted); line-height:1.6;}
-@media (max-width:560px){
-  .age-portion-note{flex-direction:column; text-align:center;}
-}
 .nutrition-more{text-align:center; margin-top:28px; font-size:16px; color:var(--muted);}
 .nutrition-more a{color:var(--forest-secondary); font-weight:600;}
 
@@ -1777,14 +1672,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .store-badge span{display:flex; flex-direction:column; text-align:left; font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px;}
 .store-badge small{font-family:'Poppins',sans-serif; font-weight:400; font-size:16px; color:rgba(255,255,255,0.6);}
 
-/* ---------- testimonials ---------- */
-.testimonial-card{background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:24px;}
-.testimonial-role{display:inline-block; font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; text-transform:uppercase; letter-spacing:0.06em; color:var(--lime-700); background:#E3F2E7; border-radius:100px; padding:5px 12px; margin-bottom:14px;}
-.testimonial-card p{font-size:16px; line-height:1.65; margin-bottom:16px;}
-.testimonial-name{display:block; font-size:16px; font-weight:600; color:var(--navy-950);}
-.testimonial-pending p{color:var(--muted); font-style:italic;}
-.testimonial-pending .testimonial-name{color:var(--muted); font-style:italic; font-weight:500;}
-
 /* ---------- inner-page hero (Schools / Caterers / Parents / About) ---------- */
 .hero-inner-page{padding:64px 0 76px;}
 .hero-inner-page .hero-copy{padding:0;}
@@ -1802,17 +1689,14 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .benefit-card-icon{width:48px; height:48px; border-radius:12px; background:var(--navy-950); color:var(--lime-300); display:flex; align-items:center; justify-content:center; margin-bottom:18px;}
 .benefit-card-icon svg{width:22px; height:22px;}
 .benefit-icon-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px;}
-.benefit-icon-grid .benefit-card-wide{grid-column:span 3;}
 /* Same tablet-composition fix as .grid-3/.trust-grid: three icon cards
    were staying at three columns right down to 900px, producing the
    compressed ~300px-wide tablet tracks this refinement pass targets. */
 @media (max-width:1180px){
   .benefit-icon-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
-  .benefit-icon-grid .benefit-card-wide{grid-column:span 2;}
 }
 @media (max-width:700px){
   .benefit-icon-grid{grid-template-columns:minmax(0,1fr);}
-  .benefit-icon-grid .benefit-card-wide{grid-column:span 1;}
 }
 .benefit-card h3{font-size:16px; margin-bottom:8px;}
 .benefit-card p{font-size:16px; line-height:1.7; color:var(--navy-800);}
@@ -1831,26 +1715,16 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .hero-visual{clip-path:none; min-height:0; padding:40px 24px; margin-top:44px;}
   .hero-visual::after{clip-path:none;}
   .steps{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
-  .steps-5{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
   .steps-6{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
   .pricing-grid{grid-template-columns:minmax(0,1fr);}
   .proof-wrap{grid-template-columns:minmax(0,1fr); gap:28px;}
   .proof-names li{flex-direction:column; align-items:flex-start; gap:6px; padding:18px 0;}
-  .cta-inner{grid-template-columns:minmax(0,1fr); text-align:center;}
-  /* text-align:center only reaches inline content (the heading/body) —
-     .hero-actions is a flex row, so the button pair stayed left-aligned
-     until justify-content was set explicitly. */
-  .cta-inner .hero-actions{justify-content:center;}
-  .cta-copy p{margin-left:auto; margin-right:auto;}
-  .cta-echo{align-items:center;}
   .trustbar-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px;}
   .trustbar-item{border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:16px;}
   .trustbar-item:nth-child(-n+2){border-top:none; padding-top:0;}
-  .why-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
   .teaser-wrap, .teaser-wrap-reverse{grid-template-columns:minmax(0,1fr);}
   .operate-list{grid-template-columns:minmax(0,1fr);}
   .teaser-wrap-reverse .teaser-copy{order:0;}
-  .feature-roles{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
   .dash-preview-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
   .dash-stat-wide{grid-column:span 2;}
   .partner-form-wrap{grid-template-columns:minmax(0,1fr); gap:32px;}
@@ -1919,10 +1793,10 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    .grid-3/.benefit-icon-grid, applied to the two card grids that were
    still waiting until 520px to go full-width. */
 @media (max-width:700px){
-  .why-grid, .what-is-pillars{grid-template-columns:minmax(0,1fr);}
+  .what-is-pillars{grid-template-columns:minmax(0,1fr);}
 }
 @media (max-width:520px){
-  .steps, .steps-5, .steps-6{grid-template-columns:minmax(0,1fr);}
+  .steps, .steps-6{grid-template-columns:minmax(0,1fr);}
   .hero-actions{flex-direction:column; align-items:stretch;}
   .hero-actions .btn{width:100%;}
   /* Mobile hero priority (final refinement pass): only the primary action
