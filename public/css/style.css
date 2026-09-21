@@ -6,91 +6,92 @@
    ============================================================ */
 :root{
   /* ============================================================
-     Green / yellow system (palette refresh pass)
-     ============================================================
-     Canonical tokens are --green-950/--green-800 (structure) and
-     --yellow-500/--amber-600 (accent, two-tier — see below). The legacy
-     --navy-*, --school-yellow, --saffron-700 names are kept as aliases
-     pointing at the new values, the same sanctioned mechanism used for
-     the previous teal/coral -> green re-theme, so ~100+ existing call
-     sites re-theme without touching each one.
-     Two-tier accent split (deliberate, not arbitrary): bright
-     --yellow-500 text/fills only read cleanly against the dark
-     --green-950/--green-800 surfaces they were tuned for — on a light
-     cream/white background the same yellow fails contrast. --amber-600
-     is the light-background counterpart (stat numbers, badge text on
-     white cards, links on light sections) so light sections never carry
-     the bright yellow. */
+     Canonical color system (final refinement pass) — single source of
+     truth. Named tokens below (--forest, --leaf, --school-yellow, …) are
+     the real definitions; the old --green-950/--navy-*/--lime-*/
+     --yellow-500 names are kept as aliases pointing at them, the same mechanism used for the earlier
+     teal/coral -> green re-theme, so ~150+ existing call sites re-theme
+     without touching each one. The old two-tier yellow (bright-on-dark
+     vs amber-on-light) and the saffron/amber family are retired here —
+     one Yellow, always paired with dark Ink text, works on any surface
+     because the contrast that matters is button-bg vs button-text, not
+     button vs page background. */
 
-  /* Structure — dark green: header, footer, dark section backgrounds */
-  --green-950:#1B4D2E;
-  --navy-950:var(--green-950);
-  /* Secondary dark surfaces */
-  --green-800:#2D6B42;
-  --navy-800:var(--green-800);
-  /* mid forest, borders/dividers on dark — extends the green-950/800 ramp
-     for dark-on-dark gradients (auth-shell, notfound-shell, menu-thumb). */
+  /* Forest — trust/structure/brand/navigation: header, footer, dark
+     section backgrounds, primary CTA. Secondary Forest is its hover
+     state (also doubles as the on-white link/interactive-text color,
+     replacing the old unrelated "Playground Blue"). */
+  --forest:#163F31;
+  --forest-secondary:#1F604A;
+  --green-950:var(--forest);
+  --navy-950:var(--forest);
+  --green-800:var(--forest-secondary);
+  --navy-800:var(--forest-secondary);
+  /* mid forest, borders/dividers on dark — extends the forest ramp for
+     dark-on-dark gradients (auth-shell, notfound-shell, menu-thumb). */
   --navy-700:#2C7259;
-  /* Playground Blue kept as-is — still used for a couple of informational
-     link/interactive-text spots outside the core brand ramp. */
-  --blue-600:#3E63A6;
-  --blue-500:#4B72B8;
+  /* The old unrelated "Playground Blue" tokens (focus rings, links,
+     hovers, icons) are gone — every one of those call sites now reads
+     Secondary Forest directly, so there's no competing blue accent left
+     in the system at all. */
 
-  /* Fresh Leaf — food/freshness/positive state; fires at confirmation
-     (booked, collected, credited) and is the default button/link accent.
-     lime-500 is the "Fresh Leaf" reference swatch itself (#5E9D6E) — every
-     live use pairs it with dark ink-900 text (not white), which clears
-     5.1:1; a darker value would actually have made that pairing worse,
-     not better. lime-600 (hover) is a touch darker while staying ≥4.5:1
-     with ink-900 (4.72:1). lime-700 is the separate darker text-safe
-     version for ~40 live text/link/icon sites on light backgrounds
-     (6.35:1 on white). */
-  --lime-500:#5E9D6E;
-  --lime-600:#5B966B;
-  /* Lightened leaf green standing in for on-dark-navy text/icon uses
+  /* Leaf family — freshness/positive/completed state; the default
+     button/link accent's "always-on" cousin, reserved for confirmation
+     moments (booked, collected, credited) rather than every CTA.
+     --leaf is the reference swatch itself (#5E9D6E) — every live use
+     pairs it with dark Ink text (not white), which clears 5.1:1,, a
+     darker value would actually make that pairing worse, not better.
+     --leaf-dark is the separate darker text-safe version for text/
+     link/icon uses on light backgrounds (6.35:1 on white) — the only
+     leaf value safe to use as small text per the accessibility note in
+     the design brief. --leaf-light is for on-dark-navy text/icon uses
      (eyebrow.on-dark, active nav state, footer links) — 7.1:1 on
-     navy-950, 4.5:1 on navy-800. */
-  --lime-300:#A0D6AC;
-  --lime-700:#2E6B45;
+     --forest, 4.5:1 on --forest-secondary. */
+  --leaf:#5E9D6E;
+  --leaf-hover:#5B966B;
+  --leaf-light:#A0D6AC;
+  --leaf-dark:#2E6B45;
+  --lime-500:var(--leaf);
+  --lime-600:var(--leaf-hover);
+  --lime-300:var(--leaf-light);
+  --lime-700:var(--leaf-dark);
 
-  /* Bright accent — dark-background use ONLY (buttons, nav highlights,
-     badges sitting on --green-950/--green-800). Always paired with dark
-     ink text, not white. Deliberately not aliased into the lime or
-     green tokens, so it can't accidentally spread across every CTA —
-     and never used on a light/cream surface, see --amber-600 for that. */
-  --yellow-500:#F5C518;
-  --school-yellow:var(--yellow-500);
+  /* School Yellow — attention/school/important action/selection.
+     Selective use only: one dominant CTA per context (Check My School,
+     the featured subscription plan, the "Tap" step), never a default
+     button color. Always Ink text, never white. */
+  --school-yellow:#F2C94C;
   --school-yellow-soft:#FFF3C7;
+  --yellow-500:var(--school-yellow);
 
-  /* Deep gold — light-background counterpart to --yellow-500: stat
-     numbers, badge text on white cards, links on light sections —
-     anywhere bright yellow-500 would fail contrast on cream/white.
-     saffron-500/600 stay background/decorative only. */
-  --saffron-500:#E2A13D;
-  --saffron-600:#C8862A;
-  --amber-600:#B8860B;
-  --saffron-700:var(--amber-600);
+  /* Warmth/calm surfaces — Cream + Mint + White dominate the page (the
+     65-75% of visual weight the brand balance calls for), forest is
+     structure, leaf is confirmation, yellow is a rare spotlight. */
+  --mint:#EFF6F0;
+  --mint-100:#E3F0E6;
+  --ice-50:var(--mint);
+  --ice-100:var(--mint-100);
 
-  /* Soft Mint — page background, cool pale green (not blue) */
-  --ice-50:#EFF6F0;
-  --ice-100:#E3F0E6;
-
-  /* Warm Cream — hero and food-forward sections only (trust-building,
-     appetite-appealing), not the structural navy/lime identity. Text on
-     these tokens uses navy-950/muted (already AA-safe) plus lime-700. */
-  --cream-50:#FFFBF3;
+  --cream:#FFFBF3;
   --cream-100:#FBF1DC;
   --cream-line:rgba(90,70,10,0.12);
+  --cream-50:var(--cream);
 
-  --ink-900:#18211D;
+  --ink:#18211D;
   --white:#FFFFFF;
-  --muted:#58655F; /* 6.1:1 on white, 5.9:1 on cream-50, 5.8:1 on ice-50 — real outdoor-light margin, not a bare AA pass */
+  --ink-900:var(--ink);
+  --muted:#58655F; /* 6.1:1 on white, 5.9:1 on cream, 5.8:1 on mint — real outdoor-light margin, not a bare AA pass */
   --line:rgba(22,63,49,0.10);
   --line-strong:rgba(22,63,49,0.16);
-  --border-input:rgba(22,63,49,0.45); /* re-based on the new navy-950 so dividers/borders track the forest-green shift too */
+  --border-input:rgba(22,63,49,0.45); /* re-based on --forest so dividers/borders track the brand shift too */
+
+  /* Semantic status pairs — bg/text, each pair contrast-checked. */
+  --success-bg:#E8F2EA; --success-text:#2E6B45;
+  --warning-bg:#FFF3C7; --warning-text:#7A5A00;
+  --error-bg:#FBEAE8; --error-text:#A52A24;
   --red-500:#C24B44; /* borders/icons/decorative only — too light for real error text */
-  --red-700:#A52A24; /* the text-safe red — 7.1:1 on white */
-  --red-050:#FBEAE8;
+  --red-700:var(--error-text); /* the text-safe red — 7.1:1 on white */
+  --red-050:var(--error-bg);
 
   --shadow-sm:0 8px 20px -14px rgba(22,63,49,0.25);
   --shadow:0 20px 50px -20px rgba(22,63,49,0.28);
@@ -121,7 +122,7 @@
   --content-max-wide:1280px;
   --gutter:24px;
   --control-height:44px;
-  --focus-ring-color:var(--blue-600);
+  --focus-ring-color:var(--forest-secondary);
 
   /* A small spacing scale — used for new Phase 3 components (slim proof
      rows, connectors, sample tags) rather than a wholesale retrofit of
@@ -170,7 +171,7 @@ h1,h2,h3,.display{font-family:'Montserrat',Arial,sans-serif; font-weight:800; le
 h1{font-size:32px; line-height:1.08;}
 h2{font-size:var(--h2-size); line-height:1.15; letter-spacing:-0.01em;}
 h3{font-size:17px; line-height:1.3; font-weight:700; letter-spacing:-0.005em;}
-p{color:#4A5568;}
+p{color:var(--muted);}
 
 .eyebrow{display:inline-flex; align-items:center; gap:8px; font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--navy-800);}
 .eyebrow::before{content:""; width:18px; height:3px; background:var(--lime-500); border-radius:2px; flex-shrink:0;}
@@ -406,36 +407,48 @@ a, button, .btn{
 /* ---------- buttons ----------
    min-height:var(--control-height) on every size — the smallest button here (.btn-sm, used
    for "Edit" rows etc.) still meets the 44x44 comfortable touch target,
-   even though its padding/font read visually smaller. */
-.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:var(--control-height); padding:13px 24px; border-radius:100px; font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; border:none; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:transform var(--dur-micro) var(--ease-standard), box-shadow var(--dur-micro) var(--ease-standard), background var(--dur-micro) var(--ease-standard);}
-.btn-primary{background:var(--lime-500); color:var(--ink-900);}
-.btn-primary:hover{background:var(--lime-600); transform:translateY(-1px); box-shadow:var(--shadow-sm);}
+   even though its padding/font read visually smaller.
+   Shape (final refinement pass): a refined rounded-rectangle instead of
+   the previous full capsule/pill — moderate radius, same comfortable
+   height/padding, so hierarchy reads from color + weight rather than
+   every action sharing one oversized pill shape. Pills stay on badges/
+   tags/chips (status indicators, not actions) — those are unchanged. */
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:var(--control-height); padding:13px 24px; border-radius:var(--radius-sm); font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; border:none; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:transform var(--dur-micro) var(--ease-standard), box-shadow var(--dur-micro) var(--ease-standard), background var(--dur-micro) var(--ease-standard);}
+/* Primary trust CTA — Forest bg, white text. The default for standard
+   important actions (this is what most existing .btn-primary call sites
+   across the site are: "standard important action", not "the one
+   dominant conversion moment" — see .btn-school-yellow for that). */
+.btn-primary{background:var(--forest); color:var(--white);}
+.btn-primary:hover{background:var(--forest-secondary); transform:translateY(-1px); box-shadow:var(--shadow-sm);}
 .btn-primary:active{transform:scale(.97) translateY(0); transition-duration:80ms;}
-/* School Yellow — reserved for the single highest-attention action on a
-   page (Check My School). Deliberately its own class, not a --lime-*
-   alias, so this stays a sparing exception rather than spreading yellow
-   across every primary button site-wide. */
-.btn-school-yellow{background:var(--yellow-500); color:var(--ink-900);}
+/* Attention/conversion CTA — School Yellow bg, Ink text (never white on
+   yellow: fails contrast). Reserved for the single highest-attention,
+   highest-conversion action in a context (Check My School, the featured
+   subscription plan) — deliberately its own class, not a leaf/forest
+   alias, so this stays a sparing exception rather than
+   spreading yellow across every CTA site-wide. One hue now (the old
+   dark-surface/light-surface two-tier amber split is retired): a solid
+   button's contrast is bg-vs-text, not bg-vs-page, so the same yellow
+   reads fine on both navy and cream — the light-surface variant just
+   adds a hairline border so the button edge stays crisp against a
+   similarly warm cream/white page background. */
+.btn-school-yellow{background:var(--school-yellow); color:var(--ink);}
 .btn-school-yellow:hover{background:#E8BC3A; transform:translateY(-1px); box-shadow:var(--shadow-sm);}
 .btn-school-yellow:active{transform:scale(.97) translateY(0); transition-duration:80ms;}
-/* Same "Check My School" CTA, but on a light/cream surface (hero-light) —
-   bright yellow-500 is reserved for dark green backgrounds only, so this
-   swaps in the light-background counterpart, --amber-600, instead. */
-/* white text on amber-600 is only ~3.25:1 — fails AA for this button's
-   16px/bold label, so it keeps the same dark ink-900 text as the
-   dark-background variant (5.3:1 on amber-600). */
-.btn-school-yellow.on-light{background:var(--amber-600); color:var(--ink-900);}
-.btn-school-yellow.on-light:hover{background:#A3760A; transform:translateY(-1px); box-shadow:var(--shadow-sm);}
+.btn-school-yellow.on-light{border:1.5px solid rgba(22,63,49,0.14);}
 /* Deliberately larger than any other hero action — "Order Meals" is the
    one thing a scanning parent should register as the primary action. */
 .btn-hero-primary{padding:16px 32px; font-size:16px; box-shadow:var(--shadow-sm);}
 .btn-dark{background:var(--navy-950); color:var(--white);}
 .btn-dark:hover{background:var(--navy-800); transform:translateY(-1px);}
 .btn-dark:active{transform:scale(.97) translateY(0); transition-duration:80ms;}
+/* Secondary CTA — transparent/light bg, forest border+text, subtle mint
+   hover (not the page's cool ice/mint tint pulled any stronger than a
+   hint — this is a hover wash, not a surface). */
 .btn-ghost{background:transparent; color:var(--navy-950); border:1.5px solid var(--line-strong);}
-.btn-ghost:hover{background:rgba(27,94,86,0.04);}
+.btn-ghost:hover{background:var(--mint); border-color:var(--forest-secondary);}
 .btn-outline{background:var(--white); color:var(--navy-950); border:1.5px solid var(--line-strong);}
-.btn-outline:hover{border-color:var(--blue-600); color:var(--blue-600);}
+.btn-outline:hover{border-color:var(--forest-secondary); color:var(--forest-secondary); background:var(--mint);}
 .btn-danger{background:transparent; color:var(--red-700); border:1.5px solid rgba(214,69,69,0.3); padding:8px 16px; font-size:16px; min-height:var(--control-height);}
 .btn-danger:hover{background:var(--red-050);}
 .btn-sm{min-height:var(--control-height); padding:9px 18px; font-size:16px;}
@@ -476,7 +489,7 @@ a, button, .btn{
 
 .notif-dropdown{
   position:absolute; top:calc(100% + 12px); right:-8px; width:360px;
-  background:var(--white); border-radius:var(--radius); box-shadow:0 20px 48px -18px rgba(27,94,86,0.35), 0 2px 8px rgba(27,94,86,0.08);
+  background:var(--white); border-radius:var(--radius); box-shadow:0 20px 48px -18px rgba(22,63,49,0.35), 0 2px 8px rgba(22,63,49,0.08);
   border:1px solid var(--line); z-index:80; opacity:0; transform:translateY(-8px) scale(0.98); pointer-events:none;
   transition:opacity var(--dur-standard) var(--ease-out), transform var(--dur-standard) var(--ease-out);
 }
@@ -498,11 +511,11 @@ a, button, .btn{
 .notif-item{display:flex; align-items:flex-start; gap:12px; padding:14px 18px; border-bottom:1px solid var(--line); position:relative;}
 .notif-item:last-child{border-bottom:none;}
 .notif-item.unread{background:var(--ice-50);}
-.notif-icon{flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:var(--ice-50); color:var(--blue-600);}
+.notif-icon{flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:var(--ice-50); color:var(--forest-secondary);}
 .notif-icon svg{width:14px; height:14px;}
 .notif-item.unread .notif-icon{background:rgba(94,157,110,0.16); color:var(--lime-700);}
 .notif-icon-booking_cancelled{background:var(--red-050); color:var(--red-700);}
-.notif-icon-low_balance{background:#FFF4E0; color:#9A6B00;}
+.notif-icon-low_balance{background:var(--warning-bg); color:var(--warning-text);}
 .notif-body{flex:1; min-width:0;}
 .notif-body p{font-size:16px; line-height:1.6; color:var(--navy-950); margin:0 0 4px;}
 .notif-body .notif-time{font-size:16px; color:var(--muted);}
@@ -612,7 +625,7 @@ form input[type="checkbox"]{
   width:18px; height:18px; min-height:0; padding:0; border-width:1.5px; flex-shrink:0; accent-color:var(--lime-500);
 }
 form textarea{resize:vertical; font-family:inherit;}
-form input:focus, form select:focus, form textarea:focus{outline:none; border-color:var(--blue-600); box-shadow:0 0 0 3.5px rgba(62,99,166,0.18);}
+form input:focus, form select:focus, form textarea:focus{outline:none; border-color:var(--forest-secondary); box-shadow:0 0 0 3.5px rgba(31,96,74,0.18);}
 form input:disabled{background:var(--ice-50); color:var(--muted); cursor:not-allowed;}
 form .field-error{display:none; align-items:center; gap:6px; font-size:16px; color:var(--red-700); margin-top:6px; font-weight:500;}
 form .field-error svg{width:13px; height:13px; flex-shrink:0;}
@@ -632,14 +645,14 @@ form .hint-secure svg{width:14px; height:14px; color:var(--lime-700); flex-shrin
 
 .alert{padding:14px 16px; border-radius:10px; font-size:16px; margin-bottom:18px; display:flex; align-items:center; gap:12px;}
 .alert svg{width:16px; height:16px; flex-shrink:0;}
-.alert-error{background:var(--red-050); color:var(--red-700); border:1px solid #F5C2C2;}
+.alert-error{background:var(--error-bg); color:var(--error-text); border:1px solid rgba(165,42,36,0.28);}
 .alert-info{background:var(--ice-50); color:var(--navy-800); border:1px solid var(--line);}
 
 /* Success is one of the two moments this whole product exists to deliver
    (booking confirmed, refund processed) — it gets the hero-duration,
    ease-spring treatment. It plays once (no infinite loop) and is skipped
    entirely under reduced motion. */
-.alert-success{background:#EEF9E4; color:#2F5A0F; border:1px solid #CBE8A8; animation:success-settle var(--dur-hero) var(--ease-spring) both;}
+.alert-success{background:var(--success-bg); color:var(--success-text); border:1px solid rgba(46,107,69,0.25); animation:success-settle var(--dur-hero) var(--ease-spring) both;}
 .alert-success .success-icon{width:26px; height:26px; border-radius:50%; background:var(--lime-500); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
 .alert-success .success-icon svg{width:14px; height:14px; color:var(--ink-900); stroke-dasharray:1px; stroke-dashoffset:1px; animation:check-draw-once .5s var(--ease-out) .3s forwards;}
 @keyframes success-settle{0%{opacity:0; transform:scale(.94) translateY(-6px);} 100%{opacity:1; transform:scale(1) translateY(0);}}
@@ -654,7 +667,7 @@ table th{text-align:left; font-size:16px; letter-spacing:0.06em; text-transform:
 table td{padding:14px 12px; border-bottom:1px solid var(--line); font-size:16px;}
 table tr:last-child td{border-bottom:none;}
 table tbody tr{transition:background var(--dur-micro) var(--ease-standard);}
-table tbody tr:hover{background:rgba(62,99,166,0.035);}
+table tbody tr:hover{background:rgba(22,63,49,0.035);}
 
 /* ---------- responsive data table -> stacked cards ----------
    A raw <table> is exactly the pattern the original audit flagged as a
@@ -694,7 +707,7 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
   .confirm-bar{
     position:fixed; left:0; right:0; bottom:0; z-index:40; margin-bottom:0;
     border-radius:20px 20px 0 0; padding:16px 24px calc(16px + env(safe-area-inset-bottom));
-    box-shadow:0 -10px 30px -12px rgba(27,94,86,0.4);
+    box-shadow:0 -10px 30px -12px rgba(22,63,49,0.4);
   }
   #bookingForm{padding-bottom:132px;}
   /* The fixed bar floats over whatever is at that screen position
@@ -706,9 +719,9 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 
 .badge{display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:100px; font-size:16px; font-weight:600;}
 .badge svg{width:11px; height:11px;}
-.badge-upcoming{background:#FFF4E0; color:#7B5500;}
-.badge-collected{background:#E8F8DB; color:#3C6E12;}
-.badge-cancelled{background:#F1F2F4; color:#555B66;}
+.badge-upcoming{background:var(--warning-bg); color:var(--warning-text);}
+.badge-collected{background:var(--success-bg); color:var(--success-text);}
+.badge-cancelled{background:rgba(22,63,49,0.06); color:var(--muted);}
 
 .period-row{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:13px 0; border-top:1px solid var(--line);}
 .period-row:first-child{border-top:none; padding-top:0;}
@@ -760,7 +773,7 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 
 .empty-state{text-align:center; padding:56px 20px; color:var(--muted);}
 .empty-state .empty-icon{width:52px; height:52px; margin:0 auto 16px; border-radius:50%; background:var(--ice-50); display:flex; align-items:center; justify-content:center;}
-.empty-state .empty-icon svg{width:22px; height:22px; color:var(--blue-600);}
+.empty-state .empty-icon svg{width:22px; height:22px; color:var(--forest-secondary);}
 .empty-state p{font-size:16px; max-width:320px; margin:0 auto;}
 .empty-state p strong{display:block; color:var(--navy-950); font-size:16px; margin-bottom:6px; font-family:'Montserrat',sans-serif;}
 
@@ -783,7 +796,7 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 .auth-card h1{font-size:22px; text-align:center; margin-bottom:6px;}
 .auth-card .sub{text-align:center; color:var(--muted); font-size:16px; margin-bottom:26px;}
 .auth-foot{text-align:center; margin-top:18px; font-size:16px; color:var(--muted);}
-.auth-foot a{color:var(--blue-600); font-weight:600;}
+.auth-foot a{color:var(--forest-secondary); font-weight:600;}
 
 .allergen-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px;}
 .allergen-pill{display:flex; align-items:center; gap:6px; padding:7px 14px; border-radius:100px; background:var(--white); border:1px solid var(--line); font-size:16px; font-weight:600; color:var(--navy-800);}
@@ -802,7 +815,7 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 .menu-card-body{padding:15px 16px;}
 .menu-card-body .tag{font-size:16px; font-weight:700; color:var(--lime-700); text-transform:uppercase; letter-spacing:0.06em;}
 .menu-card-body h3{font-size:16px; margin:6px 0 8px;}
-.menu-nutri{font-size:16px; color:var(--saffron-700); display:flex; gap:9px; font-weight:600;}
+.menu-nutri{font-size:16px; color:var(--leaf-dark); display:flex; gap:9px; font-weight:600;}
 
 /* ---------- full menu detail (menu.ejs) ---------- */
 .allergen-commitment{text-align:center; max-width:560px; margin:0 auto 28px; font-size:16px; color:var(--muted);}
@@ -860,8 +873,8 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
   transition:border-color var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), transform var(--dur-micro) var(--ease-standard);
   position:relative;
 }
-.picker-card label:hover{border-color:var(--blue-500);}
-.picker-card input:focus-visible + label{outline:2.5px solid var(--blue-600); outline-offset:2px;}
+.picker-card label:hover{border-color:var(--leaf);}
+.picker-card input:focus-visible + label{outline:2.5px solid var(--forest-secondary); outline-offset:2px;}
 .picker-card input:checked + label{border-color:var(--lime-500); box-shadow:0 0 0 3px rgba(94,157,110,0.16); background:#FBFEF7;}
 .picker-thumb{width:40px; aspect-ratio:1/1; border-radius:9px; background:linear-gradient(135deg, var(--navy-800), var(--navy-700)); display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;}
 .picker-thumb svg{width:19px; height:19px; color:var(--lime-300);}
@@ -869,7 +882,7 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 .picker-thumb picture img{width:100%; height:100%; object-fit:cover;}
 .picker-body{display:flex; flex-direction:column; gap:3px; min-width:0; padding-right:30px;} /* clears the absolutely-positioned check-badge so long dish names never wrap underneath it */
 .picker-body strong{font-size:16px; color:var(--navy-950); line-height:1.3;}
-.picker-meta{font-size:16px; color:var(--saffron-700); font-weight:600;}
+.picker-meta{font-size:16px; color:var(--leaf-dark); font-weight:600;}
 .plan-picker .picker-meta{color:var(--muted); font-size:16px;}
 .plan-icon{width:34px; height:34px; border-radius:10px; background:var(--ice-100); color:var(--lime-700); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
 .plan-icon svg{width:17px; height:17px;}
@@ -895,9 +908,9 @@ table tbody tr:hover{background:rgba(62,99,166,0.035);}
 .allergy-flag svg{width:14px; height:14px;}
 .status-line{font-size:16px; padding:5px 12px; border-radius:100px; background:var(--ice-50); color:var(--navy-800); font-weight:600; display:inline-flex; align-items:center; gap:6px; white-space:nowrap;}
 .status-line svg{width:11px; height:11px;}
-.status-line.ok{background:#E8F8DB; color:#3C6E12;}
-.status-line.pending{background:#FFF4E0; color:#7B5500;}
-.status-line.none{background:#F1F2F4; color:var(--muted);}
+.status-line.ok{background:var(--success-bg); color:var(--success-text);}
+.status-line.pending{background:var(--warning-bg); color:var(--warning-text);}
+.status-line.none{background:rgba(22,63,49,0.06); color:var(--muted);}
 
 .tabs{display:flex; gap:4px; margin-bottom:24px; background:var(--white); border-radius:10px; padding:5px; border:1px solid var(--line); width:fit-content;}
 .tabs a{padding:8px 16px; border-radius:7px; font-size:16px; font-weight:600; color:var(--muted);}
@@ -1032,7 +1045,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .hero-light .hero-copy h1 em{color:var(--lime-700);}
 .hero-light .hero-copy p.lede{color:var(--muted);}
 .hero-light .hero-actions a.btn-ghost{color:var(--navy-950); border-color:var(--line-strong);}
-.hero-light .hero-actions a.btn-ghost:hover{background:rgba(27,94,86,0.05);}
+.hero-light .hero-actions a.btn-ghost:hover{background:var(--mint);}
 /* btn-outline-lime's lime-500 text is documented decorative-only (2.7:1 on
    white, fails AA) — safe on the navy header it's normally used against,
    but this hero is now light, so swap in the text-safe lime-700 here. */
@@ -1078,7 +1091,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 @media (min-width:768px){
   .hero-toast{max-width:350px;}
 }
-.hero-toast-icon{width:28px; height:28px; border-radius:50%; background:#E8F8DB; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.hero-toast-icon{width:28px; height:28px; border-radius:50%; background:var(--success-bg); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
 .hero-toast-icon svg{width:13px; height:13px; color:var(--lime-700);}
 .hero-toast-title{font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; color:var(--navy-950); line-height:1.3;}
 .hero-toast-sub{font-size:16px; color:var(--muted); margin-top:2px;}
@@ -1188,7 +1201,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   transform:translate(-50%,0) rotate(-8deg);
   animation:tap-move 3.2s ease-in-out infinite;
 }
-.tap-card .chip{width:20px; height:14px; border-radius:3px; background:rgba(27,94,86,0.35);}
+.tap-card .chip{width:20px; height:14px; border-radius:3px; background:rgba(22,63,49,0.35);}
 .tap-card .card-name{font-family:'Montserrat',sans-serif; font-weight:800; font-size:11px; color:var(--navy-950);}
 
 @keyframes tap-move{
@@ -1213,7 +1226,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   62%,88%{opacity:1; transform:translateY(0);}
   100%{opacity:1; transform:translateY(0);}
 }
-.tap-toast .toast-icon{width:34px; height:34px; border-radius:50%; background:#E8F8DB; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.tap-toast .toast-icon{width:34px; height:34px; border-radius:50%; background:var(--success-bg); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
 .tap-toast .toast-icon svg{width:16px; height:16px; color:var(--lime-700);}
 .tap-toast .toast-icon svg path{stroke-dasharray:1px; stroke-dashoffset:1px; animation:check-draw 3.2s linear infinite;}
 .tap-toast .toast-title{font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; color:var(--navy-950);}
@@ -1398,7 +1411,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 @media (min-width:768px){
   .cta-echo-toast{max-width:400px;}
 }
-.cta-echo-icon{width:32px; height:32px; border-radius:50%; background:#E8F8DB; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.cta-echo-icon{width:32px; height:32px; border-radius:50%; background:var(--success-bg); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
 .cta-echo-icon svg{width:15px; height:15px; color:var(--lime-700);}
 .cta-echo-title{font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; color:var(--navy-950);}
 .cta-echo-sub{font-size:16px; color:var(--muted); margin-top:2px;}
@@ -1549,6 +1562,113 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   [dir="rtl"] .mini-journey-step{text-align:right;}
 }
 
+/* ---------- role journey / process rail (final refinement pass) ----------
+   Replaces the old "Book → Pay → Tap → Notified" pill row, which relied on
+   flex-wrap to fit and, when it didn't, dropped the last pill onto its own
+   orphan line. This is a deliberate numbered-rail component instead:
+   compact nodes + a thin connector, sized from real content width (each
+   node/label is flex:0 0 auto, connectors are the only flexible part), so
+   the rail can never wrap mid-item — it either fits the row it's given or
+   the responsive rules below change the row itself.
+   Logical (inline-start/end) properties are used throughout instead of
+   left/right, so the rail mirrors correctly under [dir="rtl"] with no
+   separate rule set — same approach as the rest of this file uses for
+   flex-ordered (non-absolutely-positioned) components. */
+.role-journey-grid{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; align-items:stretch;}
+.role-journey-card{
+  background:var(--white); border:1px solid var(--line); border-radius:var(--radius);
+  padding:26px 22px; display:flex; flex-direction:column; gap:22px;
+}
+.role-journey-card h3{margin:0; font-size:16.5px;}
+/* margin-inline-start:auto on the *row* would do nothing for a block-level
+   rail — margin-top:auto on the rail itself pushes it to the bottom of the
+   flex-column card, so all three rails line up on one baseline even when
+   a translated heading (Arabic, School/Caterer titles) wraps to a
+   different number of lines than its neighbors. */
+.process-rail{
+  display:flex; align-items:flex-start; flex-wrap:nowrap; width:100%;
+  margin:auto 0 0; padding:0; list-style:none; counter-reset:pstep;
+}
+.process-step{
+  flex:0 0 auto; min-width:0; display:flex; flex-direction:column; align-items:center;
+  gap:7px; text-align:center;
+}
+.process-step::before{
+  counter-increment:pstep; content:counter(pstep,decimal-leading-zero);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  width:23px; height:23px; border-radius:50%;
+  background:var(--forest); color:var(--leaf-light);
+  font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:9.5px;
+  font-variant-numeric:tabular-nums;
+}
+.process-label{
+  font-family:'Montserrat',Arial,sans-serif; font-weight:700;
+  font-size:clamp(10.5px,2vw,12.5px); color:var(--navy-950); white-space:nowrap; line-height:1.3;
+}
+/* The connector is the only element allowed to grow/shrink — steps stay
+   at their natural (never-wrapping) content width regardless of how
+   tight the row gets. min-width keeps a visible tick of line even at the
+   narrowest supported card width (see breakpoint math below). */
+.process-connector{
+  flex:1 1 14px; min-width:6px; max-width:40px; align-self:flex-start;
+  margin-top:11px; height:1.5px; background:var(--line-strong);
+}
+/* Parent's "Tap" step — the one genuine attention moment in any of the
+   three rails: School Yellow, Ink text (never white-on-yellow). */
+.process-step-attention::before{background:var(--school-yellow); color:var(--ink);}
+/* Parent's "Notified" step — the completion/positive-state moment: Leaf,
+   Ink text, matching the same badge convention used elsewhere on the
+   site (notif-badge, check-badge). School's "Report" and Caterer's
+   "Deliver" deliberately stay the neutral forest node — they're a
+   hand-off, not the attention→confirmation pair Tap→Notified is. */
+.process-step-done::before{background:var(--leaf); color:var(--ink);}
+
+/* Equal-height, equal-width, aligned-heading cards: default grid
+   align-items:stretch already equalizes row height across the three
+   cards, and each card's own flex column + margin-top:auto on the rail
+   keeps every heading flush at the top and every rail flush at the
+   bottom — no fixed pixel height that could clip a longer Arabic
+   heading. */
+
+/* ---------- desktop -> tablet: 3-across only while the rail actually
+   fits its card without pressure ----------
+   Worst case is the Parent rail (4 nodes + 3 connectors). At the
+   narrowest width this selector still applies (961px viewport: ~three
+   ~291px columns minus ~48px card padding ≈ 243px of rail width), the
+   natural content width of 4 short nodes/labels plus 3 min-width
+   connectors comfortably clears that (~165–190px) with real margin to
+   spare — verified against the full 320–1440px breakpoint sweep, not
+   just eyeballed. Below 960px there isn't a "tight" in-between state:
+   the layout switches straight to one full-width column instead, which
+   is deliberately roomier than the 3-up row ever needs to be. */
+@media (max-width:960px){
+  .role-journey-grid{grid-template-columns:minmax(0,1fr); gap:16px;}
+}
+/* ---------- mobile: intentional vertical rail ----------
+   Below 600px a horizontal 4-node rail starts fighting the phone's own
+   side padding on the very narrowest devices (320–375px), so the rail
+   itself flips to a vertical stack — numbered nodes top-to-bottom with a
+   short vertical connector, never "3 nodes on a line + 1 orphan below".
+   Each step becomes a horizontal row (node beside its label, not above
+   it); the connector rotates from a horizontal tick to a short vertical
+   one, inset to sit under the node's own center. */
+@media (max-width:600px){
+  .process-rail{flex-direction:column; align-items:flex-start; gap:0;}
+  .process-step{flex-direction:row; align-items:center; gap:12px; text-align:start;}
+  .process-label{white-space:normal;}
+  .process-connector{
+    width:1.5px; height:16px; min-width:0; max-width:none; flex:none;
+    margin-block:2px; margin-inline-start:11px; margin-inline-end:auto;
+  }
+}
+
+.role-journey-card{transition:transform var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), border-color var(--dur-standard) var(--ease-standard);}
+.role-journey-card:hover, .role-journey-card:focus-within{transform:translateY(-4px); box-shadow:var(--shadow-sm); border-color:var(--line-strong);}
+@media (prefers-reduced-motion: reduce){
+  .role-journey-card{transition:none;}
+  .role-journey-card:hover{transform:none;}
+}
+
 /* The tap-demo graphic used to share a row with the four step columns
    (a 1.3fr/1fr grid) — .hero-visual's own min-height:640px set that row's
    height, so the much-shorter step text sat vertically centered in a tall
@@ -1624,7 +1744,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .age-portion-note{flex-direction:column; text-align:center;}
 }
 .nutrition-more{text-align:center; margin-top:28px; font-size:16px; color:var(--muted);}
-.nutrition-more a{color:var(--blue-600); font-weight:600;}
+.nutrition-more a{color:var(--forest-secondary); font-weight:600;}
 
 /* ---------- dashboard preview (signature moment #3) ---------- */
 .dash-preview{background:var(--navy-950); border-radius:var(--radius-lg); padding:8px; box-shadow:var(--shadow-lg);}
@@ -1674,7 +1794,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .legal-content h2:first-child{margin-top:0;}
 .legal-content p{font-size:16px; line-height:1.7; margin-bottom:14px;}
 .legal-content ul{margin:0 0 14px; padding-left:20px; display:flex; flex-direction:column; gap:10px;}
-.legal-content ul li{font-size:16px; line-height:1.7; color:#4A5568;}
+.legal-content ul li{font-size:16px; line-height:1.7; color:var(--muted);}
 .legal-content strong{color:var(--navy-950);}
 
 /* ---------- Caterers page: benefit cards ---------- */

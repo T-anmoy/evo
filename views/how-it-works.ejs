@@ -30,24 +30,38 @@
       <span class="eyebrow"><%= t('howItWorks.roleFlows.eyebrow') %></span>
       <h2><%= t('howItWorks.roleFlows.heading') %></h2>
     </div>
-    <div class="grid-3">
-      <div class="benefit-card" data-reveal data-reveal-group="roleflows">
+    <div class="role-journey-grid">
+      <div class="role-journey-card" data-reveal data-reveal-group="roleflows">
         <h3><%= t('howItWorks.roleFlows.parentTitle') %></h3>
-        <p class="app-flow" style="justify-content:flex-start; margin:0;">
-          <span><%= t('howItWorks.roleFlows.parentStep1') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('howItWorks.roleFlows.parentStep2') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('howItWorks.roleFlows.parentStep3') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('howItWorks.roleFlows.parentStep4') %></span>
-        </p>
+        <div class="process-rail">
+          <div class="process-step"><span class="process-label"><%= t('howItWorks.roleFlows.parentStep1') %></span></div>
+          <div class="process-connector" aria-hidden="true"></div>
+          <div class="process-step"><span class="process-label"><%= t('howItWorks.roleFlows.parentStep2') %></span></div>
+          <div class="process-connector" aria-hidden="true"></div>
+          <div class="process-step process-step-attention"><span class="process-label"><%= t('howItWorks.roleFlows.parentStep3') %></span></div>
+          <div class="process-connector" aria-hidden="true"></div>
+          <div class="process-step process-step-done"><span class="process-label"><%= t('howItWorks.roleFlows.parentStep4') %></span></div>
+        </div>
       </div>
-      <div class="benefit-card" data-reveal data-reveal-group="roleflows">
+      <div class="role-journey-card" data-reveal data-reveal-group="roleflows">
         <h3><%= t('howItWorks.roleFlows.schoolTitle') %></h3>
-        <p class="app-flow" style="justify-content:flex-start; margin:0;">
-          <span><%= t('howItWorks.roleFlows.schoolStep1') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('howItWorks.roleFlows.schoolStep2') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('howItWorks.roleFlows.schoolStep3') %></span>
-        </p>
+        <div class="process-rail">
+          <div class="process-step"><span class="process-label"><%= t('howItWorks.roleFlows.schoolStep1') %></span></div>
+          <div class="process-connector" aria-hidden="true"></div>
+          <div class="process-step"><span class="process-label"><%= t('howItWorks.roleFlows.schoolStep2') %></span></div>
+          <div class="process-connector" aria-hidden="true"></div>
+          <div class="process-step"><span class="process-label"><%= t('howItWorks.roleFlows.schoolStep3') %></span></div>
+        </div>
       </div>
-      <div class="benefit-card" data-reveal data-reveal-group="roleflows">
+      <div class="role-journey-card" data-reveal data-reveal-group="roleflows">
         <h3><%= t('howItWorks.roleFlows.catererTitle') %></h3>
-        <p class="app-flow" style="justify-content:flex-start; margin:0;">
-          <span><%= t('howItWorks.roleFlows.catererStep1') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('howItWorks.roleFlows.catererStep2') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('howItWorks.roleFlows.catererStep3') %></span>
-        </p>
+        <div class="process-rail">
+          <div class="process-step"><span class="process-label"><%= t('howItWorks.roleFlows.catererStep1') %></span></div>
+          <div class="process-connector" aria-hidden="true"></div>
+          <div class="process-step"><span class="process-label"><%= t('howItWorks.roleFlows.catererStep2') %></span></div>
+          <div class="process-connector" aria-hidden="true"></div>
+          <div class="process-step"><span class="process-label"><%= t('howItWorks.roleFlows.catererStep3') %></span></div>
+        </div>
       </div>
     </div>
   </div>
