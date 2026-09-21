@@ -74,6 +74,14 @@ const SESSION_LOCALE_PATH_PREFIXES = [
   '/dashboard', '/students', '/booking', '/menu', '/history', '/profile',
   '/staff', '/notifications', '/school-admin'
 ];
+// Pages with a real, translated /ar/... counterpart — used both by the
+// locale middleware below (to decide whether a canonical/hreflang alt-locale
+// link is even meaningful for the current path) and by /sitemap.xml further
+// down. Kept as a single list so the two can never drift out of sync: a
+// crawler must never be pointed at an hreflang alternate that 404s (e.g.
+// /ar/privacy, which doesn't exist), and a page-with-no-Arabic-route must
+// never claim to have a canonical link to a language variant it doesn't have.
+const BILINGUAL_PAGES = ['/', '/schools', '/parents', '/how-it-works', '/features', '/login', '/register', '/forgot-password', '/caterers', '/about', '/contact'];
 
 app.use((req, res, next) => {
   const p = req.path;
@@ -103,8 +111,8 @@ app.use((req, res, next) => {
   const qs = qsIndex === -1 ? '' : req.originalUrl.slice(qsIndex);
   if (isArabicUrl) {
     const rest = p === AR_PREFIX ? '/' : p.slice(AR_PREFIX.length);
-    res.locals.altLocalePath = rest + qs;
-  } else if (!isSessionLocaleRoute) {
+    res.locals.altLocalePath = BILINGUAL_PAGES.includes(rest) ? rest + qs : null;
+  } else if (!isSessionLocaleRoute && BILINGUAL_PAGES.includes(p)) {
     res.locals.altLocalePath = (p === '/' ? AR_PREFIX : AR_PREFIX + p) + qs;
   } else {
     res.locals.altLocalePath = null;
@@ -370,11 +378,10 @@ app.post(['/contact', '/ar/contact'], (req, res) => {
   res.redirect((req.path.startsWith('/ar') ? '/ar/contact' : '/contact') + '?success=1');
 });
 
-// Pages with a real, translated /ar/... counterpart. /privacy and /terms
-// have no Arabic route registered at all (see above), so they get exactly
-// one <url> entry and no hreflang alternates — no fake bilingual claim to
-// a crawler for a page that isn't actually translated.
-const BILINGUAL_PAGES = ['/', '/schools', '/parents', '/how-it-works', '/features', '/login', '/register', '/forgot-password', '/caterers', '/about', '/contact'];
+// /privacy and /terms have no Arabic route registered at all (see
+// BILINGUAL_PAGES above), so they get exactly one <url> entry and no
+// hreflang alternates — no fake bilingual claim to a crawler for a page
+// that isn't actually translated.
 const ENGLISH_ONLY_PAGES = ['/privacy', '/terms'];
 
 app.get('/sitemap.xml', (req, res) => {

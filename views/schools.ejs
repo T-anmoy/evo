@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
 <head>
-<%- include('partials/head', { title: t('meta.schools.title') }) %>
-<meta name="description" content="<%= t('meta.schools.description') %>">
+<%- include('partials/head', { title: t('meta.schools.title'), description: t('meta.schools.description') }) %>
 </head>
 <body>
 

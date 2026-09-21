@@ -8,8 +8,7 @@ const SHOW_TRUST_STATS = false;
 <!DOCTYPE html>
 <html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
 <head>
-<%- include('partials/head', { title: t('meta.home.title') }) %>
-<meta name="description" content="<%= t('meta.home.description') %>">
+<%- include('partials/head', { title: t('meta.home.title'), description: t('meta.home.description') }) %>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

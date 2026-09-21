@@ -113,6 +113,20 @@ this demo.
   edit form — the raw value is never sent to the browser for an existing
   student, matching the read-only pattern already used on `/profile`.
 
+## Localization
+
+The public marketing pages (`/`, `/parents`, `/schools`, `/caterers`, `/how-it-works`,
+`/features`, `/about`, `/contact`, `/login`, `/register`, `/forgot-password`) and the
+entire authenticated parent app plus the school-admin area are available in both
+English and Arabic, with real RTL layout (not a mirrored screenshot) — see
+`lib/i18n.js` and `locales/{en,ar}.json`. Public pages switch via a `/ar/...` URL
+prefix; the authenticated app switches via a session preference
+(`GET /locale/:lang`), since those routes have no per-language URL. `/privacy` and
+`/terms` remain English-only, intentionally — see
+`docs/evo-implementation/PHASE-04-LOCALIZATION-RESPONSIVE.md` for why (no invented
+legal Arabic without a professional/legal review) and for the full localization
+architecture and scope notes.
+
 ## Resetting the demo data
 
 If the data gets messy after a demo session, stop the server, delete the
@@ -123,4 +137,3 @@ automatically.
 rm evo360.db evo360.db-wal evo360.db-shm
 npm start
 ```
-# evo

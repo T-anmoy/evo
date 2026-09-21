@@ -6,9 +6,9 @@
     "schools": { "title": "For Schools — Evo Meals School Meal Management Platform", "description": "Evo Meals partners with schools to run their school meal program in Kuwait digitally — automated subscriptions and orders, student-level meal accuracy, real-time dashboards, and a revenue-sharing partnership model." },
     "howItWorks": { "title": "How It Works — Evo Meals", "description": "How a meal moves through Evo Meals — from a school's program, through a parent's subscription, to a student's tap-to-collect at the counter." },
     "features": { "title": "Features — Evo Meals", "description": "Everything live in the Evo Meals platform today, organized by who uses it — parents, schools, caterers, students, and administrators." },
-    "login": { "title": "Log in — Evo Meals" },
-    "register": { "title": "Sign up — Evo Meals" },
-    "forgotPassword": { "title": "Forgot password — Evo Meals" },
+    "login": { "title": "Log in — Evo Meals", "description": "Log in to your Evo Meals parent account to book meals, manage your children's subscriptions, and see the moment they've collected lunch." },
+    "register": { "title": "Sign up — Evo Meals", "description": "Create your Evo Meals parent account — book school meals, manage subscriptions for multiple children, and get notified the moment lunch is collected." },
+    "forgotPassword": { "title": "Forgot password — Evo Meals", "description": "Reset the password for your Evo Meals parent account." },
     "dashboard": { "title": "Dashboard — Evo Meals" },
     "menu": { "title": "Menu — Evo Meals" },
     "booking": { "title": "Book a Meal — Evo Meals" },
@@ -536,7 +536,7 @@
   "menu": {
     "eyebrow": "This week's menu",
     "heading": "Real meals, real nutrition",
-    "intro": "Every dish shows full nutrition info — this fixes a content gap flagged in the earlier system, where menu tabs existed but were never populated.",
+    "intro": "Every dish here shows full nutrition information, so you always know what's in the meal before you book it.",
     "allergenBanner": "Allergen information available per dish",
     "commitment1": "Special dietary claims — nut-free, shellfish-free, sesame-free, soy-free, egg-free, gluten-free, lactose-free — apply to specific meal preparations, not a blanket guarantee across every dish, and aren't independently verified by Evo Meals. Check each dish's own detail before booking if your child has a specific allergy.",
     "commitment2": "Portions and protein content shown are the base recipe — each student's actual serving is matched to their registered grade when you book.",
@@ -702,7 +702,7 @@
   "students": {
     "eyebrow": "Manage children",
     "heading": "Registered students",
-    "intro": "Civil ID numbers are masked here by default — this fixes an exposure issue found in the earlier version of this system.",
+    "intro": "Civil ID numbers are masked here by default, and everywhere else they're shown.",
     "addTitle": "Add a student",
     "editTitle": "Edit student",
     "labelName": "Full name",
@@ -736,7 +736,7 @@
   "history": {
     "eyebrow": "Order history",
     "heading": "Bookings & meal history",
-    "intro": "Every booking is listed here — with a real cancellation option, fixing a policy gap flagged in the earlier system.",
+    "intro": "Every booking is listed here, with a one-tap cancellation option if your plans change.",
     "emptyTitle": "No bookings yet",
     "emptyBody": "Once you book a meal, it'll show up here — with a one-tap cancel and refund if plans change.",
     "emptyCta": "Book your first meal",
@@ -763,7 +763,7 @@
   "staff": {
     "eyebrow": "Staff meal booking",
     "heading": "Book your own meal",
-    "intro": "The live system's App Store screenshots showed a separate Staff section alongside Student — this page is that section, built out properly.",
+    "intro": "Book your own staff meal here, separate from your children's student bookings.",
     "labelMeal": "Meal",
     "labelDate": "Date",
     "priceLabel": "Staff meal price",

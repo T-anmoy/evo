@@ -1,13 +1,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title><%= typeof title !== 'undefined' ? title : 'Evo Meals' %></title>
+<% if (typeof description !== 'undefined' && description) { %>
+<meta name="description" content="<%= description %>">
+<% } %>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%230B1526'/%3E%3Cpath d='M9 14a9 9 0 0 1 14 0M12.2 17.4a5 5 0 0 1 7.6 0' stroke='%238ED13E' stroke-width='2.3' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='22' r='1.7' fill='%238ED13E'/%3E%3C/svg%3E">
+<% if (typeof origin !== 'undefined' && typeof currentPath !== 'undefined') {
+     const ogUrl = (origin + currentPath).split('?')[0];
+     const ogTitle = typeof title !== 'undefined' ? title : 'Evo Meals';
+%>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Evo Meals">
+<meta property="og:title" content="<%= ogTitle %>">
+<% if (typeof description !== 'undefined' && description) { %><meta property="og:description" content="<%= description %>"><% } %>
+<meta property="og:url" content="<%= ogUrl %>">
+<meta property="og:locale" content="<%= locale === 'ar' ? 'ar_KW' : 'en_US' %>">
+<meta property="og:image" content="<%= origin %>/images/hero-desktop.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="<%= ogTitle %>">
+<% if (typeof description !== 'undefined' && description) { %><meta name="twitter:description" content="<%= description %>"><% } %>
+<% } %>
+<% if (typeof origin !== 'undefined' && typeof currentPath !== 'undefined') { %>
+<link rel="canonical" href="<%= (origin + currentPath).split('?')[0] %>">
+<% } %>
 <% if (typeof altLocalePath !== 'undefined' && altLocalePath && typeof origin !== 'undefined') {
      const enHref = locale === 'ar' ? origin + altLocalePath : origin + currentPath;
      const arHref = locale === 'ar' ? origin + currentPath : origin + (altLocalePath.startsWith('/ar') ? altLocalePath : '/ar' + (altLocalePath === '/' ? '' : altLocalePath));
-     const selfHref = origin + currentPath;
 %>
-<link rel="canonical" href="<%= selfHref.split('?')[0] %>">
 <link rel="alternate" hreflang="en" href="<%= enHref.split('?')[0] %>">
 <link rel="alternate" hreflang="ar" href="<%= arHref.split('?')[0] %>">
 <link rel="alternate" hreflang="x-default" href="<%= enHref.split('?')[0] %>">

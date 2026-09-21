@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
 <head>
-<%- include('partials/head', { title: t('meta.register.title') }) %>
+<%- include('partials/head', { title: t('meta.register.title'), description: t('meta.register.description') }) %>
 </head>
 <body>
   <main class="auth-shell">
