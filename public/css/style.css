@@ -415,8 +415,9 @@ a, button, .btn{
 .btn-school-yellow:hover{background:#E8BC3A; transform:translateY(-1px); box-shadow:var(--shadow-sm);}
 .btn-school-yellow:active{transform:scale(.97) translateY(0); transition-duration:80ms;}
 .btn-school-yellow.on-light{border:1.5px solid rgba(22,63,49,0.14);}
-/* Deliberately larger than any other hero action — "Order Meals" is the
-   one thing a scanning parent should register as the primary action. */
+/* Deliberately larger than any other hero action — Register is the one
+   thing a scanning parent should register as the strongest conversion
+   action, ahead of Log in and Check Your School. */
 .btn-hero-primary{padding:16px 32px; font-size:16px; box-shadow:var(--shadow-sm);}
 /* Secondary CTA — one quiet outlined treatment, everywhere. Transparent
    bg (not a white box) so it reads correctly whether it sits on a plain
@@ -992,15 +993,29 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 /* mobile marketing nav — own breakpoint from the app shell's, since 8
    nav items + 3 actions need real room before they collapse cleanly */
 .site-links-mobile{display:none;}
-/* Drawer priority hierarchy (final refinement pass): Check My School and
-   Log in are the two actions a parent needs fastest, so they lead the
-   drawer as a two-up row, ahead of every nav link and the language
-   switch — not buried under "Contact" the way a plain link list would
-   leave them. */
+/* Drawer priority hierarchy (final refinement pass): Log in and Register
+   are the two actions a parent needs fastest, so they lead the drawer as
+   a two-up row, ahead of every nav link and the language switch — not
+   buried under "Contact" the way a plain link list would leave them.
+   Register carries the School Yellow "strongest conversion" treatment
+   (see .btn-school-yellow) since it's the priority conversion action;
+   Log in stays the quiet outline next to it. */
 .site-links-mobile-priority{display:flex; gap:10px; margin:22px 0 12px;}
 .site-links-mobile-priority .btn{flex:1 1 0; justify-content:center;}
-.site-links-mobile-secondary{margin-bottom:18px;}
-.site-links-mobile-secondary .btn{width:100%; justify-content:center;}
+/* Check My School: an important secondary action, but not the dominant
+   one — previously a solid School Yellow button here read as louder than
+   Register/Log in above it. A bordered, tinted row keeps it clearly
+   tappable (border, hover state, trailing chevron) without competing for
+   the same attention as the two real buttons. */
+.site-links-mobile-checkschool{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:13px 16px; margin-bottom:20px; border-radius:var(--radius-sm);
+  background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.14);
+  color:rgba(255,255,255,0.88); font-family:'Montserrat',Arial,sans-serif; font-weight:600; font-size:16px;
+  transition:background var(--dur-micro) var(--ease-standard), border-color var(--dur-micro) var(--ease-standard);
+}
+.site-links-mobile-checkschool:hover{background:rgba(255,255,255,0.09); border-color:rgba(255,255,255,0.22);}
+.site-links-mobile-checkschool svg{width:16px; height:16px; color:var(--leaf-light); flex-shrink:0;}
 .site-links-mobile-nav{display:flex; flex-direction:column;}
 .site-links-mobile-actions{display:flex; flex-direction:column; gap:10px; margin-top:20px;}
 .site-links-mobile-actions .btn{width:100%; justify-content:center;}
@@ -1453,17 +1468,24 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .site-foot-bottom{flex-direction:column; align-items:flex-start; gap:10px;}
 }
 
-/* Fluid two-button hero row (Check My School / Log in): each button gets
-   an equal flex-basis, so the pair sits inline whenever there's room for
-   both at a comfortable width, and — with no breakpoint at all — wraps to
-   one full-width button per row exactly when it no longer fits, instead
-   of only the first button going full-width and stranding the second as
-   a small orphaned control next to empty space. */
-.hero-actions-3{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:32px;}
-.hero-actions-3 .btn{flex:1 1 180px;}
-/* Third hero action, downgraded from a button to a quiet inline link
+/* Three-action hero row (Log in / Register / Check Your School), ordered
+   by priority. Below 768px there's rarely room for three natural-width
+   buttons side by side without an uneven wrap (two up top, one stranded
+   below), so it stacks full-width instead — a deliberate breakpoint
+   switch rather than relying on flex-wrap, which is what produces that
+   orphan. From 768px up (including the squeezed ~768-1199px band, where
+   the hero grid is still two columns) the row has enough width for all
+   three at their natural size, so it goes inline. */
+.hero-actions-3{display:flex; flex-direction:column; align-items:stretch; gap:12px; margin-bottom:32px;}
+.hero-actions-3 .btn{width:100%;}
+@media (min-width:768px){
+  .hero-actions-3{flex-direction:row; align-items:center; flex-wrap:wrap; gap:14px;}
+  .hero-actions-3 .btn{width:auto;}
+}
+/* Fourth hero action, downgraded from a button to a quiet inline link
    (final refinement pass) — "See how it works" doesn't need equal visual
-   weight with Check My School / Log in, it just needs to be reachable. */
+   weight with Log in / Register / Check Your School, it just needs to be
+   reachable. */
 .hero-quiet-link{
   display:inline-flex; align-items:center; gap:6px; color:rgba(255,255,255,0.72);
   font-weight:600; font-size:16px; text-decoration:underline; text-underline-offset:3px;
@@ -1882,11 +1904,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .steps, .steps-6{grid-template-columns:minmax(0,1fr);}
   .hero-actions{flex-direction:column; align-items:stretch;}
   .hero-actions .btn{width:100%;}
-  /* .hero-actions-3 (Check My School / Log in) opts back out of the
-     column stack above — its own fluid flex-basis rule (see base rule)
-     already wraps each button to full width exactly when it stops
-     fitting inline, at any width, not just below this breakpoint. */
-  .hero-actions-3{flex-direction:row; align-items:stretch;}
   h1{font-size:26px;}
   .page-head h1{font-size:25px;}
   .trustbar-grid{grid-template-columns:minmax(0,1fr);}

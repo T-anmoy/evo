@@ -37,12 +37,13 @@
       </button>
     </div>
     <div class="site-links-mobile-priority">
-      <a href="<%= p === '' ? '/' : p %>#supported-schools" class="btn btn-school-yellow"><%= t('nav.checkMySchool') %></a>
       <a href="<%= p %>/login" class="btn btn-outline"><%= t('common.login') %></a>
+      <a href="<%= p %>/register" class="btn btn-school-yellow"><%= t('common.register') %></a>
     </div>
-    <div class="site-links-mobile-secondary">
-      <a href="<%= p %>/register" class="btn btn-outline"><%= t('common.register') %></a>
-    </div>
+    <a href="<%= p === '' ? '/' : p %>#supported-schools" class="site-links-mobile-checkschool">
+      <span><%= t('nav.checkMySchool') %></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+    </a>
     <div class="site-links-mobile-nav">
       <a href="<%= p === '' ? '/' : p %>" class="<%= active === 'home' ? 'active' : '' %>" <%= active === 'home' ? 'aria-current="page"' : '' %>><%= t('nav.home') %></a>
       <a href="<%= p %>/parents" class="<%= active === 'parents' ? 'active' : '' %>" <%= active === 'parents' ? 'aria-current="page"' : '' %>><%= t('nav.forParents') %></a>
