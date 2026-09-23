@@ -1062,14 +1062,14 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 }
 .tap-reader .ripple.delay{animation-delay:180ms;}
 @keyframes tap-contact-scale{
-  0%,38%{transform:scale(1);}
-  46%{transform:scale(1.08);}
-  56%,100%{transform:scale(1);}
+  0%,30%{transform:scale(1);}
+  38%{transform:scale(1.08);}
+  50%,100%{transform:scale(1);}
 }
 @keyframes tap-ripple{
-  0%,40%{opacity:0; transform:scale(.8);}
-  46%{opacity:.55;}
-  70%{opacity:0; transform:scale(1.9);}
+  0%,30%{opacity:0; transform:scale(.8);}
+  38%{opacity:.55;}
+  60%{opacity:0; transform:scale(1.9);}
   100%{opacity:0; transform:scale(1.9);}
 }
 .tap-reader .reader-label{font-family:var(--font-heading); font-weight:700; font-size:12px; color:rgba(255,255,255,0.55); letter-spacing:0.04em;}
@@ -1085,9 +1085,10 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .tap-card .card-name{font-family:var(--font-heading); font-weight:800; font-size:11px; color:var(--forest);}
 
 @keyframes tap-move{
-  0%,18%{transform:translate(-50%,0) rotate(-8deg);}
-  40%,55%{transform:translate(-50%,46px) rotate(-2deg);}
-  75%,100%{transform:translate(-50%,0) rotate(-8deg);}
+  0%,15%{transform:translate(-50%,0) rotate(-8deg);}
+  32%{transform:translate(-50%,46px) rotate(-2deg);}
+  45%{transform:translate(-50%,10px) rotate(-4deg);}
+  60%,100%{transform:translate(-50%,0) rotate(-8deg);}
 }
 @keyframes tap-pulse{
   0%,35%{box-shadow:0 0 0 0 rgba(94,157,110,0.5);}
@@ -1100,9 +1101,10 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   display:flex; align-items:center; gap:12px; box-shadow:var(--shadow-lg);
 }
 @keyframes toast-in{
-  0%,52%{opacity:0; transform:translateY(10px);}
-  62%,88%{opacity:1; transform:translateY(0);}
-  100%{opacity:1; transform:translateY(0);}
+  0%,40%{opacity:0; transform:translateY(10px);}
+  50%,88%{opacity:1; transform:translateY(0);}
+  96%{opacity:0; transform:translateY(6px);}
+  100%{opacity:0; transform:translateY(10px);}
 }
 .tap-toast .toast-icon{width:34px; height:34px; border-radius:50%; background:var(--success-bg); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
 .tap-toast .toast-icon svg{width:16px; height:16px; color:var(--leaf-dark);}
@@ -1110,8 +1112,9 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .tap-toast .toast-title{font-family:var(--font-heading); font-weight:700; font-size:16px; color:var(--forest);}
 .tap-toast .toast-sub{font-size:16px; color:var(--muted); margin-top:2px;}
 @keyframes check-draw{
-  0%,58%{stroke-dashoffset:1px;}
-  78%,100%{stroke-dashoffset:0px;}
+  0%,42%{stroke-dashoffset:1px;}
+  55%,88%{stroke-dashoffset:0px;}
+  96%,100%{stroke-dashoffset:1px;}
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -1814,24 +1817,23 @@ th{text-align:start;}
 .action-row{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;}
 .action-row>a:not(.btn){font-weight:600;font-size:14px;min-height:44px;display:inline-flex;align-items:center;}
 .food-supporting{grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));}
-.collection-example{max-width:600px;margin-inline:auto;text-align:center;}
+.collection-example{width:100%;max-width:620px;margin-inline:auto;display:flex;flex-direction:column;align-items:center;text-align:center;}
 .collection-example>.hint{margin:20px auto 0;max-width:500px;}
-.collection-example .tap-demo{min-height:340px;margin-block:12px;}
-.collection-example .collection-replay{margin-top:16px;}
+.collection-example .tap-demo{width:min(100%,440px);margin-inline:auto;padding-top:64px;margin-bottom:12px;}
 @media(max-width:480px){.food-supporting{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}.food-card--compact .food-body{padding:12px;}.food-card--compact h3{font-size:14px;}.food-card--compact .food-nutrition{grid-template-columns:repeat(2,minmax(0,1fr));}.action-row .btn{width:100%;}}
 
-/* Collection demonstration: deliberate replay, then a persistent confirmation. */
+/* Collection demonstration: automatic continuous loop, no manual trigger. */
 .collection-example .tap-toast{opacity:1;transform:none;}
 .collection-example .toast-icon svg path{stroke-dashoffset:0;}
 .collection-example .tap-card{background:var(--school-yellow);}
 .collection-example .reader-ring{border-color:var(--school-yellow);}
 .collection-example .ripple{border-color:var(--school-yellow);}
-.collection-example .tap-demo.is-playing .tap-card{animation:tap-move 3.2s ease-in-out both;}
-.collection-example .tap-demo.is-playing .reader-ring{animation:tap-contact-scale 3.2s ease-in-out both;}
-.collection-example .tap-demo.is-playing .ripple{animation:tap-ripple 3.2s ease-out both;}
-.collection-example .tap-demo.is-playing .tap-toast{animation:toast-in 3.2s ease-in-out both;}
-.collection-example .tap-demo.is-playing .toast-icon svg path{animation:check-draw 3.2s linear both;}
-@media(prefers-reduced-motion:reduce){.collection-example .tap-demo.is-playing *{animation:none !important;}}
+.collection-example .tap-demo.is-looping .tap-card{animation:tap-move 5.2s ease-in-out infinite;}
+.collection-example .tap-demo.is-looping .reader-ring{animation:tap-contact-scale 5.2s ease-in-out infinite;}
+.collection-example .tap-demo.is-looping .ripple{animation:tap-ripple 5.2s ease-out infinite;}
+.collection-example .tap-demo.is-looping .tap-toast{animation:toast-in 5.2s ease-in-out infinite;}
+.collection-example .tap-demo.is-looping .toast-icon svg path{animation:check-draw 5.2s linear infinite;}
+@media(prefers-reduced-motion:reduce){.collection-example .tap-demo.is-looping *{animation:none !important;}}
 
 /* Home composition: content and an intact portrait each have bounded tracks. */
 .home-hero{background:var(--cream);color:var(--forest);padding-block:44px;}

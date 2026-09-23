@@ -1,6 +1,10 @@
 (function () {
   var motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
-  motionPreference.addEventListener('change', function(event) { if(event.matches) document.querySelectorAll('.tap-demo.is-playing').forEach(function(el){el.classList.remove('is-playing');}); });
+  motionPreference.addEventListener('change', function(event) {
+    document.querySelectorAll('.collection-example .tap-demo').forEach(function(el){
+      el.classList.toggle('is-looping', !event.matches);
+    });
+  });
 
   // Client-side mirror of lib/validate.js's NAME_RE — server-side stays
   // authoritative, this is only for immediate typing feedback. Built with
@@ -273,14 +277,9 @@
   }
 
   function initCollection() {
-    document.querySelectorAll('.collection-example').forEach(function(example) {
-      var demo = example.querySelector('.tap-demo');
-      var button = example.querySelector('.collection-replay');
-      button.addEventListener('click', function() {
-        demo.classList.remove('is-playing');
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        requestAnimationFrame(function(){ requestAnimationFrame(function(){ demo.classList.add('is-playing'); }); });
-      });
+    if (motionPreference.matches) return;
+    document.querySelectorAll('.collection-example .tap-demo').forEach(function(demo) {
+      demo.classList.add('is-looping');
     });
   }
 
