@@ -9,6 +9,15 @@
         "dev"
       ],
       "port": 3000
+    },
+    {
+      "name": "dev-disposable",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "DATABASE_FILE=\"${TMPDIR:-/tmp}/evo-phase3a.db\" PORT=3100 LOG_LEVEL=warn node server.js"
+      ],
+      "port": 3100
     }
   ]
 }

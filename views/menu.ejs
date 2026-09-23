@@ -14,7 +14,7 @@
   </div>
 
   <div class="food-grid">
-    <% menuItems.forEach(m => { %><%- include('partials/food-card', {m, bookable:true}) %><% }) %>
+    <% menuItems.forEach(m => { %><%- include('partials/food-card', {m, bookable:true, headingLevel:'h2'}) %><% }) %>
   </div>
   <%- include('partials/food-confidence') %>
 </main>

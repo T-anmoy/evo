@@ -197,10 +197,20 @@ app.locals.splitNotif = (message) => {
 app.locals.fmtKWD = (n) => `KWD ${Number(n).toFixed(3)}`;
 app.locals.fmtDate = (iso) => new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 app.locals.fmtTime = (iso) => new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+// Compact day/month for dense axes. Deliberately the same en-GB numerals
+// as fmtDate: a Civil ID, a KWD amount and a date all stay in one
+// readable numeric form inside an RTL page, isolated with <bdi> at the
+// call site rather than mirrored.
+app.locals.fmtDateShort = (iso) => new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
 // Takes `t` explicitly (rather than reading res.locals itself) since it's
 // called from templates, where the request's own `t` is already in scope.
 app.locals.timeAgo = (iso, t) => {
   const diffMs = Date.now() - new Date(iso).getTime();
+  // A timestamp ahead of now is not "just now", and no amount of "ago"
+  // phrasing describes it truthfully — fall back to the absolute date
+  // rather than letting motion-free text state the wrong thing. Kuwait
+  // business-day/timezone semantics remain an unresolved Phase 3B rule.
+  if (diffMs < 0) return app.locals.fmtDate(iso);
   const mins = Math.floor(diffMs / 60000);
   if (mins < 1) return t('common.justNow');
   if (mins < 60) return t('common.timeAgo', { count: mins, unit: t(mins === 1 ? 'common.minUnitOne' : 'common.minUnitOther') });
@@ -247,14 +257,31 @@ app.locals.notifMessage = (n, t, fmtKWD) => {
 // Falls back to `null` (the old generic icon) for any name that doesn't
 // exactly match, rather than guessing or mismatching a dish to the wrong
 // picture.
-const DISH_IMAGE_SLUGS = {
+// Asset identity is the menu item's stable database id, not its display
+// name: a display name is presentation, and the moment one is translated
+// or corrected the image silently disappears. The name map is retained
+// only as a fallback for a record whose id isn't in the asset map (e.g. a
+// row added outside the seed), so no existing dish image can break.
+const DISH_IMAGE_SLUGS_BY_ID = {
+  1: 'dish-arabiatta-pasta',
+  2: 'dish-balsamic-chicken-beans',
+  3: 'dish-bbq-beef-burger',
+  4: 'dish-bbq-chicken-sweet-potato',
+  5: 'dish-seasonal-fruit-cup'
+};
+const DISH_IMAGE_SLUGS_BY_NAME = {
   'Arabiatta Chicken Pasta': 'dish-arabiatta-pasta',
   'Balsamic Chicken & Beans': 'dish-balsamic-chicken-beans',
   'BBQ Beef Burger': 'dish-bbq-beef-burger',
   'BBQ Chicken & Sweet Potato': 'dish-bbq-chicken-sweet-potato',
   'Seasonal Fruit Cup': 'dish-seasonal-fruit-cup'
 };
-app.locals.dishImageSlug = (name) => DISH_IMAGE_SLUGS[name] || null;
+// Accepts a menu item (preferred) or a bare name (legacy callers).
+app.locals.dishImageSlug = (item) => {
+  if (!item) return null;
+  if (typeof item === 'string') return DISH_IMAGE_SLUGS_BY_NAME[item] || null;
+  return DISH_IMAGE_SLUGS_BY_ID[item.id] || DISH_IMAGE_SLUGS_BY_NAME[item.name] || null;
+};
 
 function requireAuth(req, res, next) {
   if (!req.session.parentId) return res.redirect(req.session.locale === 'ar' ? '/ar/login' : '/login');
@@ -675,9 +702,16 @@ app.get('/dashboard', requireAuth, (req, res) => {
     return b.startDate === todayISO;
   };
 
+  // Today's meal is the second thing a parent needs after the child's
+  // name, so the dish is resolved here rather than leaving the template
+  // with only a status word.
   const studentStatus = students.map(s => {
     const todaysBooking = bookings.find(b => b.studentId === s.id && isActiveToday(b));
-    return { student: s, booking: todaysBooking || null };
+    return {
+      student: s,
+      booking: todaysBooking || null,
+      menuItem: todaysBooking ? db.findMenuItem(todaysBooking.menuItemId) : null
+    };
   });
 
   const activeBookingCount = bookings.filter(b => b.status !== 'cancelled').length;
@@ -888,8 +922,19 @@ app.get('/booking', requireAuth, (req, res) => {
     ? Number(Object.keys(menuCounts).reduce((a, b) => (menuCounts[b] > menuCounts[a] ? b : a)))
     : null;
 
+  // Success is reached by redirect after a successful POST (see below),
+  // so the confirmation is rendered from the stored booking rather than
+  // from a POST response a refresh could replay. Ownership is re-checked
+  // here: the id in the query string proves nothing on its own.
+  const bookedRaw = req.query.booked ? db.findBookingById(Number(req.query.booked)) : null;
+  const booked = (bookedRaw && studentIds.includes(bookedRaw.studentId)) ? bookedRaw : null;
+  const bookedStudent = booked ? students.find(s => s.id === booked.studentId) : null;
+  const success = booked
+    ? res.locals.t('booking.successMsg', { name: bookedStudent.name, amount: app.locals.fmtKWD(booked.totalKWD) })
+    : null;
+
   res.render('booking', {
-    students, menuItems, plans, error: null, success: null,
+    students, menuItems, plans, error: null, success,
     parentId: parent.id, rebook,
     defaultStudentId: mostRecentStudentId, defaultMenuId: menuItems.some(m => String(m.id) === req.query.meal) ? Number(req.query.meal) : mostBookedMenuId,
     schoolCalendar: schoolCalendarForStudents(students),
@@ -935,7 +980,7 @@ app.post('/booking', requireAuth, (req, res) => {
 
   if (!Number.isFinite(total) || total <= 0) return fail('errInvalidPrice');
 
-  db.bookAndCharge({
+  const booking = db.bookAndCharge({
     studentId: student.id,
     menuItemId: Number(menuItemId),
     planType,
@@ -946,10 +991,13 @@ app.post('/booking', requireAuth, (req, res) => {
     detailType: planType === 'monthly' ? 'monthly' : 'single'
   });
 
-  res.render('booking', {
-    ...renderArgs, error: null,
-    success: t('booking.successMsg', { name: student.name, amount: app.locals.fmtKWD(total) })
-  });
+  // POST -> redirect -> GET. Rendering the confirmation straight from the
+  // POST left the booking as the page's current request, so a refresh (or
+  // a back-then-forward) re-submitted it and charged a second booking.
+  // This is not payment idempotency — a real provider integration still
+  // needs its own idempotency key — it only removes the accidental
+  // browser-level resubmission.
+  res.redirect(`/booking?booked=${booking.id}`);
 });
 
 app.get('/history', requireAuth, (req, res) => {
@@ -960,18 +1008,26 @@ app.get('/history', requireAuth, (req, res) => {
     student: students.find(s => s.id === b.studentId),
     menuItem: db.findMenuItem(b.menuItemId)
   }));
-  res.render('history', { bookings, parentId: parent.id });
+  res.render('history', {
+    bookings, parentId: parent.id,
+    cancelled: req.query.cancelled === '1',
+    cancelRejected: req.query.cancelfailed === '1'
+  });
 });
 
 app.post('/history/:id/cancel', requireAuth, (req, res) => {
   const parent = currentParent(req);
   const booking = db.findBookingById(Number(req.params.id));
   const student = booking ? db.findStudentById(booking.studentId) : null;
+  // Ownership and status are both required, unchanged. What is new is
+  // that the parent is told which of the two outcomes happened instead of
+  // landing on a silently identical page.
   if (booking && student && student.parentId === parent.id && booking.status === 'upcoming') {
     // Cancellation and refund happen in a single database transaction.
-    db.cancelAndRefund({ bookingId: booking.id, parentId: parent.id });
+    const cancelled = db.cancelAndRefund({ bookingId: booking.id, parentId: parent.id });
+    return res.redirect(cancelled ? '/history?cancelled=1' : '/history?cancelfailed=1');
   }
-  res.redirect('/history');
+  res.redirect('/history?cancelfailed=1');
 });
 
 app.get('/profile', requireAuth, (req, res) => {
@@ -1001,8 +1057,14 @@ app.post('/profile', requireAuth, (req, res) => {
 // ---------- staff section (mirrors the real app's separate Staff area) ----------
 function staffView(req, res, error = null, status = 200) {
   const parent = currentParent(req);
+  // Staff rows already reference the same authoritative menu_items rows
+  // the parent booking flow uses — resolve the meal so the record list
+  // shows what was booked, not just a date and an amount.
+  const bookings = db.getStaffBookingsByParent(parent.id).map(b => ({
+    ...b, menuItem: db.findMenuItem(b.menuItemId)
+  }));
   res.status(status).render('staff', {
-    bookings: db.getStaffBookingsByParent(parent.id), parentId: parent.id,
+    bookings, parentId: parent.id,
     success: req.query.success === '1', error, values: req.method === 'POST' ? req.body : {},
     menuItems: db.getMenuItems(), dailyRateKWD: db.getPlans().single?.rateKWD
   });

@@ -13,6 +13,13 @@
     <p><%= t('history.intro') %></p>
   </div>
 
+  <% if (typeof cancelled !== 'undefined' && cancelled) { %>
+    <div class="alert alert-success" role="status"><%- include('partials/success-icon') %><span><%= t('history.cancelledAlert') %></span></div>
+  <% } %>
+  <% if (typeof cancelRejected !== 'undefined' && cancelRejected) { %>
+    <div class="alert alert-error" role="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('history.cancelRejectedAlert') %></span></div>
+  <% } %>
+
   <div class="card">
     <% if (bookings.length === 0) { %>
       <div class="empty-state">
@@ -31,10 +38,10 @@
               <% const confirmMsg = t('history.confirmCancel', { name: b.student ? b.student.name : t('history.confirmCancelFallback'), amount: fmtKWD(b.totalKWD) }); %>
               <tr>
                 <td><%= b.student ? b.student.name : '—' %></td>
-                <td><%= b.menuItem ? b.menuItem.name : '—' %></td>
+                <td lang="en" dir="auto"><%= b.menuItem ? b.menuItem.name : '—' %></td>
                 <td><%= b.planType === 'monthly' ? t('history.planMonthly') : t('history.planDays', { days: b.days, unit: t(b.days === 1 ? 'dashboard.dayUnitOne' : 'dashboard.dayUnitOther') }) %></td>
-                <td class="data-num"><%= fmtDate(b.startDate) %></td>
-                <td class="data-num"><%= fmtKWD(b.totalKWD) %></td>
+                <td class="data-num"><bdi><%= fmtDate(b.startDate) %></bdi></td>
+                <td class="data-num"><bdi><%= fmtKWD(b.totalKWD) %></bdi></td>
                 <td>
                   <% if (b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('history.statusCollected') %> <span class="data-num"><bdi><%= b.collectedAt ? fmtTime(b.collectedAt) : '' %></bdi></span></span>
                   <% } else if (b.status === 'cancelled') { %><span class="badge badge-cancelled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg> <%= t('history.statusCancelled') %></span>
@@ -61,15 +68,15 @@
             <div class="data-card-head">
               <div>
                 <strong><%= b.student ? b.student.name : '—' %></strong>
-                <span><%= b.menuItem ? b.menuItem.name : '—' %></span>
+                <span lang="en" dir="auto"><%= b.menuItem ? b.menuItem.name : '—' %></span>
               </div>
               <% if (b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('history.statusCollected') %></span>
               <% } else if (b.status === 'cancelled') { %><span class="badge badge-cancelled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg> <%= t('history.statusCancelled') %></span>
               <% } else { %><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> <%= t('history.statusUpcoming') %></span><% } %>
             </div>
             <div class="data-card-row"><span class="k"><%= t('history.colPlan') %></span><span class="v"><%= b.planType === 'monthly' ? t('history.planMonthly') : t('history.planDays', { days: b.days, unit: t(b.days === 1 ? 'dashboard.dayUnitOne' : 'dashboard.dayUnitOther') }) %></span></div>
-            <div class="data-card-row"><span class="k"><%= t('history.colDate') %></span><span class="v data-num"><%= fmtDate(b.startDate) %></span></div>
-            <div class="data-card-row"><span class="k"><%= t('history.colTotal') %></span><span class="v data-num"><%= fmtKWD(b.totalKWD) %></span></div>
+            <div class="data-card-row"><span class="k"><%= t('history.colDate') %></span><span class="v data-num"><bdi><%= fmtDate(b.startDate) %></bdi></span></div>
+            <div class="data-card-row"><span class="k"><%= t('history.colTotal') %></span><span class="v data-num"><bdi><%= fmtKWD(b.totalKWD) %></bdi></span></div>
             <% if (b.status === 'collected' && b.collectedAt) { %>
               <div class="data-card-row"><span class="k"><%= t('history.statusCollected') %></span><span class="v data-num"><bdi><%= fmtTime(b.collectedAt) %></bdi></span></div>
             <% } %>

@@ -1,8 +1,12 @@
 <% const foodVariant = typeof variant === 'undefined' ? 'full' : variant; %>
+<% /* Heading level is the caller's call: a card under a section h2 wants
+      an h3 (the default, unchanged for every public caller), while a grid
+      sitting directly under a page h1 wants an h2. */ %>
+<% const foodHeading = typeof headingLevel === 'undefined' ? 'h3' : headingLevel; %>
 <article class="food-card food-card--<%= foodVariant %>">
   <div class="food-image"><%- include('dish-image', {m, eager: typeof eager !== 'undefined' && eager}) %></div>
   <div class="food-body">
-    <% if(foodVariant === 'featured') { %><h2 lang="en" dir="auto"><%= m.name %></h2><% } else { %><h3 lang="en" dir="auto"><%= m.name %></h3><% } %>
+    <% if(foodVariant === 'featured') { %><h2 lang="en" dir="auto"><%= m.name %></h2><% } else { %><<%= foodHeading %> lang="en" dir="auto"><%= m.name %></<%= foodHeading %>><% } %>
     <% if(foodVariant === 'compact') { %>
       <details class="food-disclosure"><summary><%= t('food.details') %></summary><%- include('food-details', {m}) %></details>
     <% } else { %><%- include('food-details', {m}) %><% } %>

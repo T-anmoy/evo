@@ -110,6 +110,35 @@
 
         <p id="calendarNote" class="hint" style="margin:-6px 0 18px;"></p>
 
+        <%
+           /* What is actually being bought, spelled out before the
+              Confirm button — child, meal, plan, date, days charged and
+              the payment state. Rendered from the selections the server
+              already knows about, so it is correct on first paint and
+              with JavaScript off; the script below keeps it in step as
+              the parent changes things. The day count and the total stay
+              deliberately unstated until dates are reviewed rather than
+              showing a placeholder number that isn't the real charge. */
+           const selStudentId = v.studentId ? Number(v.studentId) : rebookStudentId;
+           const selMenuId = v.menuItemId ? Number(v.menuItemId) : rebookMenuId;
+           const selPlan = v.planType || rebookPlan;
+           const selStudent = students.find(s => s.id === selStudentId) || students[0];
+           const selMenu = menuItems.find(m => m.id === selMenuId) || menuItems[0];
+           const selDate = v.startDate || bookingWindow().today;
+           const selDays = v.days === undefined ? 5 : v.days;
+        %>
+        <section class="booking-summary" aria-labelledby="booking-summary-heading">
+          <h2 class="dash-section-title" id="booking-summary-heading"><%= t('booking.summaryHeading') %></h2>
+          <dl class="booking-summary-list">
+            <div><dt><%= t('booking.summaryChild') %></dt><dd id="summaryChild"><%= selStudent ? selStudent.name : '—' %></dd></div>
+            <div><dt><%= t('booking.summaryMeal') %></dt><dd id="summaryMeal" lang="en" dir="auto"><%= selMenu ? selMenu.name : '—' %></dd></div>
+            <div><dt><%= t('booking.summaryPlan') %></dt><dd id="summaryPlan"><%= selPlan === 'monthly' ? t('booking.planMonthlyTitle') : t('booking.planSingleTitle') %></dd></div>
+            <div><dt><%= t('booking.summaryDate') %></dt><dd id="summaryDate" class="data-num"><bdi><%= fmtDate(selDate) %></bdi></dd></div>
+            <div><dt id="summaryDaysLabel"><%= selPlan === 'monthly' ? t('booking.summaryMonthlyDays') : t('booking.summaryDays') %></dt><dd id="summaryDays" class="data-num"><bdi><%= selPlan === 'monthly' ? t('booking.summaryDaysPending') : selDays %></bdi></dd></div>
+            <div><dt><%= t('booking.summaryPaymentLabel') %></dt><dd><%= t('booking.summaryPaymentState') %></dd></div>
+          </dl>
+        </section>
+
         <div class="confirm-bar" id="confirmBar">
           <div id="totalBox" style="display:flex; justify-content:space-between; align-items:center;">
             <span style="color:rgba(255,255,255,0.65); font-size:13px; font-weight:500;"><%= t('booking.totalDue') %></span>
@@ -135,8 +164,25 @@
     noSchoolDaysNote: <%- JSON.stringify(t('booking.noSchoolDaysNote')) %>,
     realSchoolDaysNote: <%- JSON.stringify(t('booking.realSchoolDaysNote')) %>,
     realSchoolDayUnitOne: <%- JSON.stringify(t('booking.realSchoolDayUnitOne')) %>,
-    realSchoolDayUnitOther: <%- JSON.stringify(t('booking.realSchoolDayUnitOther')) %>
+    realSchoolDayUnitOther: <%- JSON.stringify(t('booking.realSchoolDayUnitOther')) %>,
+    planSingleTitle: <%- JSON.stringify(t('booking.planSingleTitle')) %>,
+    planMonthlyTitle: <%- JSON.stringify(t('booking.planMonthlyTitle')) %>,
+    summaryDays: <%- JSON.stringify(t('booking.summaryDays')) %>,
+    summaryMonthlyDays: <%- JSON.stringify(t('booking.summaryMonthlyDays')) %>
   };
+  // Same en-GB numerals the server's fmtDate produces, so the summary
+  // doesn't switch date format the moment the script updates it.
+  function fmtDateLike(iso) {
+    var d = new Date(iso + 'T00:00:00Z');
+    if (!isFinite(d.getTime())) return iso;
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' });
+  }
+  function setSummary(id, text) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var target = el.querySelector('bdi') || el;
+    if (target.textContent !== text) target.textContent = text;
+  }
   function fmt(str, vars) {
     return str.replace(/\{(\w+)\}/g, function (m, k) { return (k in vars) ? vars[k] : m; });
   }
@@ -164,6 +210,16 @@
     var ageHint = document.getElementById('agePortionHint');
     if (!studentSelect || !daysField || !note || !confirmBtn || !startDateInput) return;
     var selected = studentSelect.options[studentSelect.selectedIndex];
+    if (selected) setSummary('summaryChild', selected.textContent.split(' — ')[0]);
+    var mealEl = document.querySelector('input[name="menuItemId"]:checked');
+    if (mealEl) {
+      var mealLabel = document.querySelector('label[for="' + mealEl.id + '"] strong');
+      if (mealLabel) setSummary('summaryMeal', mealLabel.textContent);
+    }
+    setSummary('summaryPlan', plan === 'monthly' ? T.planMonthlyTitle : T.planSingleTitle);
+    if (startDateInput.value) setSummary('summaryDate', fmtDateLike(startDateInput.value));
+    var daysLabelEl = document.getElementById('summaryDaysLabel');
+    if (daysLabelEl) daysLabelEl.textContent = plan === 'monthly' ? T.summaryMonthlyDays : T.summaryDays;
     if (ageHint && selected) {
       var klass = selected.getAttribute('data-class');
       ageHint.textContent = klass ? fmt(T.agePortionHint, { className: klass }) : '';
@@ -193,6 +249,7 @@
         var realDays = schoolDaysInRange(school, startISO, monthEndISO);
         var total = Math.round(realDays.length * DAILY_RATE * 1000) / 1000;
         setTotal('KWD ' + total.toFixed(3));
+        setSummary('summaryDays', String(realDays.length));
         if (realDays.length === 0) {
           note.textContent = fmt(T.noSchoolDaysNote, { school: school, startDate: startISO });
           confirmBtn.disabled = true;
@@ -214,10 +271,12 @@
       note.textContent = '';
       confirmBtn.disabled = false;
       var d = Math.max(1, parseInt(daysInput.value, 10) || 1);
+      setSummary('summaryDays', String(d));
       setTotal('KWD ' + (d * DAILY_RATE).toFixed(3));
     }
   }
   document.querySelectorAll('input[name="planType"]').forEach(function(el){ el.addEventListener('change', recalc); });
+  document.querySelectorAll('input[name="menuItemId"]').forEach(function(el){ el.addEventListener('change', recalc); });
   var daysInputEl = document.getElementById('daysInput');
   if (daysInputEl) daysInputEl.addEventListener('input', recalc);
   var studentSelectEl = document.getElementById('studentSelect');

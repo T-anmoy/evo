@@ -4,8 +4,10 @@
    per dish, used identically on mobile and desktop (no responsive crops
    needed here). Falls back to the generic icon if a menu item's name
    doesn't exactly match one of the five mapped dishes, rather than
-   guessing or showing the wrong dish's picture. */
-var __slug = dishImageSlug(m.name);
+   guessing or showing the wrong dish's picture. Resolved from the menu
+   item's stable record id, not its display name, so a translated or
+   corrected name can never silently drop the image. */
+var __slug = dishImageSlug(m);
 var __eager = typeof eager !== 'undefined' && eager;
 %>
 <% if (__slug) { %>

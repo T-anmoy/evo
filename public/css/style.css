@@ -414,15 +414,11 @@ a, button, .btn{
 .page-head p{color:var(--muted); font-size:16px;}
 
 .admin-page-head{max-width:none; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+/* A page-load reading of stored rows, labelled as exactly that. There is
+   no live update channel behind this screen, so there is no live
+   indicator on it either — the dot and its (already-disabled) pulse
+   keyframes are gone. */
 .live-data-tag{display:inline-flex; align-items:center; gap:7px; font-family:var(--font-heading); font-weight:700; font-size:16px; letter-spacing:0.05em; text-transform:uppercase; color:var(--leaf-dark); background:var(--ice-50); border:1px solid var(--line); border-radius:100px; padding:8px 14px; flex-shrink:0; margin-top:4px;}
-.live-dot{width:7px; height:7px; border-radius:50%; background:var(--leaf); box-shadow:0 0 0 3px rgba(94,157,110,0.25);}
-@media (prefers-reduced-motion: no-preference){
-  .live-dot{animation:none;}
-}
-@keyframes live-pulse{
-  0%, 100%{box-shadow:0 0 0 3px rgba(94,157,110,0.25);}
-  50%{box-shadow:0 0 0 6px rgba(94,157,110,0.12);}
-}
 
 .trend-chart{display:flex; align-items:flex-end; gap:8px; height:150px; padding-top:8px;}
 .trend-bar-col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; gap:6px;}
@@ -430,11 +426,32 @@ a, button, .btn{
 /* Full height always; the bar's visual growth is a transform:scaleY from
    the bottom, not a height change, so it never triggers layout. */
 .trend-bar-fill{width:100%; height:100%; background:linear-gradient(180deg, var(--leaf), var(--leaf-dark)); border-radius:6px 6px 2px 2px; transform-origin:bottom; transform:scaleY(var(--pct, 1)); transition:transform var(--dur-elevated) var(--ease-out);}
-.trend-bar-count{font-size:10.5px; font-weight:700; color:var(--forest-secondary);}
-.trend-bar-label{font-size:9.5px; color:var(--muted); white-space:nowrap;}
+.trend-bar-count{font-size:12px; font-weight:700; color:var(--forest-secondary);}
+.trend-bar-label{font-size:11px; color:var(--muted); white-space:nowrap;}
+
+/* Same fourteen rows as the bars, as text. Above the breakpoint the chart
+   carries them visually and this stays available to assistive technology
+   only; below it, where the axis labels stop fitting, the chart drops out
+   and the table is what is shown. Either way the dates and counts are
+   readable without hovering anything. */
+.trend-table-wrap{width:100%;}
+.trend-table{width:100%; border-collapse:collapse; font-size:14px;}
+.trend-table caption{text-align:start; font-size:12.5px; color:var(--muted); padding-bottom:10px;}
+.trend-table th, .trend-table td{text-align:start; padding:8px 10px; border-bottom:1px solid var(--line); font-weight:500;}
+.trend-table thead th{font-size:12.5px; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em;}
+/* Row headers are dates, not column labels — the shared table rule's
+   uppercase/letter-spacing treatment makes them harder to read, not
+   easier. */
+.trend-table tbody th{font-size:14px; color:var(--forest); text-transform:none; letter-spacing:normal; font-weight:600;}
+.trend-table tbody td{text-align:end;}
+@media (min-width:641px){
+  /* Hidden on the wrapper, not the table: a table box expands to its own
+     min-content width regardless of a 1px width, so clipping the table
+     itself leaves a 300px-wide invisible box behind. */
+  .trend-table-wrap{position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0;}
+}
 @media (max-width:640px){
-  .trend-chart{gap:4px;}
-  .trend-bar-label{display:none;}
+  .trend-chart{display:none;}
 }
 
 .card{background:var(--white); border-radius:var(--radius); padding:26px; border:1px solid var(--line); box-shadow:var(--shadow-sm);}
@@ -464,6 +481,61 @@ a, button, .btn{
 @media (max-width:700px){
   .grid-2, .grid-3, .grid-4{grid-template-columns:minmax(0,1fr);}
 }
+
+/* Students: two columns while the form is the task (first child, or an
+   edit in progress), one column afterwards — the registered children
+   first, with adding another as a disclosure underneath rather than a
+   permanent nine-field form ahead of them. */
+/* Staff is a meal booked on the parent's own account, not a separate
+   staff platform — the note says so next to the heading rather than
+   leaving the scope to be inferred from the form. */
+/* The booking summary is the last thing read before paying, so it is
+   plain rows of label/value — no card nesting, no decorative container,
+   nothing that hides the figures behind an interaction. */
+.booking-summary{margin:0 0 18px; padding:18px 0 0; border-top:1px solid var(--line);}
+.booking-summary .dash-section-title{margin-bottom:12px;}
+.booking-summary-list{display:flex; flex-direction:column; gap:0;}
+.booking-summary-list > div{display:flex; align-items:baseline; justify-content:space-between; gap:18px; padding:9px 0; border-bottom:1px solid var(--line);}
+.booking-summary-list > div:last-child{border-bottom:none;}
+.booking-summary-list dt{font-size:14px; color:var(--muted); flex-shrink:0;}
+.booking-summary-list dd{margin:0; font-size:15px; font-weight:600; color:var(--forest); text-align:end;}
+/* A label like "Remaining configured school days this month" is longer
+   than a narrow phone column, so below this width the row stacks instead
+   of forcing a horizontal scroll on the screen where the parent is about
+   to pay. */
+@media (max-width:420px){
+  .booking-summary-list > div{flex-direction:column; align-items:stretch; gap:2px;}
+  .booking-summary-list dd{text-align:start;}
+}
+
+.scope-note{margin-top:10px; font-size:14px; color:var(--muted); max-width:52ch;}
+/* Meal, date, amount and stored status: enough to identify a record
+   without opening anything. Narrow enough to stay on one row inside the
+   640px staff column. */
+.staff-records td, .staff-records th{padding-inline:8px;}
+.staff-records td:first-child{min-width:0;}
+@media (max-width:520px){
+  .staff-records th, .staff-records td{padding:10px 6px; font-size:14px;}
+}
+/* Four columns stop fitting a 320px screen. The status badge is the only
+   cell that cannot wrap, so it moves under the amount rather than pushing
+   the table wider than the page. */
+@media (max-width:400px){
+  .staff-records th, .staff-records td{padding:8px 4px; font-size:13px;}
+  .staff-records thead th:last-child{width:1%;}
+  .staff-records td:last-child .badge{padding:4px 7px; font-size:12px;}
+}
+
+.students-layout{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px; align-items:start;}
+.students-layout > *{min-width:0;}
+.students-layout--stacked{grid-template-columns:minmax(0,1fr);}
+@media (max-width:860px){
+  .students-layout{grid-template-columns:minmax(0,1fr);}
+}
+.add-student-disclosure > summary{cursor:pointer; display:flex; flex-direction:column; gap:3px; padding-block:4px; min-height:44px; justify-content:center;}
+.add-student-disclosure > summary strong{font-family:var(--font-heading); font-size:15px; color:var(--forest);}
+.add-student-disclosure > summary span{font-size:16px; color:var(--muted);}
+.add-student-disclosure[open] .add-student-form{margin-top:18px; padding-top:18px; border-top:1px solid var(--line);}
 
 .stat{background:var(--white); border-radius:var(--radius); padding:20px; border:1px solid var(--line); box-shadow:var(--shadow-sm); position:relative; overflow:hidden;}
 .stat::before{content:""; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--line);}
@@ -630,7 +702,22 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
 }
 
 .dash-card-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;}
-.dash-card-head h3{margin:0;}
+.dash-card-head h2, .dash-card-head h3{margin:0;}
+
+/* The dashboard reads top-down as the question a parent actually opens it
+   with: which child, what is booked for them today, whether it has been
+   collected — then what needs an action, then the plan paying for it.
+   These section titles carry that order, and account totals sit after it
+   as one quiet line instead of three stat cards outranking the child. */
+.dash-section-title{font-family:var(--font-heading); font-size:15px; font-weight:700; color:var(--forest); margin-bottom:16px;}
+.dash-today{margin-bottom:24px;}
+.dash-actions{margin-bottom:24px;}
+.dash-actions .dash-section-title{margin-bottom:12px;}
+.dash-account-summary{margin-top:24px; font-size:16px; color:var(--muted);}
+/* Child, then today's meal, then school/class — each on its own line so
+   the meal isn't buried in a run-on secondary string. */
+.student-meta > span{display:block;}
+.student-meta span.student-meal{color:var(--forest); font-weight:600;}
 .dash-card-head .notif-markall{color:var(--leaf-dark); background:none; border:none; font-size:16px; font-weight:600; cursor:pointer; padding:0;}
 .dash-card-head .notif-markall:hover{text-decoration:underline;}
 .dash-notif-list{display:flex; flex-direction:column; gap:2px;}

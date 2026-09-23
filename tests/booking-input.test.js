@@ -31,7 +31,7 @@ async function request(route,fields) {
  const res=await fetch(base+route,{method:fields?'POST':'GET',headers:{cookie,'content-type':'application/x-www-form-urlencoded'},body:fields?new URLSearchParams({...fields,_csrf:csrf}):undefined,redirect:'manual'});
  if(res.headers.get('set-cookie'))cookie=res.headers.get('set-cookie').split(';')[0];
  const body=await res.text(); const token=body.match(/name="_csrf" value="([^"]+)"/);if(token)csrf=token[1];
- return {status:res.status,body};
+ return {status:res.status,body,location:res.headers.get('location')};
 }
 before(async()=>{
  server=http.createServer(require('../server'));await new Promise(r=>server.listen(0,r));base=`http://127.0.0.1:${server.address().port}`;db=require('../db');
@@ -47,8 +47,49 @@ test('HTTP booking errors are usable and never write bookings',async()=>{
  }
  assert.equal(db.getBookingsForParent(1).length,count);
 });
-test('HTTP valid booking still calculates and records a booking',async()=>{
- const count=db.getBookingsForParent(1).length;assert.equal((await request('/booking',good)).status,200);assert.equal(db.getBookingsForParent(1).length,count+1);
+test('HTTP valid booking calculates, records once, and redirects to its confirmation',async()=>{
+ const count=db.getBookingsForParent(1).length;
+ const posted=await request('/booking',good);
+ // POST -> redirect -> GET: the success page is a GET of the stored
+ // booking, not the POST response a refresh would replay.
+ assert.equal(posted.status,302);
+ assert.equal(db.getBookingsForParent(1).length,count+1);
+ const newestId=Math.max(...db.getBookingsForParent(1).map(b=>b.id));
+ assert.equal(posted.location,`/booking?booked=${newestId}`);
+ const confirmation=await request(posted.location);
+ assert.equal(confirmation.status,200);
+ assert.match(confirmation.body,/role="status"/);
+ // Re-requesting the confirmation URL is what a refresh now does. It must
+ // not charge a second booking.
+ const replay=await request(posted.location);
+ assert.equal(replay.status,200);
+ assert.equal(db.getBookingsForParent(1).length,count+1);
+});
+test('a booking id this parent does not own shows no confirmation',async()=>{
+ const foreign=Math.max(...db.getBookingsForParent(1).map(b=>b.id))+9999;
+ const r=await request(`/booking?booked=${foreign}`);
+ assert.equal(r.status,200);
+ assert.doesNotMatch(r.body,/role="status"/);
+});
+test('cancellation states its outcome, and an ineligible cancel changes nothing',async()=>{
+ const target=db.getBookingsForParent(1).find(b=>b.status==='upcoming');
+ assert.ok(target,'expected an upcoming booking to cancel');
+ const cancelled=await request(`/history/${target.id}/cancel`,{});
+ assert.equal(cancelled.status,302);
+ assert.equal(cancelled.location,'/history?cancelled=1');
+ assert.equal(db.findBookingById(target.id).status,'cancelled');
+ const page=await request('/history?cancelled=1');
+ assert.match(page.body,/role="status"/);
+ // Same booking again: already cancelled, so it is refused and said so.
+ const repeat=await request(`/history/${target.id}/cancel`,{});
+ assert.equal(repeat.location,'/history?cancelfailed=1');
+ assert.equal(db.findBookingById(target.id).status,'cancelled');
+});
+test('a cancel for a booking this parent does not own is refused',async()=>{
+ const before=db.getBookingsForParent(1).map(b=>b.status).join(',');
+ const r=await request('/history/999999/cancel',{});
+ assert.equal(r.location,'/history?cancelfailed=1');
+ assert.equal(db.getBookingsForParent(1).map(b=>b.status).join(','),before);
 });
 test('Staff validates menu/date without writing invalid records',async()=>{
  const count=db.getStaffBookingsByParent(1).length;

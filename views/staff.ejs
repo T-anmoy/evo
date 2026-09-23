@@ -11,6 +11,7 @@
     <span class="eyebrow"><%= t('staff.eyebrow') %></span>
     <h1><%= t('staff.heading') %></h1>
     <p><%= t('staff.intro') %></p>
+    <p class="scope-note"><%= t('staff.scopeNote') %></p>
   </div>
 
   <% if (error) { %><div class="alert alert-error" role="alert"><%= error %></div><% } %>
@@ -21,6 +22,8 @@
       <div class="field">
         <label for="staffMeal"><%= t('staff.labelMeal') %></label>
         <select id="staffMeal" name="menuItemId" required>
+          <%/* The same menu_items rows the parent booking flow reads —
+                there is no second, hardcoded staff dish list to drift. */%>
           <% menuItems.forEach(m => { %><option value="<%= m.id %>" <%= String(m.id) === values.menuItemId ? 'selected' : '' %>><%= m.name %></option><% }) %>
         </select>
       </div>
@@ -37,17 +40,34 @@
   </div>
 
   <div class="card">
-    <h3 style="font-size:15px; margin-bottom:16px;"><%= t('staff.yourBookings') %></h3>
+    <h2 class="dash-section-title"><%= t('staff.yourBookings') %></h2>
     <% if (bookings.length === 0) { %>
       <div class="empty-state">
         <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></div>
         <p><strong><%= t('staff.emptyTitle') %></strong><%= t('staff.emptyBody') %></p>
       </div>
     <% } else { %>
-      <table>
+      <table class="staff-records">
+        <thead>
+          <tr>
+            <th scope="col"><%= t('staff.colMeal') %></th>
+            <th scope="col"><%= t('staff.colDate') %></th>
+            <th scope="col"><%= t('staff.colTotal') %></th>
+            <th scope="col"><%= t('staff.colStatus') %></th>
+          </tr>
+        </thead>
         <tbody>
           <% bookings.forEach(b => { %>
-            <tr><td class="data-num"><%= fmtDate(b.startDate) %></td><td class="data-num" style="text-align:right;"><bdi><%= fmtKWD(b.totalKWD) %></bdi></td></tr>
+            <tr>
+              <td lang="en" dir="auto"><%= b.menuItem ? b.menuItem.name : '—' %></td>
+              <td class="data-num"><bdi><%= fmtDate(b.startDate) %></bdi></td>
+              <td class="data-num"><bdi><%= fmtKWD(b.totalKWD) %></bdi></td>
+              <td>
+                <% if (b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('staff.statusCollected') %></span>
+                <% } else if (b.status === 'cancelled') { %><span class="badge badge-cancelled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg> <%= t('staff.statusCancelled') %></span>
+                <% } else { %><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> <%= t('staff.statusBooked') %></span><% } %>
+              </td>
+            </tr>
           <% }) %>
         </tbody>
       </table>
