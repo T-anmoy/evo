@@ -202,6 +202,11 @@
       // The tiny 10px notification "mark as read" dot has no room for a
       // spinner — leave it alone, its own state (disappearing) is the feedback.
       if (form.classList.contains('notif-read-form')) return;
+      // Logging out is a header control sized to the word "Log out".
+      // Swapping in a longer "Please wait…" would widen it and shove the
+      // navigation sideways for the moment before the page changes — and
+      // the page changing is the feedback here anyway.
+      if (form.classList.contains('logout-form')) return;
       form.addEventListener('submit', function (e) {
         if (e.defaultPrevented) return;
         var submitBtn = form.querySelector('button[type="submit"], button:not([type])');

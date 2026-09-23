@@ -5,7 +5,7 @@ const session = require('express-session');
 const bcrypt = require('bcryptjs');
 const path = require('path');
 const fs = require('fs');
-const { createHash } = require('crypto');
+const { createHash, randomBytes } = require('crypto');
 const helmet = require('helmet');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
@@ -26,18 +26,62 @@ if (!process.env.SESSION_SECRET) {
   throw new Error('SESSION_SECRET is not set — copy .env.example to .env and set one before starting the server.');
 }
 
-const logger = pino({ level: process.env.LOG_LEVEL || 'info' });
+// Request logging carries whatever the HTTP serializers are given. The
+// default set logs the entire header block, which means the signed
+// session cookie — a live credential — lands in plain text in every log
+// line, along with any Authorization header. Redact those, and keep only
+// the request fields that are actually useful for debugging.
+const logger = pino({
+  level: process.env.LOG_LEVEL || 'info',
+  redact: {
+    paths: [
+      'req.headers.cookie', 'req.headers.authorization',
+      'res.headers["set-cookie"]', 'req.body.password', 'req.body.confirmPassword',
+      'req.body.civilId', 'req.body.identifier'
+    ],
+    censor: '[redacted]'
+  }
+});
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// A per-request nonce for the three inline <script> blocks this app
+// actually has (the i18n bundle in head.ejs, the booking calculator, and
+// home.ejs's JSON-LD). Generated before helmet so the directive below can
+// read it.
+app.use((req, res, next) => {
+  res.locals.cspNonce = randomBytes(16).toString('base64');
+  next();
+});
 app.use(helmet({
-  // Inline styles/scripts are used in a couple of views; keep CSP from
-  // breaking the demo while still getting the rest of helmet's headers.
-  contentSecurityPolicy: false
+  // Inspected rather than assumed: every script this app loads is either
+  // same-origin or one of three inline blocks, so script-src can be
+  // locked down with nonces and no 'unsafe-inline'. Styles are a
+  // different matter — there are ~100 inline style attributes plus
+  // dynamically generated ones (the admin trend bars' --pct), so
+  // style-src still needs 'unsafe-inline'. Removing that is a real
+  // production task, not a flag flip; it is recorded as a blocker rather
+  // than pretended away.
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      baseUri: ["'self'"],
+      objectSrc: ["'none'"],
+      frameAncestors: ["'none'"],
+      formAction: ["'self'"],
+      scriptSrc: ["'self'", (req, res) => `'nonce-${res.locals.cspNonce}'`],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+      imgSrc: ["'self'", 'data:'],
+      connectSrc: ["'self'"],
+      upgradeInsecureRequests: IS_PRODUCTION ? [] : null
+    }
+  }
 }));
 app.use(compression()); // gzip text responses — real weight on a throttled mobile connection
 app.use(pinoHttp({ logger, autoLogging: { ignore: (req) => req.url === '/health' } }));
@@ -52,15 +96,29 @@ app.use(express.static(path.join(__dirname, 'public'), {
   etag: true,
   lastModified: true
 }));
+// Behind a TLS-terminating proxy, Express needs to be told before a
+// `secure` cookie will ever be sent. Only in production: switching this on
+// locally would mark cookies secure over plain HTTP and silently break
+// development sign-in.
+if (IS_PRODUCTION) app.set('trust proxy', 1);
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  // A parent checking on lunch bookings isn't a same-session, one-sitting
-  // user — 30 days keeps a returning visitor logged in without forcing a
-  // re-login on every visit, the way this kind of everyday consumer app
-  // is expected to behave.
-  cookie: { maxAge: 1000 * 60 * 60 * 24 * 30, httpOnly: true, sameSite: 'lax' }
+  // Default MemoryStore. It is deliberately left in place: choosing a
+  // persistent store is a deployment-architecture decision that has not
+  // been made, and inventing one here would imply infrastructure that
+  // does not exist. See the final verification document — a production
+  // session store is outstanding deployment work, and this process loses
+  // every session on restart and cannot be scaled to more than one
+  // instance as it stands.
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 30,
+    httpOnly: true,
+    sameSite: 'lax',
+    // Production terminates TLS; local development is plain HTTP.
+    secure: IS_PRODUCTION
+  }
 }));
 
 // ---------- localization ----------
@@ -171,6 +229,47 @@ const loginLimiter = rateLimit({
   legacyHeaders: false,
   message: (req, res) => res.locals.t('common.tooManyAttempts')
 });
+
+// Account-creation and reset endpoints are unauthenticated and write (or
+// appear to write) records, so they get their own budget. Deliberately
+// looser than the login limiter: these are not credential-guessing
+// surfaces, and a parent who mistypes a form several times must not be
+// locked out of registering. No CAPTCHA, no added friction for ordinary
+// use.
+const writeFormLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: (req, res) => res.locals.t('common.tooManyRequests')
+});
+
+// Sign-in, registration and any other privilege change must not continue
+// on the session identifier the visitor arrived with — otherwise an
+// identifier planted before sign-in stays valid afterwards (session
+// fixation). express-session's regenerate() issues a new id and drops the
+// old session, so anything worth carrying across has to be re-applied by
+// hand; here that is the display locale and nothing else.
+function startAuthenticatedSession(req, res, assign, destination) {
+  const locale = req.session.locale;
+  req.session.regenerate((regenerateErr) => {
+    if (regenerateErr) {
+      logger.error({ err: regenerateErr }, 'failed to regenerate session on authentication');
+      return res.status(500).render('500', { parentId: null });
+    }
+    if (locale) req.session.locale = locale;
+    assign(req.session);
+    // Save before redirecting so the new identifier is definitely stored
+    // before the browser follows the redirect with it.
+    req.session.save((saveErr) => {
+      if (saveErr) {
+        logger.error({ err: saveErr }, 'failed to save regenerated session');
+        return res.status(500).render('500', { parentId: null });
+      }
+      res.redirect(destination);
+    });
+  });
+}
 
 // ---------- helpers ----------
 // Version local CSS/JS by content, so returning browsers receive refinements.
@@ -327,7 +426,7 @@ app.get(['/schools', '/ar/schools'], (req, res) => {
   res.render('schools', { parentId: req.session.parentId, success: req.query.success || null, errors: null, formData: null });
 });
 
-app.post(['/schools/inquiry', '/ar/schools/inquiry'], (req, res) => {
+app.post(['/schools/inquiry', '/ar/schools/inquiry'], writeFormLimiter, (req, res) => {
   const { organizationName, contactName, contactRole, email, phone, scaleInfo, currentArrangement, message } = req.body;
   const t = res.locals.t;
   const errors = {};
@@ -362,7 +461,7 @@ app.get(['/caterers', '/ar/caterers'], (req, res) => {
   res.render('caterers', { parentId: req.session.parentId, success: req.query.success || null, errors: null, formData: null });
 });
 
-app.post(['/caterers/inquiry', '/ar/caterers/inquiry'], (req, res) => {
+app.post(['/caterers/inquiry', '/ar/caterers/inquiry'], writeFormLimiter, (req, res) => {
   const { organizationName, contactName, email, phone, scaleInfo, message } = req.body;
   const t = res.locals.t;
   const errors = {};
@@ -412,7 +511,7 @@ app.get(['/contact', '/ar/contact'], (req, res) => {
   res.render('contact', { parentId: req.session.parentId, success: req.query.success || null, error: null, errors: {}, values: null });
 });
 
-app.post(['/contact', '/ar/contact'], (req, res) => {
+app.post(['/contact', '/ar/contact'], writeFormLimiter, (req, res) => {
   const { name, email, role, message } = req.body;
   const t = res.locals.t;
   const values = { name: (name || '').trim(), email: (email || '').trim(), role: (role || '').trim(), message: (message || '').trim() };
@@ -519,18 +618,20 @@ app.post(['/login', '/ar/login'], loginLimiter, (req, res) => {
     // two was wrong would help an attacker enumerate valid Civil IDs.
     return res.render('login', { error: res.locals.t('login.errInvalid'), errors: {}, parentId: null });
   }
-  req.session.parentId = parent.id;
   // Carry the language they logged in with into the authenticated app,
   // which has no URL-based locale of its own (see the locale middleware).
-  req.session.locale = req.path.startsWith('/ar') ? 'ar' : 'en';
-  res.redirect('/dashboard');
+  const locale = req.path.startsWith('/ar') ? 'ar' : 'en';
+  startAuthenticatedSession(req, res, (session) => {
+    session.parentId = parent.id;
+    session.locale = locale;
+  }, '/dashboard');
 });
 
 app.get(['/forgot-password', '/ar/forgot-password'], (req, res) => {
   res.render('forgot-password', { submitted: false, error: null, errors: {}, identifier: '', parentId: req.session.parentId });
 });
 
-app.post(['/forgot-password', '/ar/forgot-password'], (req, res) => {
+app.post(['/forgot-password', '/ar/forgot-password'], writeFormLimiter, (req, res) => {
   const { identifier } = req.body;
   const t = res.locals.t;
   const trimmed = (identifier || '').trim();
@@ -550,7 +651,7 @@ app.get(['/register', '/ar/register'], (req, res) => {
   res.render('register', { error: null, errors: {}, parentId: req.session.parentId, values: null });
 });
 
-app.post(['/register', '/ar/register'], (req, res) => {
+app.post(['/register', '/ar/register'], writeFormLimiter, (req, res) => {
   const { name, civilId, email, phone, password, confirmPassword, agreeTerms } = req.body;
   const t = res.locals.t;
   // Re-rendered on every failure below with the non-sensitive fields the
@@ -595,12 +696,19 @@ app.post(['/register', '/ar/register'], (req, res) => {
     phone: (phone || '').trim(),
     passwordHash: bcrypt.hashSync(password, 10)
   });
-  req.session.parentId = parent.id;
-  req.session.locale = req.path.startsWith('/ar') ? 'ar' : 'en';
-  res.redirect('/dashboard');
+  const registeredLocale = req.path.startsWith('/ar') ? 'ar' : 'en';
+  startAuthenticatedSession(req, res, (session) => {
+    session.parentId = parent.id;
+    session.locale = registeredLocale;
+  }, '/dashboard');
 });
 
-app.get('/logout', (req, res) => {
+// Signing out changes authentication state, so it is a POST carrying the
+// CSRF token rather than a link any third-party page could trigger with
+// an <img> or a redirect. Both callers (the parent nav and the admin nav)
+// submit a real form, so it stays a single visible control and keeps
+// working without JavaScript.
+app.post('/logout', (req, res) => {
   const home = req.session.locale === 'ar' ? '/ar' : '/';
   req.session.destroy(() => res.redirect(home));
 });
@@ -630,11 +738,12 @@ app.post('/school-admin/login', loginLimiter, (req, res) => {
     // Not attributed to one field, same reasoning as parent login.
     return res.render('school-admin-login', { error: res.locals.t('schoolAdminLogin.errInvalid'), errors: {}, parentId: req.session.parentId });
   }
-  req.session.schoolAdminId = admin.id;
-  res.redirect('/school-admin/dashboard');
+  startAuthenticatedSession(req, res, (session) => {
+    session.schoolAdminId = admin.id;
+  }, '/school-admin/dashboard');
 });
 
-app.get('/school-admin/logout', (req, res) => {
+app.post('/school-admin/logout', (req, res) => {
   const destination = req.session.locale === 'ar' ? '/locale/ar?returnTo=%2Fschool-admin%2Flogin' : '/school-admin/login';
   req.session.destroy(() => res.redirect(destination));
 });
@@ -1084,14 +1193,39 @@ app.use((req, res) => {
   res.status(404).render('404', { parentId: req.session.parentId });
 });
 
-app.use((err, req, res, next) => {
+// Named and exported so it can be exercised directly in tests: no
+// ordinary request to this application produces an unhandled throw, and a
+// safety net that is never tested is not a safety net.
+// eslint-disable-next-line no-unused-vars -- Express identifies an error
+// handler by its four-argument signature.
+function errorHandler(err, req, res, next) {
+  const t = res.locals.t || ((key) => translate('en', key));
+
   if (err && err.code === 'EBADCSRFTOKEN') {
     logger.warn({ url: req.originalUrl }, 'rejected request with invalid/missing CSRF token');
-    const t = res.locals.t || ((key) => translate('en', key));
     return res.status(403).send(t('common.formSessionExpired'));
   }
-  next(err);
-});
+
+  // The full error — message, stack, any driver detail — goes to the log,
+  // where it is useful. It does not go to the client: Express's default
+  // handler renders the stack trace into the response outside production,
+  // which hands a visitor filesystem paths and internal error text for
+  // nothing more than malformed input.
+  logger.error({ err, url: req.originalUrl, method: req.method }, 'unhandled application error');
+
+  if (res.headersSent) return next(err);
+
+  res.status(err && err.status ? err.status : 500);
+  res.render('500', { parentId: req.session && req.session.parentId }, (renderErr, html) => {
+    // Never let the error page's own failure resurface as a stack trace.
+    if (renderErr) {
+      logger.error({ err: renderErr }, 'failed to render the error page');
+      return res.type('text/plain').send(t('serverError.heading'));
+    }
+    res.send(html);
+  });
+}
+app.use(errorHandler);
 
 if (require.main === module) {
   app.listen(PORT, () => {
@@ -1101,3 +1235,4 @@ if (require.main === module) {
 }
 
 module.exports = app;
+module.exports.errorHandler = errorHandler;

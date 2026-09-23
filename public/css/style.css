@@ -227,19 +227,7 @@ textarea:focus-visible,
    .site-foot-contact / .app-foot-contact (address + email), and the
    notification dropdown's actual message text (.notif-body, .notif-time)
    are deliberately NOT included below. */
-.site-header,
-.app-logo, .app-links, .app-links-mobile,
-.notif-bell, .notif-badge, .notif-dropdown-head, .notif-viewall,
-.profile-link, .nav-toggle,
-.btn,
-.badge, .check-badge,
-.allergen-pill, .allergen-banner-item,
-.price-tag,
-.tag,
-.store-badge,
-.site-foot-links,
-.app-foot-links,
-svg{
+.site-header, .app-logo, .app-links, .app-links-mobile, .notif-bell, .notif-badge, .notif-dropdown-head, .notif-viewall, .profile-link, .nav-toggle, .btn, .badge, .check-badge, .price-tag, .tag, .store-badge, .site-foot-links, .app-foot-links, svg{
   -webkit-user-select:none;
   -moz-user-select:none;
   user-select:none;
@@ -252,8 +240,6 @@ img{
 }
 a, button, .btn{
   touch-action:manipulation;
-}
-@media (prefers-reduced-motion: reduce){
 }
 
 /* ---------- cross-page transitions (native, no SPA rearchitecture) ---------- */
@@ -305,7 +291,7 @@ a, button, .btn{
 /* Deliberately larger than any other hero action — Register is the one
    thing a scanning parent should register as the strongest conversion
    action, ahead of Log in and Check Your School. */
-.btn-hero-primary{padding:16px 32px; font-size:16px; box-shadow:var(--shadow-sm);}
+
 /* Secondary CTA — one quiet outlined treatment, everywhere. Transparent
    bg (not a white box) so it reads correctly whether it sits on a plain
    white/cream section or a dark forest one — see the .site-header/
@@ -346,6 +332,14 @@ a, button, .btn{
 .app-user > span{color:rgba(255,255,255,0.65); font-size:16px;}
 .app-user a.profile-link{color:rgba(255,255,255,0.75); font-size:16px; font-weight:500;}
 .app-user a.profile-link:hover{color:var(--white);}
+/* Signing out is a CSRF-protected POST, so the control is a submit button
+   in a form rather than a link. The form is inline-flex so the button
+   keeps exactly the place, size and spacing the link had in the header
+   row; the button carries the translucent treatment that used to be an
+   inline style attribute. */
+.logout-form{display:inline-flex; margin:0;}
+.btn-logout{background:rgba(255,255,255,0.1); color:#fff; border:0; cursor:pointer;}
+.btn-logout:hover{background:rgba(255,255,255,0.18); color:#fff;}
 
 .notif-bell-wrap{position:relative;}
 .notif-bell{position:relative; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:transparent; border:none; color:rgba(255,255,255,0.75); cursor:pointer; transition:background var(--dur-micro) var(--ease-standard), color var(--dur-micro) var(--ease-standard);}
@@ -421,7 +415,10 @@ a, button, .btn{
 .live-data-tag{display:inline-flex; align-items:center; gap:7px; font-family:var(--font-heading); font-weight:700; font-size:16px; letter-spacing:0.05em; text-transform:uppercase; color:var(--leaf-dark); background:var(--ice-50); border:1px solid var(--line); border-radius:100px; padding:8px 14px; flex-shrink:0; margin-top:4px;}
 
 .trend-chart{display:flex; align-items:flex-end; gap:8px; height:150px; padding-top:8px;}
-.trend-bar-col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; gap:6px;}
+/* min-width:0 stops a nowrap axis label setting a min-content floor that
+   a flex track cannot shrink below — the mechanism that pushed this chart
+   past the page edge at 667px. */
+.trend-bar-col{flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; gap:6px;}
 .trend-bar-track{width:100%; max-width:26px; height:100%; display:flex; align-items:flex-end; background:var(--ice-50); border-radius:6px 6px 2px 2px; overflow:hidden;}
 /* Full height always; the bar's visual growth is a transform:scaleY from
    the bottom, not a height change, so it never triggers layout. */
@@ -444,13 +441,18 @@ a, button, .btn{
    easier. */
 .trend-table tbody th{font-size:14px; color:var(--forest); text-transform:none; letter-spacing:normal; font-weight:600;}
 .trend-table tbody td{text-align:end;}
-@media (min-width:641px){
+/* The handover point is set by the chart's own content, not a device
+   size: fourteen columns each need a readable "23 Sept" label (~40px) plus
+   the gaps and the card's padding, which comes to roughly 760px. Below
+   that the axis cannot be drawn legibly, so the chart gives way to the
+   table that carries the same fourteen rows as text. */
+@media (min-width:768px){
   /* Hidden on the wrapper, not the table: a table box expands to its own
      min-content width regardless of a 1px width, so clipping the table
      itself leaves a 300px-wide invisible box behind. */
   .trend-table-wrap{position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0;}
 }
-@media (max-width:640px){
+@media (max-width:767px){
   .trend-chart{display:none;}
 }
 
@@ -458,13 +460,13 @@ a, button, .btn{
 .card + .card{margin-top:20px;}
 .grid-2{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px;}
 .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:20px;}
-.grid-4{display:grid; grid-template-columns:repeat(4,1fr); gap:20px;}
+
 /* Grid tracks default to an "auto" minimum (their content's max-content
    width), which lets a long non-wrapping button/label force a track wider
    than its 1fr share and overflow the row — this resets that minimum so
    the track (and its content) can actually shrink to the column width.
    Found via Phase 3 visual QA on /contact at 1024px. */
-.grid-2 > *, .grid-3 > *, .grid-4 > *{min-width:0;}
+.grid-2 > *, .grid-3 > *{min-width:0;}
 /* Tablet composition fix (final refinement pass): these two utility grids
    previously stayed at their full column count all the way down to
    max-width:800px, then jumped straight to a single column. Between
@@ -476,10 +478,10 @@ a, button, .btn{
    gets too narrow for its own content rather than an arbitrary device
    width. */
 @media (max-width:1180px){
-  .grid-3, .grid-4{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .grid-3{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 @media (max-width:700px){
-  .grid-2, .grid-3, .grid-4{grid-template-columns:minmax(0,1fr);}
+  .grid-2, .grid-3{grid-template-columns:minmax(0,1fr);}
 }
 
 /* Students: two columns while the form is the task (first child, or an
@@ -718,7 +720,10 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
    the meal isn't buried in a run-on secondary string. */
 .student-meta > span{display:block;}
 .student-meta span.student-meal{color:var(--forest); font-weight:600;}
-.dash-card-head .notif-markall{color:var(--leaf-dark); background:none; border:none; font-size:16px; font-weight:600; cursor:pointer; padding:0;}
+/* A text button still has to be reachable by thumb: the visual weight is
+   unchanged, the hit area is padded out to a comfortable target and the
+   flex row keeps it aligned with the heading. */
+.dash-card-head .notif-markall{color:var(--leaf-dark); background:none; border:none; font-size:16px; font-weight:600; cursor:pointer; padding:10px 0; min-height:44px; display:inline-flex; align-items:center;}
 .dash-card-head .notif-markall:hover{text-decoration:underline;}
 .dash-notif-list{display:flex; flex-direction:column; gap:2px;}
 .dash-notif-item{display:flex; align-items:flex-start; gap:12px; padding:13px 14px; border-radius:10px;}
@@ -751,44 +756,24 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
 .auth-foot{text-align:center; margin-top:18px; font-size:16px; color:var(--muted);}
 .auth-foot a{color:var(--forest-secondary); font-weight:600;}
 
-.allergen-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px;}
-.allergen-pill{display:flex; align-items:center; gap:6px; padding:7px 14px; border-radius:100px; background:var(--white); border:1px solid var(--line); font-size:16px; font-weight:600; color:var(--forest-secondary);}
-.allergen-pill svg{width:12px; height:12px; color:var(--leaf-dark); flex-shrink:0;}
-
-.menu-card{background:var(--white); border-radius:var(--radius-sm); overflow:hidden; border:1px solid var(--line);}
 /* aspect-ratio (not a fixed px height) so the crop window is always a true
    square regardless of how wide the card renders at any breakpoint — cover
    fitting inside a mismatched box can still look aggressively cropped even
    though it never distorts, so the box itself needs to be square. Holds
    automatically for real photography later too, square or not. */
-.menu-thumb{aspect-ratio:1/1; height:auto; background:linear-gradient(135deg, var(--forest-secondary), var(--forest-mid)); display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;}
-.menu-thumb svg{width:26px; height:26px; color:var(--leaf-light);}
-.menu-thumb picture{display:block; width:100%; height:100%;}
-.menu-thumb picture img{width:100%; height:100%; object-fit:cover;}
-.menu-card-body{padding:15px 16px;}
-.menu-card-body .tag{font-size:16px; font-weight:700; color:var(--leaf-dark); text-transform:uppercase; letter-spacing:0.06em;}
-.menu-card-body h3{font-size:16px; margin:6px 0 8px;}
-.menu-nutri{font-size:16px; color:var(--leaf-dark); display:flex; gap:9px; font-weight:600;}
 
 /* ---------- full menu detail (menu.ejs) ---------- */
-.allergen-commitment{text-align:center; max-width:560px; margin:0 auto 28px; font-size:16px; color:var(--muted);}
-.menu-card-full{display:flex; gap:0; overflow:visible;}
-.menu-thumb-wide{width:100px; aspect-ratio:1/1; height:auto; flex-shrink:0; align-self:flex-start; border-radius:var(--radius-sm) 0 0 var(--radius-sm);}
+
 /* min-width:0 overrides the flex item's default min-width:auto — without
    it, the body couldn't shrink below its content's intrinsic width (the
    4-up .menu-nutri-grid, dish name) and pushed past the card at ~768px. */
-.menu-card-full .menu-card-body{padding:18px 20px; flex:1; min-width:0;}
-.menu-card-full h3{font-size:16px; margin:6px 0 10px;}
-.menu-ingredients{font-size:16px; color:var(--forest-secondary); line-height:1.6; margin-bottom:16px;}
-.menu-ingredients strong{color:var(--forest);}
 
 /* Featured dish (final refinement pass) — same .menu-card-full layout as
    the authenticated /menu page, just with a larger image, since this one
    card is carrying the page's entire "see the food" trust moment. */
-.menu-featured{margin-bottom:20px;}
-.menu-featured .menu-thumb-wide{width:180px;}
+
 @media (max-width:560px){
-  .menu-featured{flex-direction:column;}
+
   /* Stays aspect-ratio:1/1 (inherited from .menu-thumb-wide) — the source
      photography is a true 800x800 square; forcing 16:9 here would crop a
      third of the dish out of frame instead of just resizing the box.
@@ -797,25 +782,14 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
      page list thumbnails) sets a fixed height:70px that would otherwise
      win over aspect-ratio and squash this full-width featured image into
      a 70px-tall cropped strip. */
-  .menu-featured .menu-thumb-wide{width:100%; height:auto; border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
+
 }
 /* Secondary dishes: small preview strip, not another row of equal cards —
    compact enough to scan in one glance rather than compete with the
    featured dish above it. */
-.menu-preview-strip{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px;}
-.menu-preview-card{background:var(--white); border:1px solid var(--line); border-radius:var(--radius-sm); overflow:hidden;}
+
 /* Stays the base .menu-thumb aspect-ratio:1/1 — matches the source dish
    photography exactly, so nothing is cropped out of frame. */
-.menu-preview-body{padding:10px 12px;}
-.menu-preview-body h4{font-size:16px; margin:0 0 4px;}
-.menu-preview-body span{font-size:16px; color:var(--muted);}
-@media (max-width:900px){
-  .menu-preview-strip{grid-template-columns:repeat(2,minmax(0,1fr));}
-}
-.menu-nutri-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(72px,1fr)); gap:10px; border-top:1px solid var(--line); padding-top:14px;}
-.menu-nutri-grid > div{display:flex; flex-direction:column; gap:2px;}
-.menu-nutri-val{font-size:16px; color:var(--forest); font-weight:700;}
-.menu-nutri-key{font-size:16px; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;}
 
 /* ---------- picker cards (booking: meal + plan) ----------
    Radio inputs styled as tappable cards — real dish presentation instead
@@ -866,17 +840,12 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
 .student-meta{flex:1; min-width:0;}
 .student-meta strong{display:flex; align-items:center; gap:6px; font-size:16px;}
 .student-meta span{font-size:16px; color:var(--muted);}
-.allergy-flag{display:inline-flex; color:var(--leaf-dark); flex-shrink:0;}
-.allergy-flag svg{width:14px; height:14px;}
+
 .status-line{font-size:16px; padding:5px 12px; border-radius:100px; background:var(--ice-50); color:var(--forest-secondary); font-weight:600; display:inline-flex; align-items:center; gap:6px; white-space:nowrap;}
 .status-line svg{width:11px; height:11px;}
 .status-line.ok{background:var(--success-bg); color:var(--success-text);}
 .status-line.pending{background:var(--warning-bg); color:var(--warning-text);}
 .status-line.none{background:rgba(22,63,49,0.06); color:var(--muted);}
-
-.tabs{display:flex; gap:4px; margin-bottom:24px; background:var(--white); border-radius:10px; padding:5px; border:1px solid var(--line); width:fit-content;}
-.tabs a{padding:8px 16px; border-radius:7px; font-size:16px; font-weight:600; color:var(--muted);}
-.tabs a.active{background:var(--forest); color:var(--white);}
 
 footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-size:16px; border-top:1px solid var(--line); margin-top:20px;}
 
@@ -1008,14 +977,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    from the navy/lime identity that stays on nav, footer, and every B2B/
    legal page. The parent landing here needs to trust the food fast; a
    dark "enterprise software" hero works against that. */
-.hero-light{background:var(--cream-50); color:var(--ink-900);}
-.hero-light .hero-inner{grid-template-columns:minmax(0,1fr) minmax(0,0.9fr); min-height:0;}
-.hero-light .hero-copy{padding:64px 40px 64px 0;}
-.hero-light .hero-copy .eyebrow{color:var(--forest-secondary);}
-.hero-light .hero-copy .eyebrow::before{background:var(--leaf);}
-.hero-light .hero-copy h1{color:var(--forest);}
-.hero-light .hero-copy h1 em{color:var(--leaf-dark);}
-.hero-light .hero-copy p.lede{color:var(--muted);}
+
 /* .hero-actions a.btn-outline{color:#fff;...}
 /* The hero image sits in its own column on desktop (stretched to match the
    copy column's height, cropped via object-fit:cover — not ratio-locked
@@ -1046,25 +1008,13 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 
 /* Live-proof moment, up near the hero instead of only at the page's
    closing CTA — same real tap-to-collect toast, seen early. */
-.hero-toast{
-  position:absolute; z-index:2; left:16px; bottom:-16px; max-width:220px;
-  background:var(--white); border-radius:14px; padding:12px 14px; display:flex; align-items:center; gap:10px;
-  box-shadow:var(--shadow-lg);
-}
-@media (min-width:768px){
-  .hero-toast{max-width:350px;}
-}
-.hero-toast-icon{width:28px; height:28px; border-radius:50%; background:var(--success-bg); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
-.hero-toast-icon svg{width:13px; height:13px; color:var(--leaf-dark);}
-.hero-toast-title{font-family:var(--font-heading); font-weight:700; font-size:16px; color:var(--forest); line-height:1.3;}
-.hero-toast-sub{font-size:16px; color:var(--muted); margin-top:2px;}
+
 @media (max-width:900px){
   /* .hero-copy's box disappears from layout; its children become direct
      grid items of .hero-inner alongside .hero-media-wrap, so `order`
      below can interleave the image between the CTA row and the school
      trust badges without touching the markup itself. */
-  .hero-light .hero-inner{grid-template-columns:minmax(0,1fr);}
-  .hero-light .hero-copy{display:contents;}
+
   .hero-media-wrap{order:5; margin-top:28px;}
 
   .hero-media-wrap::before{top:8px; right:-14px; bottom:-16px; left:-8px; border-radius:58% 42% 48% 52% / 40% 55% 45% 60%;}
@@ -1073,10 +1023,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   /* .hero-copy has no box under display:contents, so the "top padding
      below the header" and "no max-width cap" that used to live on it move
      to .hero-inner (a real box) and its now-direct child elements. */
-  .hero-light .hero-inner{padding-top:20px;}
-  .hero-light .hero-copy h1{margin-bottom:14px;}
-  .hero-light .hero-copy p.lede{margin-bottom:20px;}
-  .hero-light .hero-actions.hero-actions-3{margin-bottom:0;}
+
 }
 .hero-copy{padding:64px 40px 64px 0; position:relative; z-index:2; max-width:560px;}
 .hero-copy .eyebrow{margin-bottom:22px;}
@@ -1086,18 +1033,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .hero-actions{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:40px;}
 
 /* diagonal seam panel that carries the tap demo */
-.hero-visual{
-  position:relative; z-index:1; height:100%; min-height:640px;
-  background:linear-gradient(160deg, var(--forest-secondary), var(--forest-mid));
-  clip-path:polygon(14% 0, 100% 0, 100% 100%, 0% 100%);
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  padding:40px;
-}
-.hero-visual::after{
-  content:""; position:absolute; inset:0;
-  background:radial-gradient(circle at 70% 30%, rgba(94,157,110,0.14), transparent 55%);
-  clip-path:polygon(14% 0, 100% 0, 100% 100%, 0% 100%);
-}
 
 /* --- the tap demo (signature element) --- */
 .tap-demo{position:relative; z-index:2; width:100%; max-width:280px;}
@@ -1160,7 +1095,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   70%,100%{box-shadow:0 0 0 0 rgba(94,157,110,0);}
 }
 
-
 .tap-toast{
   margin-top:22px; background:var(--white); border-radius:14px; padding:14px 16px;
   display:flex; align-items:center; gap:12px; box-shadow:var(--shadow-lg);
@@ -1205,20 +1139,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    4-up grid of white cards, used for the homepage confidence row. No
    background, no border, no shadow per item: a thin rule divides items
    instead, so four short trust signals read as one scannable strip. */
-.proof-row{display:flex; flex-wrap:wrap; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
-.proof-row-item{display:flex; align-items:center; gap:var(--space-2); flex:1 1 220px; padding:var(--space-3) var(--space-4); border-left:1px solid var(--line);}
-.proof-row-item:first-child{border-left:none;}
-.proof-row-icon{width:36px; height:36px; border-radius:50%; background:rgba(46,107,69,0.1); color:var(--leaf-dark); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
-.proof-row-icon svg{width:17px; height:17px;}
-.proof-row-item span{font-family:var(--font-heading); font-weight:700; font-size:15.5px; color:var(--forest); line-height:1.3;}
-@media (max-width:900px){
-  .proof-row-item{flex:1 1 45%; border-left:none; border-top:1px solid var(--line);}
-  .proof-row-item:nth-child(1),.proof-row-item:nth-child(2){border-top:none;}
-}
-@media (max-width:520px){
-  .proof-row-item{flex:1 1 100%; border-top:1px solid var(--line);}
-  .proof-row-item:first-child{border-top:none;}
-}
 
 /* ---------- sample / illustrative tag (Phase 3) ----------
    One consistent small badge for every place the site shows seeded or
@@ -1249,8 +1169,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   font-size:12px; font-variant-numeric:tabular-nums;
 }
 .step .step-num::after{content:""; height:1px; flex:1; background:var(--line-strong);}
-.step-attention .step-num::before{background:var(--school-yellow); color:var(--ink);}
-.step-done .step-num::before{background:var(--leaf); color:var(--ink);}
+
 .step h3{font-size:16px; margin-bottom:8px;}
 .step p{font-size:16px; line-height:1.6;}
 
@@ -1390,25 +1309,11 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    orphan. From 768px up (including the squeezed ~768-1199px band, where
    the hero grid is still two columns) the row has enough width for all
    three at their natural size, so it goes inline. */
-.hero-actions-3{display:flex; flex-direction:column; align-items:stretch; gap:12px; margin-bottom:32px;}
-.hero-actions-3 .btn{width:100%;}
-@media (min-width:768px){
-  .hero-actions-3{flex-direction:row; align-items:center; flex-wrap:wrap; gap:14px;}
-  .hero-actions-3 .btn{width:auto;}
-}
+
 /* Fourth hero action, downgraded from a button to a quiet inline link
    (final refinement pass) — "See how it works" doesn't need equal visual
    weight with Log in / Register / Check Your School, it just needs to be
    reachable. */
-.hero-quiet-link{
-  display:inline-flex; align-items:center; gap:6px; color:rgba(255,255,255,0.72);
-  font-weight:600; font-size:16px; text-decoration:underline; text-underline-offset:3px;
-  margin:-16px 0 32px;
-}
-.hero-quiet-link:hover{color:#fff;}
-.hero-quiet-link svg{width:15px; height:15px; flex-shrink:0;}
-.hero-light .hero-quiet-link{color:var(--forest-secondary);}
-.hero-light .hero-quiet-link:hover{color:var(--forest);}
 
 /* ---------- trust bar ---------- */
 .trustbar{background:var(--white); border-bottom:1px solid var(--line);}
@@ -1439,17 +1344,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .what-is-pillar strong{display:block; font-family:var(--font-heading); font-size:16px; color:var(--forest); margin-bottom:6px;}
 .what-is-pillar span{font-size:16px; color:var(--muted); line-height:1.6;}
 
-.steps-6{grid-template-columns:repeat(6,1fr);}
-
 /* ---------- teaser sections (Schools / Caterers) ---------- */
-.teaser-wrap{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:48px; align-items:center;}
-.teaser-wrap-reverse .teaser-copy{order:2;}
-.teaser-copy p{margin:14px 0 22px; font-size:16px; line-height:1.7; color:var(--forest-secondary); max-width:440px;}
-.teaser-list{display:flex; flex-direction:column; gap:14px;}
-.teaser-list li{display:flex; align-items:flex-start; gap:12px; font-size:16px; color:var(--forest-secondary); background:var(--white); border:1px solid var(--line); border-radius:12px; padding:14px 16px;}
-.teaser-list li svg{width:18px; height:18px; color:var(--leaf-dark); flex-shrink:0; margin-top:1px;}
-.operate-list{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:14px; max-width:760px; margin:0 auto;}
-.operate-list li{align-items:center; font-weight:500;}
 
 /* ---------- role journey / process rail (final refinement pass) ----------
    Replaces the old "Book → Pay → Tap → Notified" pill row, which relied on
@@ -1504,13 +1399,12 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 }
 /* Parent's "Tap" step — the one genuine attention moment in any of the
    three rails: School Yellow, Ink text (never white-on-yellow). */
-.process-step-attention::before{background:var(--school-yellow); color:var(--ink);}
+
 /* Parent's "Notified" step — the completion/positive-state moment: Leaf,
    Ink text, matching the same badge convention used elsewhere on the
    site (notif-badge, check-badge). School's "Report" and Caterer's
    "Deliver" deliberately stay the neutral forest node — they're a
    hand-off, not the attention→confirmation pair Tap→Notified is. */
-.process-step-done::before{background:var(--leaf); color:var(--ink);}
 
 /* Equal-height, equal-width, aligned-heading cards: default grid
    align-items:stretch already equalizes row height across the three
@@ -1565,17 +1459,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    width. Steps now render as their own full-width 4-column .steps grid;
    this is a separate, self-sized panel below them, not a hero treatment —
    no diagonal clip, no forced min-height, sized to its own content. */
-.parent-flow-demo{
-  background:linear-gradient(160deg, var(--forest-secondary), var(--forest-mid));
-  border-radius:var(--radius-lg);
-  padding:48px 24px;
-  margin-top:40px;
-  display:flex; align-items:center; justify-content:center;
-}
-.parent-flow-demo .tap-demo{max-width:280px;}
-@media (min-width:768px){
-  .parent-flow-demo .tap-demo{max-width:420px;}
-}
 
 /* ---------- flow caption (Phase 3) ----------
    Names the three-stage sequence (Tap → Collected → Notified) explicitly
@@ -1583,11 +1466,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    sequence rather than a single static mockup. Text-based, not another
    animation — the existing reader pulse/ripple already carries the motion
    and already respects prefers-reduced-motion (see .tap-reader.pulse). */
-.flow-caption{display:flex; align-items:center; justify-content:center; gap:var(--space-2); margin-bottom:var(--space-4); flex-wrap:wrap;}
-.flow-caption span{font-family:var(--font-heading); font-weight:800; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:var(--leaf-dark);}
-.flow-caption .flow-caption-arrow{color:var(--muted); font-weight:400; letter-spacing:0; font-size:15px;}
-.flow-caption.on-dark span{color:var(--leaf-light);}
-.flow-caption.on-dark .flow-caption-arrow{color:rgba(255,255,255,0.4);}
 
 /* ---------- role cards (Features page) ----------
    role -> concise context -> capability group. A fixed set of exactly
@@ -1595,52 +1473,15 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    the grid predictable: a single stacked column on narrow mobile, 2-then-
    2-then-1 from ~480px, 3-then-2 on tablet, one full row of five on
    desktop — every step a genuine composition change, not a squeeze. */
-.role-cards{display:grid; grid-template-columns:minmax(0,1fr); gap:16px;}
-.role-card{
-  background:var(--white); border:1px solid var(--line); border-radius:var(--radius);
-  padding:24px 20px; transition:transform var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), border-color var(--dur-standard) var(--ease-standard);
-}
-.role-card-icon{width:44px; height:44px; border-radius:12px; background:var(--ice-100); color:var(--leaf-dark); display:flex; align-items:center; justify-content:center; margin-bottom:14px;}
-.role-card-icon svg{width:21px; height:21px;}
-.role-card h3{font-size:17px; margin-bottom:14px;}
-.role-card-tags{display:flex; flex-direction:column; gap:8px;}
-.role-card-tags li{
-  display:flex; align-items:center; gap:8px; font-size:16px; font-weight:600; color:var(--forest-secondary);
-  line-height:1.3; background:var(--ice-100); border-radius:100px; padding:7px 12px 7px 10px;
-}
-.role-card-tags li svg{width:15px; height:15px; color:var(--leaf-dark); flex-shrink:0;}
-@media (min-width:480px){
-  .role-cards{grid-template-columns:repeat(2,minmax(0,1fr));}
-}
-@media (min-width:768px){
-  .role-cards{grid-template-columns:repeat(3,minmax(0,1fr));}
-}
-@media (min-width:1024px){
-  .role-cards{grid-template-columns:repeat(5,minmax(0,1fr));}
-}
-@media (prefers-reduced-motion: reduce){
-  .role-card{transition:none;}
-}
 
 /* ---------- nutrition trust banner ---------- */
-.allergen-banner{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:32px;}
-.allergen-banner-item{display:flex; align-items:center; gap:8px; background:var(--forest); color:#fff; padding:12px 20px; border-radius:100px; font-family:var(--font-heading); font-weight:700; font-size:16px;}
-.allergen-banner-item svg{width:15px; height:15px; color:var(--leaf-light); flex-shrink:0;}
+
 .nutrition-more{text-align:center; margin-top:28px; font-size:16px; color:var(--muted);}
 .nutrition-more a{color:var(--forest-secondary); font-weight:600;}
 
 /* ---------- dashboard preview (signature moment #3) ---------- */
 .dash-preview{background:var(--forest); border-radius:var(--radius-lg); padding:8px; box-shadow:var(--shadow-lg);}
 .dash-preview-head{display:flex; align-items:center; justify-content:space-between; padding:18px 22px;}
-.dash-preview-title{font-family:var(--font-heading); font-weight:700; font-size:16px; color:#fff;}
-.dash-preview-title span{color:rgba(255,255,255,0.5); font-weight:500;}
-.dash-preview-grid{background:var(--ice-50); border-radius:calc(var(--radius-lg) - 8px); padding:22px; display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
-.dash-stat{background:var(--white); border:1px solid var(--line); border-radius:12px; padding:18px;}
-.dash-stat-label{display:block; font-size:16px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;}
-.dash-stat-value{font-family:var(--font-heading); font-weight:800; font-size:26px; color:var(--forest); font-variant-numeric:tabular-nums;}
-.dash-stat-wide{grid-column:span 4;}
-.dash-bar{height:8px; background:var(--line); border-radius:100px; overflow:hidden; margin:8px 0 10px;}
-.dash-bar-fill{height:100%; background:var(--leaf); border-radius:100px;}
 
 /* ---------- app section ---------- */
 .app-section-wrap{max-width:640px; text-align:center; margin:0 auto;}
@@ -1729,27 +1570,17 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 @media (max-width:960px){
   .hero-inner{grid-template-columns:minmax(0,1fr); min-height:0;}
   .hero-copy{padding:56px 24px 0; max-width:none;}
-  .hero-visual{clip-path:none; min-height:0; padding:40px 24px; margin-top:44px;}
-  .hero-visual::after{clip-path:none;}
+
   .steps{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
-  .steps-6{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
+
   .pricing-grid{grid-template-columns:minmax(0,1fr);}
   .proof-wrap{grid-template-columns:minmax(0,1fr); gap:28px;}
   .proof-names li{flex-direction:column; align-items:flex-start; gap:6px; padding:18px 0;}
   .trustbar-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px;}
   .trustbar-item{border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:16px;}
   .trustbar-item:nth-child(-n+2){border-top:none; padding-top:0;}
-  .teaser-wrap, .teaser-wrap-reverse{grid-template-columns:minmax(0,1fr);}
-  .operate-list{grid-template-columns:minmax(0,1fr);}
-  .teaser-wrap-reverse .teaser-copy{order:0;}
-  .dash-preview-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
-  .dash-stat-wide{grid-column:span 2;}
+
   .partner-form-wrap{grid-template-columns:minmax(0,1fr); gap:32px;}
-}
-@media (max-width:560px){
-  .menu-card-full{flex-direction:column;}
-  .menu-thumb-wide{width:100%; height:auto; aspect-ratio:1; border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
-  .menu-nutri-grid{grid-template-columns:repeat(2,1fr); row-gap:14px;}
 }
 @media (max-width:1279px){
   .site-links{display:none;}
@@ -1813,7 +1644,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .what-is-pillars{grid-template-columns:minmax(0,1fr);}
 }
 @media (max-width:520px){
-  .steps, .steps-6{grid-template-columns:minmax(0,1fr);}
+  .steps{grid-template-columns:minmax(0,1fr);}
   .hero-actions{flex-direction:column; align-items:stretch;}
   .hero-actions .btn{width:100%;}
   h1{font-size:26px;}
@@ -1821,8 +1652,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .trustbar-grid{grid-template-columns:minmax(0,1fr);}
   .trustbar-item{border-top:1px solid var(--line) !important; padding-top:16px !important;}
   .trustbar-item:first-child{border-top:none !important; padding-top:0 !important;}
-  .dash-preview-grid{grid-template-columns:minmax(0,1fr);}
-  .dash-stat-wide{grid-column:span 1;}
+
   .dash-preview-head{flex-direction:column; align-items:flex-start; gap:10px;}
   .store-badges{flex-direction:column; align-items:stretch;}
 }
@@ -1871,12 +1701,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   [dir="rtl"] .notif-dropdown{left:16px; right:16px;}
 }
 
-[dir="rtl"] .proof-row-item{border-left:none; border-right:1px solid var(--line);}
-[dir="rtl"] .proof-row-item:first-child{border-right:none;}
-@media (max-width:900px){
-  [dir="rtl"] .proof-row-item{border-right:none;}
-}
-
 @media (max-width:480px){
   [dir="rtl"] .student-row .status-line{margin-left:0; margin-right:54px; text-align:right;}
 }
@@ -1908,10 +1732,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    point the way the flow actually reads — right-to-left in Arabic — so
    the glyph itself flips instead of pointing backwards through a
    correctly-reordered flex row. */
-[dir="rtl"] .app-flow-arrow,
-[dir="rtl"] .flow-caption-arrow{
-  display:inline-block; transform:scaleX(-1);
-}
 
 /* Shared accessibility and type foundations */
 :root{--font-body:'Poppins',Arial,sans-serif;--font-heading:'Montserrat',Arial,sans-serif;}
@@ -1928,7 +1748,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .auth-card .field .hint{font-size:13px;}
 :focus-visible{outline:3px solid var(--forest-secondary);outline-offset:4px;}
 .site-header :focus-visible,.app-header :focus-visible,.cta-band :focus-visible{outline-color:var(--school-yellow);}
-.hero-light :focus-visible{outline-color:var(--forest);}
+
 @media(max-width:480px){.app-nav{gap:6px;}.app-user{gap:4px;}.app-nav.wrap{padding-inline:12px;}.admin-header .app-logo{flex-direction:column;align-items:flex-start;gap:2px;white-space:normal;flex:1;min-width:0;}.admin-nav-tag{font-size:10px;padding:2px 4px;}}
 
 /* Food: one content contract, three deliberate densities; source imagery is square. */
@@ -1985,7 +1805,7 @@ fieldset.field legend{font-weight:600;margin-bottom:10px;}
 .record-details{margin:12px 0 0;}
 .record-details>div{display:grid;grid-template-columns:minmax(70px,.6fr) minmax(0,1fr);gap:16px;padding-block:8px;}
 .record-details dt{font-size:13px;color:var(--muted);}.record-details dd{margin:0;text-align:end;font-size:14px;}
-th{text-align:start;}.data-card-value{text-align:end;}
+th{text-align:start;}
 
 .parent-intro{background:var(--cream);padding-top:48px;padding-bottom:12px;}
 .parent-intro-copy{max-width:760px;margin-bottom:36px;}
@@ -2041,7 +1861,7 @@ th{text-align:start;}.data-card-value{text-align:end;}
 .contact-channels h2{margin-bottom:10px;}.contact-channels p{margin-bottom:20px;}
 .contact-role-links{display:flex;flex-direction:column;gap:14px;justify-content:center;}.contact-role-links a{padding-block:10px;font-weight:600;}
 .hero-inner-page{padding-block:48px;}.hero-inner-page h1{font-size:clamp(30px,3.6vw,46px);}.hero-inner-page .lede{margin-bottom:20px;}.hero-inner-page .hero-actions{margin-bottom:0;}
-.notif-read-btn{min-width:44px;min-height:44px;}
+
 .store-badge span{text-align:start;}
 .role-journey-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
 @media(max-width:767px){.contact-channels-inner,.role-journey-grid{grid-template-columns:minmax(0,1fr);}}

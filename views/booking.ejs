@@ -152,7 +152,7 @@
   </div>
 </main>
 
-<script>
+<script nonce="<%= cspNonce %>">
   var SCHOOL_CALENDAR = <%- JSON.stringify(schoolCalendar) %>;
   var DAILY_RATE = <%- JSON.stringify(dailyRateKWD) %>;
   // Translated fragments for the client-side live-preview calculation

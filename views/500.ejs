@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
+<head>
+<%- include('partials/head', { title: t('meta.serverError.title') }) %>
+</head>
+<body>
+<%
+/* Deliberately says nothing about what failed. The details are in the
+   server log, where they are useful; in the response they would only
+   hand out stack traces, filesystem paths and internal error text. */
+%>
+<main id="main-content" class="notfound-shell">
+  <div class="notfound-card">
+    <a href="/" class="notfound-logo"><span>Evo <span class="dot">Meals</span></span></a>
+    <div class="notfound-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+    </div>
+    <h1><%= t('serverError.heading') %></h1>
+    <p><%= t('serverError.body') %></p>
+    <div class="notfound-actions">
+      <% if (typeof parentId !== 'undefined' && parentId) { %>
+        <a href="/dashboard" class="btn btn-primary"><%= t('serverError.backToDashboard') %></a>
+      <% } else { %>
+        <a href="/" class="btn btn-primary"><%= t('serverError.backToHome') %></a>
+      <% } %>
+    </div>
+  </div>
+</main>
+</body>
+</html>

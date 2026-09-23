@@ -36,6 +36,10 @@ async function request(route,fields) {
 before(async()=>{
  server=http.createServer(require('../server'));await new Promise(r=>server.listen(0,r));base=`http://127.0.0.1:${server.address().port}`;db=require('../db');
  await request('/login');assert.equal((await request('/login',{civilId:'111111111111',password:'demo1234'})).status,302);
+ // Signing in regenerates the session, which deliberately invalidates the
+ // pre-login CSRF token. A browser picks up a fresh one from the next
+ // page it renders; this harness has to do the same.
+ await request('/dashboard');
  const {today,horizon}=require('../lib/booking-input').bookingWindow();
  good={...valid,startDate:db.getSchoolDaysInRange(db.getStudentsByParent(1)[0].school,today,horizon)[0]};
 });

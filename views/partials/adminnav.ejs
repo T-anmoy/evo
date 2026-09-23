@@ -9,7 +9,10 @@
         <a href="/locale/ar?returnTo=<%= encodeURIComponent(currentPath) %>" lang="ar" hreflang="ar" aria-current="<%= locale === 'ar' ? 'true' : 'false' %>" class="<%= locale === 'ar' ? 'is-current' : '' %>">AR</a>
       </div>
       <span><%= admin.name %> · <%= admin.school %></span>
-      <a href="/school-admin/logout" class="btn btn-sm" style="background:rgba(255,255,255,0.1); color:#fff;"><%= t('adminNav.logout') %></a>
+      <form method="POST" action="/school-admin/logout" class="logout-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" class="btn btn-sm btn-logout"><%= t('adminNav.logout') %></button>
+      </form>
     </div>
   </div>
 </header>

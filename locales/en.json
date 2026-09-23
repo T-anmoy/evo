@@ -74,6 +74,9 @@
     },
     "notFound": {
       "title": "Page not found — Evo Meals"
+    },
+    "serverError": {
+      "title": "Something went wrong — Evo Meals"
     }
   },
   "common": {
@@ -104,6 +107,7 @@
     "hourUnitOther": "hours",
     "timeAgo": "{count} {unit} ago",
     "tooManyAttempts": "Too many login attempts. Please wait a few minutes and try again.",
+    "tooManyRequests": "Too many requests from this connection. Please wait a few minutes and try again.",
     "formSessionExpired": "Form session expired. Please go back, refresh the page, and try again."
   },
   "nav": {
@@ -184,14 +188,6 @@
       "introLink": "Get in touch",
       "tag": "Demo configuration"
     },
-    "confidence": {
-      "eyebrow": "What you can actually check, before you book",
-      "heading": "Not just \"trust us.\" See it yourself.",
-      "item1": "Ingredients and sample nutrition",
-      "item2": "A clear total before confirmation",
-      "item3": "A collection journey you can explore",
-      "item4": "Recorded collection status"
-    },
     "menuProof": {
       "eyebrow": "Sample menu experience",
       "heading": "Know what's on the plate.",
@@ -249,7 +245,7 @@
       "q3": "My child has an allergy. How does that get handled?",
       "a3": "The programme statement names Nuts, Shellfish, Sesame and Soy. Dish records are sample information. Student allergy notes are reference notes only; the demo does not check or match allergies automatically. Contact the team about a specific dietary requirement.",
       "q4": "What if I need to cancel a booking?",
-      "a4": "History lets you cancel a booking marked Upcoming. The demo records a simulated refund; it does not move money.",
+      "a4": "History lets you cancel any booking still marked Booked — once it is Collected or Cancelled, that option is gone. The demo records a simulated refund; it does not move money.",
       "footnote": "Booking, pricing, and the full parent journey: see {parents}. Platform-wide capabilities: see {features}.",
       "footnoteParents": "For Parents",
       "footnoteFeatures": "Features"
@@ -266,29 +262,6 @@
       "catererBody": "Discuss your kitchen’s role in a school meal programme.",
       "catererCta": "Become a Catering Partner"
     }
-  },
-  "howItWorksSection": {
-    "eyebrow": "How the platform works",
-    "heading": "From school programme to your child's hands.",
-    "intro": "How a meal moves through the system, in six steps.",
-    "step1Role": "School",
-    "step1Title": "Sets the programme",
-    "step1Body": "Partners with Evo Meals and onboards its parent community.",
-    "step2Role": "Parent",
-    "step2Title": "Books & pays",
-    "step2Body": "Books a plan and pays only for real school days.",
-    "step3Role": "Evo Meals",
-    "step3Title": "Routes the order",
-    "step3Body": "Matches each order to the right student, with any allergy notes on file passed along.",
-    "step4Role": "Caterer",
-    "step4Title": "Prepares the meal",
-    "step4Body": "Sees real orders and prepares exactly what's booked.",
-    "step5Role": "Student",
-    "step5Title": "Taps & collects",
-    "step5Body": "One tap at the counter confirms the meal.",
-    "step6Role": "Parent",
-    "step6Title": "Gets notified",
-    "step6Body": "You see which meal, and when it was collected."
   },
   "howItWorks": {
     "hero": {
@@ -460,53 +433,8 @@
       "ctaPartner": "Partner with us",
       "ctaHowItWorks": "See how the platform works"
     },
-    "problem": {
-      "eyebrow": "The problem today",
-      "heading": "Meal coordination shouldn't run through paper and WhatsApp.",
-      "intro": "Most school meal programmes are held together by phone calls, spreadsheets, and group chats between administration, parents, and the catering kitchen — with no single record either side can check.",
-      "item1Label": "Fragmented",
-      "item1Body": "Parent requests, payments, and allergy notes scattered across calls, messages, and paper forms.",
-      "item2Label": "Manual",
-      "item2Body": "Administration staff reconciling orders and payments by hand, school day after school day.",
-      "item3Label": "Opaque",
-      "item3Body": "No shared, real-time record of who booked, who paid, or who actually collected a meal."
-    },
-    "connectedModel": {
-      "eyebrow": "The Evo Meals model",
-      "heading": "One connected programme, not three separate processes.",
-      "intro": "Your school, your parents, and your catering partner all work from the same live booking and calendar data — instead of three separate, disconnected processes.",
-      "item1": "Automated subscriptions, orders & notifications",
-      "item2": "A structured commercial programme, not just software",
-      "item3": "New revenue opportunities from a digitally run programme",
-      "item4": "A real partnership — not a vendor relationship"
-    },
     "parentExperience": {
-      "eyebrow": "What changes for your parents",
-      "heading": "Higher parent engagement, less admin overhead for you.",
-      "intro": "Parents book directly, pay only for the real school days their plan covers, and get a notification the moment their child collects lunch — instead of calling your office to ask.",
-      "cta": "See the full parent experience",
-      "item1": "Self-service booking and subscription management",
-      "item2": "Calendar-accurate pricing, shown before payment",
-      "item3": "Real-time collection notifications"
-    },
-    "operationalVisibility": {
-      "eyebrow": "What changes for your administration",
-      "heading": "What actually changes for your administration.",
-      "card1Title": "Reduce Administrative Work",
-      "card1Body": "Subscriptions and orders run themselves — no more chasing forms.",
-      "card2Title": "Real-Time Visibility",
-      "card2Body": "See bookings, collections, and trends as they happen, not at month-end.",
-      "card3Title": "A Professional Experience",
-      "card3Body": "Replaces manual processes with one system your whole administration uses."
-    },
-    "studentIdentification": {
-      "item1": "A student-issued meal card, tapped at the counter",
-      "item2": "Every collection matched to the right student and order",
-      "item3": "Allergy information attached to the student's profile",
-      "item4": "Civil ID masked everywhere it's shown, including to staff",
-      "eyebrow": "Improve Meal Accuracy",
-      "heading": "The right meal, matched to the right student, every time.",
-      "body": "Student-level identification means a collection is never guessed — it's tapped, matched, and logged, with allergy information carried alongside the order rather than tracked separately."
+      "cta": "See the full parent experience"
     },
     "dashboardPreview": {
       "eyebrow": "For school administrators",
@@ -520,22 +448,6 @@
       "statMealsDelivered": "Meals delivered (mtd)",
       "statPendingOrders": "Pending orders",
       "statParentEngagement": "Parent engagement"
-    },
-    "onboarding": {
-      "eyebrow": "Getting started",
-      "heading": "What onboarding actually looks like.",
-      "step1Label": "Talk",
-      "step1Title": "Tell us about your school",
-      "step1Body": "Use the form below — a member of our partnerships team responds within one business day.",
-      "step2Label": "Configure",
-      "step2Title": "We set up your programme",
-      "step2Body": "Menus, plans, and your school's calendar, configured together with your team.",
-      "step3Label": "Onboard",
-      "step3Title": "Parents join",
-      "step3Body": "Parents register, add their children, and start booking.",
-      "step4Label": "Live",
-      "step4Title": "Your programme goes live",
-      "step4Body": "Bookings, collections, and reporting run through the platform from day one."
     },
     "partnerForm": {
       "eyebrow": "Partner with us",
@@ -567,12 +479,6 @@
       "errEmail": "A valid email address is required.",
       "errPhone": "Enter a valid phone number (8–15 digits).",
       "errMessage": "Tell us a little more — between 10 and 2,000 characters."
-    },
-    "finalCta": {
-      "eyebrow": "Ready when you are",
-      "heading": "See what Evo Meals looks like for your school.",
-      "body": "No commitment — just a conversation about whether this is a fit.",
-      "cta": "Partner with us"
     },
     "operations": {
       "title1": "Programme control",
@@ -780,52 +686,12 @@
       "colMeal": "Meal",
       "colStatus": "Status",
       "statusCollected": "Collected",
-      "statusUpcoming": "Upcoming",
+      "statusUpcoming": "Booked",
       "row1Student": "Ahmed A.",
       "row2Student": "Sara A.",
       "row3Student": "Student C.",
       "schoolThird": "The English School",
       "footnote": "Illustrative records only. No orders are transmitted to a kitchen by this demo."
-    },
-    "demandVisibility": {
-      "eyebrow": "Predictable demand",
-      "heading": "Know what to prepare before service starts.",
-      "intro": "Bookings are real digital orders, not estimates — placed and paid for ahead of the school day, so your kitchen plans against actual demand rather than guesswork.",
-      "item1": "Orders placed and paid for ahead of service",
-      "item2": "Quantities visible by school and by meal",
-      "item3": "No estimating from a phone call or a paper tally"
-    },
-    "fulfilment": {
-      "item1": "Orders grouped by the school you're fulfilling for",
-      "item2": "Each school's own calendar drives when orders are expected",
-      "item3": "Every school on the platform is a customer base you don't have to market to separately",
-      "eyebrow": "Fulfilment fits the programme",
-      "heading": "Built around the school's programme, not a generic delivery queue.",
-      "body": "Because every order is tied to a specific school's calendar and student roster, your kitchen fulfils against that school's actual programme — not a one-size-fits-all delivery list."
-    },
-    "benefits": {
-      "eyebrow": "What changes for your kitchen",
-      "heading": "Operational partners, not an afterthought.",
-      "card1Title": "Streamlined order management",
-      "card1Body": "One digital queue replaces phone calls, paper tickets, and end-of-day reconciliation.",
-      "card2Title": "Reduced manual processing",
-      "card2Body": "Orders arrive already matched to a student, a plan, and a payment that's settled."
-    },
-    "onboarding": {
-      "eyebrow": "Getting started",
-      "heading": "What onboarding actually looks like.",
-      "step1Label": "Apply",
-      "step1Title": "Tell us about your kitchen",
-      "step1Body": "Use the form below — a member of our partnerships team responds within one business day.",
-      "step2Label": "Match",
-      "step2Title": "We match you to a school",
-      "step2Body": "Based on your capacity, cuisine, and the schools looking for a catering partner.",
-      "step3Label": "Connect",
-      "step3Title": "Your kitchen joins the queue",
-      "step3Body": "Menus and pricing are configured so orders can start arriving digitally.",
-      "step4Label": "Fulfil",
-      "step4Title": "Service begins",
-      "step4Body": "Orders arrive matched to a student and school, ready to prepare."
     },
     "form": {
       "eyebrow": "Partner with us",
@@ -1107,5 +973,11 @@
     "reader": "MEAL COLLECTION · EXAMPLE",
     "student": "Student card",
     "replay": "Play collection example"
+  },
+  "serverError": {
+    "heading": "Something went wrong on our side.",
+    "body": "The problem has been recorded. Nothing you were doing was charged or changed by this — try again in a moment.",
+    "backToDashboard": "Back to your dashboard",
+    "backToHome": "Back to the homepage"
   }
 }

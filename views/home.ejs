@@ -9,7 +9,7 @@ const SHOW_TRUST_STATS = false;
 <html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
 <head>
 <%- include('partials/head', { title: t('meta.home.title'), description: t('meta.home.description') }) %>
-<script type="application/ld+json">
+<script type="application/ld+json" nonce="<%= cspNonce %>">
 {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -48,7 +48,7 @@ const SHOW_TRUST_STATS = false;
           <source media="(max-width:900px)" srcset="/images/hero-mobile.png" type="image/png">
           <source media="(min-width:901px)" srcset="/images/hero-desktop.webp" type="image/webp">
           <source media="(min-width:901px)" srcset="/images/hero-desktop.png" type="image/png">
-          <img src="/images/hero-desktop.png" alt="<%= t('home.hero.imgAlt') %>" width="1792" height="2400" fetchpriority="high" decoding="async">
+          <img src="/images/hero-desktop.png" alt="<%= t('home.hero.imgAlt') %>" width="1344" height="1800" fetchpriority="high" decoding="async">
         </picture>
 
       </div>
