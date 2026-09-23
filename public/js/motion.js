@@ -1,5 +1,6 @@
 (function () {
-  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  motionPreference.addEventListener('change', function(event) { if(event.matches) document.querySelectorAll('.tap-demo.is-playing').forEach(function(el){el.classList.remove('is-playing');}); });
 
   // Client-side mirror of lib/validate.js's NAME_RE — server-side stays
   // authoritative, this is only for immediate typing feedback. Built with
@@ -17,188 +18,23 @@
     NAME_PATTERN = /^(?=.*[^\d\s])[^\d]{2,60}$/;
   }
 
-  // ---------- entrance choreography ----------
-  // Elements marked [data-reveal] fade/rise in once, staggered by their
-  // position among siblings sharing the same [data-reveal-group] (or
-  // document order if ungrouped). Capped stagger, see project motion rules.
-  function initReveal() {
-    var els = document.querySelectorAll('[data-reveal]');
-    if (!els.length) return;
-    if (reduceMotion || !('IntersectionObserver' in window)) {
-      els.forEach(function (el) { el.classList.add('is-visible'); });
-      return;
-    }
-    var groups = {};
-    els.forEach(function (el) {
-      var g = el.getAttribute('data-reveal-group') || 'default';
-      groups[g] = groups[g] || [];
-      groups[g].push(el);
-    });
-    Object.keys(groups).forEach(function (g) {
-      groups[g].forEach(function (el, i) {
-        el.style.transitionDelay = Math.min(i, 5) * 70 + 'ms';
-      });
-    });
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-    els.forEach(function (el) { io.observe(el); });
-
-    // Safety net: some browser/embedding contexts fail to fire
-    // IntersectionObserver callbacks reliably. Content must never stay
-    // invisible forever because of that — force-reveal anything still
-    // hidden shortly after load.
-    setTimeout(function () {
-      els.forEach(function (el) { el.classList.add('is-visible'); });
-    }, 1200);
-  }
-
-  // ---------- number count-up ----------
-  // Elements with [data-countup] animate from 0 to their own text content
-  // on first reveal. Honest about the MPA architecture: this is a
-  // count-from-zero-on-load effect, not an old-to-new delta (there's no
-  // client-side state to diff against across a full page navigation).
-  function animateCount(el) {
-    var raw = el.getAttribute('data-countup');
-    var match = raw.match(/^([^\d-]*)(-?[\d.,]+)(.*)$/);
-    if (!match) return;
-    var prefix = match[1], numStr = match[2].replace(/,/g, ''), suffix = match[3];
-    var target = parseFloat(numStr);
-    if (isNaN(target)) return;
-    var decimals = (numStr.split('.')[1] || '').length;
-    if (reduceMotion) { el.textContent = prefix + target.toFixed(decimals) + suffix; return; }
-
-    var duration = 900;
-    var start = null;
-    var finished = false;
-    function finish() {
-      if (finished) return;
-      finished = true;
-      el.textContent = prefix + target.toFixed(decimals) + suffix;
-    }
-    function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
-    function step(ts) {
-      if (finished) return;
-      if (start === null) start = ts;
-      var progress = Math.min((ts - start) / duration, 1);
-      var eased = easeOutExpo(progress);
-      var value = target * eased;
-      el.textContent = prefix + value.toFixed(decimals) + suffix;
-      if (progress < 1) requestAnimationFrame(step);
-      else finish();
-    }
-    requestAnimationFrame(step);
-    // Wall-clock watchdog: some environments (throttled/background tabs,
-    // some embedded webviews) deliver requestAnimationFrame very sparsely.
-    // The number must never sit at a wrong value indefinitely.
-    setTimeout(finish, duration + 400);
-  }
-
-  function initCountUp() {
-    var els = document.querySelectorAll('[data-countup]');
-    if (!els.length) return;
-    if (!('IntersectionObserver' in window)) { els.forEach(animateCount); return; }
-    var done = new Set();
-    function runOnce(el) { if (done.has(el)) return; done.add(el); animateCount(el); }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) { runOnce(entry.target); io.unobserve(entry.target); }
-      });
-    }, { threshold: 0.4 });
-    els.forEach(function (el) { io.observe(el); });
-    // Same safety net as initReveal — never leave a stat frozen at 0.
-    setTimeout(function () { els.forEach(runOnce); }, 1200);
-  }
-
-  // ---------- hero parallax ----------
-  // The hero image drifts slightly slower than the page as it scrolls out —
-  // applied to the inner .hero-media (not the [data-parallax] wrapper
-  // itself), which keeps this independent of the wrapper's own CSS
-  // entrance animation instead of both fighting over `transform`. Capped
-  // and rAF-throttled; a no-op once the hero has scrolled well past view.
-  function initHeroParallax() {
-    if (reduceMotion) return;
-    var wrap = document.querySelector('[data-parallax]');
-    var target = wrap ? wrap.querySelector('.hero-media') : null;
-    if (!wrap || !target) return;
-    var ticking = false;
-    var MAX_SHIFT = 28;
-    function update() {
-      ticking = false;
-      var rect = wrap.getBoundingClientRect();
-      var vh = window.innerHeight || document.documentElement.clientHeight;
-      if (rect.bottom < 0 || rect.top > vh) return;
-      var progress = (rect.top) / vh; // 1 at top of viewport, 0 as it centers, negative past center
-      var shift = Math.max(-MAX_SHIFT, Math.min(MAX_SHIFT, progress * MAX_SHIFT));
-      target.style.transform = 'translateY(' + shift.toFixed(1) + 'px)';
-    }
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(update);
-    }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    update();
-  }
-
-  // ---------- magnetic buttons ----------
-  // Primary CTAs marked [data-magnetic] pull slightly toward the cursor on
-  // desktop hover — a small, premium touch, never on touch devices (no
-  // hover to react to, and it would just feel like a delayed tap there).
-  function initMagneticButtons() {
-    if (reduceMotion) return;
-    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-    var RADIUS = 70;
-    var STRENGTH = 0.28;
-    document.querySelectorAll('[data-magnetic]').forEach(function (btn) {
-      btn.addEventListener('mousemove', function (e) {
-        var rect = btn.getBoundingClientRect();
-        var cx = rect.left + rect.width / 2;
-        var cy = rect.top + rect.height / 2;
-        var dx = e.clientX - cx;
-        var dy = e.clientY - cy;
-        var dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist > RADIUS) return;
-        btn.style.setProperty('--mx', (dx * STRENGTH).toFixed(1) + 'px');
-        btn.style.setProperty('--my', (dy * STRENGTH).toFixed(1) + 'px');
-      });
-      btn.addEventListener('mouseleave', function () {
-        btn.style.setProperty('--mx', '0px');
-        btn.style.setProperty('--my', '0px');
-      });
-    });
-  }
-
-  // ---------- FAQ smooth expand/collapse ----------
-  // Pure CSS grid-template-rows (0fr <-> 1fr) drives the height animation —
-  // no scrollHeight measurement, no layout thrash per toggle. JS only
-  // flips a class and enforces one open item per .faq-list.
+  // Native controls keep disclosure content available with or without JS.
   function initFaq() {
-    document.querySelectorAll('.faq-item').forEach(function (item) {
+    document.querySelectorAll('.faq-item').forEach(function(item, index) {
       var button = item.querySelector('.faq-summary');
-      if (!button) return;
-
-      button.addEventListener('click', function () {
-        var isOpen = item.classList.contains('is-open');
-        var list = item.closest('.faq-list');
-
-        if (list && !isOpen) {
-          list.querySelectorAll('.faq-item.is-open').forEach(function (other) {
-            if (other === item) return;
-            other.classList.remove('is-open');
-            var otherBtn = other.querySelector('.faq-summary');
-            if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
-          });
-        }
-
-        item.classList.toggle('is-open', !isOpen);
-        button.setAttribute('aria-expanded', String(!isOpen));
-      });
+      var content = item.querySelector('.faq-content');
+      if (!button || !content) return;
+      content.id = 'faq-panel-' + index;
+      button.id = 'faq-button-' + index;
+      button.setAttribute('aria-controls', content.id);
+      content.setAttribute('aria-labelledby', button.id);
+      function setOpen(open) {
+        item.classList.toggle('is-open', open);
+        button.setAttribute('aria-expanded', String(open));
+        content.hidden = !open;
+      }
+      setOpen(item.classList.contains('is-open'));
+      button.addEventListener('click', function() { setOpen(content.hidden); });
     });
   }
 
@@ -292,6 +128,7 @@
       return true;
     }
     setFieldMessage(field, message);
+    input.setAttribute('aria-invalid', String(!valid));
     field.classList.toggle('invalid', !valid);
     field.classList.toggle('valid', valid);
     return valid;
@@ -299,10 +136,11 @@
 
   function initGenericValidation() {
     document.querySelectorAll('form[novalidate]').forEach(function (form) {
-      var fields = form.querySelectorAll('[data-validate]:not([data-validate="civilid"])');
+      var fields = form.querySelectorAll('[data-validate]:not([data-validate="civilid"]):not([type="checkbox"])');
       fields.forEach(function (input) {
-        input.addEventListener('blur', function () { validateGenericField(input); });
+        input.addEventListener('blur', function () { if(input.value || input.dataset.edited) validateGenericField(input); });
         input.addEventListener('input', function () {
+          input.dataset.edited = 'true';
           var field = input.closest('.field');
           if (field && field.classList.contains('invalid')) validateGenericField(input);
         });
@@ -325,12 +163,15 @@
           var field = input.closest('.field');
           var digits = input.value.replace(/\D/g, '');
           var ok = digits.length === 12 && digits === input.value.trim();
+          input.setAttribute('aria-invalid', String(!ok));
           if (field) field.classList.toggle('invalid', !ok);
           if (!ok && !firstInvalid) firstInvalid = input;
           allValid = allValid && ok;
         });
         requiredCheckboxes.forEach(function (input) {
           var ok = input.checked;
+          input.setAttribute('aria-invalid', String(!ok));
+          input.closest('.field').classList.toggle('invalid', !ok);
           if (!ok && !firstInvalid) firstInvalid = input;
           allValid = allValid && ok;
         });
@@ -426,17 +267,28 @@
     });
   }
 
+  function initCollection() {
+    document.querySelectorAll('.collection-example').forEach(function(example) {
+      var demo = example.querySelector('.tap-demo');
+      var button = example.querySelector('.collection-replay');
+      button.addEventListener('click', function() {
+        demo.classList.remove('is-playing');
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        requestAnimationFrame(function(){ requestAnimationFrame(function(){ demo.classList.add('is-playing'); }); });
+      });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
+    initCollection();
     initConfirmForms();
-    initReveal();
-    initCountUp();
     initFaq();
     initFieldValidation();
     initGenericValidation();
     initSubmitFeedback();
-    initHeroParallax();
-    initMagneticButtons();
     initPasswordToggles();
     initFooterActiveLink();
+    var invalid = document.querySelector('[aria-invalid="true"]');
+    if (invalid) invalid.focus();
   });
 })();

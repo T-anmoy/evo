@@ -13,8 +13,8 @@
     <p><%= t('booking.intro') %></p>
   </div>
 
-  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
-  <% if (success) { %><div class="alert alert-success"><%- include('partials/success-icon') %><span><%= success %></span></div><% } %>
+  <% if (error) { %><div class="alert alert-error" role="alert" tabindex="-1"><%= error %></div><% } %>
+  <% if (success) { %><div class="alert alert-success" role="status"><%- include('partials/success-icon') %><span><%= success %></span></div><% } %>
   <% if (typeof rebook !== 'undefined' && rebook) { %>
     <div class="alert alert-info"><%= t('booking.rebookInfo') %></div>
   <% } %>
@@ -34,6 +34,7 @@
       <% const rebookStudentId = (typeof rebook !== 'undefined' && rebook) ? rebook.studentId : (typeof defaultStudentId !== 'undefined' ? defaultStudentId : null); %>
       <% const rebookMenuId = (typeof rebook !== 'undefined' && rebook) ? rebook.menuItemId : ((typeof defaultMenuId !== 'undefined' && defaultMenuId) ? defaultMenuId : (menuItems[0] && menuItems[0].id)); %>
       <% const rebookPlan = (typeof rebook !== 'undefined' && rebook) ? rebook.planType : 'monthly'; %>
+      <% const v = typeof values !== 'undefined' ? values : {}; %>
       <form method="POST" action="/booking" id="bookingForm">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
@@ -41,18 +42,18 @@
           <label for="studentSelect"><%= t('booking.labelStudent') %></label>
           <select name="studentId" id="studentSelect" required>
             <% students.forEach(s => { %>
-              <option value="<%= s.id %>" data-school="<%= s.school %>" data-class="<%= s.class %>" <%= s.id === rebookStudentId ? 'selected' : '' %>><%= s.name %> — <%= s.school %></option>
+              <option value="<%= s.id %>" data-school="<%= s.school %>" data-class="<%= s.class %>" <%= s.id === (v.studentId ? Number(v.studentId) : rebookStudentId) ? 'selected' : '' %>><%= s.name %> — <%= s.school %></option>
             <% }) %>
           </select>
           <span class="hint" id="agePortionHint"></span>
         </div>
 
-        <div class="field">
-          <label><%= t('booking.labelMeal') %> <span style="font-weight:400; color:var(--muted);"><%= t('booking.labelMealHint') %></span></label>
+        <fieldset class="field">
+          <legend><%= t('booking.labelMeal') %> <span style="font-weight:400; color:var(--muted);"><%= t('booking.labelMealHint') %></span></legend>
           <div class="picker-grid">
             <% menuItems.forEach((m, i) => { %>
               <div class="picker-card">
-                <input type="radio" name="menuItemId" id="meal-<%= m.id %>" value="<%= m.id %>" <%= m.id === rebookMenuId ? 'checked' : '' %> required>
+                <input type="radio" name="menuItemId" id="meal-<%= m.id %>" value="<%= m.id %>" <%= m.id === (v.menuItemId ? Number(v.menuItemId) : rebookMenuId) ? 'checked' : '' %> required>
                 <label for="meal-<%= m.id %>">
                   <span class="picker-thumb"><%- include('partials/dish-image', { m: m }) %></span>
                   <span class="picker-body">
@@ -61,16 +62,17 @@
                   </span>
                   <span class="check-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
                 </label>
+                <details class="food-disclosure booking-food-detail"><summary><%= t('food.details') %></summary><%- include('partials/food-details', {m}) %></details>
               </div>
             <% }) %>
           </div>
-        </div>
+        </fieldset>
 
-        <div class="field">
-          <label><%= t('booking.labelPlan') %></label>
+        <fieldset class="field">
+          <legend><%= t('booking.labelPlan') %></legend>
           <div class="picker-grid plan-picker">
             <div class="picker-card">
-              <input type="radio" name="planType" id="plan-single" value="single" <%= rebookPlan === 'single' ? 'checked' : '' %>>
+              <input type="radio" name="planType" id="plan-single" value="single" <%= (v.planType || rebookPlan) === 'single' ? 'checked' : '' %>>
               <label for="plan-single">
                 <span class="plan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
                 <span class="picker-body">
@@ -81,7 +83,7 @@
               </label>
             </div>
             <div class="picker-card">
-              <input type="radio" name="planType" id="plan-monthly" value="monthly" <%= rebookPlan === 'monthly' ? 'checked' : '' %>>
+              <input type="radio" name="planType" id="plan-monthly" value="monthly" <%= (v.planType || rebookPlan) === 'monthly' ? 'checked' : '' %>>
               <label for="plan-monthly">
                 <span class="popular-tag"><%= t('booking.planMonthlyBadge') %></span>
                 <span class="plan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 0 1 4 4L7 21l-5 1 1-5Z"/></svg></span>
@@ -93,16 +95,16 @@
               </label>
             </div>
           </div>
-        </div>
+        </fieldset>
 
         <div class="form-row">
           <div class="field">
             <label for="startDate"><%= t('booking.labelStartDate') %></label>
-            <input type="date" name="startDate" id="startDate" value="<%= new Date().toISOString().split('T')[0] %>" required>
+            <input type="date" name="startDate" id="startDate" value="<%= v.startDate || bookingWindow().today %>" min="<%= bookingWindow().today %>" max="<%= bookingWindow().horizon %>" required>
           </div>
           <div class="field" id="daysField">
             <label for="daysInput"><%= t('booking.labelDays') %></label>
-            <input type="number" name="days" id="daysInput" inputmode="numeric" value="5" min="1" max="30">
+            <input type="number" name="days" id="daysInput" inputmode="numeric" value="<%= v.days === undefined ? 5 : v.days %>" min="1" max="30" step="1">
           </div>
         </div>
 
@@ -111,9 +113,9 @@
         <div class="confirm-bar" id="confirmBar">
           <div id="totalBox" style="display:flex; justify-content:space-between; align-items:center;">
             <span style="color:rgba(255,255,255,0.65); font-size:13px; font-weight:500;"><%= t('booking.totalDue') %></span>
-            <strong id="totalAmt" class="data-num" style="color:var(--leaf-light); font-size:20px;"><bdi>KWD 0.000</bdi></strong>
+            <strong aria-live="polite" id="totalAmt" class="data-num" style="color:var(--leaf-light); font-size:20px;"><bdi><%= t('booking.previewTotal') %></bdi></strong>
           </div>
-          <button type="submit" class="btn btn-primary" style="width:100%;" id="confirmBtn"><%= t('booking.confirmCta') %></button>
+          <button type="submit" class="btn btn-light" style="width:100%;" id="confirmBtn"><%= t('booking.confirmCta') %></button>
         </div>
         <p class="hint" style="text-align:center; margin-top:8px;"><%= t('booking.knetHint') %></p>
       </form>
@@ -175,15 +177,14 @@
     var totalEl = document.getElementById('totalAmt');
     function setTotal(text) {
       if (totalEl.textContent === text) return;
-      totalEl.textContent = text;
+      totalEl.querySelector('bdi').textContent = text;
       totalEl.classList.remove('total-updated');
-      // eslint-disable-next-line no-unused-expressions
-      void totalEl.offsetWidth; // restart the CSS transition on repeat updates
       totalEl.classList.add('total-updated');
     }
 
     if (plan === 'monthly') {
       daysField.style.display = 'none';
+      daysInput.disabled = true;
       var selectedOption = studentSelect.options[studentSelect.selectedIndex];
       var school = selectedOption ? selectedOption.getAttribute('data-school') : null;
       var startISO = startDateInput.value;
@@ -209,6 +210,7 @@
       }
     } else {
       daysField.style.display = 'block';
+      daysInput.disabled = false;
       note.textContent = '';
       confirmBtn.disabled = false;
       var d = Math.max(1, parseInt(daysInput.value, 10) || 1);

@@ -1,0 +1,4 @@
+<nav class="auth-nav" aria-label="<%= t('nav.langSwitchLabel') %>">
+  <a href="<%= locale === 'ar' ? '/ar' : '/' %>"><%= t('nav.home') %></a>
+  <a href="<%= altLocalePath %>" lang="<%= locale === 'ar' ? 'en' : 'ar' %>"><%= locale === 'ar' ? 'English' : 'العربية' %></a>
+</nav>

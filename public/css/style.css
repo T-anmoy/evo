@@ -140,7 +140,7 @@
    the header scroll away instead of staying pinned). */
 html{-webkit-text-size-adjust:100%; overflow-x:hidden;}
 body{
-  font-family:'Poppins',Arial,sans-serif;
+  font-family:var(--font-body);
   color:var(--ink-900);
   background:var(--ice-50);
   line-height:1.65;
@@ -154,18 +154,18 @@ button,input,select,textarea{font-family:inherit; font-size:16px;} /* 16px floor
 ul{list-style:none;}
 
 /* ---------- type scale ---------- */
-h1,h2,h3,.display{font-family:'Montserrat',Arial,sans-serif; font-weight:800; letter-spacing:-0.015em; color:var(--forest);}
+h1,h2,h3,.display{font-family:var(--font-heading); font-weight:800; letter-spacing:-0.015em; color:var(--forest);}
 h1{font-size:32px; line-height:1.08;}
 h2{font-size:var(--h2-size); line-height:1.15; letter-spacing:-0.01em;}
 h3{font-size:17px; line-height:1.3; font-weight:700; letter-spacing:-0.005em;}
 p{color:var(--muted);}
 
-.eyebrow{display:inline-flex; align-items:center; gap:8px; font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--forest-secondary);}
+.eyebrow{display:inline-flex; align-items:center; gap:8px; font-family:var(--font-heading); font-weight:700; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--forest-secondary);}
 .eyebrow::before{content:""; width:18px; height:3px; background:var(--leaf); border-radius:2px; flex-shrink:0;}
 .eyebrow.on-dark{color:var(--leaf-light);}
 .eyebrow.on-dark::before{background:var(--leaf);}
 
-.data-num{font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:-0.01em;}
+.data-num{font-family:var(--font-heading); font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:-0.01em;}
 /* Booking total recalculation cue (final refinement pass) — a brief
    opacity/scale settle whenever the JS-computed total actually changes,
    so updating the price reads as cause → effect instead of a silent
@@ -183,7 +183,7 @@ p{color:var(--muted);}
 .skip-link{
   position:absolute; top:12px; left:12px; z-index:200;
   background:var(--forest); color:#fff; padding:12px 20px; border-radius:8px;
-  font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:15px; text-decoration:none;
+  font-family:var(--font-heading); font-weight:700; font-size:15px; text-decoration:none;
   /* Off-screen via transform, not `top` — keeps this animation on the
      compositor-only transform/opacity properties like every other
      animation in this file, instead of triggering layout on focus. */
@@ -253,19 +253,7 @@ img{
 a, button, .btn{
   touch-action:manipulation;
 }
-
-/* ---------- entrance choreography ---------- */
-/* Elements opt in with [data-reveal]; motion.js adds .is-visible on
-   intersection (or immediately, if JS is off or motion is reduced —
-   see the noscript fallback rule below). */
-[data-reveal]{opacity:0; transform:translateY(18px); transition:opacity var(--dur-elevated) var(--ease-out), transform var(--dur-elevated) var(--ease-out);}
-[data-reveal].is-visible{opacity:1; transform:translateY(0);}
 @media (prefers-reduced-motion: reduce){
-  /* motion.js adds .is-visible immediately (no IntersectionObserver
-     wait) when motion is reduced, but without this the opacity/transform
-     change would still animate over --dur-elevated — content should just
-     be there, not fade/rise in even on a fast timer. */
-  [data-reveal]{transition:none;}
 }
 
 /* ---------- cross-page transitions (native, no SPA rearchitecture) ---------- */
@@ -276,107 +264,6 @@ a, button, .btn{
 @keyframes evo-fade-in{from{opacity:0; transform:translateY(6px);}}
 @media (prefers-reduced-motion: reduce){
   ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important;}
-}
-
-/* ---------- interactive surfaces: one hover/focus treatment, everywhere ----------
-   Every card-like surface site-wide gets the same lift + shadow-deepen on
-   hover/focus, on the same duration/easing tokens as the rest of the
-   motion system — defined once here rather than each section inventing
-   its own. Icons that sit inside these cards get a small sympathetic
-   scale, same trigger, same timing. */
-.menu-card, .menu-preview-card, .price-card, .what-is-pillar, .allergen-banner-item, .benefit-card{
-  transition:transform var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), border-color var(--dur-standard) var(--ease-standard);
-}
-.menu-card:hover, .menu-card:focus-within,
-.menu-preview-card:hover, .menu-preview-card:focus-within,
-.price-card:hover, .price-card:focus-within,
-.what-is-pillar:hover, .what-is-pillar:focus-within,
-.benefit-card:hover, .benefit-card:focus-within{
-  transform:translateY(-4px);
-  box-shadow:var(--shadow-sm);
-  border-color:var(--line-strong);
-}
-/* Menu imagery gets its own subtle zoom on top of the shared card lift —
-   pointer devices only (see prefers-reduced-motion guard below); touch
-   devices never depend on hover to reveal dish info, so nothing is lost
-   there. */
-@media (hover:hover) and (pointer:fine){
-  .menu-card .menu-thumb picture img, .menu-preview-card .menu-thumb picture img{
-    transition:transform var(--dur-elevated) var(--ease-out);
-  }
-  .menu-card:hover .menu-thumb picture img, .menu-preview-card:hover .menu-thumb picture img{
-    transform:scale(1.035);
-  }
-}
-.benefit-card:hover .benefit-card-icon, .benefit-card:focus-within .benefit-card-icon{transform:scale(1.08);}
-.benefit-card-icon{transition:transform var(--dur-standard) var(--ease-spring);}
-@media (prefers-reduced-motion: reduce){
-  .menu-card, .menu-preview-card, .price-card, .what-is-pillar, .benefit-card, .benefit-card-icon{transition:none;}
-  .menu-card:hover, .menu-preview-card:hover, .price-card:hover, .what-is-pillar:hover, .benefit-card:hover{transform:none;}
-  .benefit-card:hover .benefit-card-icon{transform:none;}
-  .menu-card .menu-thumb picture img, .menu-preview-card .menu-thumb picture img{transition:none;}
-  .menu-card:hover .menu-thumb picture img, .menu-preview-card:hover .menu-thumb picture img{transform:none;}
-}
-
-/* ---------- hero entrance: the richest moment on the page, on purpose ----------
-   Everything below the fold uses [data-reveal] (scroll-triggered). The
-   hero is always above the fold on load, so it gets a dedicated
-   page-load choreography instead — pure CSS, no IntersectionObserver
-   round-trip needed for content that's visible from the first frame.
-   One curve (--ease-out), one duration (--dur-hero), staggered by 80ms —
-   same system, just the top of its hierarchy. */
-@keyframes hero-rise-in{from{opacity:0; transform:translateY(22px);} to{opacity:1; transform:translateY(0);}}
-.hero-copy > .eyebrow, .hero-copy > h1, .hero-copy > p.lede, .hero-copy > .hero-actions, .hero-media-wrap{
-  animation:hero-rise-in var(--dur-hero) var(--ease-out) both;
-}
-.hero-copy > .eyebrow{animation-delay:0ms;}
-.hero-copy > h1{animation-delay:90ms;}
-.hero-copy > p.lede{animation-delay:180ms;}
-.hero-copy > .hero-actions{animation-delay:270ms;}
-.hero-media-wrap{animation-delay:220ms;}
-@media (prefers-reduced-motion: reduce){
-  .hero-copy > .eyebrow, .hero-copy > h1, .hero-copy > p.lede, .hero-copy > .hero-actions, .hero-media-wrap{
-    animation:none; opacity:1; transform:none;
-  }
-}
-
-/* A living detail on the hero itself — a slow, low-opacity light sweep
-   across the image, so the first thing a visitor sees doesn't sit
-   perfectly static. Kept subtle: this reads as ambient light, not a
-   loading state. */
-.hero-media-glow{
-  position:absolute; inset:0; pointer-events:none; z-index:2;
-  background:linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.22) 50%, transparent 60%);
-  background-size:250% 250%;
-  animation:hero-glow-sweep 6s ease-in-out 1.4s infinite;
-}
-@keyframes hero-glow-sweep{
-  0%, 100%{background-position:120% 120%;}
-  50%{background-position:-20% -20%;}
-}
-@media (prefers-reduced-motion: reduce){
-  .hero-media-glow{animation:none; display:none;}
-}
-
-/* Parallax (motion.js) writes --parallax-y here on scroll; translateZ(0)
-   keeps it on its own compositor layer so it stays smooth. */
-.hero-media-wrap{will-change:transform;}
-@media (prefers-reduced-motion: reduce){
-  .hero-media-wrap{transform:none !important;}
-}
-
-/* Magnetic buttons (motion.js, desktop pointer only) write --mx/--my as
-   the button is approached; falls back to static if JS never sets them. */
-[data-magnetic]{transform:translate(var(--mx, 0), var(--my, 0)); transition:transform var(--dur-standard) var(--ease-out);}
-[data-magnetic]:active{transition-duration:120ms;}
-/* These elements also have their own hover-lift transform (higher
-   specificity than [data-magnetic] alone would win outright and cancel
-   the pull) — recompose both explicitly so lift and magnetic pull apply
-   together instead of one silently overriding the other. */
-.btn-primary[data-magnetic]:hover{transform:translate(var(--mx, 0), var(--my, 0)) translateY(-1px);}
-.store-badge[data-magnetic]:hover, .store-badge[data-magnetic]:focus-visible{transform:translate(var(--mx, 0), var(--my, 0)) translateY(-3px);}
-@media (prefers-reduced-motion: reduce){
-  [data-magnetic]{transform:none !important; transition:none;}
 }
 
 /* ---------- layout ---------- */
@@ -392,7 +279,7 @@ a, button, .btn{
    height/padding, so hierarchy reads from color + weight rather than
    every action sharing one oversized pill shape. Pills stay on badges/
    tags/chips (status indicators, not actions) — those are unchanged. */
-.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:var(--control-height); padding:13px 24px; border-radius:var(--radius-sm); font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; border:none; cursor:pointer; white-space:nowrap; flex-shrink:0; transition:transform var(--dur-micro) var(--ease-standard), box-shadow var(--dur-micro) var(--ease-standard), background var(--dur-micro) var(--ease-standard);}
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:var(--control-height); padding:13px 24px; border-radius:var(--radius-sm); font-family:var(--font-heading); font-weight:700; font-size:16px; border:none; cursor:pointer; white-space:normal; max-width:100%; text-align:center; flex-shrink:1; transition:transform var(--dur-micro) var(--ease-standard), box-shadow var(--dur-micro) var(--ease-standard), background var(--dur-micro) var(--ease-standard);}
 /* Primary trust CTA — Forest bg, white text. The default for standard
    important actions (this is what most existing .btn-primary call sites
    across the site are: "standard important action", not "the one
@@ -448,9 +335,9 @@ a, button, .btn{
    ============================================================ */
 .app-header{background:var(--forest); position:sticky; top:0; z-index:50; padding-top:env(safe-area-inset-top);}
 .app-nav{display:flex; align-items:center; justify-content:space-between; height:66px;}
-.app-logo{color:var(--white); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:17px; display:flex; align-items:center; min-height:var(--control-height); gap:8px; white-space:nowrap; flex-shrink:0;}
+.app-logo{color:var(--white); font-family:var(--font-heading); font-weight:800; font-size:17px; display:flex; align-items:center; min-height:var(--control-height); gap:8px; white-space:nowrap; flex-shrink:0;}
 .app-logo .dot{color:var(--leaf);}
-.admin-nav-tag{font-family:'Poppins',Arial,sans-serif; font-weight:600; font-size:10.5px; letter-spacing:0.04em; text-transform:uppercase; color:var(--leaf-light); background:rgba(94,157,110,0.12); border:1px solid rgba(94,157,110,0.28); border-radius:100px; padding:4px 10px;}
+.admin-nav-tag{font-family:var(--font-body); font-weight:600; font-size:10.5px; letter-spacing:0.04em; text-transform:uppercase; color:var(--leaf-light); background:rgba(94,157,110,0.12); border:1px solid rgba(94,157,110,0.28); border-radius:100px; padding:4px 10px;}
 .app-links{display:flex; align-items:center; gap:4px;}
 .app-links a{color:rgba(255,255,255,0.68); font-size:16px; font-weight:500; padding:8px 14px; border-radius:8px; transition:background var(--dur-standard) var(--ease-standard), color var(--dur-standard) var(--ease-standard);}
 .app-links a:hover{color:var(--white); background:rgba(255,255,255,0.08);}
@@ -464,7 +351,7 @@ a, button, .btn{
 .notif-bell{position:relative; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:transparent; border:none; color:rgba(255,255,255,0.75); cursor:pointer; transition:background var(--dur-micro) var(--ease-standard), color var(--dur-micro) var(--ease-standard);}
 .notif-bell:hover{background:rgba(255,255,255,0.08); color:var(--white);}
 .notif-bell svg{width:19px; height:19px;}
-.notif-badge{position:absolute; top:3px; right:3px; min-width:16px; height:16px; padding:0 4px; border-radius:100px; background:var(--leaf); color:var(--ink-900); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:9.5px; display:flex; align-items:center; justify-content:center; border:2px solid var(--forest);}
+.notif-badge{position:absolute; top:3px; right:3px; min-width:16px; height:16px; padding:0 4px; border-radius:100px; background:var(--leaf); color:var(--ink-900); font-family:var(--font-heading); font-weight:800; font-size:9.5px; display:flex; align-items:center; justify-content:center; border:2px solid var(--forest);}
 
 .notif-dropdown{
   position:absolute; top:calc(100% + 12px); right:-8px; width:360px;
@@ -482,7 +369,7 @@ a, button, .btn{
 }
 @media (prefers-reduced-motion: reduce){.notif-dropdown{transition:opacity var(--dur-micro) linear;}}
 .notif-dropdown-head{display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid var(--line);}
-.notif-dropdown-head span{font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; color:var(--forest);}
+.notif-dropdown-head span{font-family:var(--font-heading); font-weight:700; font-size:16px; color:var(--forest);}
 .notif-markall{background:none; border:none; color:var(--leaf-dark); font-size:16px; font-weight:600; cursor:pointer; padding:0;}
 .notif-markall:hover{text-decoration:underline;}
 .notif-empty{padding:32px 18px; text-align:center; font-size:16px; color:var(--muted);}
@@ -499,14 +386,14 @@ a, button, .btn{
 .notif-body p{font-size:16px; line-height:1.6; color:var(--forest); margin:0 0 4px;}
 .notif-body .notif-time{font-size:16px; color:var(--muted);}
 .notif-read-form{flex-shrink:0;}
-.notif-read-form button{width:10px; height:10px; border-radius:50%; background:var(--leaf); border:none; cursor:pointer; margin-top:6px; padding:0;}
+.notif-read-form button{width:44px;height:44px;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;}.notif-read-form button::before{content:"";width:10px;height:10px;background:var(--forest-secondary);border-radius:50%;}
 .notif-viewall{display:block; text-align:center; padding:13px; font-size:16px; font-weight:600; color:var(--forest-secondary); border-top:1px solid var(--line);}
 .notif-viewall:hover{color:var(--leaf-dark);}
 @media (max-width:480px){
   .notif-dropdown{position:fixed; left:16px; right:16px; top:calc(66px + env(safe-area-inset-top) + 10px); width:auto; max-width:none;}
 }
 
-.nav-toggle{display:none; align-items:center; gap:6px; min-height:var(--control-height); background:none; border:none; color:var(--white); padding:8px 10px; font-family:'Montserrat',Arial,sans-serif; font-weight:600; font-size:16px; cursor:pointer; flex-shrink:0; border-radius:8px;}
+.nav-toggle{display:none; align-items:center; gap:6px; min-height:var(--control-height); background:none; border:none; color:var(--white); padding:8px 10px; font-family:var(--font-heading); font-weight:600; font-size:16px; cursor:pointer; flex-shrink:0; border-radius:8px;}
 /* At the narrowest widths, "Menu"/"Close" next to a full-width Login
    pill (longer still in Arabic — "تسجيل الدخول") is the one header
    combination genuinely tight on room. The hamburger icon alone is a
@@ -527,10 +414,10 @@ a, button, .btn{
 .page-head p{color:var(--muted); font-size:16px;}
 
 .admin-page-head{max-width:none; display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap;}
-.live-data-tag{display:inline-flex; align-items:center; gap:7px; font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; letter-spacing:0.05em; text-transform:uppercase; color:var(--leaf-dark); background:var(--ice-50); border:1px solid var(--line); border-radius:100px; padding:8px 14px; flex-shrink:0; margin-top:4px;}
+.live-data-tag{display:inline-flex; align-items:center; gap:7px; font-family:var(--font-heading); font-weight:700; font-size:16px; letter-spacing:0.05em; text-transform:uppercase; color:var(--leaf-dark); background:var(--ice-50); border:1px solid var(--line); border-radius:100px; padding:8px 14px; flex-shrink:0; margin-top:4px;}
 .live-dot{width:7px; height:7px; border-radius:50%; background:var(--leaf); box-shadow:0 0 0 3px rgba(94,157,110,0.25);}
 @media (prefers-reduced-motion: no-preference){
-  .live-dot{animation:live-pulse 2.2s ease-in-out infinite;}
+  .live-dot{animation:none;}
 }
 @keyframes live-pulse{
   0%, 100%{box-shadow:0 0 0 3px rgba(94,157,110,0.25);}
@@ -584,7 +471,7 @@ a, button, .btn{
 .stat-icon{width:30px; height:30px; border-radius:9px; background:var(--ice-100); color:var(--leaf-dark); display:flex; align-items:center; justify-content:center; margin-bottom:10px;}
 .stat-icon svg{width:15px; height:15px;}
 .stat .label{font-size:16px; color:var(--muted); margin-bottom:8px; font-weight:500; text-transform:uppercase; letter-spacing:0.05em;}
-.stat .value{font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:26px; color:var(--forest); font-variant-numeric:tabular-nums;}
+.stat .value{font-family:var(--font-heading); font-weight:800; font-size:26px; color:var(--forest); font-variant-numeric:tabular-nums;}
 .stat .value.leaf{color:var(--leaf-dark);}
 
 form .field{margin-bottom:18px;}
@@ -662,7 +549,7 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
    instead of letting it push the whole page into horizontal scroll. */
 .data-table-view{overflow-x:auto;}
 @media (max-width:640px){
-  .data-table-view{display:none;}
+  .data-table-view.has-card-alternative,.responsive-records .data-table-view{display:none;}
   .data-card-view{display:block;}
 }
 .data-card{border:1px solid var(--line); border-radius:var(--radius-sm); padding:16px; background:var(--white);}
@@ -682,11 +569,6 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
    booking never requires scrolling back down to find the button —
    safe-area-inset-bottom keeps it clear of the iPhone home indicator. */
 .confirm-bar{background:var(--forest); border-radius:14px; padding:18px 20px; margin-bottom:18px; display:flex; flex-direction:column; gap:14px;}
-/* .btn-primary's forest bg is invisible on this bar's own forest
-   background — invert to a white pill so the booking confirm action
-   (the single most important control on this page) is actually visible. */
-.confirm-bar .btn-primary{background:var(--white); color:var(--forest);}
-.confirm-bar .btn-primary:hover{background:var(--mint);}
 @media (max-width:640px){
   .confirm-bar{
     position:fixed; left:0; right:0; bottom:0; z-index:40; margin-bottom:0;
@@ -759,12 +641,12 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
 .empty-state .empty-icon{width:52px; height:52px; margin:0 auto 16px; border-radius:50%; background:var(--ice-50); display:flex; align-items:center; justify-content:center;}
 .empty-state .empty-icon svg{width:22px; height:22px; color:var(--forest-secondary);}
 .empty-state p{font-size:16px; max-width:320px; margin:0 auto;}
-.empty-state p strong{display:block; color:var(--forest); font-size:16px; margin-bottom:6px; font-family:'Montserrat',sans-serif;}
+.empty-state p strong{display:block; color:var(--forest); font-size:16px; margin-bottom:6px; font-family:var(--font-heading);}
 
 /* ---------- 404 ---------- */
 .notfound-shell{min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg, var(--forest) 0%, var(--forest-secondary) 65%, var(--forest-mid) 100%); padding:24px;}
 .notfound-card{background:var(--white); width:100%; max-width:460px; border-radius:var(--radius-lg); padding:44px 38px; box-shadow:var(--shadow-lg); text-align:center;}
-.notfound-logo{display:inline-block; font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:18px; margin-bottom:28px; color:var(--forest);}
+.notfound-logo{display:inline-block; font-family:var(--font-heading); font-weight:800; font-size:18px; margin-bottom:28px; color:var(--forest);}
 .notfound-logo .dot{color:var(--leaf);}
 .notfound-mark{width:64px; height:64px; margin:0 auto 22px; border-radius:50%; background:var(--ice-50); display:flex; align-items:center; justify-content:center; color:var(--forest-secondary);}
 .notfound-mark svg{width:28px; height:28px;}
@@ -775,7 +657,7 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
 .auth-shell{min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg, var(--forest) 0%, var(--forest-secondary) 65%, var(--forest-mid) 100%); padding:24px; position:relative; overflow:hidden;}
 .auth-shell::before{content:""; position:absolute; top:-10%; right:-8%; width:420px; height:420px; border-radius:50%; background:radial-gradient(circle, rgba(94,157,110,0.14), transparent 70%);}
 .auth-card{background:var(--white); width:100%; max-width:420px; border-radius:var(--radius-lg); padding:40px 36px; box-shadow:var(--shadow-lg); position:relative;}
-.auth-card .logo{font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:19px; margin-bottom:18px; text-align:center;}
+.auth-card .logo{font-family:var(--font-heading); font-weight:800; font-size:19px; margin-bottom:18px; text-align:center;}
 .auth-card .logo .dot{color:var(--leaf);}
 .auth-card h1{font-size:22px; text-align:center; margin-bottom:6px;}
 .auth-card .sub{text-align:center; color:var(--muted); font-size:16px; margin-bottom:26px;}
@@ -843,7 +725,7 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
 @media (max-width:900px){
   .menu-preview-strip{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
-.menu-nutri-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; border-top:1px solid var(--line); padding-top:14px;}
+.menu-nutri-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(72px,1fr)); gap:10px; border-top:1px solid var(--line); padding-top:14px;}
 .menu-nutri-grid > div{display:flex; flex-direction:column; gap:2px;}
 .menu-nutri-val{font-size:16px; color:var(--forest); font-weight:700;}
 .menu-nutri-key{font-size:16px; color:var(--muted); text-transform:uppercase; letter-spacing:0.04em; font-weight:600;}
@@ -853,15 +735,15 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
    of a text dropdown, and a visible checked state instead of a hidden
    select value. Input stays in the accessibility tree (visually hidden,
    not display:none) so it's still keyboard- and screen-reader-operable. */
-.picker-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:12px; margin-bottom:4px;}
+.picker-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%,230px),1fr)); gap:12px; margin-bottom:4px;}
 .plan-picker{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
 @media (max-width:400px){
   .plan-picker{grid-template-columns:minmax(0,1fr);}
 }
-.picker-card{position:relative; min-width:0;}
+.picker-card{position:relative; min-width:0; display:flex; flex-direction:column; gap:8px;}
 .picker-card input{position:absolute; opacity:0; width:1px; height:1px; margin:-1px; overflow:hidden; clip:rect(0,0,0,0);}
 .picker-card label{
-  display:flex; align-items:center; gap:12px; height:100%; min-height:var(--control-height); min-width:0; padding:12px 14px;
+  display:flex; flex:1; align-items:center; gap:12px; min-height:var(--control-height); min-width:0; padding:12px 14px;
   border:2px solid var(--border-input); border-radius:var(--radius-sm); background:var(--white); cursor:pointer;
   transition:border-color var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), transform var(--dur-micro) var(--ease-standard);
   position:relative;
@@ -872,7 +754,7 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
 .picker-thumb{width:40px; aspect-ratio:1/1; border-radius:9px; background:linear-gradient(135deg, var(--forest-secondary), var(--forest-mid)); display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;}
 .picker-thumb svg{width:19px; height:19px; color:var(--leaf-light);}
 .picker-thumb picture{display:block; width:100%; height:100%;}
-.picker-thumb picture img{width:100%; height:100%; object-fit:cover;}
+.picker-thumb picture img{width:100%; height:100%; object-fit:contain;}
 .picker-body{display:flex; flex-direction:column; gap:3px; min-width:0; padding-right:30px;} /* clears the absolutely-positioned check-badge so long dish names never wrap underneath it */
 .picker-body strong{font-size:16px; color:var(--forest); line-height:1.3;}
 .picker-meta{font-size:16px; color:var(--leaf-dark); font-weight:600;}
@@ -893,7 +775,7 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
 .student-row .avatar{margin-top:2px;}
 .student-row .btn{margin-top:2px;}
 .student-row:last-child{border-bottom:none;}
-.avatar{width:40px; height:40px; border-radius:50%; background:var(--forest); color:var(--white); display:flex; align-items:center; justify-content:center; font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; flex-shrink:0;}
+.avatar{width:40px; height:40px; border-radius:50%; background:var(--forest); color:var(--white); display:flex; align-items:center; justify-content:center; font-family:var(--font-heading); font-weight:700; font-size:16px; flex-shrink:0;}
 .student-meta{flex:1; min-width:0;}
 .student-meta strong{display:flex; align-items:center; gap:6px; font-size:16px;}
 .student-meta span{font-size:16px; color:var(--muted);}
@@ -918,7 +800,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .app-foot-full{margin-top:40px; padding-top:44px; border-top:1px solid var(--line); background:var(--white);}
 .app-foot-grid{display:flex; justify-content:space-between; gap:40px; flex-wrap:wrap; padding-bottom:28px;}
 .app-foot-links{display:flex; gap:40px; flex-wrap:wrap;}
-.app-foot-links h4{font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; letter-spacing:0.06em; text-transform:uppercase; color:var(--forest-secondary); margin-bottom:14px;}
+.app-foot-links h4{font-family:var(--font-heading); font-weight:700; font-size:16px; letter-spacing:0.06em; text-transform:uppercase; color:var(--forest-secondary); margin-bottom:14px;}
 .app-foot-links .foot-col{display:flex; flex-direction:column;}
 .app-foot-links a{display:flex; align-items:center; min-height:var(--control-height); color:var(--muted); font-size:16px; text-decoration:none; transition:color var(--dur-micro) var(--ease-standard);}
 .app-foot-links a:hover{color:var(--leaf-dark);}
@@ -943,7 +825,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    ============================================================ */
 .site-header{background:var(--forest); position:sticky; top:0; z-index:50; padding-top:env(safe-area-inset-top);}
 .site-nav{display:flex; align-items:center; justify-content:space-between; height:72px; max-width:1400px;}
-.site-logo{color:var(--white); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:18px; display:flex; align-items:center; min-height:var(--control-height); gap:8px; white-space:nowrap; flex-shrink:0;}
+.site-logo{color:var(--white); font-family:var(--font-heading); font-weight:800; font-size:18px; display:flex; align-items:center; min-height:var(--control-height); gap:8px; white-space:nowrap; flex-shrink:0;}
 .site-logo .dot{color:var(--leaf);}
 .site-links{display:flex; align-items:center; gap:2px;}
 .site-links a{color:rgba(255,255,255,0.72); font-size:16px; font-weight:500; padding:8px 6px; border-radius:8px; white-space:nowrap; transition:background var(--dur-standard) var(--ease-standard), color var(--dur-standard) var(--ease-standard);}
@@ -963,7 +845,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   padding:0 4px; white-space:nowrap; flex-shrink:0;
 }
 .lang-switch a{
-  color:rgba(255,255,255,0.55); font-family:'Montserrat',Arial,sans-serif;
+  color:rgba(255,255,255,0.55); font-family:var(--font-heading);
   font-weight:600; font-size:13px; letter-spacing:0.02em; text-decoration:none;
   padding:6px 2px;
 }
@@ -981,14 +863,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .auth-card .lang-switch a:hover{color:var(--forest-secondary);}
 .auth-card .lang-switch a[aria-current="true"]{color:var(--forest);}
 .site-actions .btn-sm{padding:9px 15px;}
-.site-actions a.btn-outline{color:#fff; border-color:rgba(255,255,255,0.28);}
-.site-actions a.btn-outline:hover{background:rgba(255,255,255,0.08);}
-/* .btn-primary's forest-on-white default is invisible on this header's own
-   forest background — invert to a white pill so it still reads as the
-   "primary" action (highest-contrast option) without borrowing the
-   selective School Yellow treatment for a plain nav link. */
-.site-actions a.btn-primary{background:var(--white); color:var(--forest);}
-.site-actions a.btn-primary:hover{background:var(--mint);}
 
 /* mobile marketing nav — own breakpoint from the app shell's, since 8
    nav items + 3 actions need real room before they collapse cleanly */
@@ -1011,7 +885,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   display:flex; align-items:center; justify-content:space-between; gap:10px;
   padding:13px 16px; margin-bottom:20px; border-radius:var(--radius-sm);
   background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.14);
-  color:rgba(255,255,255,0.88); font-family:'Montserrat',Arial,sans-serif; font-weight:600; font-size:16px;
+  color:rgba(255,255,255,0.88); font-family:var(--font-heading); font-weight:600; font-size:16px;
   transition:background var(--dur-micro) var(--ease-standard), border-color var(--dur-micro) var(--ease-standard);
 }
 .site-links-mobile-checkschool:hover{background:rgba(255,255,255,0.09); border-color:rgba(255,255,255,0.22);}
@@ -1029,7 +903,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   padding:calc(16px + env(safe-area-inset-top)) 0 16px; margin-bottom:4px;
   background:var(--forest);
 }
-.mobile-menu-brand{color:var(--white); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:18px;}
+.mobile-menu-brand{color:var(--white); font-family:var(--font-heading); font-weight:800; font-size:18px;}
 .mobile-menu-brand .dot{color:var(--leaf);}
 .mobile-menu-close{
   display:flex; align-items:center; justify-content:center; width:44px; height:44px; flex-shrink:0;
@@ -1055,17 +929,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .hero-light .hero-copy h1{color:var(--forest);}
 .hero-light .hero-copy h1 em{color:var(--leaf-dark);}
 .hero-light .hero-copy p.lede{color:var(--muted);}
-/* .hero-actions a.btn-outline{color:#fff;...} below is the dark-hero
-   override — it has higher specificity than the plain .btn-outline base
-   rule, so on this light hero it must be explicitly re-scoped back to
-   the base forest/border-strong treatment rather than left to "just not
-   apply". */
-.hero-light .hero-actions a.btn-outline{color:var(--forest); border-color:var(--line-strong);}
-.hero-light .hero-actions a.btn-outline:hover{background:var(--mint);}
-/* Undo the dark-hero .btn-primary inversion below — this hero variant's
-   own cream/white background is what .btn-primary was designed for. */
-.hero-light .hero-actions a.btn-primary{background:var(--forest); color:var(--white);}
-.hero-light .hero-actions a.btn-primary:hover{background:var(--forest-secondary); color:var(--white); box-shadow:var(--shadow-sm);}
+/* .hero-actions a.btn-outline{color:#fff;...}
 /* The hero image sits in its own column on desktop (stretched to match the
    copy column's height, cropped via object-fit:cover — not ratio-locked
    by design, since the two-column layout's height is driven by the text).
@@ -1105,7 +969,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 }
 .hero-toast-icon{width:28px; height:28px; border-radius:50%; background:var(--success-bg); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
 .hero-toast-icon svg{width:13px; height:13px; color:var(--leaf-dark);}
-.hero-toast-title{font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; color:var(--forest); line-height:1.3;}
+.hero-toast-title{font-family:var(--font-heading); font-weight:700; font-size:16px; color:var(--forest); line-height:1.3;}
 .hero-toast-sub{font-size:16px; color:var(--muted); margin-top:2px;}
 @media (max-width:900px){
   /* .hero-copy's box disappears from layout; its children become direct
@@ -1114,11 +978,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
      trust badges without touching the markup itself. */
   .hero-light .hero-inner{grid-template-columns:minmax(0,1fr);}
   .hero-light .hero-copy{display:contents;}
-  .hero-copy > .eyebrow{order:1;}
-  .hero-copy > h1{order:2;}
-  .hero-copy > p.lede{order:3;}
-  .hero-copy > .hero-actions{order:4;}
-  .hero-copy > .hero-quiet-link{order:4;}
   .hero-media-wrap{order:5; margin-top:28px;}
 
   .hero-media-wrap::before{top:8px; right:-14px; bottom:-16px; left:-8px; border-radius:58% 42% 48% 52% / 40% 55% 45% 60%;}
@@ -1128,11 +987,9 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
      below the header" and "no max-width cap" that used to live on it move
      to .hero-inner (a real box) and its now-direct child elements. */
   .hero-light .hero-inner{padding-top:20px;}
-  .hero-copy > .eyebrow, .hero-copy > h1, .hero-copy > p.lede, .hero-copy > .hero-actions, .hero-copy > .hero-quiet-link{max-width:none;}
   .hero-light .hero-copy h1{margin-bottom:14px;}
   .hero-light .hero-copy p.lede{margin-bottom:20px;}
   .hero-light .hero-actions.hero-actions-3{margin-bottom:0;}
-  .hero-copy > .hero-quiet-link{margin-top:14px;}
 }
 .hero-copy{padding:64px 40px 64px 0; position:relative; z-index:2; max-width:560px;}
 .hero-copy .eyebrow{margin-bottom:22px;}
@@ -1140,32 +997,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .hero-copy h1 em{font-style:normal; color:var(--leaf-light);}
 .hero-copy p.lede{color:rgba(255,255,255,0.72); font-size:16.5px; line-height:1.6; margin-bottom:32px; max-width:460px;}
 .hero-actions{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:40px;}
-/* Scoped to an actual dark surface ancestor (a non-light .hero, or a
-   .cta-band's own dark band — e.g. the Parents page's closing "Create
-   your account / Log in" row, direct children of .cta-band .wrap) — this
-   is a reusable button-row utility, also reused on plain WHITE surfaces
-   nested further inside a .cta-band (e.g. the homepage's closing "Ready
-   when you are" .benefit-card cards), so the dark-surface color
-   inversion below must not apply unconditionally to every .hero-actions
-   inside a .cta-band, only to one sitting directly on its dark band —
-   `.cta-band .wrap > .hero-actions` (direct child) deliberately excludes
-   the nested-in-a-white-card case, which needs the opposite (light-
-   surface) treatment instead. Without this scoping, .btn-outline's
-   default forest-on-transparent styling is invisible on the dark band,
-   or (if scoped too broadly) white-on-white inside the white cards —
-   both confirmed live via elementFromPoint/computed-style checks. */
-.hero:not(.hero-light) .hero-actions a.btn-outline,
-.cta-band .wrap > .hero-actions a.btn-outline{color:#fff; border-color:rgba(255,255,255,0.28);}
-.hero:not(.hero-light) .hero-actions a.btn-outline:hover,
-.cta-band .wrap > .hero-actions a.btn-outline:hover{background:rgba(255,255,255,0.08);}
-/* .btn-primary's forest bg is invisible on this hero's own forest
-   background — invert to white bg/forest text so it still reads as the
-   trust-colored primary action, distinct from the selective School
-   Yellow attention treatment used elsewhere (e.g. the homepage hero). */
-.hero:not(.hero-light) .hero-actions a.btn-primary,
-.cta-band .wrap > .hero-actions a.btn-primary{background:var(--white); color:var(--forest);}
-.hero:not(.hero-light) .hero-actions a.btn-primary:hover,
-.cta-band .wrap > .hero-actions a.btn-primary:hover{background:var(--mint); color:var(--forest-secondary); transform:translateY(-1px); box-shadow:none;}
 
 /* diagonal seam panel that carries the tap demo */
 .hero-visual{
@@ -1198,7 +1029,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   width:76px; height:76px; margin:0 auto 18px; border-radius:50%;
   border:2px solid rgba(94,157,110,0.35); display:flex; align-items:center; justify-content:center;
   position:relative;
-  animation:tap-contact-scale 3.2s var(--ease-spring) infinite;
 }
 .tap-reader .reader-ring::before{
   content:""; position:absolute; inset:-8px; border-radius:50%; border:1.5px solid rgba(94,157,110,0.18);
@@ -1207,7 +1037,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .tap-reader .ripple{
   position:absolute; inset:0; margin:auto; width:76px; height:76px; border-radius:50%;
   border:1.5px solid var(--leaf); opacity:0; pointer-events:none;
-  animation:tap-ripple 3.2s var(--ease-out) infinite;
 }
 .tap-reader .ripple.delay{animation-delay:180ms;}
 @keyframes tap-contact-scale{
@@ -1221,7 +1050,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   70%{opacity:0; transform:scale(1.9);}
   100%{opacity:0; transform:scale(1.9);}
 }
-.tap-reader .reader-label{font-family:'Montserrat',sans-serif; font-weight:700; font-size:12px; color:rgba(255,255,255,0.55); letter-spacing:0.04em;}
+.tap-reader .reader-label{font-family:var(--font-heading); font-weight:700; font-size:12px; color:rgba(255,255,255,0.55); letter-spacing:0.04em;}
 
 .tap-card{
   position:absolute; top:-38px; left:50%; width:150px; height:94px;
@@ -1229,10 +1058,9 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   border-radius:12px; box-shadow:0 16px 30px -10px rgba(94,157,110,0.5);
   padding:12px 14px; display:flex; flex-direction:column; justify-content:space-between;
   transform:translate(-50%,0) rotate(-8deg);
-  animation:tap-move 3.2s ease-in-out infinite;
 }
 .tap-card .chip{width:20px; height:14px; border-radius:3px; background:rgba(22,63,49,0.35);}
-.tap-card .card-name{font-family:'Montserrat',sans-serif; font-weight:800; font-size:11px; color:var(--forest);}
+.tap-card .card-name{font-family:var(--font-heading); font-weight:800; font-size:11px; color:var(--forest);}
 
 @keyframes tap-move{
   0%,18%{transform:translate(-50%,0) rotate(-8deg);}
@@ -1244,12 +1072,11 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   50%{box-shadow:0 0 0 14px rgba(94,157,110,0);}
   70%,100%{box-shadow:0 0 0 0 rgba(94,157,110,0);}
 }
-.tap-reader.pulse .reader-ring{animation:tap-pulse 3.2s ease-in-out infinite;}
+
 
 .tap-toast{
   margin-top:22px; background:var(--white); border-radius:14px; padding:14px 16px;
   display:flex; align-items:center; gap:12px; box-shadow:var(--shadow-lg);
-  animation:toast-in 3.2s ease-in-out infinite;
 }
 @keyframes toast-in{
   0%,52%{opacity:0; transform:translateY(10px);}
@@ -1258,8 +1085,8 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 }
 .tap-toast .toast-icon{width:34px; height:34px; border-radius:50%; background:var(--success-bg); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
 .tap-toast .toast-icon svg{width:16px; height:16px; color:var(--leaf-dark);}
-.tap-toast .toast-icon svg path{stroke-dasharray:1px; stroke-dashoffset:1px; animation:check-draw 3.2s linear infinite;}
-.tap-toast .toast-title{font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; color:var(--forest);}
+.tap-toast .toast-icon svg path{stroke-dasharray:1px; stroke-dashoffset:0;}
+.tap-toast .toast-title{font-family:var(--font-heading); font-weight:700; font-size:16px; color:var(--forest);}
 .tap-toast .toast-sub{font-size:16px; color:var(--muted); margin-top:2px;}
 @keyframes check-draw{
   0%,58%{stroke-dashoffset:1px;}
@@ -1296,7 +1123,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .proof-row-item:first-child{border-left:none;}
 .proof-row-icon{width:36px; height:36px; border-radius:50%; background:rgba(46,107,69,0.1); color:var(--leaf-dark); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
 .proof-row-icon svg{width:17px; height:17px;}
-.proof-row-item span{font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:15.5px; color:var(--forest); line-height:1.3;}
+.proof-row-item span{font-family:var(--font-heading); font-weight:700; font-size:15.5px; color:var(--forest); line-height:1.3;}
 @media (max-width:900px){
   .proof-row-item{flex:1 1 45%; border-left:none; border-top:1px solid var(--line);}
   .proof-row-item:nth-child(1),.proof-row-item:nth-child(2){border-top:none;}
@@ -1311,7 +1138,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    mocked data instead of a live feed — reused across the homepage,
    /parents, /schools, and /caterers rather than each page inventing its
    own "(illustrative example)" wording treatment. */
-.sample-tag{display:inline-flex; align-items:center; gap:6px; font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--leaf-dark); background:rgba(46,107,69,0.08); border-radius:100px; padding:4px 11px;}
+.sample-tag{display:inline-flex; align-items:center; gap:6px; font-family:var(--font-heading); font-weight:700; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--leaf-dark); background:rgba(46,107,69,0.08); border-radius:100px; padding:4px 11px;}
 .sample-tag svg{width:11px; height:11px;}
 /* Dark-surface variant — same component, safe contrast on navy (e.g. the
    dashboard preview card): border instead of a tinted fill, lime-500
@@ -1321,7 +1148,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 /* steps (real sequence: book -> tap -> collected -> notified) */
 .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:24px; counter-reset:step;}
 .step{position:relative; padding-top:8px;}
-.step .step-num{font-family:'Montserrat',sans-serif; font-weight:800; font-size:16px; letter-spacing:0.04em; text-transform:uppercase; color:var(--forest); margin-bottom:14px; display:flex; align-items:center; gap:10px;}
+.step .step-num{font-family:var(--font-heading); font-weight:800; font-size:16px; letter-spacing:0.04em; text-transform:uppercase; color:var(--forest); margin-bottom:14px; display:flex; align-items:center; gap:10px;}
 /* Numbered badge, not plain colored text — a filled circle so the Tap
    (attention) and Notified (completion) steps can use School
    Yellow/Leaf backgrounds with proper dark-ink contrast, the same
@@ -1348,7 +1175,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .price-card.featured h3{color:#fff;}
 .price-card.featured p{color:rgba(255,255,255,0.65);}
 .price-card .price-tag{font-size:16px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:10px;}
-.price-card .price-amt{font-family:'Montserrat',sans-serif; font-weight:800; font-size:40px; margin:6px 0 4px; font-variant-numeric:tabular-nums;}
+.price-card .price-amt{font-family:var(--font-heading); font-weight:800; font-size:40px; margin:6px 0 4px; font-variant-numeric:tabular-nums;}
 .price-card .price-amt span{font-size:16px; font-weight:600; color:var(--muted);}
 .price-card.featured .price-amt span{color:rgba(255,255,255,0.55);}
 .price-card p{font-size:16px; margin-bottom:22px;}
@@ -1357,9 +1184,9 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .faq-list{margin:0;}
 .faq-item{border-bottom:1px solid var(--line);}
 .faq-summary{
-  width:100%; padding:20px 4px; font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; color:var(--forest);
+  width:100%; padding:20px 4px; font-family:var(--font-heading); font-weight:700; font-size:16px; color:var(--forest);
   cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:16px;
-  background:none; border:none; text-align:left; font-size:16px;
+  background:none; border:none; text-align:start; font-size:16px;
 }
 .faq-summary .plus{width:22px; height:22px; border-radius:50%; border:1.5px solid var(--line-strong); flex-shrink:0; position:relative; transition:transform var(--dur-standard) var(--ease-standard), border-color var(--dur-standard) var(--ease-standard);}
 .faq-summary .plus::before, .faq-summary .plus::after{content:""; position:absolute; background:var(--forest-secondary); top:50%; left:50%; transform:translate(-50%,-50%);}
@@ -1371,7 +1198,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    no scrollHeight measurement, no layout thrash on every toggle. */
 .faq-content{
   display:grid;
-  grid-template-rows:0fr;
+  grid-template-rows:1fr;
   transition:grid-template-rows var(--dur-standard) var(--ease-standard);
 }
 .faq-item.is-open .faq-content{grid-template-rows:1fr;}
@@ -1396,8 +1223,8 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   display:flex; align-items:baseline; justify-content:space-between; gap:20px;
   padding:22px 0; border-bottom:1px solid rgba(255,255,255,0.14);
 }
-.proof-name{font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:clamp(22px,3.4vw,38px); letter-spacing:-0.01em; color:#fff; line-height:1.1;}
-.proof-tag{font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--leaf-light); flex-shrink:0;}
+.proof-name{font-family:var(--font-heading); font-weight:800; font-size:clamp(22px,3.4vw,38px); letter-spacing:-0.01em; color:#fff; line-height:1.1;}
+.proof-tag{font-family:var(--font-heading); font-weight:700; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--leaf-light); flex-shrink:0;}
 
 /* final CTA with diagonal seam */
 /* The closing section carries the same creative weight as the hero — it's
@@ -1424,11 +1251,11 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .site-foot a{color:rgba(255,255,255,0.75); text-decoration:none; transition:color var(--dur-micro) var(--ease-standard);}
 .site-foot a:hover{color:var(--leaf-light);}
 .site-foot-top{display:grid; grid-template-columns:minmax(0,1.4fr) minmax(0,2.6fr); gap:48px; padding-bottom:44px;}
-.site-foot-brand .site-logo{color:var(--white); font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:18px; display:inline-flex; margin-bottom:14px;}
+.site-foot-brand .site-logo{color:var(--white); font-family:var(--font-heading); font-weight:800; font-size:18px; display:inline-flex; margin-bottom:14px;}
 .site-foot-brand .site-logo .dot{color:var(--leaf);}
 .site-foot-brand p{color:rgba(255,255,255,0.5); font-size:16px; line-height:1.6; max-width:280px; margin:0 0 16px;}
 .site-foot-links{display:grid; grid-template-columns:repeat(4,1fr); gap:24px;}
-.site-foot-links h4{font-family:'Montserrat',Arial,sans-serif; font-weight:700; font-size:16px; letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.85); margin-bottom:16px;}
+.site-foot-links h4{font-family:var(--font-heading); font-weight:700; font-size:16px; letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.85); margin-bottom:16px;}
 .site-foot-links .foot-col{display:flex; flex-direction:column;}
 .site-foot-links a{display:flex; align-items:center; min-height:var(--control-height);}
 .site-foot-links a.active{color:var(--leaf-light); font-weight:700;}
@@ -1501,7 +1328,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .trustbar-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:24px; padding-top:28px; padding-bottom:28px;}
 .trustbar-item{display:flex; flex-direction:column; gap:6px; text-align:center; border-left:1px solid var(--line); padding-left:24px;}
 .trustbar-item:first-child{border-left:none; padding-left:0;}
-.trustbar-label{font-family:'Montserrat',sans-serif; font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted);}
+.trustbar-label{font-family:var(--font-heading); font-weight:700; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted);}
 .trustbar-value{font-size:16px; font-weight:600; color:var(--forest-secondary);}
 .trustbar-pending{color:var(--muted); font-weight:500; font-style:italic; font-size:16px; border:1px dashed var(--line-strong); border-radius:8px; padding:6px 10px;}
 
@@ -1521,8 +1348,8 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .what-is-pillars{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 .what-is-pillar{background:var(--white); border:1px solid var(--line); border-radius:var(--radius-sm); padding:22px;}
-.what-is-num{display:block; font-family:'Montserrat',sans-serif; font-weight:800; font-size:12px; color:var(--leaf-dark); margin-bottom:10px;}
-.what-is-pillar strong{display:block; font-family:'Montserrat',sans-serif; font-size:16px; color:var(--forest); margin-bottom:6px;}
+.what-is-num{display:block; font-family:var(--font-heading); font-weight:800; font-size:12px; color:var(--leaf-dark); margin-bottom:10px;}
+.what-is-pillar strong{display:block; font-family:var(--font-heading); font-size:16px; color:var(--forest); margin-bottom:6px;}
 .what-is-pillar span{font-size:16px; color:var(--muted); line-height:1.6;}
 
 .steps-6{grid-template-columns:repeat(6,1fr);}
@@ -1573,11 +1400,11 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   display:flex; align-items:center; justify-content:center; flex-shrink:0;
   width:23px; height:23px; border-radius:50%;
   background:var(--forest); color:var(--leaf-light);
-  font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:9.5px;
+  font-family:var(--font-heading); font-weight:800; font-size:9.5px;
   font-variant-numeric:tabular-nums;
 }
 .process-label{
-  font-family:'Montserrat',Arial,sans-serif; font-weight:700;
+  font-family:var(--font-heading); font-weight:700;
   font-size:clamp(10.5px,2vw,12.5px); color:var(--forest); white-space:nowrap; line-height:1.3;
 }
 /* The connector is the only element allowed to grow/shrink — steps stay
@@ -1670,7 +1497,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    animation — the existing reader pulse/ripple already carries the motion
    and already respects prefers-reduced-motion (see .tap-reader.pulse). */
 .flow-caption{display:flex; align-items:center; justify-content:center; gap:var(--space-2); margin-bottom:var(--space-4); flex-wrap:wrap;}
-.flow-caption span{font-family:'Montserrat',Arial,sans-serif; font-weight:800; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:var(--leaf-dark);}
+.flow-caption span{font-family:var(--font-heading); font-weight:800; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:var(--leaf-dark);}
 .flow-caption .flow-caption-arrow{color:var(--muted); font-weight:400; letter-spacing:0; font-size:15px;}
 .flow-caption.on-dark span{color:var(--leaf-light);}
 .flow-caption.on-dark .flow-caption-arrow{color:rgba(255,255,255,0.4);}
@@ -1686,7 +1513,6 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   background:var(--white); border:1px solid var(--line); border-radius:var(--radius);
   padding:24px 20px; transition:transform var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), border-color var(--dur-standard) var(--ease-standard);
 }
-.role-card:hover, .role-card:focus-within{transform:translateY(-4px); box-shadow:var(--shadow-sm); border-color:var(--line-strong);}
 .role-card-icon{width:44px; height:44px; border-radius:12px; background:var(--ice-100); color:var(--leaf-dark); display:flex; align-items:center; justify-content:center; margin-bottom:14px;}
 .role-card-icon svg{width:21px; height:21px;}
 .role-card h3{font-size:17px; margin-bottom:14px;}
@@ -1707,12 +1533,11 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 }
 @media (prefers-reduced-motion: reduce){
   .role-card{transition:none;}
-  .role-card:hover{transform:none;}
 }
 
 /* ---------- nutrition trust banner ---------- */
 .allergen-banner{display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:32px;}
-.allergen-banner-item{display:flex; align-items:center; gap:8px; background:var(--forest); color:#fff; padding:12px 20px; border-radius:100px; font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px;}
+.allergen-banner-item{display:flex; align-items:center; gap:8px; background:var(--forest); color:#fff; padding:12px 20px; border-radius:100px; font-family:var(--font-heading); font-weight:700; font-size:16px;}
 .allergen-banner-item svg{width:15px; height:15px; color:var(--leaf-light); flex-shrink:0;}
 .nutrition-more{text-align:center; margin-top:28px; font-size:16px; color:var(--muted);}
 .nutrition-more a{color:var(--forest-secondary); font-weight:600;}
@@ -1720,12 +1545,12 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 /* ---------- dashboard preview (signature moment #3) ---------- */
 .dash-preview{background:var(--forest); border-radius:var(--radius-lg); padding:8px; box-shadow:var(--shadow-lg);}
 .dash-preview-head{display:flex; align-items:center; justify-content:space-between; padding:18px 22px;}
-.dash-preview-title{font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px; color:#fff;}
+.dash-preview-title{font-family:var(--font-heading); font-weight:700; font-size:16px; color:#fff;}
 .dash-preview-title span{color:rgba(255,255,255,0.5); font-weight:500;}
 .dash-preview-grid{background:var(--ice-50); border-radius:calc(var(--radius-lg) - 8px); padding:22px; display:grid; grid-template-columns:repeat(4,1fr); gap:16px;}
 .dash-stat{background:var(--white); border:1px solid var(--line); border-radius:12px; padding:18px;}
 .dash-stat-label{display:block; font-size:16px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;}
-.dash-stat-value{font-family:'Montserrat',sans-serif; font-weight:800; font-size:26px; color:var(--forest); font-variant-numeric:tabular-nums;}
+.dash-stat-value{font-family:var(--font-heading); font-weight:800; font-size:26px; color:var(--forest); font-variant-numeric:tabular-nums;}
 .dash-stat-wide{grid-column:span 4;}
 .dash-bar{height:8px; background:var(--line); border-radius:100px; overflow:hidden; margin:8px 0 10px;}
 .dash-bar-fill{height:100%; background:var(--leaf); border-radius:100px;}
@@ -1737,8 +1562,8 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .app-flow-intro{font-weight:600; color:var(--forest-secondary);}
 .app-steps{display:flex; align-items:flex-start; justify-content:center; gap:0; margin:8px auto 32px; max-width:520px;}
 .app-step{display:flex; flex-direction:column; align-items:center; gap:10px; flex:0 1 120px;}
-.app-step-num{font-family:'Montserrat',sans-serif; font-weight:800; font-size:15px; letter-spacing:0.02em; color:var(--white); background:var(--forest); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-sm);}
-.app-step-label{font-family:'Montserrat',sans-serif; font-weight:700; font-size:15px; color:var(--forest-secondary);}
+.app-step-num{font-family:var(--font-heading); font-weight:800; font-size:15px; letter-spacing:0.02em; color:var(--white); background:var(--forest); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-sm);}
+.app-step-label{font-family:var(--font-heading); font-weight:700; font-size:15px; color:var(--forest-secondary);}
 .app-step-connector{flex:1 1 40px; height:2px; background:var(--line-strong); margin-top:20px; min-width:24px; max-width:80px;}
 @media (max-width:560px){
   .app-steps{gap:0;}
@@ -1753,8 +1578,8 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .store-badge{transition:none;}
   .store-badge:hover, .store-badge:focus-visible{transform:none;}
 }
-.store-badge span{display:flex; flex-direction:column; text-align:left; font-family:'Montserrat',sans-serif; font-weight:700; font-size:16px;}
-.store-badge small{font-family:'Poppins',sans-serif; font-weight:400; font-size:16px; color:rgba(255,255,255,0.6);}
+.store-badge span{display:flex; flex-direction:column; text-align:left; font-family:var(--font-heading); font-weight:700; font-size:16px;}
+.store-badge small{font-family:var(--font-body); font-weight:400; font-size:16px; color:rgba(255,255,255,0.6);}
 
 /* ---------- inner-page hero (Schools / Caterers / Parents / About) ---------- */
 .hero-inner-page{padding:64px 0 76px;}
@@ -1836,7 +1661,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 }
 @media (max-width:560px){
   .menu-card-full{flex-direction:column;}
-  .menu-thumb-wide{width:100%; height:70px; border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
+  .menu-thumb-wide{width:100%; height:auto; aspect-ratio:1; border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
   .menu-nutri-grid{grid-template-columns:repeat(2,1fr); row-gap:14px;}
 }
 @media (max-width:1279px){
@@ -1869,7 +1694,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    viewport at 820px (iPad Mini) with the switch-to-hamburger point at
    800px; 900px gives it real headroom instead of trading one narrow-width
    overflow for another just above the old threshold. */
-@media (max-width:900px){
+@media (max-width:1199px){
   .app-links{display:none;}
   .app-header .nav-toggle{display:flex;}
   .app-links-mobile{
@@ -2000,3 +1825,136 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 [dir="rtl"] .flow-caption-arrow{
   display:inline-block; transform:scaleX(-1);
 }
+
+/* Shared accessibility and type foundations */
+:root{--font-body:'Poppins',Arial,sans-serif;--font-heading:'Montserrat',Arial,sans-serif;}
+[dir="rtl"]{--font-body:'Cairo',Arial,sans-serif;--font-heading:'Cairo',Arial,sans-serif;}
+[hidden]{display:none !important;}
+.auth-nav{display:flex;justify-content:space-between;gap:16px;margin-bottom:20px;font-size:14px;}
+.field[data-consent]{display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;align-items:start;}
+.field[data-consent] input{width:22px;height:22px;margin:2px 0;}
+.field[data-consent] .field-error{grid-column:1/-1;}
+.consent-label{font-weight:400;line-height:1.5;margin:0;}
+.admin-header .app-user .lang-switch{display:flex;}
+.app-nav{gap:12px;}
+.app-user{min-width:0;}
+.auth-card .field .hint{font-size:13px;}
+:focus-visible{outline:3px solid var(--forest-secondary);outline-offset:4px;}
+.site-header :focus-visible,.app-header :focus-visible,.cta-band :focus-visible{outline-color:var(--school-yellow);}
+.hero-light :focus-visible{outline-color:var(--forest);}
+@media(max-width:480px){.app-nav{gap:6px;}.app-user{gap:4px;}.app-nav.wrap{padding-inline:12px;}.admin-header .app-logo{flex-direction:column;align-items:flex-start;gap:2px;white-space:normal;flex:1;min-width:0;}.admin-nav-tag{font-size:10px;padding:2px 4px;}}
+
+/* Food: one content contract, three deliberate densities; source imagery is square. */
+.food-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:28px;}
+.food-card{min-width:0;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+.food-image{aspect-ratio:1;min-width:0;overflow:hidden;background:var(--cream);}
+.food-image picture,.food-image img{display:block;width:100%;height:100%;object-fit:contain;}
+.food-image svg{width:100%;height:100%;padding:25%;}
+.food-body{padding:22px;min-width:0;}
+.food-body h2,.food-body h3{font-size:19px;line-height:1.4;margin-bottom:14px;}
+.food-ingredients{font-size:14px;line-height:1.65;margin-bottom:18px;color:var(--forest-secondary);}
+.food-nutrition{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:12px;border-block:1px solid var(--line);padding-block:14px;margin:0 0 16px;}
+.food-nutrition div{display:flex;flex-direction:column-reverse;gap:3px;min-width:0;}
+.food-nutrition dt{font-size:12px;color:var(--muted);}
+.food-nutrition dd{margin:0;font-weight:700;color:var(--forest);font-variant-numeric:tabular-nums;}
+.dish-allergens{font-size:13px;line-height:1.65;margin:0 0 10px;}
+.dish-allergens strong{display:block;}
+.food-provenance{font-size:12px;color:var(--muted);line-height:1.6;margin:0;}
+.food-book-link{display:inline-block;padding-block:12px;font-size:14px;font-weight:700;color:var(--forest-secondary);}
+.food-disclosure summary{cursor:pointer;color:var(--forest);padding-block:12px;font-size:14px;font-weight:600;min-height:44px;}
+.food-disclosure[open] .food-details{padding-top:10px;}
+.food-card--featured{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;background:var(--cream);}
+.food-card--featured .food-body{padding:clamp(20px,3vw,44px);}
+.food-card--featured h2{font-size:clamp(21px,2.2vw,29px);}
+.food-card--compact .food-body{padding:16px;}
+.food-card--compact h3{font-size:16px;margin:0;}
+.food-confidence{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px 36px;border-block:1px solid var(--line-strong);padding-block:28px;margin-block:32px;align-items:center;}
+.food-confidence-copy p{font-size:17px;line-height:1.6;margin-top:10px;color:var(--forest);}
+.food-exclusions{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+.food-exclusions li{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;font-size:13px;font-weight:600;color:var(--forest);}
+.food-exclusions svg{width:36px;height:36px;}
+.food-confidence>.food-provenance{grid-column:1/-1;}
+.booking-food-detail{padding:0 14px 10px;}
+fieldset.field{border:0;padding:0;min-width:0;}
+fieldset.field legend{font-weight:600;margin-bottom:10px;}
+@media(max-width:767px){.food-card--featured{grid-template-columns:minmax(0,1fr);}.food-confidence{grid-template-columns:minmax(0,1fr);}.food-exclusions{margin-block:12px;}}
+/* The parent journey has deliberate 4 / 2 / 1-column composition. */
+.parent-journey{list-style:none;padding:0;margin:32px 0 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;}
+.journey-item{border-top:2px solid var(--line-strong);padding-top:18px;min-width:0;}
+.journey-label{display:flex;align-items:center;gap:10px;text-transform:uppercase;font-weight:700;font-family:var(--font-heading);font-size:14px;color:var(--forest);}
+.journey-number{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--forest);color:white;flex-shrink:0;}
+.journey-attention .journey-number{background:var(--school-yellow);color:var(--ink);}
+.journey-complete .journey-number{background:var(--leaf);color:var(--ink);}
+.journey-item h3{font-size:17px;margin:18px 0 8px;}
+.journey-item p{font-size:14px;color:var(--muted);}
+@media(max-width:1023px){.parent-journey{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:600px){.parent-journey{grid-template-columns:minmax(0,1fr);gap:20px;}.journey-item{padding-inline-start:22px;border-top:0;border-inline-start:2px solid var(--line-strong);padding-top:0;}.journey-item h3{margin-top:12px;}}
+
+/* Explicit button surface variants, independent of ancestors. */
+.btn-light{background:var(--white);color:var(--forest);}
+.btn-light:hover{background:var(--mint);color:var(--forest);}
+.btn-outline-light{background:transparent;color:var(--white);border:1.5px solid rgba(255,255,255,.5);}
+.btn-outline-light:hover{background:rgba(255,255,255,.1);}
+.record-details{margin:12px 0 0;}
+.record-details>div{display:grid;grid-template-columns:minmax(70px,.6fr) minmax(0,1fr);gap:16px;padding-block:8px;}
+.record-details dt{font-size:13px;color:var(--muted);}.record-details dd{margin:0;text-align:end;font-size:14px;}
+th{text-align:start;}.data-card-value{text-align:end;}
+
+.parent-intro{background:var(--cream);padding-top:48px;padding-bottom:12px;}
+.parent-intro-copy{max-width:760px;margin-bottom:36px;}
+.parent-intro h1{font-size:clamp(30px,3.5vw,44px);line-height:1.2;margin:16px 0;}
+.parent-intro .lede{color:var(--forest-secondary);max-width:640px;margin-bottom:20px;}
+.action-row{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;}
+.action-row>a:not(.btn){font-weight:600;font-size:14px;min-height:44px;display:inline-flex;align-items:center;}
+.food-supporting{grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));}
+.collection-example{max-width:600px;margin-inline:auto;text-align:center;}
+.collection-example>.hint{margin:20px auto 0;max-width:500px;}
+.collection-example .tap-demo{min-height:340px;margin-block:12px;}
+.collection-example .collection-replay{margin-top:16px;}
+@media(max-width:480px){.food-supporting{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}.food-card--compact .food-body{padding:12px;}.food-card--compact h3{font-size:14px;}.food-card--compact .food-nutrition{grid-template-columns:repeat(2,minmax(0,1fr));}.action-row .btn{width:100%;}}
+
+/* Collection demonstration: deliberate replay, then a persistent confirmation. */
+.collection-example .tap-toast{opacity:1;transform:none;}
+.collection-example .toast-icon svg path{stroke-dashoffset:0;}
+.collection-example .tap-card{background:var(--school-yellow);}
+.collection-example .reader-ring{border-color:var(--school-yellow);}
+.collection-example .ripple{border-color:var(--school-yellow);}
+.collection-example .tap-demo.is-playing .tap-card{animation:tap-move 3.2s ease-in-out both;}
+.collection-example .tap-demo.is-playing .reader-ring{animation:tap-contact-scale 3.2s ease-in-out both;}
+.collection-example .tap-demo.is-playing .ripple{animation:tap-ripple 3.2s ease-out both;}
+.collection-example .tap-demo.is-playing .tap-toast{animation:toast-in 3.2s ease-in-out both;}
+.collection-example .tap-demo.is-playing .toast-icon svg path{animation:check-draw 3.2s linear both;}
+@media(prefers-reduced-motion:reduce){.collection-example .tap-demo.is-playing *{animation:none !important;}}
+
+/* Home composition: content and an intact portrait each have bounded tracks. */
+.home-hero{background:var(--cream);color:var(--forest);padding-block:44px;}
+.home-hero-inner{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);align-items:center;gap:clamp(28px,5vw,80px);}
+.home-hero .hero-copy{padding:0;min-width:0;}
+.home-hero h1{color:var(--forest);font-size:clamp(32px,3.8vw,54px);line-height:1.16;max-width:600px;}
+.home-hero h1 em{color:var(--forest-secondary);}
+.home-hero .hero-copy p.lede{color:var(--forest-secondary);max-width:540px;font-size:17px;margin-bottom:24px;}
+.home-hero .eyebrow{color:var(--forest-secondary);}
+.home-hero-media-wrap{width:100%;max-width:430px;justify-self:center;}
+.home-hero-media{aspect-ratio:1792/2400;overflow:hidden;border-radius:var(--radius-lg);}
+.home-hero-media picture,.home-hero-media img{display:block;width:100%;height:100%;object-fit:contain;}
+.home-food-grid{max-width:920px;margin-inline:auto;}
+.closing-parent{max-width:800px;}.closing-parent h2{margin-top:14px;}.closing-parent p{margin-block:16px 24px;}
+@media(max-width:767px){.home-hero-inner{grid-template-columns:minmax(0,1fr);gap:28px;}.home-hero-media-wrap{max-width:360px;}.home-hero{padding-block:32px;}.home-hero h1{font-size:clamp(30px,6vw,42px);}.home-hero .hero-copy>*{animation:none;opacity:1;transform:none;}}
+
+.operational-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:start;}
+.operational-list{display:grid;gap:24px;}.operational-list>div{border-block-end:1px solid var(--line);padding-bottom:20px;}.operational-list h2{font-size:19px;margin-bottom:8px;}.operational-list p{font-size:15px;}
+.operational-example{position:sticky;top:96px;}.operational-example h2{font-size:21px;margin-block:16px;}.operational-example>p{font-size:14px;}.operational-example .btn{margin-top:24px;}
+.operational-journey{margin-top:0;}.operational-journey p{margin-top:18px;}
+.capability-map{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:32px;}
+.capability-unit{border-block-start:2px solid var(--line-strong);padding-block:24px;}
+.capability-unit h3{font-size:20px;margin-bottom:14px;}.capability-unit ul{padding-inline-start:18px;font-size:15px;line-height:1.8;margin-bottom:16px;}.capability-unit a{font-weight:600;font-size:14px;}
+@media(max-width:767px){.operational-layout{grid-template-columns:minmax(0,1fr);gap:24px;}.operational-example{position:static;}}
+
+.contact-channels-inner{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.5fr);gap:32px;}
+.contact-channels h2{margin-bottom:10px;}.contact-channels p{margin-bottom:20px;}
+.contact-role-links{display:flex;flex-direction:column;gap:14px;justify-content:center;}.contact-role-links a{padding-block:10px;font-weight:600;}
+.hero-inner-page{padding-block:48px;}.hero-inner-page h1{font-size:clamp(30px,3.6vw,46px);}.hero-inner-page .lede{margin-bottom:20px;}.hero-inner-page .hero-actions{margin-bottom:0;}
+.notif-read-btn{min-width:44px;min-height:44px;}
+.store-badge span{text-align:start;}
+.role-journey-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+@media(max-width:767px){.contact-channels-inner,.role-journey-grid{grid-template-columns:minmax(0,1fr);}}

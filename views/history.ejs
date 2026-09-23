@@ -13,7 +13,7 @@
     <p><%= t('history.intro') %></p>
   </div>
 
-  <div class="card" data-reveal>
+  <div class="card">
     <% if (bookings.length === 0) { %>
       <div class="empty-state">
         <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></div>
@@ -21,7 +21,7 @@
         <a href="/booking" class="btn btn-primary btn-sm" style="margin-top:16px;"><%= t('history.emptyCta') %></a>
       </div>
     <% } else { %>
-      <div class="data-table-view">
+      <div class="data-table-view has-card-alternative">
         <table>
           <thead>
             <tr><th><%= t('history.colStudent') %></th><th><%= t('history.colMeal') %></th><th><%= t('history.colPlan') %></th><th><%= t('history.colDate') %></th><th><%= t('history.colTotal') %></th><th><%= t('history.colStatus') %></th><th></th></tr>

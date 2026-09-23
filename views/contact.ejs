@@ -6,10 +6,11 @@
 <body>
 
 <%- include('partials/sitenav', { active: 'contact' }) %>
+<main id="main-content" tabindex="-1">
 
 <section class="hero hero-inner-page">
   <div class="wrap-wide">
-    <div class="hero-copy" data-reveal style="max-width:640px;">
+    <div class="hero-copy" style="max-width:640px;">
       <span class="eyebrow on-dark"><%= t('contact.hero.eyebrow') %></span>
       <h1><%= t('contact.hero.heading') %></h1>
       <p class="lede"><%= t('contact.hero.lede') %></p>
@@ -17,58 +18,38 @@
   </div>
 </section>
 
-<section class="section" id="contact-pathways">
-  <div class="wrap">
-    <div class="grid-3">
-      <div class="benefit-card" data-reveal data-reveal-group="contactpaths">
-        <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"/></svg></div>
-        <h3><%= t('contact.pathways.parentTitle') %></h3>
-        <p><%= t('contact.pathways.parentBody') %></p>
-        <a href="#parent-support" class="btn btn-outline btn-sm"><%= t('contact.pathways.parentCta') %></a>
-      </div>
-      <div class="benefit-card" data-reveal data-reveal-group="contactpaths">
-        <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9l8-5 8 5v12"/><path d="M9 21v-6h6v6"/></svg></div>
-        <h3><%= t('contact.pathways.schoolTitle') %></h3>
-        <p><%= t('contact.pathways.schoolBody') %></p>
-        <a href="<%= locale === 'ar' ? '/ar/schools' : '/schools' %>#partner-form" class="btn btn-outline btn-sm"><%= t('contact.pathways.schoolCta') %></a>
-      </div>
-      <div class="benefit-card" data-reveal data-reveal-group="contactpaths">
-        <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8 12 4l8 4-8 4-8-4Z"/><path d="M4 8v8l8 4 8-4V8"/></svg></div>
-        <h3><%= t('contact.pathways.catererTitle') %></h3>
-        <p><%= t('contact.pathways.catererBody') %></p>
-        <a href="<%= locale === 'ar' ? '/ar/caterers' : '/caterers' %>#caterer-form" class="btn btn-outline btn-sm"><%= t('contact.pathways.catererCta') %></a>
-      </div>
-    </div>
-  </div>
-</section>
+<section class="section contact-channels"><div class="wrap contact-channels-inner">
+  <div><h2><%= t('contact.pathways.parentTitle') %></h2><p><%= t('contact.pathways.parentBody') %></p><div class="action-row"><a href="mailto:info@evo360.tech" class="btn btn-primary"><bdi>info@evo360.tech</bdi></a><a href="https://wa.me/96599570836" class="btn btn-outline"><bdi>WhatsApp · +965 9957 0836</bdi></a></div></div>
+  <nav class="contact-role-links"><a href="<%= locale === 'ar' ? '/ar/schools' : '/schools' %>#partner-form"><%= t('contact.pathways.schoolTitle') %> →</a><a href="<%= locale === 'ar' ? '/ar/caterers' : '/caterers' %>#caterer-form"><%= t('contact.pathways.catererTitle') %> →</a></nav>
+</div></section>
 
 <section class="section on-tint" id="parent-support">
   <div class="wrap" style="max-width:560px;">
-    <div class="section-head" data-reveal>
+    <div class="section-head">
       <span class="eyebrow"><%= t('contact.form.eyebrow') %></span>
       <h2><%= t('contact.form.heading') %></h2>
     </div>
     <% if (success) { %>
-      <div class="alert alert-success"><%- include('partials/success-icon') %><span><%= t('contact.form.successMsg') %></span></div>
+      <div class="alert alert-success" role="status"><%- include('partials/success-icon') %><span><%= t('contact.form.successMsg') %></span></div>
     <% } %>
     <% if (error) { %>
-      <div class="alert alert-error"><%= error %></div>
+      <div class="alert alert-error" role="alert"><%= error %></div>
     <% } %>
-    <div class="card" data-reveal>
+    <div class="card">
       <% var cv = (typeof values !== 'undefined' && values) ? values : {}; %>
       <% var ce = (typeof errors !== 'undefined' && errors) ? errors : {}; %>
-      <form method="POST" action="/contact" novalidate>
+      <form method="POST" action="<%= locale === 'ar' ? '/ar/contact' : '/contact' %>" novalidate>
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <div class="field <%= ce.name ? 'invalid' : '' %>">
           <label for="contactName"><%= t('contact.form.labelName') %></label>
-          <input type="text" id="contactName" name="name" value="<%= cv.name || '' %>" data-validate="name" required>
-          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= ce.name || t('contact.form.errName') %></span></div>
+          <input type="text" id="contactName" name="name" value="<%= cv.name || '' %>" data-validate="name" required aria-describedby="contactName-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.name) ? 'true' : 'false' %>">
+          <div class="field-error" id="contactName-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= ce.name || t('contact.form.errName') %></span></div>
         </div>
         <div class="form-row">
           <div class="field <%= ce.email ? 'invalid' : '' %>">
             <label for="contactEmail"><%= t('contact.form.labelEmail') %></label>
-            <input type="email" id="contactEmail" name="email" value="<%= cv.email || '' %>" inputmode="email" data-validate="email" required>
-            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= ce.email || t('contact.form.errEmail') %></span></div>
+            <input type="email" id="contactEmail" name="email" value="<%= cv.email || '' %>" inputmode="email" data-validate="email" required aria-describedby="contactEmail-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.email) ? 'true' : 'false' %>">
+            <div class="field-error" id="contactEmail-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= ce.email || t('contact.form.errEmail') %></span></div>
           </div>
           <div class="field">
             <label for="contactRole"><%= t('contact.form.labelRole') %></label>
@@ -82,17 +63,18 @@
         </div>
         <div class="field <%= ce.message ? 'invalid' : '' %>">
           <label for="contactMessage"><%= t('contact.form.labelMessage') %></label>
-          <textarea id="contactMessage" name="message" rows="5" required minlength="10" maxlength="2000" data-validate="minlength:10" placeholder="<%= t('contact.form.placeholderMessage') %>"><%= cv.message || '' %></textarea>
-          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= ce.message || t('contact.form.errMessage') %></span></div>
+          <textarea id="contactMessage" name="message" rows="5" required minlength="10" maxlength="2000" data-validate="minlength:10" placeholder="<%= t('contact.form.placeholderMessage') %>" aria-describedby="contactMessage-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.message) ? 'true' : 'false' %>"><%= cv.message || '' %></textarea>
+          <div class="field-error" id="contactMessage-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= ce.message || t('contact.form.errMessage') %></span></div>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('contact.form.submit') %></button>
         <div class="hint hint-secure" style="justify-content:center; margin-top:14px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span><%= t('contact.form.secureHint') %></span></div>
       </form>
-      <p class="nutrition-more" data-reveal style="margin-top:18px;"><%= t('contact.form.footnote') %></p>
+      <p class="nutrition-more" style="margin-top:18px;"><%= t('contact.form.footnote') %></p>
     </div>
   </div>
 </section>
 
+</main>
 <%- include('partials/sitefoot') %>
 
 </body>

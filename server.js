@@ -4,6 +4,8 @@ const express = require('express');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
 const path = require('path');
+const fs = require('fs');
+const { createHash } = require('crypto');
 const helmet = require('helmet');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
@@ -12,6 +14,7 @@ const pinoHttp = require('pino-http');
 const { csrfSync } = require('csrf-sync');
 const db = require('./db');
 const { calculateBookingTotal, endOfMonthISO } = require('./lib/pricing');
+const { validateMealInput, bookingWindow } = require('./lib/booking-input');
 const { maskCivilId } = require('./lib/mask');
 const {
   isValidName, isValidEmail, isValidCivilId, isValidPhone, isValidOrgName, isValidClassSection,
@@ -170,7 +173,19 @@ const loginLimiter = rateLimit({
 });
 
 // ---------- helpers ----------
+// Version local CSS/JS by content, so returning browsers receive refinements.
+const assetVersions = new Map();
+app.locals.assetVersion = (file) => {
+  const location = path.join(__dirname, 'public', file);
+  const modified = fs.statSync(location).mtimeMs;
+  const cached = assetVersions.get(file);
+  if (cached && cached.modified === modified) return cached.version;
+  const version = createHash('sha256').update(fs.readFileSync(location)).digest('hex').slice(0, 12);
+  assetVersions.set(file, { modified, version });
+  return version;
+};
 app.locals.maskCivilId = maskCivilId;
+app.locals.bookingWindow = bookingWindow;
 // Notifications are stored as "Student Name — rest of the message" —
 // split so the template can bold the name (the fact a parent scans for)
 // and keep the rest secondary, without ever rendering raw HTML.
@@ -242,7 +257,7 @@ const DISH_IMAGE_SLUGS = {
 app.locals.dishImageSlug = (name) => DISH_IMAGE_SLUGS[name] || null;
 
 function requireAuth(req, res, next) {
-  if (!req.session.parentId) return res.redirect('/login');
+  if (!req.session.parentId) return res.redirect(req.session.locale === 'ar' ? '/ar/login' : '/login');
   res.locals.headerNotifications = db.getNotificationsForParent(req.session.parentId, 6);
   res.locals.unreadNotificationCount = db.getUnreadNotificationCount(req.session.parentId);
   next();
@@ -389,7 +404,7 @@ app.post(['/contact', '/ar/contact'], (req, res) => {
   }
   // Demo only — no email/CRM integration wired up yet. In production this
   // would notify the partnerships team (see the note in views/contact.ejs).
-  logger.info({ name, email, role }, 'contact form submission (demo — not sent anywhere)');
+  logger.info('contact form checked (demo — not sent or saved)');
   res.redirect((req.path.startsWith('/ar') ? '/ar/contact' : '/contact') + '?success=1');
 });
 
@@ -480,7 +495,7 @@ app.post(['/login', '/ar/login'], loginLimiter, (req, res) => {
   req.session.parentId = parent.id;
   // Carry the language they logged in with into the authenticated app,
   // which has no URL-based locale of its own (see the locale middleware).
-  if (req.path.startsWith('/ar')) req.session.locale = 'ar';
+  req.session.locale = req.path.startsWith('/ar') ? 'ar' : 'en';
   res.redirect('/dashboard');
 });
 
@@ -500,7 +515,7 @@ app.post(['/forgot-password', '/ar/forgot-password'], (req, res) => {
   }
   // Demo only — no email is actually sent. Never reveal whether the
   // identifier matches an account, same reasoning as any real reset flow.
-  logger.info({ identifier }, 'forgot-password request (demo — no email sent)');
+  logger.info('forgot-password demo completed; no email sent');
   res.render('forgot-password', { submitted: true, error: null, errors: {}, identifier: '', parentId: req.session.parentId });
 });
 
@@ -515,7 +530,7 @@ app.post(['/register', '/ar/register'], (req, res) => {
   // parent already typed (never the password) so a validation error never
   // means retyping the whole form — spec requirement: preserve valid
   // entered values on validation failure.
-  const values = { name: (name || '').trim(), civilId: (civilId || '').trim(), email: (email || '').trim(), phone: (phone || '').trim() };
+  const values = { name: (name || '').trim(), civilId: (civilId || '').trim(), email: (email || '').trim(), phone: (phone || '').trim(), agreeTerms: agreeTerms === 'on' };
   const rerender = (error, errors) => res.render('register', { error: error || null, errors: errors || {}, parentId: null, values });
   if (!name || !civilId || !email || !phone || !password || !confirmPassword) {
     return rerender(t('register.errAllFields'));
@@ -540,7 +555,7 @@ app.post(['/register', '/ar/register'], (req, res) => {
   }
   // The Terms checkbox is client-side `required`, which a direct POST
   // skips entirely — re-check it's actually present here too.
-  if (!agreeTerms) {
+  if (agreeTerms !== 'on') {
     return rerender(null, { agreeTerms: t('register.errAgreeTerms') });
   }
   if (db.findParentByCivilId(civilId.trim())) {
@@ -554,12 +569,13 @@ app.post(['/register', '/ar/register'], (req, res) => {
     passwordHash: bcrypt.hashSync(password, 10)
   });
   req.session.parentId = parent.id;
-  if (req.path.startsWith('/ar')) req.session.locale = 'ar';
+  req.session.locale = req.path.startsWith('/ar') ? 'ar' : 'en';
   res.redirect('/dashboard');
 });
 
 app.get('/logout', (req, res) => {
-  req.session.destroy(() => res.redirect('/'));
+  const home = req.session.locale === 'ar' ? '/ar' : '/';
+  req.session.destroy(() => res.redirect(home));
 });
 
 // ---------- school admin auth (separate, lightweight login) ----------
@@ -592,7 +608,8 @@ app.post('/school-admin/login', loginLimiter, (req, res) => {
 });
 
 app.get('/school-admin/logout', (req, res) => {
-  req.session.destroy(() => res.redirect('/school-admin/login'));
+  const destination = req.session.locale === 'ar' ? '/locale/ar?returnTo=%2Fschool-admin%2Flogin' : '/school-admin/login';
+  req.session.destroy(() => res.redirect(destination));
 });
 
 app.get('/school-admin/dashboard', requireSchoolAdmin, (req, res) => {
@@ -767,6 +784,8 @@ app.post('/booking/:id/renew', requireAuth, (req, res) => {
     return res.redirect('/dashboard?norenewaldays=1');
   }
 
+  if (!Number.isFinite(total) || total <= 0) return res.redirect('/dashboard?norenewaldays=1');
+
   db.bookAndCharge({
     studentId: student.id, menuItemId: original.menuItemId, planType: original.planType,
     startDate: newStartDate, days, totalKWD: total, parentId: parent.id,
@@ -840,10 +859,7 @@ app.get('/menu', requireAuth, (req, res) => {
 // client-side total can be computed live (exact charge for a chosen start
 // date) without a server round-trip on every date change.
 function schoolCalendarForStudents(students) {
-  const todayISO = new Date().toISOString().split('T')[0];
-  const horizon = new Date();
-  horizon.setDate(horizon.getDate() + 120);
-  const horizonISO = horizon.toISOString().split('T')[0];
+  const { today: todayISO, horizon: horizonISO } = bookingWindow();
   const schools = [...new Set(students.map(s => s.school))];
   const schoolCalendar = {};
   schools.forEach(school => {
@@ -875,7 +891,7 @@ app.get('/booking', requireAuth, (req, res) => {
   res.render('booking', {
     students, menuItems, plans, error: null, success: null,
     parentId: parent.id, rebook,
-    defaultStudentId: mostRecentStudentId, defaultMenuId: mostBookedMenuId,
+    defaultStudentId: mostRecentStudentId, defaultMenuId: menuItems.some(m => String(m.id) === req.query.meal) ? Number(req.query.meal) : mostBookedMenuId,
     schoolCalendar: schoolCalendarForStudents(students),
     dailyRateKWD: plans.single ? plans.single.rateKWD : 2
   });
@@ -890,14 +906,14 @@ app.post('/booking', requireAuth, (req, res) => {
   const plans = db.getPlans();
   const schoolCalendar = schoolCalendarForStudents(students);
   const dailyRateKWD = plans.single ? plans.single.rateKWD : 2;
-  const renderArgs = { students, menuItems, plans, parentId: parent.id, rebook: null, schoolCalendar, dailyRateKWD };
+  const renderArgs = { students, menuItems, plans, parentId: parent.id, rebook: null, schoolCalendar, dailyRateKWD, values: req.body };
 
   const t = res.locals.t;
+  const validationError = validateMealInput(req.body, { students, menuItems, calendar: schoolCalendar, ...bookingWindow() });
+  const fail = key => res.status(422).render('booking', { ...renderArgs, error: t('booking.' + key), success: null });
+  if (validationError) return fail(validationError);
   const student = students.find(s => s.id === Number(studentId));
-  if (!student) {
-    return res.render('booking', { ...renderArgs, error: t('booking.errInvalidStudent'), success: null });
-  }
-
+  if (!Number.isFinite(plans.single?.rateKWD) || plans.single.rateKWD <= 0) return fail('errInvalidPrice');
   // Real, always-correct total calculation — the direct fix for the
   // KWD 0.00 bug found in the live system audit. A monthly plan is priced
   // against the real school days between the chosen start date and the end
@@ -908,7 +924,7 @@ app.post('/booking', requireAuth, (req, res) => {
     const schoolDays = db.getSchoolDaysInRange(student.school, startDate, monthEndISO);
     ({ total, days: resolvedDays } = calculateBookingTotal({ planType, plans, schoolDays }));
     if (resolvedDays === 0) {
-      return res.render('booking', {
+      return res.status(422).render('booking', {
         ...renderArgs, success: null,
         error: t('booking.errNoSchoolDaysServer', { school: student.school, startDate })
       });
@@ -916,6 +932,8 @@ app.post('/booking', requireAuth, (req, res) => {
   } else {
     ({ total, days: resolvedDays } = calculateBookingTotal({ planType, days, plans }));
   }
+
+  if (!Number.isFinite(total) || total <= 0) return fail('errInvalidPrice');
 
   db.bookAndCharge({
     studentId: student.id,
@@ -981,24 +999,22 @@ app.post('/profile', requireAuth, (req, res) => {
 });
 
 // ---------- staff section (mirrors the real app's separate Staff area) ----------
-app.get('/staff', requireAuth, (req, res) => {
+function staffView(req, res, error = null, status = 200) {
   const parent = currentParent(req);
-  const bookings = db.getStaffBookingsByParent(parent.id);
-  const plans = db.getPlans();
-  res.render('staff', { bookings, parentId: parent.id, success: null, dailyRateKWD: plans.single ? plans.single.rateKWD : 2 });
-});
-
-app.post('/staff', requireAuth, (req, res) => {
-  const parent = currentParent(req);
-  const { menuItemId, startDate } = req.body;
-  const plans = db.getPlans();
-  db.createStaffBooking({
-    staffId: parent.id,
-    menuItemId: Number(menuItemId),
-    startDate,
-    totalKWD: plans.single ? plans.single.rateKWD : 2
+  res.status(status).render('staff', {
+    bookings: db.getStaffBookingsByParent(parent.id), parentId: parent.id,
+    success: req.query.success === '1', error, values: req.method === 'POST' ? req.body : {},
+    menuItems: db.getMenuItems(), dailyRateKWD: db.getPlans().single?.rateKWD
   });
-  res.redirect('/staff');
+}
+app.get('/staff', requireAuth, (req, res) => staffView(req, res));
+app.post('/staff', requireAuth, (req, res) => {
+  const error = validateMealInput(req.body, { menuItems: db.getMenuItems(), staff: true, ...bookingWindow() });
+  if (error) return staffView(req, res, res.locals.t('booking.' + error), 422);
+  const rate = db.getPlans().single?.rateKWD;
+  if (!Number.isFinite(rate) || rate <= 0) return staffView(req, res, res.locals.t('booking.errInvalidPrice'), 422);
+  db.createStaffBooking({ staffId: currentParent(req).id, menuItemId: Number(req.body.menuItemId), startDate: req.body.startDate, totalKWD: rate });
+  res.redirect('/staff?success=1');
 });
 
 // ---------- 404 + error handling ----------

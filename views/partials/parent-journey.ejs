@@ -1,0 +1,9 @@
+<ol class="parent-journey">
+  <% for(let step=1;step<=4;step++){ %>
+    <li class="journey-item<%= step === 3 ? ' journey-attention' : step === 4 ? ' journey-complete' : '' %>">
+      <span class="journey-label"><bdi class="journey-number">0<%= step %></bdi> <%= t('parents.journey.step'+step+'Label') %></span>
+      <h3><%= t('parents.journey.step'+step+'Title') %></h3>
+      <p><%= t('parents.journey.step'+step+'Body') %></p>
+    </li>
+  <% } %>
+</ol>

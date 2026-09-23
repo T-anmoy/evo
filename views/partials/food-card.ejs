@@ -1,0 +1,11 @@
+<% const foodVariant = typeof variant === 'undefined' ? 'full' : variant; %>
+<article class="food-card food-card--<%= foodVariant %>">
+  <div class="food-image"><%- include('dish-image', {m, eager: typeof eager !== 'undefined' && eager}) %></div>
+  <div class="food-body">
+    <% if(foodVariant === 'featured') { %><h2 lang="en" dir="auto"><%= m.name %></h2><% } else { %><h3 lang="en" dir="auto"><%= m.name %></h3><% } %>
+    <% if(foodVariant === 'compact') { %>
+      <details class="food-disclosure"><summary><%= t('food.details') %></summary><%- include('food-details', {m}) %></details>
+    <% } else { %><%- include('food-details', {m}) %><% } %>
+    <% if(typeof bookable !== 'undefined' && bookable) { %><a class="food-book-link" href="/booking?meal=<%= m.id %>"><%= t('appNav.bookAMeal') %> →</a><% } %>
+  </div>
+</article>

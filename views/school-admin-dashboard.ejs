@@ -17,24 +17,24 @@
   </div>
 
   <div class="grid-3" style="margin-bottom:24px;">
-    <div class="stat leaf" data-reveal data-reveal-group="adminstats">
+    <div class="stat leaf">
       <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
       <div class="label"><%= t('schoolAdminDashboard.statActiveSubs') %></div>
-      <div class="value leaf data-num" data-countup="<%= activeSubscriptions %>">0</div>
+      <div class="value leaf data-num"><%= activeSubscriptions %></div>
     </div>
-    <div class="stat" data-reveal data-reveal-group="adminstats">
+    <div class="stat">
       <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8 12 4l8 4-8 4-8-4Z"/><path d="M4 8v8l8 4 8-4V8"/></svg></div>
       <div class="label"><%= t('schoolAdminDashboard.statTodaysMeals') %></div>
-      <div class="value data-num" data-countup="<%= todaysMeals %>">0</div>
+      <div class="value data-num"><%= todaysMeals %></div>
     </div>
-    <div class="stat" data-reveal data-reveal-group="adminstats">
+    <div class="stat">
       <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg></div>
       <div class="label"><%= t('schoolAdminDashboard.statPendingOrders') %></div>
-      <div class="value data-num" data-countup="<%= pendingOrders %>">0</div>
+      <div class="value data-num"><%= pendingOrders %></div>
     </div>
   </div>
 
-  <div class="card" style="margin-bottom:24px;" data-reveal>
+  <div class="card" style="margin-bottom:24px;">
     <h3 style="font-size:15px; margin-bottom:4px;"><%= t('schoolAdminDashboard.trendHeading') %></h3>
     <p style="font-size:12.5px; color:var(--muted); margin-bottom:20px;"><%= t('schoolAdminDashboard.trendIntro') %></p>
     <div class="trend-chart">
@@ -50,7 +50,7 @@
     </div>
   </div>
 
-  <div class="card" data-reveal>
+  <div class="card">
     <h3 style="font-size:15px; margin-bottom:16px;"><%= t('schoolAdminDashboard.recentActivity') %></h3>
     <% if (recentActivity.length === 0) { %>
       <div class="empty-state">
@@ -58,7 +58,7 @@
         <p><strong><%= t('schoolAdminDashboard.emptyTitle') %></strong><%= t('schoolAdminDashboard.emptyBody') %></p>
       </div>
     <% } else { %>
-      <div class="data-table-view">
+      <div class="data-table-view has-card-alternative">
         <table>
           <thead>
             <tr><th><%= t('schoolAdminDashboard.colStudent') %></th><th><%= t('schoolAdminDashboard.colMeal') %></th><th><%= t('schoolAdminDashboard.colPlan') %></th><th><%= t('schoolAdminDashboard.colDate') %></th><th><%= t('schoolAdminDashboard.colTotal') %></th><th><%= t('schoolAdminDashboard.colStatus') %></th></tr>

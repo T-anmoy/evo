@@ -1,78 +1,66 @@
 (function () {
-  // Same mobile drawer behavior for both the logged-in app nav and the
-  // public site nav — they never appear on the same page, so one script
-  // checking both id pairs replaces what used to be two near-identical files.
-  var NAV_SETS = [
+  [
     { toggle: 'navToggle', panel: 'appLinksMobile', close: 'appLinksMobileClose' },
     { toggle: 'siteNavToggle', panel: 'siteLinksMobile', close: 'siteLinksMobileClose' }
-  ];
-
-  NAV_SETS.forEach(function (ids) {
+  ].forEach(function (ids) {
     var toggle = document.getElementById(ids.toggle);
     var panel = document.getElementById(ids.panel);
-    var closeBtn = document.getElementById(ids.close);
+    var close = document.getElementById(ids.close);
     if (!toggle || !panel) return;
-
-    var toggleIcon = toggle.querySelector('svg');
-    var toggleLabel = toggle.querySelector('span');
-    var hamburgerPath = 'M4 7h16M4 12h16M4 17h16';
-    var closePath = 'M6 6l12 12M18 6 6 18';
-    var lockedScrollY = 0;
-
-    // Locking scroll with overflow:hidden alone doesn't reliably stop
-    // touch-scroll on mobile Safari, and can interact badly with the page's
-    // sticky header. Pinning the body at its current scroll offset via
-    // position:fixed locks it completely and lets us restore the exact
-    // scroll position — no jump — when the menu closes.
-    function lockBodyScroll() {
-      lockedScrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = -lockedScrollY + 'px';
-      document.body.style.left = '0';
-      document.body.style.right = '0';
-      document.body.style.width = '100%';
-    }
-    function unlockBodyScroll() {
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
-      document.body.style.width = '';
-      window.scrollTo(0, lockedScrollY);
-    }
-
-    function setOpen(open) {
+    var open = false, scrollY = 0, background = [];
+    panel.hidden = true;
+    panel.inert = true;
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-modal', 'true');
+    panel.setAttribute('aria-label', toggle.dataset.closedLabel);
+    function setOpen(next, restoreFocus) {
+      if (open === next) return;
+      open = next;
+      panel.hidden = !open;
+      panel.inert = !open;
       panel.classList.toggle('open', open);
-      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      if (toggleIcon) toggleIcon.querySelector('path').setAttribute('d', open ? closePath : hamburgerPath);
-      var labelText = open
-        ? (toggle.dataset.openLabel || 'Close')
-        : (toggle.dataset.closedLabel || 'Menu');
-      if (toggleLabel) toggleLabel.textContent = labelText;
-      // Visible label text can be hidden at the narrowest widths (see
-      // .nav-toggle span in style.css) — aria-label keeps the accessible
-      // name correct either way, in sync with whichever state it's in.
-      toggle.setAttribute('aria-label', labelText);
+      toggle.setAttribute('aria-expanded', String(open));
       if (open) {
-        lockBodyScroll();
+        scrollY = window.scrollY;
+        document.body.style.position = 'fixed';
+        document.body.style.top = -scrollY + 'px';
+        document.body.style.width = '100%';
+        var header = panel.closest('header');
+        background = Array.from(document.body.children).filter(function (el) { return el !== header && !['SCRIPT','STYLE'].includes(el.tagName) && !el.inert; });
+        var bar = header.querySelector('.site-nav, .app-nav');
+        if (bar && !bar.inert) background.push(bar);
+        background.forEach(function (el) { el.inert = true; });
         panel.scrollTop = 0;
+        (close || panel.querySelector('a')).focus();
       } else {
-        unlockBodyScroll();
+        background.forEach(function (el) { el.inert = false; });
+        background = [];
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, scrollY);
+        if (restoreFocus !== false) toggle.focus();
       }
     }
-
-    toggle.addEventListener('click', function () {
-      setOpen(!panel.classList.contains('open'));
+    toggle.addEventListener('click', function () { setOpen(!open); });
+    if (close) close.addEventListener('click', function () { setOpen(false); });
+    panel.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { setOpen(false, false); }); });
+    document.addEventListener('keydown', function (event) {
+      if (!open) return;
+      if (event.key === 'Escape') { event.preventDefault(); setOpen(false); }
+      if (event.key === 'Tab') {
+        var items = Array.from(panel.querySelectorAll('a[href],button:not([disabled])')).filter(function(el) {return el.getClientRects().length;});
+        var first = items[0], last = items[items.length-1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      }
     });
-
-    if (closeBtn) closeBtn.addEventListener('click', function () { setOpen(false); });
-
-    panel.querySelectorAll('a').forEach(function (link) {
-      link.addEventListener('click', function () { setOpen(false); });
+    window.addEventListener('resize', function () {
+      if (open && getComputedStyle(toggle).display === 'none') {
+        setOpen(false, false);
+        panel.closest('header').querySelector('a').focus();
+      }
     });
-
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && panel.classList.contains('open')) setOpen(false);
-    });
+    window.addEventListener('pageshow', function () { if(open) setOpen(false, false); });
   });
 })();

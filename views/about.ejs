@@ -6,10 +6,11 @@
 <body>
 
 <%- include('partials/sitenav', { active: 'about' }) %>
+<main id="main-content" tabindex="-1">
 
 <section class="hero hero-inner-page">
   <div class="wrap-wide">
-    <div class="hero-copy" data-reveal style="max-width:680px;">
+    <div class="hero-copy" style="max-width:680px;">
       <span class="eyebrow on-dark"><%= t('about.hero.eyebrow') %></span>
       <h1><%= t('about.hero.heading') %></h1>
       <p class="lede"><%= t('about.hero.lede') %></p>
@@ -19,21 +20,21 @@
 
 <section class="section on-tint">
   <div class="wrap">
-    <div class="section-head" data-reveal>
+    <div class="section-head">
       <span class="eyebrow"><%= t('about.connects.eyebrow') %></span>
       <h2><%= t('about.connects.heading') %></h2>
       <p><%= t('about.connects.intro') %></p>
     </div>
     <div class="benefit-icon-grid">
-      <div class="benefit-card" data-reveal data-reveal-group="connects">
+      <div class="benefit-card">
         <h3><%= t('about.connects.parentsTitle') %></h3>
         <p><%= t('about.connects.parentsBody') %></p>
       </div>
-      <div class="benefit-card" data-reveal data-reveal-group="connects">
+      <div class="benefit-card">
         <h3><%= t('about.connects.schoolsTitle') %></h3>
         <p><%= t('about.connects.schoolsBody') %></p>
       </div>
-      <div class="benefit-card" data-reveal data-reveal-group="connects">
+      <div class="benefit-card">
         <h3><%= t('about.connects.caterersTitle') %></h3>
         <p><%= t('about.connects.caterersBody') %></p>
       </div>
@@ -43,21 +44,21 @@
 
 <section class="section">
   <div class="wrap what-is-wrap">
-    <div data-reveal>
+    <div>
       <span class="eyebrow"><%= t('about.story.eyebrow') %></span>
       <h2><%= t('about.story.heading') %></h2>
       <p><%= t('about.story.intro') %></p>
     </div>
     <div class="what-is-pillars">
-      <div class="what-is-pillar" data-reveal data-reveal-group="about">
+      <div class="what-is-pillar">
         <span class="what-is-num"><%= t('about.story.pillar1Label') %></span>
         <strong><%= t('about.story.pillar1Body') %></strong>
       </div>
-      <div class="what-is-pillar" data-reveal data-reveal-group="about">
+      <div class="what-is-pillar">
         <span class="what-is-num"><%= t('about.story.pillar2Label') %></span>
         <strong><%= t('about.story.pillar2Body') %></strong>
       </div>
-      <div class="what-is-pillar" data-reveal data-reveal-group="about">
+      <div class="what-is-pillar">
         <span class="what-is-num"><%= t('about.story.pillar3Label') %></span>
         <strong><%= t('about.story.pillar3Body') %></strong>
       </div>
@@ -74,6 +75,7 @@
   </div>
 </section>
 
+</main>
 <%- include('partials/sitefoot') %>
 
 </body>

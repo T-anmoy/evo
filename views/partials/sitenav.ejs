@@ -20,16 +20,15 @@
           <a href="<%= locale === 'ar' ? currentPath : altLocalePath %>" lang="ar" hreflang="ar" aria-current="<%= locale === 'ar' ? 'true' : 'false' %>" class="<%= locale === 'ar' ? 'is-current' : '' %>">العربية</a>
         </div>
       <% } %>
-      <a href="<%= p %>/login" class="btn btn-outline btn-sm nav-login-action"><%= t('common.login') %></a>
-      <a href="<%= p %>/register" class="btn btn-outline btn-sm nav-secondary-action"><%= t('common.register') %></a>
-      <a href="<%= p === '' ? '/' : p %>#app" class="btn btn-primary btn-sm nav-secondary-action"><%= t('common.downloadApp') %></a>
+      <a href="<%= p %>/login" class="btn btn-outline-light btn-sm nav-login-action"><%= t('common.login') %></a>
+      <a href="<%= p %>/register" class="btn btn-outline-light btn-sm nav-secondary-action"><%= t('common.register') %></a>
       <button type="button" class="nav-toggle" id="siteNavToggle" aria-expanded="false" aria-controls="siteLinksMobile" aria-label="<%= t('nav.menuToggle') %>" data-open-label="<%= t('nav.closeLabel') %>" data-closed-label="<%= t('nav.menuToggle') %>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         <span><%= t('nav.menuToggle') %></span>
       </button>
     </div>
   </div>
-  <nav class="site-links-mobile" id="siteLinksMobile">
+  <nav class="site-links-mobile" id="siteLinksMobile" hidden inert>
     <div class="mobile-menu-head">
       <span class="mobile-menu-brand">Evo <span class="dot">Meals</span></span>
       <button type="button" class="mobile-menu-close" id="siteLinksMobileClose" aria-label="<%= t('nav.closeMenu') %>">
@@ -37,7 +36,7 @@
       </button>
     </div>
     <div class="site-links-mobile-priority">
-      <a href="<%= p %>/login" class="btn btn-outline"><%= t('common.login') %></a>
+      <a href="<%= p %>/login" class="btn btn-outline-light"><%= t('common.login') %></a>
       <a href="<%= p %>/register" class="btn btn-school-yellow"><%= t('common.register') %></a>
     </div>
     <a href="<%= p === '' ? '/' : p %>#supported-schools" class="site-links-mobile-checkschool">
@@ -62,8 +61,8 @@
           <a href="<%= locale === 'ar' ? currentPath : altLocalePath %>" lang="ar" hreflang="ar" aria-current="<%= locale === 'ar' ? 'true' : 'false' %>" class="<%= locale === 'ar' ? 'is-current' : '' %>">العربية</a>
         </div>
       <% } %>
-      <a href="<%= p === '' ? '/' : p %>#app" class="btn btn-outline btn-sm"><%= t('common.downloadApp') %></a>
+      <a href="<%= p === '' ? '/' : p %>#app" class="btn btn-outline-light btn-sm"><%= t('common.downloadApp') %></a>
     </div>
   </nav>
 </header>
-<script src="/js/nav.js" defer></script>
+<script src="/js/nav.js?v=<%= assetVersion('js/nav.js') %>" defer></script>

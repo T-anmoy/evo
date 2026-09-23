@@ -13,37 +13,10 @@
     <p><%= t('menu.intro') %></p>
   </div>
 
-  <div class="allergen-banner">
-    <div class="allergen-banner-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg><span><%= t('menu.allergenBanner') %></span></div>
+  <div class="food-grid">
+    <% menuItems.forEach(m => { %><%- include('partials/food-card', {m, bookable:true}) %><% }) %>
   </div>
-  <p class="allergen-commitment"><%= t('menu.commitment1') %></p>
-  <p class="allergen-commitment"><%= t('menu.commitment2') %></p>
-
-  <!-- Dish names, tags, and ingredients are real product/menu data (from
-       seed.json via db.js), not UI copy — they are not translated this
-       phase, since doing so would mean adding a parallel Arabic dataset to
-       the data layer, out of scope for a localization pass. See
-       docs/evo-implementation/PHASE-04-LOCALIZATION-RESPONSIVE.md. -->
-  <div class="grid-2">
-    <% menuItems.forEach(m => { %>
-      <div class="menu-card menu-card-full">
-        <div class="menu-thumb menu-thumb-wide">
-          <%- include('partials/dish-image', { m: m }) %>
-        </div>
-        <div class="menu-card-body">
-          <span class="tag"><%= m.tag %></span>
-          <h3><%= m.name %></h3>
-          <p class="menu-ingredients"><strong><%= t('menu.ingredientsLabel') %></strong> <%= m.ingredients %></p>
-          <div class="menu-nutri-grid">
-            <div><span class="menu-nutri-val data-num"><%= m.calories %></span><span class="menu-nutri-key"><%= t('menu.kcal') %></span></div>
-            <div><span class="menu-nutri-val data-num"><bdi><%= m.protein %>g</bdi></span><span class="menu-nutri-key"><%= t('menu.protein') %></span></div>
-            <div><span class="menu-nutri-val data-num"><bdi><%= m.carbs %>g</bdi></span><span class="menu-nutri-key"><%= t('menu.carbs') %></span></div>
-            <div><span class="menu-nutri-val data-num"><bdi><%= m.fat %>g</bdi></span><span class="menu-nutri-key"><%= t('menu.fat') %></span></div>
-          </div>
-        </div>
-      </div>
-    <% }) %>
-  </div>
+  <%- include('partials/food-confidence') %>
 </main>
 
 <%- include('partials/appfoot') %>

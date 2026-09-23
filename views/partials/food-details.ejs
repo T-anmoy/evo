@@ -1,0 +1,13 @@
+<% const dishExclusions = Array.isArray(m.allergenFree) ? m.allergenFree.filter(k => ['nut','shellfish','sesame','soy'].includes(k)) : []; %>
+<div class="food-details">
+  <p class="food-ingredients"><strong><%= t('menu.ingredientsLabel') %></strong> <span lang="en" dir="auto"><%= m.ingredients %></span></p>
+  <dl class="food-nutrition">
+    <% [['calories','kcal',''],['protein','protein','g'],['carbs','carbs','g'],['fat','fat','g']].forEach(([field,label,unit]) => { %>
+      <div><dt><%= t('menu.'+label) %></dt><dd><bdi><%= m[field] %><%= unit %></bdi></dd></div>
+    <% }) %>
+  </dl>
+  <p class="dish-allergens"><strong><%= t('food.dishExclusions') %></strong>
+    <%= dishExclusions.length ? dishExclusions.map(k => t('food.'+k)).join(locale === 'ar' ? '، ' : ', ') : t('food.notRecorded') %>
+  </p>
+  <p class="food-provenance"><%= t('food.dishSource') %></p>
+</div>

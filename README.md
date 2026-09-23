@@ -1,10 +1,12 @@
 # Evo Meals Demo System
 
 A real, working multi-page demo of the redesigned Evo Meals school meal platform.
-This is not a mockup: real login sessions backed by
-a real SQLite database, a real booking engine that always calculates a
-correct total against the school's actual calendar, real Civil ID
-masking, CSRF protection, rate-limited login, and structured logging.
+The demo uses Express login sessions, SQLite application records, calendar-based
+booking calculations, Civil ID masking, CSRF protection, rate-limited login,
+and structured logging. Sessions currently use the in-memory Express store;
+production session storage remains deployment work. Payment, physical collection
+readers and push delivery are not connected. See `docs/evo-phase-2-report.md`
+for implemented boundaries and remaining product decisions.
 
 ## Run it (takes about a minute)
 

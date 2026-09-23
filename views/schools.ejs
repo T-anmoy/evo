@@ -7,222 +7,63 @@
 
 <%- include('partials/sitenav', { active: 'schools' }) %>
 
-<main id="main-content">
+<main id="main-content" tabindex="-1">
 <!-- 1. Hero -->
 <section class="hero hero-inner-page">
   <div class="wrap-wide">
-    <div class="hero-copy" data-reveal style="max-width:680px;">
+    <div class="hero-copy" style="max-width:680px;">
       <span class="eyebrow on-dark"><%= t('schools.hero.eyebrow') %></span>
       <h1><%= t('schools.hero.heading') %></h1>
       <p class="lede"><%= t('schools.hero.lede') %></p>
       <div class="hero-actions">
-        <a href="#partner-form" class="btn btn-primary"><%= t('schools.hero.ctaPartner') %></a>
-        <a href="<%= locale === 'ar' ? '/ar/how-it-works' : '/how-it-works' %>" class="btn btn-outline"><%= t('schools.hero.ctaHowItWorks') %></a>
+        <a href="#partner-form" class="btn btn-light"><%= t('schools.hero.ctaPartner') %></a>
+        <a href="<%= locale === 'ar' ? '/ar/how-it-works' : '/how-it-works' %>" class="btn btn-outline-light"><%= t('schools.hero.ctaHowItWorks') %></a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- 2. Current problem -->
-<section class="section" id="the-problem">
-  <div class="wrap what-is-wrap">
-    <div data-reveal>
-      <span class="eyebrow"><%= t('schools.problem.eyebrow') %></span>
-      <h2><%= t('schools.problem.heading') %></h2>
-      <p><%= t('schools.problem.intro') %></p>
-    </div>
-    <div class="what-is-pillars">
-      <div class="what-is-pillar" data-reveal data-reveal-group="problem">
-        <span class="what-is-num"><%= t('schools.problem.item1Label') %></span>
-        <strong><%= t('schools.problem.item1Body') %></strong>
-      </div>
-      <div class="what-is-pillar" data-reveal data-reveal-group="problem">
-        <span class="what-is-num"><%= t('schools.problem.item2Label') %></span>
-        <strong><%= t('schools.problem.item2Body') %></strong>
-      </div>
-      <div class="what-is-pillar" data-reveal data-reveal-group="problem">
-        <span class="what-is-num"><%= t('schools.problem.item3Label') %></span>
-        <strong><%= t('schools.problem.item3Body') %></strong>
-      </div>
-    </div>
+<section class="section"><div class="wrap operational-layout">
+  <div class="operational-list">
+    <% for(let i=1;i<=5;i++){ %><div><h2><%= t('schools.operations.title'+i) %></h2><p><%= t('schools.operations.body'+i) %></p></div><% } %>
   </div>
-</section>
-
-<!-- 3. Connected programme model -->
-<section class="section on-tint" id="connected-model">
-  <div class="wrap">
-    <div class="section-head" data-reveal>
-      <span class="eyebrow"><%= t('schools.connectedModel.eyebrow') %></span>
-      <h2><%= t('schools.connectedModel.heading') %></h2>
-      <p><%= t('schools.connectedModel.intro') %></p>
-    </div>
-    <ul class="teaser-list operate-list" data-reveal>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.connectedModel.item1') %></li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.connectedModel.item2') %></li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.connectedModel.item3') %></li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.connectedModel.item4') %></li>
-    </ul>
+  <div class="card operational-example">
+    <span class="sample-tag"><%= t('schools.dashboardPreview.productPreview') %></span>
+    <h2><%= t('schools.dashboardPreview.overview') %></h2>
+    <p><%= t('schools.dashboardPreview.intro') %></p>
+    <dl class="record-details">
+      <div><dt><%= t('caterers.orderQueue.colStudent') %></dt><dd><bdi>Ahmed A.</bdi></dd></div>
+      <div><dt><%= t('caterers.orderQueue.colMeal') %></dt><dd><bdi>Arabiatta Chicken Pasta</bdi></dd></div>
+      <div><dt><%= t('caterers.orderQueue.colStatus') %></dt><dd><%- include('partials/example-status',{status:'Upcoming'}) %></dd></div>
+    </dl>
+    <a href="/school-admin/login" class="btn btn-outline"><%= t('meta.schoolAdminLogin.title') %></a>
+    <a class="food-book-link" href="<%= locale === 'ar' ? '/ar/parents' : '/parents' %>"><%= t('schools.parentExperience.cta') %> →</a>
   </div>
-</section>
-
-<!-- 4. Parent experience -->
-<section class="section" id="parent-experience">
-  <div class="wrap teaser-wrap">
-    <div class="teaser-copy" data-reveal>
-      <span class="eyebrow"><%= t('schools.parentExperience.eyebrow') %></span>
-      <h2><%= t('schools.parentExperience.heading') %></h2>
-      <p><%= t('schools.parentExperience.intro') %></p>
-      <a href="<%= locale === 'ar' ? '/ar/parents' : '/parents' %>" class="btn btn-primary"><%= t('schools.parentExperience.cta') %></a>
-    </div>
-    <ul class="teaser-list" data-reveal>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.parentExperience.item1') %></li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.parentExperience.item2') %></li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.parentExperience.item3') %></li>
-    </ul>
-  </div>
-</section>
-
-<!-- 5. School operational visibility -->
-<section class="section on-tint" id="operational-visibility">
-  <div class="wrap">
-    <div class="section-head" data-reveal>
-      <span class="eyebrow"><%= t('schools.operationalVisibility.eyebrow') %></span>
-      <h2><%= t('schools.operationalVisibility.heading') %></h2>
-    </div>
-    <div class="benefit-icon-grid">
-      <div class="benefit-card" data-reveal data-reveal-group="ops">
-        <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></div>
-        <h3><%= t('schools.operationalVisibility.card1Title') %></h3>
-        <p><%= t('schools.operationalVisibility.card1Body') %></p>
-      </div>
-      <div class="benefit-card" data-reveal data-reveal-group="ops">
-        <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></div>
-        <h3><%= t('schools.operationalVisibility.card2Title') %></h3>
-        <p><%= t('schools.operationalVisibility.card2Body') %></p>
-      </div>
-      <div class="benefit-card" data-reveal data-reveal-group="ops">
-        <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="m4.2 10.9 1.7-.6a7.9 7.9 0 0 1 1-1.7l-.3-1.8 1.7-1 1.5 1.1a7.9 7.9 0 0 1 2 0l1.5-1.1 1.7 1-.3 1.8c.4.5.8 1.1 1 1.7l1.7.6v2l-1.7.6a7.9 7.9 0 0 1-1 1.7l.3 1.8-1.7 1-1.5-1.1a7.9 7.9 0 0 1-2 0l-1.5 1.1-1.7-1 .3-1.8a7.9 7.9 0 0 1-1-1.7l-1.7-.6Z"/></svg></div>
-        <h3><%= t('schools.operationalVisibility.card3Title') %></h3>
-        <p><%= t('schools.operationalVisibility.card3Body') %></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 6. Student-level identification -->
-<section class="section" id="student-identification">
-  <div class="wrap teaser-wrap teaser-wrap-reverse">
-    <ul class="teaser-list" data-reveal>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.studentIdentification.item1') %></li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.studentIdentification.item2') %></li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.studentIdentification.item3') %></li>
-      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schools.studentIdentification.item4') %></li>
-    </ul>
-    <div class="teaser-copy" data-reveal>
-      <span class="eyebrow"><%= t('schools.studentIdentification.eyebrow') %></span>
-      <h2><%= t('schools.studentIdentification.heading') %></h2>
-      <p><%= t('schools.studentIdentification.body') %></p>
-    </div>
-  </div>
-</section>
-
-<!-- 7. Dashboard / product proof -->
-<section class="section on-tint" id="dashboard-preview">
-  <div class="wrap">
-    <div class="section-head" data-reveal>
-      <span class="eyebrow"><%= t('schools.dashboardPreview.eyebrow') %></span>
-      <h2><%= t('schools.dashboardPreview.heading') %></h2>
-      <p><%= t('schools.dashboardPreview.intro') %></p>
-    </div>
-    <div class="dash-preview" data-reveal>
-      <div class="dash-preview-head">
-        <div class="dash-preview-title"><%= t('schools.dashboardPreview.schoolName') %> <span>· <%= t('schools.dashboardPreview.overview') %></span></div>
-        <span class="sample-tag on-dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> <%= t('schools.dashboardPreview.productPreview') %></span>
-      </div>
-      <div class="dash-preview-grid">
-        <div class="dash-stat">
-          <span class="dash-stat-label"><%= t('schools.dashboardPreview.statTodaysMeals') %></span>
-          <span class="dash-stat-value data-num">312</span>
-        </div>
-        <div class="dash-stat">
-          <span class="dash-stat-label"><%= t('schools.dashboardPreview.statActiveSubs') %></span>
-          <span class="dash-stat-value data-num">648</span>
-        </div>
-        <div class="dash-stat">
-          <span class="dash-stat-label"><%= t('schools.dashboardPreview.statMealsDelivered') %></span>
-          <span class="dash-stat-value data-num">6,140</span>
-        </div>
-        <div class="dash-stat">
-          <span class="dash-stat-label"><%= t('schools.dashboardPreview.statPendingOrders') %></span>
-          <span class="dash-stat-value data-num">14</span>
-        </div>
-        <div class="dash-stat dash-stat-wide">
-          <span class="dash-stat-label"><%= t('schools.dashboardPreview.statParentEngagement') %></span>
-          <div class="dash-bar"><div class="dash-bar-fill" style="width:87%;"></div></div>
-          <span class="dash-stat-value data-num" style="font-size:20px;">87%</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 8. Implementation / onboarding -->
-<section class="section" id="onboarding">
-  <div class="wrap">
-    <div class="section-head" data-reveal>
-      <span class="eyebrow"><%= t('schools.onboarding.eyebrow') %></span>
-      <h2><%= t('schools.onboarding.heading') %></h2>
-    </div>
-    <div class="steps">
-      <div class="step" data-reveal data-reveal-group="onboarding">
-        <div class="step-num"><%= t('schools.onboarding.step1Label') %></div>
-        <h3><%= t('schools.onboarding.step1Title') %></h3>
-        <p><%= t('schools.onboarding.step1Body') %></p>
-      </div>
-      <div class="step" data-reveal data-reveal-group="onboarding">
-        <div class="step-num"><%= t('schools.onboarding.step2Label') %></div>
-        <h3><%= t('schools.onboarding.step2Title') %></h3>
-        <p><%= t('schools.onboarding.step2Body') %></p>
-      </div>
-      <div class="step" data-reveal data-reveal-group="onboarding">
-        <div class="step-num"><%= t('schools.onboarding.step3Label') %></div>
-        <h3><%= t('schools.onboarding.step3Title') %></h3>
-        <p><%= t('schools.onboarding.step3Body') %></p>
-      </div>
-      <div class="step" data-reveal data-reveal-group="onboarding">
-        <div class="step-num"><%= t('schools.onboarding.step4Label') %></div>
-        <h3><%= t('schools.onboarding.step4Title') %></h3>
-        <p><%= t('schools.onboarding.step4Body') %></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 9. Partnership enquiry -->
+</div></section>
 <section class="section on-tint" id="partner-form">
   <div class="wrap partner-form-wrap">
-    <div class="section-head" data-reveal style="margin:0 0 0;">
+    <div class="section-head" style="margin:0 0 0;">
       <span class="eyebrow"><%= t('schools.partnerForm.eyebrow') %></span>
       <h2><%= t('schools.partnerForm.heading') %></h2>
-      <p><%- t('schools.partnerForm.intro', { strong: `<strong>${t('schools.partnerForm.introStrong')}</strong>` }) %></p>
+      <p><%= t('schools.partnerForm.intro') %></p>
     </div>
-    <div class="card" data-reveal>
+    <div class="card">
       <% if (typeof success !== 'undefined' && success) { %>
-        <div class="alert alert-success"><%- include('partials/success-icon') %><span><%= t('schools.partnerForm.successMsg') %></span></div>
+        <div class="alert alert-success" role="status"><%- include('partials/success-icon') %><span><%= t('schools.partnerForm.successMsg') %></span></div>
       <% } else { %>
         <% var fd = (typeof formData !== 'undefined' && formData) ? formData : {}; var errs = (typeof errors !== 'undefined' && errors) ? errors : {}; %>
         <form method="POST" action="<%= locale === 'ar' ? '/ar/schools/inquiry' : '/schools/inquiry' %>" id="schoolInquiryForm" novalidate>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <div class="field <%= errs.organizationName ? 'invalid' : '' %>">
             <label for="schoolOrgName"><%= t('schools.partnerForm.labelSchoolName') %></label>
-            <input type="text" id="schoolOrgName" name="organizationName" value="<%= fd.organizationName || '' %>" required data-validate="required">
-            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.organizationName || t('schools.partnerForm.errSchoolName') %></span></div>
+            <input type="text" id="schoolOrgName" name="organizationName" value="<%= fd.organizationName || '' %>" required data-validate="required" aria-describedby="schoolOrgName-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.organizationName) ? 'true' : 'false' %>">
+            <div class="field-error" id="schoolOrgName-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.organizationName || t('schools.partnerForm.errSchoolName') %></span></div>
           </div>
           <div class="form-row">
             <div class="field <%= errs.contactName ? 'invalid' : '' %>">
               <label for="schoolContactName"><%= t('schools.partnerForm.labelContactName') %></label>
-              <input type="text" id="schoolContactName" name="contactName" value="<%= fd.contactName || '' %>" required data-validate="name">
-              <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.contactName || t('schools.partnerForm.errContactName') %></span></div>
+              <input type="text" id="schoolContactName" name="contactName" value="<%= fd.contactName || '' %>" required data-validate="name" aria-describedby="schoolContactName-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.contactName) ? 'true' : 'false' %>">
+              <div class="field-error" id="schoolContactName-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.contactName || t('schools.partnerForm.errContactName') %></span></div>
             </div>
             <div class="field">
               <label for="schoolContactRole"><%= t('schools.partnerForm.labelContactRole') %></label>
@@ -232,13 +73,13 @@
           <div class="form-row">
             <div class="field <%= errs.email ? 'invalid' : '' %>">
               <label for="schoolContactEmail"><%= t('schools.partnerForm.labelEmail') %></label>
-              <input type="email" id="schoolContactEmail" name="email" value="<%= fd.email || '' %>" inputmode="email" required data-validate="email">
-              <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.email || t('schools.partnerForm.errEmail') %></span></div>
+              <input type="email" id="schoolContactEmail" name="email" value="<%= fd.email || '' %>" inputmode="email" required data-validate="email" aria-describedby="schoolContactEmail-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.email) ? 'true' : 'false' %>">
+              <div class="field-error" id="schoolContactEmail-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.email || t('schools.partnerForm.errEmail') %></span></div>
             </div>
             <div class="field <%= errs.phone ? 'invalid' : '' %>">
               <label for="schoolContactPhone"><%= t('schools.partnerForm.labelPhone') %></label>
-              <input type="tel" id="schoolContactPhone" name="phone" value="<%= fd.phone || '' %>" inputmode="tel" data-validate="phone" placeholder="+965 ...">
-              <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.phone || t('schools.partnerForm.errPhone') %></span></div>
+              <input type="tel" id="schoolContactPhone" name="phone" value="<%= fd.phone || '' %>" inputmode="tel" data-validate="phone" placeholder="+965 ..." aria-describedby="schoolContactPhone-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.phone) ? 'true' : 'false' %>">
+              <div class="field-error" id="schoolContactPhone-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.phone || t('schools.partnerForm.errPhone') %></span></div>
             </div>
           </div>
           <div class="form-row">
@@ -263,8 +104,8 @@
           </div>
           <div class="field <%= errs.message ? 'invalid' : '' %>">
             <label for="schoolMessage"><%= t('schools.partnerForm.labelMessage') %></label>
-            <textarea id="schoolMessage" name="message" rows="4" required maxlength="2000" data-validate="minlength:10" placeholder="<%= t('schools.partnerForm.placeholderMessage') %>"><%= fd.message || '' %></textarea>
-            <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.message || t('schools.partnerForm.errMessage') %></span></div>
+            <textarea id="schoolMessage" name="message" rows="4" required maxlength="2000" data-validate="minlength:10" placeholder="<%= t('schools.partnerForm.placeholderMessage') %>" aria-describedby="schoolMessage-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.message) ? 'true' : 'false' %>"><%= fd.message || '' %></textarea>
+            <div class="field-error" id="schoolMessage-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.message || t('schools.partnerForm.errMessage') %></span></div>
           </div>
           <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('schools.partnerForm.submit') %></button>
         </form>
@@ -273,14 +114,7 @@
   </div>
 </section>
 
-<section class="cta-band">
-  <div class="wrap" style="text-align:center;">
-    <span class="eyebrow on-dark" style="justify-content:center;"><%= t('schools.finalCta.eyebrow') %></span>
-    <h2 style="margin-top:16px;"><%= t('schools.finalCta.heading') %></h2>
-    <p style="margin:14px auto 28px;"><%= t('schools.finalCta.body') %></p>
-    <a href="#partner-form" class="btn btn-school-yellow"><%= t('schools.finalCta.cta') %></a>
-  </div>
-</section>
+
 </main>
 
 <%- include('partials/sitefoot') %>

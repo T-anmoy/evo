@@ -7,156 +7,58 @@
 
 <%- include('partials/sitenav', { active: 'parents' }) %>
 
-<main id="main-content">
-<!-- 1. Hero -->
-<section class="hero hero-inner-page">
-  <div class="wrap-wide hero-inner">
-    <div class="hero-copy" data-reveal>
-      <span class="eyebrow on-dark"><%= t('parents.hero.eyebrow') %></span>
-      <h1><%= t('parents.hero.headline1') %><br><%= t('parents.hero.headline2') %><br><em><%= t('parents.hero.headlineEm') %></em></h1>
-      <p class="lede"><%= t('parents.hero.lede') %></p>
-      <div class="hero-actions">
-        <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-primary"><%= t('common.createAccount') %></a>
-        <a href="<%= locale === 'ar' ? '/ar/login' : '/login' %>" class="btn btn-outline"><%= t('common.login') %></a>
-      </div>
-    </div>
-    <div class="hero-visual" aria-hidden="true">
-      <div class="tap-demo">
-        <div class="tap-card">
-          <div class="chip"></div>
-          <div class="card-name">Ahmed A.</div>
-        </div>
-        <div class="tap-reader pulse">
-          <div class="ripple"></div>
-          <div class="ripple delay"></div>
-          <div class="reader-ring">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8.5a8 8 0 0 1 12 0M8.5 11a4.5 4.5 0 0 1 7 0M12 14v.01"/></svg>
-          </div>
-          <div class="reader-label">MEAL READER · GATE 2</div>
-        </div>
-        <div class="tap-toast">
-          <div class="toast-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1"><path d="M20 6 9 17l-5-5"/></svg>
-          </div>
-          <div>
-            <div class="toast-title"><%= t('parents.hero.toastTitle') %></div>
-            <div class="toast-sub"><bdi><%= t('parents.hero.toastSub') %></bdi></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 2. How the parent journey works -->
-<section class="section on-tint">
+<main id="main-content" tabindex="-1">
+<section class="section parent-intro">
   <div class="wrap">
-    <div class="section-head" data-reveal>
-      <span class="eyebrow"><%= t('parents.journey.eyebrow') %></span>
-      <h2><%= t('parents.journey.heading') %></h2>
-      <p><%= t('parents.journey.intro') %></p>
+    <div class="parent-intro-copy">
+      <span class="eyebrow"><%= t('parents.hero.eyebrow') %></span>
+      <h1><%= t('parents.hero.headline1') %></h1>
+      <p class="lede"><%= t('parents.hero.lede') %></p>
+      <div class="action-row"><a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-primary"><%= t('common.createAccount') %></a><a href="<%= locale === 'ar' ? '/ar' : '/' %>#supported-schools"><%= t('nav.checkMySchool') %> →</a></div>
     </div>
-
-    <!-- One coherent Book -> Pay -> Tap -> Notified journey (the previous
-         "before/at/after" mini-journey strip duplicated this same content
-         a second time with its own numbering — removed in favor of a
-         single journey with real color semantics: Tap is the attention
-         moment (School Yellow), Notified is the completion moment (Leaf). -->
-    <div class="steps">
-      <div class="step" data-reveal data-reveal-group="psteps">
-        <div class="step-num"><%= t('parents.journey.step1Label') %></div>
-        <h3><%= t('parents.journey.step1Title') %></h3>
-        <p><%= t('parents.journey.step1Body') %></p>
-      </div>
-      <div class="step" data-reveal data-reveal-group="psteps">
-        <div class="step-num"><%= t('parents.journey.step2Label') %></div>
-        <h3><%= t('parents.journey.step2Title') %></h3>
-        <p><%= t('parents.journey.step2Body') %></p>
-      </div>
-      <div class="step step-attention" data-reveal data-reveal-group="psteps">
-        <div class="step-num"><%= t('parents.journey.step3Label') %></div>
-        <h3><%= t('parents.journey.step3Title') %></h3>
-        <p><%= t('parents.journey.step3Body') %></p>
-      </div>
-      <div class="step step-done" data-reveal data-reveal-group="psteps">
-        <div class="step-num"><%= t('parents.journey.step4Label') %></div>
-        <h3><%= t('parents.journey.step4Title') %></h3>
-        <p><%= t('parents.journey.step4Body') %></p>
-      </div>
-    </div>
-
+    <% if(menuItems[0]) { %><%- include('partials/food-card', {m:menuItems[0],variant:'featured',eager:true}) %><% } %>
+    <%- include('partials/food-confidence') %>
   </div>
 </section>
-
 <!-- 3. Menu + nutrition + allergen information -->
 <section class="section" id="menu">
   <div class="wrap">
-    <div class="section-head" data-reveal>
+    <div class="section-head">
       <span class="eyebrow"><%= t('parents.menu.eyebrow') %></span>
       <h2><%= t('parents.menu.heading') %></h2>
       <p><%= t('parents.menu.intro') %></p>
     </div>
-    <div class="allergen-row" style="justify-content:center;">
-      <span class="allergen-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg> <%= t('parents.menu.allergenPill') %></span>
+    <div class="food-grid food-supporting">
+      <% menuItems.slice(1).forEach(m => { %><%- include('partials/food-card', {m,variant:'compact'}) %><% }) %>
     </div>
-    <% const __featured = menuItems[0]; const __rest = menuItems.slice(1); %>
-    <% if (__featured) { %>
-    <!-- One dish shown in full detail (name, category, macros, ingredients)
-         instead of another equal card in a grid — a featured-detail
-         composition communicates more, faster, than four identical cards
-         (final refinement pass, spec section 7C). -->
-    <div class="menu-card menu-card-full menu-featured" data-reveal>
-      <div class="menu-thumb menu-thumb-wide">
-        <%- include('partials/dish-image', { m: __featured, eager: true }) %>
-      </div>
-      <div class="menu-card-body">
-        <span class="tag"><%= __featured.tag %></span>
-        <h3><%= __featured.name %></h3>
-        <p class="menu-ingredients"><strong><%= t('menu.ingredientsLabel') %></strong> <%= __featured.ingredients %></p>
-        <div class="menu-nutri-grid">
-          <div><span class="menu-nutri-val data-num"><%= __featured.calories %></span><span class="menu-nutri-key"><%= t('menu.kcal') %></span></div>
-          <div><span class="menu-nutri-val data-num"><bdi><%= __featured.protein %>g</bdi></span><span class="menu-nutri-key"><%= t('menu.protein') %></span></div>
-        </div>
-      </div>
-    </div>
-    <% } %>
-    <% if (__rest.length) { %>
-    <div class="menu-preview-strip">
-      <% __rest.forEach(m => { %>
-        <div class="menu-preview-card" data-reveal data-reveal-group="pmenu">
-          <div class="menu-thumb"><%- include('partials/dish-image', { m: m }) %></div>
-          <div class="menu-preview-body">
-            <h4><%= m.name %></h4>
-            <span><bdi><%= m.calories %> <%= t('common.kcal') %></bdi></span>
-          </div>
-        </div>
-      <% }) %>
-    </div>
-    <% } %>
-    <p class="nutrition-more" data-reveal><%= t('parents.menu.footnote') %></p>
+    <p class="nutrition-more"><%= t('parents.menu.footnote') %></p>
   </div>
 </section>
 
+<section class="section on-tint" id="journey"><div class="wrap">
+  <div class="section-head"><span class="eyebrow"><%= t('parents.journey.eyebrow') %></span><h2><%= t('parents.journey.heading') %></h2><p><%= t('parents.journey.intro') %></p></div>
+  <%- include('partials/parent-journey') %>
+</div></section>
 <!-- 4. Calendar-aware pricing explanation -->
-<section class="section on-tint" id="pricing">
+<section class="section" id="pricing">
   <div class="wrap">
-    <div class="section-head" data-reveal>
+    <div class="section-head">
       <span class="eyebrow"><%= t('parents.pricing.eyebrow') %></span>
       <h2><%= t('parents.pricing.heading') %></h2>
       <p><%= t('parents.pricing.intro') %></p>
     </div>
     <div class="pricing-grid">
-      <div class="price-card" data-reveal data-reveal-group="ppricing">
+      <div class="price-card">
         <div class="price-tag"><%= t('parents.pricing.payAsYouGoTitle') %></div>
         <div class="price-amt"><bdi>KWD <%= (plans.single ? plans.single.rateKWD : 2).toFixed(3) %></bdi><span><%= t('parents.pricing.payAsYouGoPer') %></span></div>
         <p><%= t('parents.pricing.payAsYouGoBody') %></p>
         <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-outline" style="width:100%;"><%= t('parents.pricing.payAsYouGoCta') %></a>
       </div>
-      <div class="price-card featured" data-reveal data-reveal-group="ppricing">
+      <div class="price-card">
         <div class="price-tag"><%= t('parents.pricing.subscriptionTitle') %></div>
         <div class="price-amt"><bdi>KWD <%= (plans.single ? plans.single.rateKWD : 2).toFixed(3) %></bdi><span><%= t('parents.pricing.subscriptionPer') %></span></div>
         <p><%= t('parents.pricing.subscriptionBody') %></p>
-        <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-school-yellow" style="width:100%;"><%= t('parents.pricing.subscriptionCta') %></a>
+        <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-outline" style="width:100%;"><%= t('parents.pricing.subscriptionCta') %></a>
       </div>
     </div>
   </div>
@@ -165,42 +67,26 @@
 <!-- 5. Tap-to-collect + notification -->
 <section class="section" id="collection">
   <div class="wrap">
-    <div class="section-head" data-reveal>
+    <div class="section-head">
       <span class="eyebrow"><%= t('parents.collection.eyebrow') %></span>
       <h2><%= t('parents.collection.heading') %></h2>
       <p><%= t('parents.collection.intro') %></p>
     </div>
-    <div class="flow-caption">
-      <span><%= t('home.collectionProof.flowTap') %></span><span class="flow-caption-arrow" aria-hidden="true">→</span><span><%= t('home.collectionProof.flowCollected') %></span><span class="flow-caption-arrow" aria-hidden="true">→</span><span><%= t('home.collectionProof.flowNotified') %></span>
-    </div>
-    <div class="card" data-reveal style="max-width:480px; margin:0 auto;">
-      <div class="dash-preview-head" style="padding:0 0 14px;">
-        <strong style="font-family:'Montserrat',Arial,sans-serif; font-size:15px; color:var(--forest);"><%= t('parents.collection.cardTitle') %></strong>
-        <span class="sample-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> <%= t('parents.collection.sampleView') %></span>
-      </div>
-      <div class="student-row">
-        <div class="avatar">A</div>
-        <div class="student-meta">
-          <strong>Ahmed</strong>
-          <span><%= t('parents.collection.mealName') %></span>
-        </div>
-        <span class="status-line ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('parents.collection.collectedAt') %></span>
-      </div>
-    </div>
+    <%- include('partials/collection-demo') %>
   </div>
 </section>
 
 <!-- 6. Multiple children -->
 <section class="section on-tint" id="multiple-children">
   <div class="wrap what-is-wrap">
-    <div data-reveal>
+    <div>
       <span class="eyebrow"><%= t('parents.multipleChildren.eyebrow') %></span>
       <h2><%= t('parents.multipleChildren.heading') %></h2>
       <p><%= t('parents.multipleChildren.intro') %></p>
     </div>
-    <div class="card" data-reveal style="max-width:480px;">
+    <div class="card" style="max-width:480px;">
       <div class="dash-preview-head" style="padding:0 0 14px;">
-        <strong style="font-family:'Montserrat',Arial,sans-serif; font-size:15px; color:var(--forest);"><%= t('parents.multipleChildren.cardTitle') %></strong>
+        <strong style="font-family:var(--font-heading); font-size:15px; color:var(--forest);"><%= t('parents.multipleChildren.cardTitle') %></strong>
         <span class="sample-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> <%= t('parents.multipleChildren.sampleView') %></span>
       </div>
       <div class="student-row">
@@ -226,19 +112,17 @@
 <!-- 7. App -->
 <section class="section" id="app">
   <div class="wrap app-section-wrap">
-    <div data-reveal>
+    <div>
       <span class="eyebrow"><%= t('parents.app.eyebrow') %></span>
       <h2><%= t('parents.app.headingLine1') %><br><%= t('parents.app.headingLine2') %></h2>
-      <div class="app-flow">
-        <span><%= t('home.app.flowMenu') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('home.app.flowChoose') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('home.app.flowPay') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('home.app.flowCollect') %></span><span class="app-flow-arrow" aria-hidden="true">→</span><span><%= t('home.app.flowNotified') %></span>
-      </div>
+      <p class="app-capabilities"><%= t('home.app.flowMenu') %> <span aria-hidden="true">·</span> <%= t('home.app.flowSubscription') %> <span aria-hidden="true">·</span> <%= t('home.app.flowOrder') %></p>
       <p class="app-download-cta" style="font-weight:700; margin-bottom:10px;"><%= t('parents.app.downloadCta') %></p>
       <div class="store-badges">
-        <a href="https://apps.apple.com/us/app/evo-school-meal/id6738001343" class="store-badge" data-magnetic target="_blank" rel="noopener noreferrer">
+        <a href="https://apps.apple.com/us/app/evo-school-meal/id6738001343" class="store-badge" target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zm3.63-3.331c.837-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.817-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701z"/></svg>
           <span><%= t('common.appStore') %></span>
         </a>
-        <a href="https://play.google.com/store/apps/details?id=com.pmg.school" class="store-badge" data-magnetic target="_blank" rel="noopener noreferrer">
+        <a href="https://play.google.com/store/apps/details?id=com.pmg.school" class="store-badge" target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zM13.792 12l3.606-3.583L4.24.936A1.5 1.5 0 0 0 3.312.7L13.792 12zM3.24 23.316a1.5 1.5 0 0 0 .928-.235l12.876-7.462-3.604-3.552L3.24 23.316z"/></svg>
           <span><%= t('common.googlePlay') %></span>
         </a>
@@ -267,7 +151,7 @@
     <p style="margin:14px auto 28px;"><%= t('parents.finalCta.body') %></p>
     <div class="hero-actions" style="justify-content:center;">
       <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-school-yellow"><%= t('common.createAccount') %></a>
-      <a href="<%= locale === 'ar' ? '/ar/login' : '/login' %>" class="btn btn-outline"><%= t('common.login') %></a>
+      <a href="<%= locale === 'ar' ? '/ar/login' : '/login' %>" class="btn btn-outline-light"><%= t('common.login') %></a>
     </div>
   </div>
 </section>

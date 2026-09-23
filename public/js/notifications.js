@@ -3,7 +3,11 @@
   var dropdown = document.getElementById('notifDropdown');
   if (!btn || !dropdown) return;
 
+  dropdown.hidden = true;
+  dropdown.inert = true;
   function setOpen(open) {
+    dropdown.hidden = !open;
+    dropdown.inert = !open;
     dropdown.classList.toggle('open', open);
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
@@ -20,6 +24,6 @@
   });
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && dropdown.classList.contains('open')) setOpen(false);
+    if (e.key === 'Escape' && dropdown.classList.contains('open')) { setOpen(false); btn.focus(); }
   });
 })();

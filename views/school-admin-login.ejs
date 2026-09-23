@@ -4,6 +4,7 @@
 <%- include('partials/head', { title: t('meta.schoolAdminLogin.title') }) %>
 </head>
 <body>
+<main class="admin-auth-main">
   <div class="auth-shell">
     <div class="auth-card">
       <div class="lang-switch" role="group" aria-label="<%= t('nav.langSwitchLabel') %>" style="justify-content:center; margin-bottom:16px;">
@@ -17,7 +18,7 @@
       <p class="sub"><%= t('schoolAdminLogin.subtitle') %></p>
 
       <% if (error) { %>
-        <div class="alert alert-error"><%= error %></div>
+        <div class="alert alert-error" role="alert"><%= error %></div>
       <% } %>
 
       <form method="POST" action="/school-admin/login" novalidate>
@@ -25,13 +26,13 @@
         <% var sae = (typeof errors !== 'undefined' && errors) ? errors : {}; %>
         <div class="field <%= sae.email ? 'invalid' : '' %>">
           <label for="email"><%= t('schoolAdminLogin.labelEmail') %></label>
-          <input type="email" id="email" name="email" inputmode="email" data-validate="email" placeholder="<%= t('schoolAdminLogin.placeholderEmail') %>" required autofocus>
-          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= sae.email || t('schoolAdminLogin.errEmail') %></span></div>
+          <input type="email" id="email" name="email" inputmode="email" data-validate="email" placeholder="<%= t('schoolAdminLogin.placeholderEmail') %>" required autofocus aria-describedby="email-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.email) ? 'true' : 'false' %>">
+          <div class="field-error" id="email-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= sae.email || t('schoolAdminLogin.errEmail') %></span></div>
         </div>
         <div class="field">
           <label for="password"><%= t('schoolAdminLogin.labelPassword') %></label>
-          <input type="password" id="password" name="password" data-validate="required" placeholder="<%= t('schoolAdminLogin.placeholderPassword') %>" required>
-          <div class="field-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('common.valRequired') %></span></div>
+          <input type="password" id="password" name="password" data-validate="required" placeholder="<%= t('schoolAdminLogin.placeholderPassword') %>" required aria-describedby="password-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.password) ? 'true' : 'false' %>">
+          <div class="field-error" id="password-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('common.valRequired') %></span></div>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('schoolAdminLogin.submit') %></button>
       </form>
@@ -39,8 +40,9 @@
       <!-- Demo credentials (admin@kes.evomeals.demo / admin1234) intentionally
            not shown here — this is a public-facing page. See README for the
            test account. -->
-      <div class="auth-foot"><%= t('schoolAdminLogin.notAdminPre') %> <a href="/login" style="color:var(--leaf-dark); font-weight:600;"><%= t('schoolAdminLogin.goToParentLogin') %></a></div>
+      <div class="auth-foot"><%= t('schoolAdminLogin.notAdminPre') %> <a href="<%= locale === 'ar' ? '/ar/login' : '/login' %>" style="color:var(--leaf-dark); font-weight:600;"><%= t('schoolAdminLogin.goToParentLogin') %></a></div>
     </div>
   </div>
+</main>
 </body>
 </html>

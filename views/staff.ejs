@@ -13,21 +13,20 @@
     <p><%= t('staff.intro') %></p>
   </div>
 
+  <% if (error) { %><div class="alert alert-error" role="alert"><%= error %></div><% } %>
+  <% if (success) { %><div class="alert alert-success" role="status"><%= t('staff.successMsg') %></div><% } %>
   <div class="card">
     <form method="POST" action="/staff">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <div class="field">
-        <label><%= t('staff.labelMeal') %></label>
-        <select name="menuItemId" required>
-          <option value="1">Arabiatta Chicken Pasta</option>
-          <option value="2">Balsamic Chicken &amp; Beans</option>
-          <option value="3">BBQ Beef Burger</option>
-          <option value="4">BBQ Chicken &amp; Sweet Potato</option>
+        <label for="staffMeal"><%= t('staff.labelMeal') %></label>
+        <select id="staffMeal" name="menuItemId" required>
+          <% menuItems.forEach(m => { %><option value="<%= m.id %>" <%= String(m.id) === values.menuItemId ? 'selected' : '' %>><%= m.name %></option><% }) %>
         </select>
       </div>
       <div class="field">
-        <label><%= t('staff.labelDate') %></label>
-        <input type="date" name="startDate" value="<%= new Date().toISOString().split('T')[0] %>" required>
+        <label for="staffDate"><%= t('staff.labelDate') %></label>
+        <input id="staffDate" type="date" name="startDate" min="<%= bookingWindow().today %>" max="<%= bookingWindow().horizon %>" value="<%= values.startDate || bookingWindow().today %>" required>
       </div>
       <div class="confirm-bar" style="flex-direction:row; justify-content:space-between; align-items:center;">
         <span style="color:rgba(255,255,255,0.65); font-size:13px; font-weight:500;"><%= t('staff.priceLabel') %></span>

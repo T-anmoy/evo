@@ -26,8 +26,8 @@
         <h4><%= t('footer.companyHeading') %></h4>
         <a href="<%= fp %>/about"><%= t('footer.about') %></a>
         <a href="<%= fp %>/contact"><%= t('footer.contact') %></a>
-        <a href="/privacy"><%= t('footer.privacy') %></a>
-        <a href="/terms"><%= t('footer.terms') %></a>
+        <a href="/privacy"><%= t('footer.privacy') %><%= locale === 'ar' ? ' (English)' : '' %></a>
+        <a href="/terms"><%= t('footer.terms') %><%= locale === 'ar' ? ' (English)' : '' %></a>
       </div>
     </div>
   </div>

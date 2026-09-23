@@ -13,12 +13,12 @@
     <p><%= t('dashboard.intro') %></p>
   </div>
 
-  <% if (renewed) { %><div class="alert alert-success"><%- include('partials/success-icon') %><span><%= t('dashboard.renewedAlert') %></span></div><% } %>
-  <% if (typeof norenewaldays !== 'undefined' && norenewaldays) { %><div class="alert alert-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('dashboard.noRenewalDaysAlert') %></span></div><% } %>
+  <% if (renewed) { %><div class="alert alert-success" role="status"><%- include('partials/success-icon') %><span><%= t('dashboard.renewedAlert') %></span></div><% } %>
+  <% if (typeof norenewaldays !== 'undefined' && norenewaldays) { %><div class="alert alert-error" role="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('dashboard.noRenewalDaysAlert') %></span></div><% } %>
 
   <% if (renewalCandidates && renewalCandidates.length > 0) { %>
     <% renewalCandidates.forEach(rc => { %>
-      <div class="card renewal-card" data-reveal>
+      <div class="card renewal-card">
         <div class="renewal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
         <div class="renewal-body">
           <strong><%= t('dashboard.renewalEndsIn', { name: rc.studentName, days: rc.daysLeft, unit: t('dashboard.' + (rc.daysLeft === 1 ? 'dayUnitOne' : 'dayUnitOther')) }) %></strong>
@@ -33,7 +33,7 @@
   <% } %>
 
   <% if (typeof lastBooking !== 'undefined' && lastBooking) { %>
-    <div class="card quick-rebook-card" data-reveal>
+    <div class="card quick-rebook-card">
       <div class="quick-rebook-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8 12 4l8 4-8 4-8-4Z"/><path d="M4 8v8l8 4 8-4V8"/></svg></div>
       <div class="quick-rebook-body">
         <strong><%= t('dashboard.quickRebookTitle') %></strong>
@@ -44,25 +44,25 @@
   <% } %>
 
   <div class="grid-3" style="margin-bottom:28px;">
-    <div class="stat leaf" data-reveal data-reveal-group="stats">
+    <div class="stat leaf">
       <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
       <div class="label"><%= t('dashboard.statActiveSubs') %></div>
-      <div class="value leaf data-num" data-countup="<%= activeSubscriptionPeriods.length %>">0</div>
+      <div class="value leaf data-num"><%= activeSubscriptionPeriods.length %></div>
     </div>
-    <div class="stat" data-reveal data-reveal-group="stats">
+    <div class="stat">
       <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"/></svg></div>
       <div class="label"><%= t('dashboard.statChildrenRegistered') %></div>
-      <div class="value data-num" data-countup="<%= students.length %>">0</div>
+      <div class="value data-num"><%= students.length %></div>
     </div>
-    <div class="stat" data-reveal data-reveal-group="stats">
+    <div class="stat">
       <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8.5a8 8 0 0 1 12 0M8.5 11a4.5 4.5 0 0 1 7 0M12 14v.01"/></svg></div>
       <div class="label"><%= t('dashboard.statActiveBookings') %></div>
-      <div class="value data-num" data-countup="<%= activeBookingCount %>">0</div>
+      <div class="value data-num"><%= activeBookingCount %></div>
     </div>
   </div>
 
   <% if (activeSubscriptionPeriods.length > 0) { %>
-    <div class="card" style="margin-bottom:24px;" data-reveal>
+    <div class="card" style="margin-bottom:24px;">
       <h3 style="font-size:15px; margin-bottom:16px;"><%= activeSubscriptionPeriods.length === 1 ? t('dashboard.currentPeriodHeading') : t('dashboard.currentPeriodHeadingPlural') %></h3>
       <% activeSubscriptionPeriods.forEach(p => { %>
         <div class="period-row">
@@ -79,7 +79,7 @@
     </div>
   <% } %>
 
-  <div class="card" data-reveal>
+  <div class="card">
     <h3 style="font-size:15px; margin-bottom:16px;"><%= t('dashboard.todaysStatusHeading') %></h3>
     <% if (studentStatus.length === 0) { %>
       <div class="empty-state">
@@ -107,7 +107,7 @@
     <% } %>
   </div>
 
-  <div class="card" id="notifications" style="margin-top:24px;" data-reveal>
+  <div class="card" id="notifications" style="margin-top:24px;">
     <div class="dash-card-head">
       <h3 style="font-size:15px;"><%= t('dashboard.notificationsHeading') %></h3>
       <% if (unreadNotificationCount > 0) { %>
@@ -148,12 +148,12 @@
   </div>
 
   <div class="grid-2" style="margin-top:24px;">
-    <div class="card" data-reveal>
+    <div class="card">
       <h3 style="font-size:15px; margin-bottom:10px;"><%= t('dashboard.bookMealTitle') %></h3>
       <p style="font-size:13.5px; color:var(--muted); margin-bottom:16px;"><%= t('dashboard.bookMealBody') %></p>
       <a href="/booking" class="btn btn-primary btn-sm"><%= t('dashboard.bookMealCta') %></a>
     </div>
-    <div class="card" data-reveal>
+    <div class="card">
       <h3 style="font-size:15px; margin-bottom:10px;"><%= t('dashboard.historyTitle') %></h3>
       <p style="font-size:13.5px; color:var(--muted); margin-bottom:16px;"><%= t('dashboard.historyBody') %></p>
       <a href="/history" class="btn btn-outline btn-sm"><%= t('dashboard.historyCta') %></a>
