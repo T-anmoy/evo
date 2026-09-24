@@ -1653,9 +1653,16 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .cta-band .grid-3{grid-template-columns:minmax(0,1fr);}
 }
 
-/* ---------- partner contact forms (Schools / Caterers) ---------- */
-.partner-form-wrap{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:48px; align-items:start;}
-.partner-form-wrap .card{margin-top:0;}
+/* ---------- partner contact forms (Schools / Caterers) ----------
+   One centered column: the heading block introduces the form directly
+   above it (the same heading → content rhythm as every other section),
+   instead of floating beside a much taller form in a half-empty column.
+   The card keeps a comfortable form measure rather than stretching to
+   the full content width. */
+.partner-form-wrap{display:grid; grid-template-columns:minmax(0,1fr); justify-items:center; gap:36px;}
+.partner-form-wrap > .section-head{max-width:600px;}
+.partner-form-wrap > .section-head :is(h2, p){text-wrap:balance;}
+.partner-form-wrap .card{margin-top:0; width:100%; max-width:640px;}
 .partner-form-wrap textarea{resize:vertical; min-height:96px; font-family:inherit;}
 
 /* ============================================================
@@ -1674,7 +1681,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .trustbar-item{border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:16px;}
   .trustbar-item:nth-child(-n+2){border-top:none; padding-top:0;}
 
-  .partner-form-wrap{grid-template-columns:minmax(0,1fr); gap:32px;}
+  .partner-form-wrap{gap:28px;}
 }
 @media (max-width:1279px){
   .site-links{display:none;}
