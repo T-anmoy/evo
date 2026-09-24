@@ -177,11 +177,20 @@
     if (!isFinite(d.getTime())) return iso;
     return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' });
   }
+  // Change feedback: after the first calculation (which only fills in
+  // the page as rendered), any value that actually changes gets the
+  // shared settle beat — just that value, so the parent sees exactly
+  // what their choice affected. EvoMotion.settle restarts cleanly every
+  // time and is a no-op under reduced motion.
+  var feedbackLive = false;
+  function acknowledge(el) {
+    if (feedbackLive && window.EvoMotion) window.EvoMotion.settle(el);
+  }
   function setSummary(id, text) {
     var el = document.getElementById(id);
     if (!el) return;
     var target = el.querySelector('bdi') || el;
-    if (target.textContent !== text) target.textContent = text;
+    if (target.textContent !== text) { target.textContent = text; acknowledge(el); }
   }
   function fmt(str, vars) {
     return str.replace(/\{(\w+)\}/g, function (m, k) { return (k in vars) ? vars[k] : m; });
@@ -225,17 +234,12 @@
       ageHint.textContent = klass ? fmt(T.agePortionHint, { className: klass }) : '';
     }
 
-    // Purposeful animation: a brief opacity/scale pulse on the total
-    // whenever it actually changes, so the recalculation reads as cause
-    // → effect rather than a silent text swap. Respects
-    // prefers-reduced-motion via the CSS transition itself being a noop
-    // there (see .total-updated in style.css).
+    // The total acknowledges every real change (see acknowledge above).
     var totalEl = document.getElementById('totalAmt');
     function setTotal(text) {
       if (totalEl.textContent === text) return;
       totalEl.querySelector('bdi').textContent = text;
-      totalEl.classList.remove('total-updated');
-      totalEl.classList.add('total-updated');
+      acknowledge(totalEl);
     }
 
     if (plan === 'monthly') {
@@ -283,7 +287,7 @@
   if (studentSelectEl) studentSelectEl.addEventListener('change', recalc);
   var startDateEl = document.getElementById('startDate');
   if (startDateEl) startDateEl.addEventListener('change', recalc);
-  document.addEventListener('DOMContentLoaded', recalc);
+  document.addEventListener('DOMContentLoaded', function () { recalc(); feedbackLive = true; });
 </script>
 
 <%- include('partials/appfoot') %>

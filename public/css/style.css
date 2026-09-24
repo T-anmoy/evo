@@ -188,20 +188,17 @@ p{color:var(--muted);}
 .eyebrow.on-dark::before{background:var(--school-yellow);}
 
 .data-num{font-family:var(--font-heading); font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:-0.01em;}
-/* Booking total recalculation cue (final refinement pass) — a brief
-   opacity/scale settle whenever the JS-computed total actually changes,
-   so updating the price reads as cause → effect instead of a silent
-   text swap. Triggered by toggling this class in booking.ejs. */
-.total-updated{animation:total-pulse var(--dur-standard) var(--ease-out);}
-@keyframes total-pulse{0%{opacity:0.55; transform:scale(0.97);} 100%{opacity:1; transform:scale(1);}}
-/* Shared status-change settle (same curve as the total cue above): add
-   .motion-settle — or call EvoMotion.settle(el), which restarts it
-   cleanly — when a value or status changes in place. One short beat,
-   transform/opacity only, never looping; color and meaning stay the
-   element's own. */
-.motion-settle{animation:total-pulse var(--dur-standard) var(--ease-out);}
+/* Shared in-place change acknowledgement ("settle"): call
+   EvoMotion.settle(el) when a value or status changes where it stands —
+   the booking total and the booking summary values use it. One short
+   beat (opacity .7 → 1, scale .975 → 1), transform/opacity only, never
+   looping; color and meaning stay the element's own. EvoMotion.settle()
+   restarts it cleanly on every call — toggling a class in the same frame
+   (the old .total-updated cue) only ever played the first time. */
+.motion-settle{animation:evo-settle var(--dur-standard) var(--ease-out);}
+@keyframes evo-settle{0%{opacity:.7; transform:scale(.975);} 100%{opacity:1; transform:scale(1);}}
 @media (prefers-reduced-motion: reduce){
-  .total-updated,.motion-settle{animation:none;}
+  .motion-settle{animation:none;}
 }
 
 /* ---------- accessibility baseline ---------- */
@@ -662,13 +659,20 @@ form .hint-secure svg{width:14px; height:14px; color:var(--leaf-dark); flex-shri
    (booking confirmed, refund processed) — it gets the hero-duration,
    ease-spring treatment. It plays once (no infinite loop) and is skipped
    entirely under reduced motion. */
-.alert-success{background:var(--success-bg); color:var(--success-text); border:1px solid rgba(57,116,81,0.25); animation:success-settle var(--dur-hero) var(--ease-spring) both;}
+.alert-success{background:var(--success-bg); color:var(--success-text); border:1px solid rgba(57,116,81,0.25); --reveal-scale:.97; animation:evo-reveal-scale var(--dur-elevated) var(--ease-out) both;}
 .alert-success .success-icon{width:26px; height:26px; border-radius:50%; background:var(--leaf-dark); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
-.alert-success .success-icon svg{width:14px; height:14px; color:var(--white); stroke-dasharray:1px; stroke-dashoffset:1px; animation:check-draw-once .5s var(--ease-out) .3s forwards;}
-@keyframes success-settle{0%{opacity:0; transform:scale(.94) translateY(-6px);} 100%{opacity:1; transform:scale(1) translateY(0);}}
+.alert-success .success-icon svg{width:14px; height:14px; color:var(--white); stroke-dasharray:1px; stroke-dashoffset:1px; animation:check-draw-once calc(var(--dur-elevated) - 60ms) var(--ease-out) 200ms forwards;}
+/* Success sequence (~740ms) — the product's signature completion
+   moment (booking confirmed; also profile saved, cancellation done and
+   the public forms, so every success speaks one language): the panel
+   settles in (opacity + .97 scale), the badge lands on the same
+   restrained spring as a selected card's check, the check draws, then
+   the message rises in. No overshoot on the panel, nothing loops. */
+.alert-success .success-icon{--reveal-scale:.7; animation:evo-reveal-scale var(--dur-standard) var(--ease-spring) 120ms backwards;}
+.alert-success .success-icon ~ span{--reveal-distance:4px; animation:evo-reveal-up var(--dur-elevated) var(--ease-out) 260ms backwards;}
 @keyframes check-draw-once{to{stroke-dashoffset:0;}}
 @media (prefers-reduced-motion: reduce){
-  .alert-success{animation:none;}
+  .alert-success, .alert-success .success-icon, .alert-success .success-icon ~ span{animation:none;}
   .alert-success .success-icon svg{animation:none; stroke-dashoffset:0;}
 }
 
@@ -880,6 +884,9 @@ table tbody tr:hover{background:rgba(20,61,50,0.035);}
   position:relative;
 }
 .picker-card label:hover{border-color:var(--school-yellow-hover);}
+/* Tactile press on selection (meal and plan alike) — the same quick
+   settle as a button press; no resting offset, so nothing shifts. */
+.picker-card label:active{transform:scale(.99); transition-duration:var(--dur-instant);}
 .picker-card input:focus-visible + label{outline:2.5px solid var(--forest-secondary); outline-offset:2px;}
 .picker-card input:checked + label{border-color:var(--school-yellow); box-shadow:0 0 0 3px rgba(241,199,91,0.25); background:var(--warning-bg);}
 .picker-thumb{width:40px; aspect-ratio:1/1; border-radius:9px; background:linear-gradient(135deg, var(--forest-secondary), var(--forest-mid)); display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;}
@@ -1533,15 +1540,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   }
 }
 
-.role-journey-card{transition:transform var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), border-color var(--dur-standard) var(--ease-standard);}
-.role-journey-card:focus-within{transform:translateY(-4px); box-shadow:var(--shadow-sm); border-color:var(--line-strong);}
-@media (hover:hover) and (pointer:fine){
-  .role-journey-card:hover{transform:translateY(-4px); box-shadow:var(--shadow-sm); border-color:var(--line-strong);}
-}
-@media (prefers-reduced-motion: reduce){
-  .role-journey-card{transition:none;}
-  .role-journey-card:hover{transform:none;}
-}
+
 
 /* The tap-demo graphic used to share a row with the four step columns
    (a 1.3fr/1fr grid) — .hero-visual's own min-height:640px set that row's
@@ -2169,4 +2168,44 @@ th{text-align:start;}
   @media (max-width:767px){
     .home-hero-media-wrap{--reveal-distance:0px; --reveal-scale:1;}
   }
+}
+
+/* ============================================================
+   Product motion (Phase 3) — the logged-in app answers, it doesn't
+   perform. Arrivals are one short grouped beat on first paint (6px,
+   --dur-standard, ~35ms apart, done in ~310ms); everything after that
+   is state feedback: selection (picker cards), the settle on changed
+   booking values (EvoMotion.settle), and the success sequence. The one
+   data flourish is the school-admin trend chart growing once from its
+   baseline. All CSS-only from first paint — nothing waits on JS or an
+   observer, nothing replays on scroll — and none of it exists under
+   reduced motion.
+   ============================================================ */
+@keyframes evo-grow-y{from{transform:scaleY(0);}}
+
+@media (prefers-reduced-motion: no-preference){
+  :is(.dash-today, .dash-actions, .dash-today ~ .card, .students-layout > *, .admin-page-head + .grid-3 > .stat){
+    --reveal-distance:6px;
+    animation:evo-reveal-up var(--dur-standard) var(--ease-out) backwards;
+  }
+  :is(.dash-actions, .students-layout > :nth-child(2), .admin-page-head + .grid-3 > :nth-child(2)){animation-delay:calc(var(--stagger-step) * .7);}
+  :is(.dash-today ~ .card, .admin-page-head + .grid-3 > :nth-child(3)){animation-delay:calc(var(--stagger-step) * 1.4);}
+
+  /* Trend chart: each bar grows from the baseline to its own value (its
+     resting scaleY), spread evenly across --stagger-max. Counts and
+     date labels are never animated — the data is readable at once. */
+  .trend-bar-fill{animation:evo-grow-y var(--dur-elevated) var(--ease-out) calc(var(--i, 0) * var(--stagger-max) / 13) backwards;}
+  .trend-bar-col:nth-child(2) .trend-bar-fill{--i:1;}
+  .trend-bar-col:nth-child(3) .trend-bar-fill{--i:2;}
+  .trend-bar-col:nth-child(4) .trend-bar-fill{--i:3;}
+  .trend-bar-col:nth-child(5) .trend-bar-fill{--i:4;}
+  .trend-bar-col:nth-child(6) .trend-bar-fill{--i:5;}
+  .trend-bar-col:nth-child(7) .trend-bar-fill{--i:6;}
+  .trend-bar-col:nth-child(8) .trend-bar-fill{--i:7;}
+  .trend-bar-col:nth-child(9) .trend-bar-fill{--i:8;}
+  .trend-bar-col:nth-child(10) .trend-bar-fill{--i:9;}
+  .trend-bar-col:nth-child(11) .trend-bar-fill{--i:10;}
+  .trend-bar-col:nth-child(12) .trend-bar-fill{--i:11;}
+  .trend-bar-col:nth-child(13) .trend-bar-fill{--i:12;}
+  .trend-bar-col:nth-child(14) .trend-bar-fill{--i:13;}
 }
