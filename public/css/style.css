@@ -91,17 +91,35 @@
   --radius:16px;
   --radius-lg:24px;
 
-  /* Motion system — see project notes: hero treatment (the slower,
-     bouncier end of this scale) is reserved for exactly two moments,
-     the tap/collection sequence and booking/top-up confirmation.
-     Everything else uses standard or micro. */
+  /* Motion system — one scale, four levels. Quiet by default,
+     responsive on interaction, expressive only where it's earned.
+       L1 micro interaction  --dur-instant / --dur-micro
+          (press, hover, link color, focus, field border, tiny state)
+       L2 component          --dur-fast / --dur-standard
+          (menus, dropdowns, FAQ answer, validation message, selection)
+       L3 section reveal     --dur-elevated  (data-reveal, see below)
+       L4 signature moment   --dur-hero      (collection loop, booking/
+          top-up confirmation only — nothing else reaches for this)
+     Easing: --ease-standard for state changes that go both ways,
+     --ease-out for anything arriving (panels, reveals, page-in),
+     --ease-spring only for tiny selection/check marks — a restrained
+     overshoot, never a bounce. Motion animates transform/opacity;
+     color/border/shadow transitions are limited to L1/L2 state. */
   --ease-standard:cubic-bezier(.4,0,.2,1);
   --ease-out:cubic-bezier(.16,1,.3,1);
-  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --ease-spring:cubic-bezier(.34,1.32,.64,1);
+  --dur-instant:100ms;
   --dur-micro:140ms;
+  --dur-fast:200ms;
   --dur-standard:240ms;
   --dur-elevated:480ms;
   --dur-hero:750ms;
+  /* Reveal / stagger primitives (Level 3). Deliberately small: a short
+     rise, one step size, and a hard cap so a group never trails. */
+  --reveal-distance:14px;
+  --reveal-scale:.97;
+  --stagger-step:50ms;
+  --stagger-max:250ms;
 
   /* ---------- layout tokens (Phase 3 consolidation) ----------
      Named so a page's structural width/rhythm reads as intent, not a
@@ -148,7 +166,7 @@ body{
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
 }
-a{color:inherit; text-decoration:none;}
+a{color:inherit; text-decoration:none; transition:color var(--dur-micro) var(--ease-standard), text-decoration-color var(--dur-micro) var(--ease-standard);}
 img,svg{display:block; max-width:100%;}
 button,input,select,textarea{font-family:inherit; font-size:16px;} /* 16px floor: comfortable to read, and stops iOS Safari auto-zooming on focus */
 ul{list-style:none;}
@@ -172,8 +190,14 @@ p{color:var(--muted);}
    text swap. Triggered by toggling this class in booking.ejs. */
 .total-updated{animation:total-pulse var(--dur-standard) var(--ease-out);}
 @keyframes total-pulse{0%{opacity:0.55; transform:scale(0.97);} 100%{opacity:1; transform:scale(1);}}
+/* Shared status-change settle (same curve as the total cue above): add
+   .motion-settle — or call EvoMotion.settle(el), which restarts it
+   cleanly — when a value or status changes in place. One short beat,
+   transform/opacity only, never looping; color and meaning stay the
+   element's own. */
+.motion-settle{animation:total-pulse var(--dur-standard) var(--ease-out);}
 @media (prefers-reduced-motion: reduce){
-  .total-updated{animation:none;}
+  .total-updated,.motion-settle{animation:none;}
 }
 
 /* ---------- accessibility baseline ---------- */
@@ -210,6 +234,11 @@ textarea:focus-visible,
 .cta-band :is(a,button):focus-visible,
 .price-card.featured :is(a,button):focus-visible{outline-color:var(--leaf-light);}
 
+/* Reduced-motion safety net. Components that carry meaning in motion
+   (success check, collection demo, reveals, loading spinner, page
+   transitions) also declare an explicit static end state of their own
+   next to their animation — this catch-all only guarantees nothing
+   decorative is left running or drifting. */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{
     animation-duration:0.001ms !important;
@@ -243,13 +272,31 @@ a, button, .btn{
 }
 
 /* ---------- cross-page transitions (native, no SPA rearchitecture) ---------- */
+/* The outgoing page leaves slightly faster than the new one settles, so
+   the handoff reads as one forward step (~260ms total) rather than two
+   pages dissolving through each other. Movement is a few pixels of
+   vertical drift only — no slide, zoom or navigation delay. */
 @view-transition{navigation:auto;}
-::view-transition-old(root){animation:evo-fade-out var(--dur-standard) var(--ease-standard) both;}
-::view-transition-new(root){animation:evo-fade-in var(--dur-standard) var(--ease-standard) both;}
-@keyframes evo-fade-out{to{opacity:0; transform:translateY(-6px);}}
-@keyframes evo-fade-in{from{opacity:0; transform:translateY(6px);}}
+::view-transition-old(root){animation:evo-page-out var(--dur-fast) var(--ease-standard) both;}
+::view-transition-new(root){animation:evo-page-in 260ms var(--ease-out) both;}
+@keyframes evo-page-out{to{opacity:0; transform:translateY(-4px);}}
+@keyframes evo-page-in{from{opacity:0; transform:translateY(8px);}}
+@keyframes evo-fade-out{to{opacity:0;}}
+@keyframes evo-fade-in{from{opacity:0;}}
+/* The header is the one constant between pages — captured on its own so
+   it stays anchored while only the content beneath it changes. (One
+   header per page: public, app and admin shells each render exactly one
+   of these.) */
+.site-header,.app-header{view-transition-name:evo-header;}
+::view-transition-group(evo-header){animation-duration:var(--dur-fast); animation-timing-function:var(--ease-standard);}
+::view-transition-old(evo-header),::view-transition-new(evo-header){animation-duration:var(--dur-fast);}
+/* Reduced motion: the page still hands off, as a short plain crossfade —
+   no drift. (Opacity-only change is not vestibular motion, and an
+   instant snapshot swap reads as a flash.) */
 @media (prefers-reduced-motion: reduce){
-  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important;}
+  ::view-transition-group(*){animation:none !important;}
+  ::view-transition-old(root){animation:evo-fade-out var(--dur-micro) linear both !important;}
+  ::view-transition-new(root){animation:evo-fade-in var(--dur-micro) linear both !important;}
 }
 
 /* ---------- layout ---------- */
@@ -265,14 +312,13 @@ a, button, .btn{
    height/padding, so hierarchy reads from color + weight rather than
    every action sharing one oversized pill shape. Pills stay on badges/
    tags/chips (status indicators, not actions) — those are unchanged. */
-.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:var(--control-height); padding:13px 24px; border-radius:var(--radius-sm); font-family:var(--font-heading); font-weight:700; font-size:16px; border:none; cursor:pointer; white-space:normal; max-width:100%; text-align:center; flex-shrink:1; transition:transform var(--dur-micro) var(--ease-standard), box-shadow var(--dur-micro) var(--ease-standard), background var(--dur-micro) var(--ease-standard);}
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:var(--control-height); padding:13px 24px; border-radius:var(--radius-sm); font-family:var(--font-heading); font-weight:700; font-size:16px; border:none; cursor:pointer; white-space:normal; max-width:100%; text-align:center; flex-shrink:1; transition:transform var(--dur-micro) var(--ease-standard), box-shadow var(--dur-micro) var(--ease-standard), background-color var(--dur-micro) var(--ease-standard), border-color var(--dur-micro) var(--ease-standard), color var(--dur-micro) var(--ease-standard), opacity var(--dur-micro) var(--ease-standard);}
 /* Primary trust CTA — Forest bg, white text. The default for standard
    important actions (this is what most existing .btn-primary call sites
    across the site are: "standard important action", not "the one
    dominant conversion moment" — see .btn-school-yellow for that). */
 .btn-primary{background:var(--forest); color:var(--white);}
-.btn-primary:hover{background:var(--forest-secondary); transform:translateY(-1px); box-shadow:var(--shadow-sm);}
-.btn-primary:active{transform:scale(.97) translateY(0); transition-duration:80ms;}
+.btn-primary:hover{background:var(--forest-secondary);}
 /* Attention/conversion CTA — School Yellow bg, Ink text (never white on
    yellow: fails contrast). Reserved for the single highest-attention,
    highest-conversion action in a context (Check My School, the featured
@@ -285,8 +331,7 @@ a, button, .btn{
    adds a hairline border so the button edge stays crisp against a
    similarly warm cream/white page background. */
 .btn-school-yellow{background:var(--school-yellow); color:var(--ink);}
-.btn-school-yellow:hover{background:var(--school-yellow-hover); transform:translateY(-1px); box-shadow:var(--shadow-sm);}
-.btn-school-yellow:active{transform:scale(.97) translateY(0); transition-duration:80ms;}
+.btn-school-yellow:hover{background:var(--school-yellow-hover);}
 .btn-school-yellow.on-light{border:1.5px solid rgba(20,61,50,0.14);}
 /* Deliberately larger than any other hero action — Register is the one
    thing a scanning parent should register as the strongest conversion
@@ -304,14 +349,23 @@ a, button, .btn{
 .btn-danger{background:transparent; color:var(--red-700); border:1.5px solid rgba(193,94,85,0.3); padding:8px 16px; font-size:16px; min-height:var(--control-height);}
 .btn-danger:hover{background:var(--red-050);}
 .btn-sm{min-height:var(--control-height); padding:9px 18px; font-size:16px;}
-.btn:active{transform:scale(.97);}
+/* Shared press feel. The lift (-1px + soft shadow) belongs to the two
+   solid CTAs and only on a real hover-capable pointer — a touch tap
+   would otherwise leave the button "stuck" raised after release. Press
+   is universal: a quick settle to .98 (--dur-instant in, the base
+   --dur-micro back out on release). Keyboard focus gets the focus ring,
+   not the lift. */
+@media (hover:hover) and (pointer:fine){
+  .btn-primary:hover,.btn-school-yellow:hover{transform:translateY(-1px); box-shadow:var(--shadow-sm);}
+}
+.btn:active{transform:scale(.98); transition-duration:var(--dur-instant);}
 .btn:disabled{opacity:0.5; cursor:not-allowed;}
 .btn:disabled:hover,.btn:disabled:active{transform:none; box-shadow:none;}
 .btn-loading{opacity:0.75; cursor:wait;}
 .btn-loading::before{
   content:""; flex-shrink:0; width:15px; height:15px;
   border:2px solid currentColor; border-top-color:transparent; border-radius:50%;
-  animation:btn-spin 0.7s linear infinite;
+  animation:btn-spin 0.7s linear infinite, evo-fade-in var(--dur-micro) var(--ease-standard);
 }
 @keyframes btn-spin{to{transform:rotate(360deg);}}
 @media (prefers-reduced-motion: reduce){.btn-loading::before{animation:none; opacity:0.6;}}
@@ -325,7 +379,7 @@ a, button, .btn{
 .app-logo .dot{color:var(--school-yellow);}
 .admin-nav-tag{font-family:var(--font-body); font-weight:600; font-size:10.5px; letter-spacing:0.04em; text-transform:uppercase; color:var(--leaf-light); background:rgba(120,168,134,0.12); border:1px solid rgba(120,168,134,0.28); border-radius:100px; padding:4px 10px;}
 .app-links{display:flex; align-items:center; gap:4px;}
-.app-links a{color:rgba(255,255,255,0.68); font-size:16px; font-weight:500; padding:8px 14px; border-radius:8px; transition:background var(--dur-standard) var(--ease-standard), color var(--dur-standard) var(--ease-standard);}
+.app-links a{color:rgba(255,255,255,0.68); font-size:16px; font-weight:500; padding:8px 14px; border-radius:8px; transition:background-color var(--dur-micro) var(--ease-standard), color var(--dur-micro) var(--ease-standard);}
 .app-links a:hover{color:var(--white); background:rgba(255,255,255,0.08);}
 .app-links a.active{color:var(--ink-900); background:var(--leaf); font-weight:700;}
 .app-user{display:flex; align-items:center; gap:12px;}
@@ -350,10 +404,19 @@ a, button, .btn{
 .notif-dropdown{
   position:absolute; top:calc(100% + 12px); right:-8px; width:360px;
   background:var(--white); border-radius:var(--radius); box-shadow:0 20px 48px -18px rgba(20,61,50,0.35), 0 2px 8px rgba(20,61,50,0.08);
-  border:1px solid var(--line); z-index:80; opacity:0; transform:translateY(-8px) scale(0.98); pointer-events:none;
-  transition:opacity var(--dur-standard) var(--ease-out), transform var(--dur-standard) var(--ease-out);
+  border:1px solid var(--line); z-index:80; opacity:0; transform:translateY(-6px) scale(0.98); pointer-events:none;
+  transform-origin:top right;
+  /* Closing: quick, and display is held (allow-discrete) until the fade
+     finishes — notifications.js toggles [hidden], which alone would cut
+     the panel off instantly. */
+  transition:opacity var(--dur-micro) var(--ease-standard), transform var(--dur-micro) var(--ease-standard); transition-property:opacity, transform, display; transition-behavior:allow-discrete;
 }
-.notif-dropdown.open{opacity:1; transform:translateY(0) scale(1); pointer-events:auto;}
+.notif-dropdown.open{opacity:1; transform:translateY(0) scale(1); pointer-events:auto; transition-duration:var(--dur-fast); transition-timing-function:var(--ease-out);}
+/* Opening from [hidden]: an element coming out of display:none has no
+   previous style to transition from, so the entrance needs an explicit
+   starting point — without this the panel simply popped in. */
+@starting-style{.notif-dropdown.open{opacity:0; transform:translateY(-6px) scale(0.98);}}
+[dir="rtl"] .notif-dropdown{transform-origin:top left;}
 @media (max-width:480px){
   /* 100vw includes the scrollbar gutter on some browsers, which can push
      an absolutely-positioned panel a few pixels past the real edge —
@@ -361,7 +424,7 @@ a, button, .btn{
      instead, so it can never be wider than what's actually visible. */
   .notif-dropdown{position:fixed; top:64px; left:16px; right:16px; width:auto;}
 }
-@media (prefers-reduced-motion: reduce){.notif-dropdown{transition:opacity var(--dur-micro) linear;}}
+@media (prefers-reduced-motion: reduce){.notif-dropdown,.notif-dropdown.open{transform:none; transition:opacity var(--dur-micro) linear; transition-property:opacity, display; transition-behavior:allow-discrete;}}
 .notif-dropdown-head{display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid var(--line);}
 .notif-dropdown-head span{font-family:var(--font-heading); font-weight:700; font-size:16px; color:var(--forest);}
 .notif-markall{background:none; border:none; color:var(--leaf-dark); font-size:16px; font-weight:600; cursor:pointer; padding:0;}
@@ -552,7 +615,7 @@ form .field{margin-bottom:18px;}
 form label{display:block; font-size:16px; font-weight:600; color:var(--forest-secondary); margin-bottom:7px;}
 form label .req{color:var(--red-700); font-weight:700;}
 form input, form select, form textarea{
-  width:100%; min-height:var(--control-height); padding:12px 14px; border:1.5px solid var(--border-input); border-radius:10px; background:var(--white); color:var(--ink-900); transition:border-color var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard);
+  width:100%; min-height:var(--control-height); padding:12px 14px; border:1.5px solid var(--border-input); border-radius:10px; background:var(--white); color:var(--ink-900); transition:border-color var(--dur-micro) var(--ease-standard), box-shadow var(--dur-micro) var(--ease-standard), background-color var(--dur-micro) var(--ease-standard);
 }
 /* The 44px touch-target minimum above is meant for text inputs, not a
    native checkbox — applied unscoped, it forced a real 18x18 checkbox into
@@ -570,7 +633,9 @@ form input:disabled{background:var(--ice-50); color:var(--muted); cursor:not-all
 form .field-error{display:none; align-items:center; gap:6px; font-size:16px; color:var(--red-700); margin-top:6px; font-weight:500;}
 form .field-error svg{width:13px; height:13px; flex-shrink:0;}
 form .field.invalid input, form .field.invalid select, form .field.invalid textarea{border-color:var(--red-500); box-shadow:0 0 0 3.5px rgba(193,94,85,0.12);}
-form .field.invalid .field-error{display:flex;}
+form .field.invalid .field-error{display:flex; transition:opacity var(--dur-fast) var(--ease-out);}
+/* Validation message fades in where it appears — no shake, no slide. */
+@starting-style{.motion-ready form .field.invalid .field-error{opacity:0;}}
 form .field.valid input{border-color:var(--leaf-hover);}
 form .hint{font-size:16px; color:var(--muted); margin-top:4px;}
 form .hint-secure{display:flex; align-items:flex-start; gap:6px; font-size:13px;}
@@ -581,6 +646,7 @@ form .hint-secure svg{width:14px; height:14px; color:var(--leaf-dark); flex-shri
 .password-field input{padding-right:44px;}
 .password-toggle{position:absolute; top:0; right:0; width:44px; height:44px; display:flex; align-items:center; justify-content:center; background:none; border:none; cursor:pointer; color:var(--muted);}
 .password-toggle svg{width:18px; height:18px;}
+.password-toggle{transition:color var(--dur-micro) var(--ease-standard);}
 .password-toggle.is-showing{color:var(--leaf-dark);}
 
 .alert{padding:14px 16px; border-radius:10px; font-size:16px; margin-bottom:18px; display:flex; align-items:center; gap:12px;}
@@ -657,7 +723,7 @@ table tbody tr:hover{background:rgba(20,61,50,0.035);}
   body:has(.confirm-bar) .app-foot-full{padding-bottom:110px;}
 }
 
-.badge{display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:100px; font-size:16px; font-weight:600;}
+.badge{display:inline-flex; align-items:center; gap:6px; padding:5px 12px; border-radius:100px; font-size:16px; font-weight:600; transition:background-color var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard);}
 .badge svg{width:11px; height:11px;}
 .badge-upcoming{background:var(--warning-bg); color:var(--warning-text);}
 .badge-collected{background:var(--success-bg); color:var(--success-text);}
@@ -806,7 +872,7 @@ table tbody tr:hover{background:rgba(20,61,50,0.035);}
 .picker-card label{
   display:flex; flex:1; align-items:center; gap:12px; min-height:var(--control-height); min-width:0; padding:12px 14px;
   border:2px solid var(--border-input); border-radius:var(--radius-sm); background:var(--white); cursor:pointer;
-  transition:border-color var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), transform var(--dur-micro) var(--ease-standard);
+  transition:border-color var(--dur-fast) var(--ease-standard), box-shadow var(--dur-fast) var(--ease-standard), background-color var(--dur-fast) var(--ease-standard), transform var(--dur-micro) var(--ease-standard);
   position:relative;
 }
 .picker-card label:hover{border-color:var(--school-yellow-hover);}
@@ -825,7 +891,7 @@ table tbody tr:hover{background:rgba(20,61,50,0.035);}
 .check-badge{
   position:absolute; top:10px; right:10px; width:22px; height:22px; border-radius:50%;
   background:var(--school-yellow); display:flex; align-items:center; justify-content:center;
-  opacity:0; transform:scale(.5); transition:opacity var(--dur-standard) var(--ease-spring), transform var(--dur-standard) var(--ease-spring);
+  opacity:0; transform:scale(.7); transition:opacity var(--dur-micro) var(--ease-standard), transform var(--dur-standard) var(--ease-spring);
 }
 .picker-card input:checked + label .check-badge{opacity:1; transform:scale(1);}
 .check-badge svg{width:12px; height:12px; color:var(--ink-900);}
@@ -884,7 +950,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .site-logo{color:var(--white); font-family:var(--font-heading); font-weight:800; font-size:18px; display:flex; align-items:center; min-height:var(--control-height); gap:8px; white-space:nowrap; flex-shrink:0;}
 .site-logo .dot{color:var(--school-yellow);}
 .site-links{display:flex; align-items:center; gap:2px;}
-.site-links a{color:rgba(255,255,255,0.72); font-size:16px; font-weight:500; padding:8px 6px; border-radius:8px; white-space:nowrap; transition:background var(--dur-standard) var(--ease-standard), color var(--dur-standard) var(--ease-standard);}
+.site-links a{color:rgba(255,255,255,0.72); font-size:16px; font-weight:500; padding:8px 6px; border-radius:8px; white-space:nowrap; transition:background-color var(--dur-micro) var(--ease-standard), color var(--dur-micro) var(--ease-standard);}
 .site-links a:hover{color:var(--white); background:rgba(255,255,255,0.08);}
 .site-links a.active{color:var(--school-yellow); font-weight:700;}
 .site-actions{display:flex; align-items:center; gap:6px;}
@@ -1203,13 +1269,18 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .faq-summary .plus::after{width:1.5px; height:9px; transition:opacity var(--dur-standard) var(--ease-standard);}
 .faq-item.is-open .faq-summary .plus{transform:rotate(180deg); border-color:var(--leaf);}
 .faq-item.is-open .faq-summary .plus::after{opacity:0;}
-/* grid-template-rows 0fr -> 1fr animates smoothly to natural content height —
-   no scrollHeight measurement, no layout thrash on every toggle. */
+/* Open/close is driven by [hidden] (motion.js), so the row itself opens
+   at once — no height animation, no layout thrash, nothing for a screen
+   reader to wait on. What moves is the answer text: a short fade and
+   2px settle as it appears (opening only; closing is immediate so the
+   list below never jumps late). Scoped to .motion-ready so answers that
+   are open on first paint never animate in. */
 .faq-content{
   display:grid;
   grid-template-rows:1fr;
-  transition:grid-template-rows var(--dur-standard) var(--ease-standard);
+  transition:opacity var(--dur-standard) var(--ease-out), transform var(--dur-standard) var(--ease-out);
 }
+@starting-style{.motion-ready .faq-content{opacity:0; transform:translateY(-2px);}}
 .faq-item.is-open .faq-content{grid-template-rows:1fr;}
 /* The collapsing element itself must carry no padding of its own — padding
    is part of the box, not the overflow-hidden content, so it would stop the
@@ -1449,7 +1520,10 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 }
 
 .role-journey-card{transition:transform var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), border-color var(--dur-standard) var(--ease-standard);}
-.role-journey-card:hover, .role-journey-card:focus-within{transform:translateY(-4px); box-shadow:var(--shadow-sm); border-color:var(--line-strong);}
+.role-journey-card:focus-within{transform:translateY(-4px); box-shadow:var(--shadow-sm); border-color:var(--line-strong);}
+@media (hover:hover) and (pointer:fine){
+  .role-journey-card:hover{transform:translateY(-4px); box-shadow:var(--shadow-sm); border-color:var(--line-strong);}
+}
 @media (prefers-reduced-motion: reduce){
   .role-journey-card{transition:none;}
   .role-journey-card:hover{transform:none;}
@@ -1503,7 +1577,11 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 }
 .store-badges{display:flex; justify-content:center; gap:14px; flex-wrap:wrap;}
 .store-badge{display:flex; align-items:center; gap:10px; background:var(--forest); color:#fff; border-radius:12px; padding:10px 18px; transition:transform var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), background var(--dur-standard) var(--ease-standard);}
-.store-badge:hover, .store-badge:focus-visible{transform:translateY(-3px); box-shadow:var(--shadow-sm); background:var(--forest-secondary);}
+.store-badge:hover, .store-badge:focus-visible{background:var(--forest-secondary);}
+.store-badge:focus-visible{transform:translateY(-3px); box-shadow:var(--shadow-sm);}
+@media (hover:hover) and (pointer:fine){
+  .store-badge:hover{transform:translateY(-3px); box-shadow:var(--shadow-sm);}
+}
 .store-badge svg{width:24px; height:24px; color:var(--leaf-light); flex-shrink:0;}
 @media (prefers-reduced-motion: reduce){
   .store-badge{transition:none;}
@@ -1597,16 +1675,19 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .site-links-mobile{
     display:block; position:fixed; inset:0; height:100vh; height:100dvh; z-index:60;
     background:var(--forest); padding:0 20px calc(24px + env(safe-area-inset-bottom)); overflow-y:auto;
-    transform:translateY(-8px); opacity:0; pointer-events:none; transition:opacity var(--dur-standard) var(--ease-standard), transform var(--dur-standard) var(--ease-standard);
+    transform:translateY(-8px); opacity:0; pointer-events:none;
+    transition:opacity var(--dur-micro) var(--ease-standard), transform var(--dur-micro) var(--ease-standard); transition-property:opacity, transform, display; transition-behavior:allow-discrete;
   }
-  .site-links-mobile.open{opacity:1; transform:translateY(0); pointer-events:auto;}
+  .site-links-mobile.open{opacity:1; transform:translateY(0); pointer-events:auto; transition-duration:var(--dur-fast); transition-timing-function:var(--ease-out);}
+  @starting-style{.site-links-mobile.open{opacity:0; transform:translateY(-8px);}}
   .site-links-mobile a{
     display:flex; align-items:center; padding:14px 6px; font-size:16px; font-weight:600;
     color:rgba(255,255,255,0.82); border-bottom:1px solid rgba(255,255,255,0.08);
   }
   .site-links-mobile a.active{color:var(--school-yellow);}
   @media (prefers-reduced-motion: reduce){
-    .site-links-mobile{transition:opacity var(--dur-micro) linear; transform:none;}
+    .site-links-mobile,.site-links-mobile.open{transform:none; transition:opacity var(--dur-micro) linear; transition-property:opacity, display; transition-behavior:allow-discrete;}
+    @starting-style{.site-links-mobile.open{transform:none;}}
   }
 }
 /* Own breakpoint, wider than the .form-row/.page/.section block below —
@@ -1621,16 +1702,19 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   .app-links-mobile{
     display:block; position:fixed; inset:0; height:100vh; height:100dvh; z-index:60;
     background:var(--forest); padding:0 20px calc(24px + env(safe-area-inset-bottom)); overflow-y:auto;
-    transform:translateY(-8px); opacity:0; pointer-events:none; transition:opacity var(--dur-standard) var(--ease-standard), transform var(--dur-standard) var(--ease-standard);
+    transform:translateY(-8px); opacity:0; pointer-events:none;
+    transition:opacity var(--dur-micro) var(--ease-standard), transform var(--dur-micro) var(--ease-standard); transition-property:opacity, transform, display; transition-behavior:allow-discrete;
   }
-  .app-links-mobile.open{opacity:1; transform:translateY(0); pointer-events:auto;}
+  .app-links-mobile.open{opacity:1; transform:translateY(0); pointer-events:auto; transition-duration:var(--dur-fast); transition-timing-function:var(--ease-out);}
+  @starting-style{.app-links-mobile.open{opacity:0; transform:translateY(-8px);}}
   .app-links-mobile a{
     display:flex; align-items:center; padding:15px 6px; font-size:16px; font-weight:600;
     color:rgba(255,255,255,0.82); border-bottom:1px solid rgba(255,255,255,0.08);
   }
   .app-links-mobile a.active{color:var(--school-yellow);}
   @media (prefers-reduced-motion: reduce){
-    .app-links-mobile{transition:opacity var(--dur-micro) linear; transform:none;}
+    .app-links-mobile,.app-links-mobile.open{transform:none; transition:opacity var(--dur-micro) linear; transition-property:opacity, display; transition-behavior:allow-discrete;}
+    @starting-style{.app-links-mobile.open{transform:none;}}
   }
 }
 @media (max-width:800px){
@@ -1833,7 +1917,52 @@ th{text-align:start;}
 .collection-example .tap-demo.is-looping .ripple{animation:tap-ripple 5.2s ease-out infinite;}
 .collection-example .tap-demo.is-looping .tap-toast{animation:toast-in 5.2s ease-in-out infinite;}
 .collection-example .tap-demo.is-looping .toast-icon svg path{animation:check-draw 5.2s linear infinite;}
+/* Offscreen, the loop holds its current frame (motion.js toggles
+   .is-offscreen from the shared observer) — all five parts pause
+   together, so they resume in sync. */
+.collection-example .tap-demo.is-looping.is-offscreen *{animation-play-state:paused;}
 @media(prefers-reduced-motion:reduce){.collection-example .tap-demo.is-looping *{animation:none !important;}}
+
+/* ============================================================
+   Reveal foundation (Level 3) — opt-in, progressively enhanced.
+   Markup:  data-reveal="up" | "fade" | "scale"
+            data-reveal-delay="120"   (ms, optional, capped in JS)
+            data-reveal-group         (on a parent: its [data-reveal]
+                                       children stagger by
+                                       --stagger-step, capped at
+                                       --stagger-max)
+   Content is fully visible by default. The hidden pre-state exists only
+   under html.motion-ready, which motion.js adds after it has confirmed
+   IntersectionObserver support and already marked everything that was
+   in view on arrival as revealed — so no JS, a failed script, or an
+   unsupported browser all leave the page exactly as authored, and
+   nothing above the fold ever blinks out and back in.
+   The entrance is a one-shot animation with backwards fill (not a
+   transition, not fill:both): it covers its own stagger delay, then
+   lets go completely — the element's own transitions and hover
+   transforms keep working afterwards. Don't put data-reveal on an
+   element that runs its own CSS animation; wrap it instead.
+   ============================================================ */
+.motion-ready [data-reveal]:not(.is-revealed){opacity:0;}
+.motion-ready [data-reveal="up"]:not(.is-revealed){transform:translateY(var(--reveal-distance));}
+.motion-ready [data-reveal="scale"]:not(.is-revealed){transform:scale(var(--reveal-scale));}
+/* .is-entering is added only when the observer reveals an element on
+   scroll — content already visible on arrival is .is-revealed without
+   it, so it never plays an entrance. */
+.motion-ready [data-reveal].is-entering{
+  animation:evo-fade-in var(--dur-elevated) var(--ease-out) backwards;
+  animation-delay:calc(min(var(--reveal-index, 0) * var(--stagger-step), var(--stagger-max)) + var(--reveal-delay, 0ms));
+}
+.motion-ready [data-reveal="up"].is-entering{animation-name:evo-reveal-up;}
+.motion-ready [data-reveal="scale"].is-entering{animation-name:evo-reveal-scale;}
+@keyframes evo-reveal-up{from{opacity:0; transform:translateY(var(--reveal-distance));}}
+@keyframes evo-reveal-scale{from{opacity:0; transform:scale(var(--reveal-scale));}}
+@media (prefers-reduced-motion: reduce){
+  .motion-ready [data-reveal]{opacity:1 !important; transform:none !important; animation:none !important;}
+}
+@media print{
+  [data-reveal]{opacity:1 !important; transform:none !important;}
+}
 
 /* Home composition: content and an intact portrait each have bounded tracks. */
 .home-hero{background:var(--cream);color:var(--forest);padding-block:44px;}

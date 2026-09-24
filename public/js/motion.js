@@ -1,10 +1,105 @@
 (function () {
   var motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
-  motionPreference.addEventListener('change', function(event) {
-    document.querySelectorAll('.collection-example .tap-demo').forEach(function(el){
-      el.classList.toggle('is-looping', !event.matches);
+
+  // ---------- shared motion environment ----------
+  // CSS owns every visual (timing, easing, keyframes — see the motion
+  // tokens in style.css); this only flips semantic state classes. One
+  // IntersectionObserver serves the whole page: [data-reveal] elements
+  // are revealed once and then unobserved, and continuous loops (the
+  // collection demo) are paused while fully offscreen.
+  var observer = null;
+  var loops = [];
+
+  function reduced() { return motionPreference.matches; }
+
+  // `entering` is true only for a scroll-in reveal from the observer —
+  // that alone gets the CSS entrance (.is-entering); everything else
+  // (in view on arrival, reduced motion, fallback) is simply shown.
+  function reveal(el, entering) {
+    if (entering) el.classList.add('is-entering');
+    el.classList.add('is-revealed');
+    if (observer) observer.unobserve(el);
+  }
+
+  function onIntersect(entries) {
+    entries.forEach(function (entry) {
+      var el = entry.target;
+      if (loops.indexOf(el) !== -1) el.classList.toggle('is-offscreen', !entry.isIntersecting);
+      else if (entry.isIntersecting) reveal(el, !reduced());
     });
-  });
+  }
+
+  // Anything already on screen (or above it, e.g. a restored scroll
+  // position) is marked revealed *before* html.motion-ready exists, so it
+  // never enters the hidden pre-state — only content below the fold waits
+  // to be scrolled to. All rects are read in one pass, before any write.
+  function registerReveals(root) {
+    var targets = Array.prototype.slice.call(root.querySelectorAll('[data-reveal]:not(.is-revealed)'));
+    if (root.matches && root.matches('[data-reveal]:not(.is-revealed)')) targets.unshift(root);
+    if (!targets.length) return;
+    if (!observer || reduced()) { targets.forEach(function (el) { reveal(el); }); return; }
+    var fold = window.innerHeight;
+    var inView = targets.map(function (el) { return el.getBoundingClientRect().top < fold; });
+    targets.forEach(function (el, i) {
+      var delay = parseInt(el.getAttribute('data-reveal-delay'), 10);
+      if (delay > 0) el.style.setProperty('--reveal-delay', Math.min(delay, 400) + 'ms');
+      if (inView[i]) reveal(el); else observer.observe(el);
+    });
+  }
+
+  function initMotionEnvironment() {
+    var root = document.documentElement;
+    try {
+      if (!('IntersectionObserver' in window)) throw new Error('no IntersectionObserver');
+      observer = new IntersectionObserver(onIntersect, { rootMargin: '0px 0px -8% 0px' });
+      // Stagger index within a group; the CSS caps the resulting delay
+      // at --stagger-max, so a long group can never trail on and on.
+      document.querySelectorAll('[data-reveal-group]').forEach(function (group) {
+        group.querySelectorAll('[data-reveal]').forEach(function (el, i) {
+          el.style.setProperty('--reveal-index', i);
+        });
+      });
+      registerReveals(document);
+      loops.forEach(function (el) { observer.observe(el); });
+      // Two frames later, not now: the first frame renders the page
+      // exactly as authored, so every element already has a settled style
+      // before any .motion-ready entrance rule (reveal pre-states, the
+      // @starting-style fades on FAQ answers / validation messages) can
+      // match it — nothing that is open or visible on arrival animates in.
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { if (observer) root.classList.add('motion-ready'); });
+      });
+    } catch (e) {
+      // Any failure leaves the page exactly as authored: fully visible.
+      observer = null;
+      root.classList.remove('motion-ready');
+      document.querySelectorAll('[data-reveal]').forEach(function (el) { reveal(el); });
+    }
+  }
+
+  // Live OS preference changes, no reload: reducing motion stops the loop
+  // and releases anything still waiting to reveal; restoring it restarts
+  // the loop (already-revealed content simply stays revealed).
+  function onMotionPreferenceChange() {
+    loops.forEach(function (el) { el.classList.toggle('is-looping', !reduced()); });
+    if (reduced()) document.querySelectorAll('[data-reveal]:not(.is-revealed)').forEach(function (el) { reveal(el); });
+  }
+  if (motionPreference.addEventListener) motionPreference.addEventListener('change', onMotionPreferenceChange);
+  else if (motionPreference.addListener) motionPreference.addListener(onMotionPreferenceChange);
+
+  // Small public surface for later page-level work: register content
+  // added after load, restart the shared status settle, or check the
+  // current preference — without each page re-implementing any of it.
+  window.EvoMotion = {
+    reduced: reduced,
+    observe: function (root) { registerReveals(root || document); },
+    settle: function (el) {
+      if (!el || reduced()) return;
+      el.classList.remove('motion-settle');
+      void el.offsetWidth; // restart the animation if it is mid-flight
+      el.classList.add('motion-settle');
+    }
+  };
 
   // Client-side mirror of lib/validate.js's NAME_RE — server-side stays
   // authoritative, this is only for immediate typing feedback. Built with
@@ -277,10 +372,8 @@
   }
 
   function initCollection() {
-    if (motionPreference.matches) return;
-    document.querySelectorAll('.collection-example .tap-demo').forEach(function(demo) {
-      demo.classList.add('is-looping');
-    });
+    loops = Array.prototype.slice.call(document.querySelectorAll('.collection-example .tap-demo'));
+    loops.forEach(function (demo) { demo.classList.toggle('is-looping', !reduced()); });
   }
 
   document.addEventListener('DOMContentLoaded', function () {
@@ -292,6 +385,9 @@
     initSubmitFeedback();
     initPasswordToggles();
     initFooterActiveLink();
+    // After every other class write above, so its single rect-read pass
+    // flushes layout once, on final markup.
+    initMotionEnvironment();
     var invalid = document.querySelector('[aria-invalid="true"]');
     if (invalid) invalid.focus();
   });
