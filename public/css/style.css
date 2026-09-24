@@ -1,91 +1,91 @@
 /* ============================================================
    Evo Meals — design tokens
-   Palette derived from Evo Meals' real navy/lime identity, refined
-   for contrast and given each color an actual job (see README-ish
-   comments below) rather than one all-purpose accent.
+   Final global color system (Phase 05): Academic Forest anchors trust/
+   structure, School Gold moves — attention, school identity, selection —
+   Paper Cream/Sage carry warmth and freshness, Success Leaf confirms
+   completion, Graphite reads as clarity. "Green anchors, yellow moves."
    ============================================================ */
 :root{
   /* ============================================================
-     Canonical color system (Phase 02) — single source of truth. Named
+     Canonical color system (Phase 05) — single source of truth. Named
      tokens below (--forest, --leaf, --school-yellow, …) are the only
-     names now in use; the old "navy"/"lime" alias tokens that used to
-     shadow them (kept mid-migration so ~150+ call sites could re-theme
-     without being touched individually) have been retired — every call
-     site across style.css and the views now reads the canonical name
-     directly, so there are no two names for the same color anymore.
-     The old two-tier yellow (bright-on-dark vs amber-on-light) and the
-     saffron/amber family are retired too — one Yellow, always paired
-     with dark Ink text, works on any surface because the contrast that
-     matters is button-bg vs button-text, not button vs page background. */
+     names in use; call sites across style.css and the views all read
+     these canonical names, so there are no two names for the same
+     color. Token *names* are unchanged from the prior phase (renaming
+     150+ call sites site-wide would be pure risk for zero visual
+     benefit) — this pass re-values them to the approved Academic
+     Forest / School Gold / Paper Cream palette and reclassifies a
+     handful of call sites whose semantic role didn't match their old
+     color family (selection states now read Gold, not Green; see the
+     picker-card / check-badge / tap-demo / logo-dot rules below). */
 
   /* Forest — trust/structure/brand/navigation: header, footer, dark
-     section backgrounds, primary CTA. Secondary Forest is its hover
-     state (also doubles as the on-white link/interactive-text color,
-     replacing the old unrelated "Playground Blue"). */
-  --forest:#163F31;
-  --forest-secondary:#1F604A;
-  /* mid forest, borders/dividers on dark — extends the forest ramp for
-     dark-on-dark gradients (auth-shell, notfound-shell, menu-thumb). */
-  --forest-mid:#2C7259;
-  /* The old unrelated "Playground Blue" tokens (focus rings, links,
-     hovers, icons) are gone — every one of those call sites now reads
-     Secondary Forest directly, so there's no competing blue accent left
-     in the system at all. */
+     section backgrounds, primary CTA. Secondary Forest (Campus Green)
+     is its hover state and the on-white link/interactive-text color.
+     Forest-mid extends the ramp one step lighter for dark-on-dark
+     gradients (auth-shell, notfound-shell, menu-thumb). */
+  --forest:#143D32;
+  --forest-secondary:#245F4B;
+  --forest-mid:#2B7159;
 
-  /* Leaf family — freshness/positive/completed state; the default
-     button/link accent's "always-on" cousin, reserved for confirmation
-     moments (booked, collected, credited) rather than every CTA.
-     --leaf is the reference swatch itself (#5E9D6E) — every live use
-     pairs it with dark Ink text (not white), which clears 5.1:1,, a
-     darker value would actually make that pairing worse, not better.
-     --leaf-dark is the separate darker text-safe version for text/
-     link/icon uses on light backgrounds (6.35:1 on white) — the only
-     leaf value safe to use as small text per the accessibility note in
-     the design brief. --leaf-light is for on-dark-navy text/icon uses
-     (eyebrow.on-dark, active nav state, footer links) — 7.1:1 on
-     --forest, 4.5:1 on --forest-secondary. */
-  --leaf:#5E9D6E;
-  --leaf-hover:#5B966B;
-  --leaf-light:#A0D6AC;
-  --leaf-dark:#2E6B45;
+  /* Leaf family — Fresh Sage is the calm, sparing freshness/food accent
+     (decorative blobs, small supportive icons); --leaf-dark is Success
+     Leaf, the confirmed/completed/positive-outcome color (success
+     icons, "collected" states, completion badges) and the only leaf
+     value used as small text on light backgrounds. --leaf-light is a
+     light sage tone for text/icon uses on dark Forest surfaces (hero
+     emphasis, eyebrow-on-dark, footer link hover). --leaf-hover is a
+     slightly deeper sage used only for the subtle "valid" form-field
+     border accent. */
+  --leaf:#78A886;
+  --leaf-hover:#6B9A79;
+  --leaf-light:#A7C6B0;
+  --leaf-dark:#397451;
 
-  /* School Yellow — attention/school/important action/selection.
-     Selective use only: one dominant CTA per context (Check My School,
-     the featured subscription plan, the "Tap" step), never a default
-     button color. Always Ink text, never white. */
-  --school-yellow:#F2C94C;
+  /* School Gold — attention/school identity/selection/one dominant CTA
+     per context (Check My School, the featured plan, the "Tap" step,
+     a selected booking option). Always Ink text, never white.
+     --school-yellow-hover is Pencil Gold, its hover/pressed state. */
+  --school-yellow:#F1C75B;
+  --school-yellow-hover:#E2B443;
 
-  /* Warmth/calm surfaces — Cream + Mint + White dominate the page (the
-     65-75% of visual weight the brand balance calls for), forest is
-     structure, leaf is confirmation, yellow is a rare spotlight. */
-  --mint:#EFF6F0;
-  --mint-100:#E3F0E6;
+  /* Warmth/calm surfaces — Paper Cream + Sage Mist + White dominate the
+     page, Forest is structure, Success Leaf is confirmation, Gold is a
+     rare spotlight. --mint-100/--ice-100 is Success Mist, the soft-icon
+     background paired with Success Leaf icons. */
+  --mint:#EDF5EF;
+  --mint-100:#E7F1E9;
   --ice-50:var(--mint);
   --ice-100:var(--mint-100);
 
-  --cream:#FFFBF3;
-  --cream-line:rgba(90,70,10,0.12);
+  --cream:#FFF9EF;
+  --cream-line:rgba(20,61,50,0.12);
   --cream-50:var(--cream);
 
-  --ink:#18211D;
+  --ink:#1B2420;
   --white:#FFFFFF;
   --ink-900:var(--ink);
-  --muted:#58655F; /* 6.1:1 on white, 5.9:1 on cream, 5.8:1 on mint — real outdoor-light margin, not a bare AA pass */
-  --line:rgba(22,63,49,0.10);
-  --line-strong:rgba(22,63,49,0.16);
-  --border-input:rgba(22,63,49,0.45); /* re-based on --forest so dividers/borders track the brand shift too */
+  --muted:#64716B;
+  --line:rgba(20,61,50,0.10);
+  --line-strong:rgba(20,61,50,0.18);
+  --border-input:rgba(20,61,50,0.28);
+  --focus-ring:rgba(36,95,75,0.15);
+  --neutral-mist:#EEF1EF; /* cancelled/neutral status background, paired with --muted text */
 
-  /* Semantic status pairs — bg/text, each pair contrast-checked. */
-  --success-bg:#E8F2EA; --success-text:#2E6B45;
-  --warning-bg:#FFF3C7; --warning-text:#7A5A00;
-  --error-bg:#FBEAE8; --error-text:#A52A24;
-  --red-500:#C24B44; /* borders/icons/decorative only — too light for real error text */
-  --red-700:var(--error-text); /* the text-safe red — 7.1:1 on white */
+  /* Semantic status pairs — bg/text, each pair contrast-checked.
+     Booked/waiting = Notebook Yellow + Deep Ochre text; collected/
+     completed = Success Mist + Success Leaf text; error = Soft Coral +
+     Brick Red text. */
+  --success-bg:#E7F1E9; --success-text:#397451;
+  --warning-bg:#FFF2C6; --warning-text:#765700;
+  --error-bg:#FBE9E7; --error-text:#A43D35;
+  --red-500:#C15E55; /* borders/icons/decorative only — too light for real error text */
+  --red-700:var(--error-text); /* the text-safe red */
   --red-050:var(--error-bg);
 
-  --shadow-sm:0 8px 20px -14px rgba(22,63,49,0.25);
-  --shadow:0 20px 50px -20px rgba(22,63,49,0.28);
-  --shadow-lg:0 30px 70px -24px rgba(22,63,49,0.35);
+  --shadow-sm:0 8px 20px -14px rgba(20,61,50,0.25);
+  --shadow:0 20px 50px -20px rgba(20,61,50,0.28);
+  --shadow-lg:0 30px 70px -24px rgba(20,61,50,0.35);
 
   --radius-sm:10px;
   --radius:16px;
@@ -161,9 +161,9 @@ h3{font-size:17px; line-height:1.3; font-weight:700; letter-spacing:-0.005em;}
 p{color:var(--muted);}
 
 .eyebrow{display:inline-flex; align-items:center; gap:8px; font-family:var(--font-heading); font-weight:700; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--forest-secondary);}
-.eyebrow::before{content:""; width:18px; height:3px; background:var(--leaf); border-radius:2px; flex-shrink:0;}
+.eyebrow::before{content:""; width:18px; height:3px; background:var(--school-yellow); border-radius:2px; flex-shrink:0;}
 .eyebrow.on-dark{color:var(--leaf-light);}
-.eyebrow.on-dark::before{background:var(--leaf);}
+.eyebrow.on-dark::before{background:var(--school-yellow);}
 
 .data-num{font-family:var(--font-heading); font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:-0.01em;}
 /* Booking total recalculation cue (final refinement pass) — a brief
@@ -285,9 +285,9 @@ a, button, .btn{
    adds a hairline border so the button edge stays crisp against a
    similarly warm cream/white page background. */
 .btn-school-yellow{background:var(--school-yellow); color:var(--ink);}
-.btn-school-yellow:hover{background:#E8BC3A; transform:translateY(-1px); box-shadow:var(--shadow-sm);}
+.btn-school-yellow:hover{background:var(--school-yellow-hover); transform:translateY(-1px); box-shadow:var(--shadow-sm);}
 .btn-school-yellow:active{transform:scale(.97) translateY(0); transition-duration:80ms;}
-.btn-school-yellow.on-light{border:1.5px solid rgba(22,63,49,0.14);}
+.btn-school-yellow.on-light{border:1.5px solid rgba(20,61,50,0.14);}
 /* Deliberately larger than any other hero action — Register is the one
    thing a scanning parent should register as the strongest conversion
    action, ahead of Log in and Check Your School. */
@@ -301,7 +301,7 @@ a, button, .btn{
    this same role slightly differently; consolidated to this one class. */
 .btn-outline{background:transparent; color:var(--forest); border:1.5px solid var(--line-strong);}
 .btn-outline:hover{background:var(--mint); border-color:var(--forest-secondary);}
-.btn-danger{background:transparent; color:var(--red-700); border:1.5px solid rgba(214,69,69,0.3); padding:8px 16px; font-size:16px; min-height:var(--control-height);}
+.btn-danger{background:transparent; color:var(--red-700); border:1.5px solid rgba(193,94,85,0.3); padding:8px 16px; font-size:16px; min-height:var(--control-height);}
 .btn-danger:hover{background:var(--red-050);}
 .btn-sm{min-height:var(--control-height); padding:9px 18px; font-size:16px;}
 .btn:active{transform:scale(.97);}
@@ -322,8 +322,8 @@ a, button, .btn{
 .app-header{background:var(--forest); position:sticky; top:0; z-index:50; padding-top:env(safe-area-inset-top);}
 .app-nav{display:flex; align-items:center; justify-content:space-between; height:66px;}
 .app-logo{color:var(--white); font-family:var(--font-heading); font-weight:800; font-size:17px; display:flex; align-items:center; min-height:var(--control-height); gap:8px; white-space:nowrap; flex-shrink:0;}
-.app-logo .dot{color:var(--leaf);}
-.admin-nav-tag{font-family:var(--font-body); font-weight:600; font-size:10.5px; letter-spacing:0.04em; text-transform:uppercase; color:var(--leaf-light); background:rgba(94,157,110,0.12); border:1px solid rgba(94,157,110,0.28); border-radius:100px; padding:4px 10px;}
+.app-logo .dot{color:var(--school-yellow);}
+.admin-nav-tag{font-family:var(--font-body); font-weight:600; font-size:10.5px; letter-spacing:0.04em; text-transform:uppercase; color:var(--leaf-light); background:rgba(120,168,134,0.12); border:1px solid rgba(120,168,134,0.28); border-radius:100px; padding:4px 10px;}
 .app-links{display:flex; align-items:center; gap:4px;}
 .app-links a{color:rgba(255,255,255,0.68); font-size:16px; font-weight:500; padding:8px 14px; border-radius:8px; transition:background var(--dur-standard) var(--ease-standard), color var(--dur-standard) var(--ease-standard);}
 .app-links a:hover{color:var(--white); background:rgba(255,255,255,0.08);}
@@ -345,11 +345,11 @@ a, button, .btn{
 .notif-bell{position:relative; display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; background:transparent; border:none; color:rgba(255,255,255,0.75); cursor:pointer; transition:background var(--dur-micro) var(--ease-standard), color var(--dur-micro) var(--ease-standard);}
 .notif-bell:hover{background:rgba(255,255,255,0.08); color:var(--white);}
 .notif-bell svg{width:19px; height:19px;}
-.notif-badge{position:absolute; top:3px; right:3px; min-width:16px; height:16px; padding:0 4px; border-radius:100px; background:var(--leaf); color:var(--ink-900); font-family:var(--font-heading); font-weight:800; font-size:9.5px; display:flex; align-items:center; justify-content:center; border:2px solid var(--forest);}
+.notif-badge{position:absolute; top:3px; right:3px; min-width:16px; height:16px; padding:0 4px; border-radius:100px; background:var(--school-yellow); color:var(--ink-900); font-family:var(--font-heading); font-weight:800; font-size:9.5px; display:flex; align-items:center; justify-content:center; border:2px solid var(--forest);}
 
 .notif-dropdown{
   position:absolute; top:calc(100% + 12px); right:-8px; width:360px;
-  background:var(--white); border-radius:var(--radius); box-shadow:0 20px 48px -18px rgba(22,63,49,0.35), 0 2px 8px rgba(22,63,49,0.08);
+  background:var(--white); border-radius:var(--radius); box-shadow:0 20px 48px -18px rgba(20,61,50,0.35), 0 2px 8px rgba(20,61,50,0.08);
   border:1px solid var(--line); z-index:80; opacity:0; transform:translateY(-8px) scale(0.98); pointer-events:none;
   transition:opacity var(--dur-standard) var(--ease-out), transform var(--dur-standard) var(--ease-out);
 }
@@ -373,7 +373,7 @@ a, button, .btn{
 .notif-item.unread{background:var(--ice-50);}
 .notif-icon{flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:var(--ice-50); color:var(--forest-secondary);}
 .notif-icon svg{width:14px; height:14px;}
-.notif-item.unread .notif-icon{background:rgba(94,157,110,0.16); color:var(--leaf-dark);}
+.notif-item.unread .notif-icon{background:rgba(57,116,81,0.16); color:var(--leaf-dark);}
 .notif-icon-booking_cancelled{background:var(--red-050); color:var(--red-700);}
 .notif-icon-low_balance{background:var(--warning-bg); color:var(--warning-text);}
 .notif-body{flex:1; min-width:0;}
@@ -422,7 +422,7 @@ a, button, .btn{
 .trend-bar-track{width:100%; max-width:26px; height:100%; display:flex; align-items:flex-end; background:var(--ice-50); border-radius:6px 6px 2px 2px; overflow:hidden;}
 /* Full height always; the bar's visual growth is a transform:scaleY from
    the bottom, not a height change, so it never triggers layout. */
-.trend-bar-fill{width:100%; height:100%; background:linear-gradient(180deg, var(--leaf), var(--leaf-dark)); border-radius:6px 6px 2px 2px; transform-origin:bottom; transform:scaleY(var(--pct, 1)); transition:transform var(--dur-elevated) var(--ease-out);}
+.trend-bar-fill{width:100%; height:100%; background:linear-gradient(180deg, var(--forest-secondary), var(--leaf-dark)); border-radius:6px 6px 2px 2px; transform-origin:bottom; transform:scaleY(var(--pct, 1)); transition:transform var(--dur-elevated) var(--ease-out);}
 .trend-bar-count{font-size:12px; font-weight:700; color:var(--forest-secondary);}
 .trend-bar-label{font-size:11px; color:var(--muted); white-space:nowrap;}
 
@@ -541,7 +541,7 @@ a, button, .btn{
 
 .stat{background:var(--white); border-radius:var(--radius); padding:20px; border:1px solid var(--line); box-shadow:var(--shadow-sm); position:relative; overflow:hidden;}
 .stat::before{content:""; position:absolute; top:0; left:0; width:3px; height:100%; background:var(--line);}
-.stat.leaf::before{background:var(--leaf);}
+.stat.leaf::before{background:var(--leaf-dark);}
 .stat-icon{width:30px; height:30px; border-radius:9px; background:var(--ice-100); color:var(--leaf-dark); display:flex; align-items:center; justify-content:center; margin-bottom:10px;}
 .stat-icon svg{width:15px; height:15px;}
 .stat .label{font-size:16px; color:var(--muted); margin-bottom:8px; font-weight:500; text-transform:uppercase; letter-spacing:0.05em;}
@@ -562,14 +562,14 @@ form input, form select, form textarea{
    forms are all inside .picker-card, deliberately hidden at 1x1px by a
    more specific rule of their own.) */
 form input[type="checkbox"]{
-  width:18px; height:18px; min-height:0; padding:0; border-width:1.5px; flex-shrink:0; accent-color:var(--leaf);
+  width:18px; height:18px; min-height:0; padding:0; border-width:1.5px; flex-shrink:0; accent-color:var(--leaf-dark);
 }
 form textarea{resize:vertical; font-family:inherit;}
-form input:focus, form select:focus, form textarea:focus{outline:none; border-color:var(--forest-secondary); box-shadow:0 0 0 3.5px rgba(31,96,74,0.18);}
+form input:focus, form select:focus, form textarea:focus{outline:none; border-color:var(--forest-secondary); box-shadow:0 0 0 3.5px var(--focus-ring);}
 form input:disabled{background:var(--ice-50); color:var(--muted); cursor:not-allowed;}
 form .field-error{display:none; align-items:center; gap:6px; font-size:16px; color:var(--red-700); margin-top:6px; font-weight:500;}
 form .field-error svg{width:13px; height:13px; flex-shrink:0;}
-form .field.invalid input, form .field.invalid select, form .field.invalid textarea{border-color:var(--red-500); box-shadow:0 0 0 3.5px rgba(214,69,69,0.12);}
+form .field.invalid input, form .field.invalid select, form .field.invalid textarea{border-color:var(--red-500); box-shadow:0 0 0 3.5px rgba(193,94,85,0.12);}
 form .field.invalid .field-error{display:flex;}
 form .field.valid input{border-color:var(--leaf-hover);}
 form .hint{font-size:16px; color:var(--muted); margin-top:4px;}
@@ -585,16 +585,16 @@ form .hint-secure svg{width:14px; height:14px; color:var(--leaf-dark); flex-shri
 
 .alert{padding:14px 16px; border-radius:10px; font-size:16px; margin-bottom:18px; display:flex; align-items:center; gap:12px;}
 .alert svg{width:16px; height:16px; flex-shrink:0;}
-.alert-error{background:var(--error-bg); color:var(--error-text); border:1px solid rgba(165,42,36,0.28);}
+.alert-error{background:var(--error-bg); color:var(--error-text); border:1px solid rgba(164,61,53,0.28);}
 .alert-info{background:var(--ice-50); color:var(--forest-secondary); border:1px solid var(--line);}
 
 /* Success is one of the two moments this whole product exists to deliver
    (booking confirmed, refund processed) — it gets the hero-duration,
    ease-spring treatment. It plays once (no infinite loop) and is skipped
    entirely under reduced motion. */
-.alert-success{background:var(--success-bg); color:var(--success-text); border:1px solid rgba(46,107,69,0.25); animation:success-settle var(--dur-hero) var(--ease-spring) both;}
-.alert-success .success-icon{width:26px; height:26px; border-radius:50%; background:var(--leaf); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
-.alert-success .success-icon svg{width:14px; height:14px; color:var(--ink-900); stroke-dasharray:1px; stroke-dashoffset:1px; animation:check-draw-once .5s var(--ease-out) .3s forwards;}
+.alert-success{background:var(--success-bg); color:var(--success-text); border:1px solid rgba(57,116,81,0.25); animation:success-settle var(--dur-hero) var(--ease-spring) both;}
+.alert-success .success-icon{width:26px; height:26px; border-radius:50%; background:var(--leaf-dark); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.alert-success .success-icon svg{width:14px; height:14px; color:var(--white); stroke-dasharray:1px; stroke-dashoffset:1px; animation:check-draw-once .5s var(--ease-out) .3s forwards;}
 @keyframes success-settle{0%{opacity:0; transform:scale(.94) translateY(-6px);} 100%{opacity:1; transform:scale(1) translateY(0);}}
 @keyframes check-draw-once{to{stroke-dashoffset:0;}}
 @media (prefers-reduced-motion: reduce){
@@ -607,7 +607,7 @@ table th{text-align:left; font-size:16px; letter-spacing:0.06em; text-transform:
 table td{padding:14px 12px; border-bottom:1px solid var(--line); font-size:16px;}
 table tr:last-child td{border-bottom:none;}
 table tbody tr{transition:background var(--dur-micro) var(--ease-standard);}
-table tbody tr:hover{background:rgba(22,63,49,0.035);}
+table tbody tr:hover{background:rgba(20,61,50,0.035);}
 
 /* ---------- responsive data table -> stacked cards ----------
    A raw <table> is exactly the pattern the original audit flagged as a
@@ -647,7 +647,7 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
   .confirm-bar{
     position:fixed; left:0; right:0; bottom:0; z-index:40; margin-bottom:0;
     border-radius:20px 20px 0 0; padding:16px 24px calc(16px + env(safe-area-inset-bottom));
-    box-shadow:0 -10px 30px -12px rgba(22,63,49,0.4);
+    box-shadow:0 -10px 30px -12px rgba(20,61,50,0.4);
   }
   #bookingForm{padding-bottom:132px;}
   /* The fixed bar floats over whatever is at that screen position
@@ -661,7 +661,7 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
 .badge svg{width:11px; height:11px;}
 .badge-upcoming{background:var(--warning-bg); color:var(--warning-text);}
 .badge-collected{background:var(--success-bg); color:var(--success-text);}
-.badge-cancelled{background:rgba(22,63,49,0.06); color:var(--muted);}
+.badge-cancelled{background:var(--neutral-mist); color:var(--muted);}
 
 .period-row{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:13px 0; border-top:1px solid var(--line);}
 .period-row:first-child{border-top:none; padding-top:0;}
@@ -676,9 +676,9 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
   .period-figures{align-items:flex-start;}
 }
 
-.renewal-card{display:flex; align-items:center; gap:16px; background:linear-gradient(135deg, rgba(94,157,110,0.1), var(--white) 55%); border-color:rgba(94,157,110,0.35);}
+.renewal-card{display:flex; align-items:center; gap:16px; background:linear-gradient(135deg, rgba(57,116,81,0.1), var(--white) 55%); border-color:rgba(57,116,81,0.35);}
 .renewal-card + .renewal-card{margin-top:14px;}
-.renewal-icon{flex-shrink:0; width:42px; height:42px; border-radius:50%; background:var(--leaf); color:var(--ink-900); display:flex; align-items:center; justify-content:center;}
+.renewal-icon{flex-shrink:0; width:42px; height:42px; border-radius:50%; background:var(--leaf-dark); color:var(--white); display:flex; align-items:center; justify-content:center;}
 .renewal-icon svg{width:20px; height:20px;}
 .renewal-body{flex:1; min-width:0; display:flex; flex-direction:column; gap:3px;}
 .renewal-body strong{font-size:16px; color:var(--forest);}
@@ -692,8 +692,8 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
 /* Prominent, near the top of the dashboard on purpose — a returning
    parent who wants to repeat their last booking shouldn't have to scroll
    past stats and notifications to find it. */
-.quick-rebook-card{display:flex; align-items:center; gap:16px; margin-bottom:24px; background:linear-gradient(135deg, rgba(94,157,110,0.14), var(--white) 60%); border-color:rgba(94,157,110,0.4);}
-.quick-rebook-icon{flex-shrink:0; width:48px; height:48px; border-radius:50%; background:var(--leaf); color:var(--ink-900); display:flex; align-items:center; justify-content:center;}
+.quick-rebook-card{display:flex; align-items:center; gap:16px; margin-bottom:24px; background:linear-gradient(135deg, rgba(57,116,81,0.14), var(--white) 60%); border-color:rgba(57,116,81,0.4);}
+.quick-rebook-icon{flex-shrink:0; width:48px; height:48px; border-radius:50%; background:var(--leaf-dark); color:var(--white); display:flex; align-items:center; justify-content:center;}
 .quick-rebook-icon svg{width:22px; height:22px;}
 .quick-rebook-body{flex:1; min-width:0; display:flex; flex-direction:column; gap:3px;}
 .quick-rebook-body strong{font-size:17px; color:var(--forest);}
@@ -739,7 +739,7 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
 .notfound-shell{min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg, var(--forest) 0%, var(--forest-secondary) 65%, var(--forest-mid) 100%); padding:24px;}
 .notfound-card{background:var(--white); width:100%; max-width:460px; border-radius:var(--radius-lg); padding:44px 38px; box-shadow:var(--shadow-lg); text-align:center;}
 .notfound-logo{display:inline-block; font-family:var(--font-heading); font-weight:800; font-size:18px; margin-bottom:28px; color:var(--forest);}
-.notfound-logo .dot{color:var(--leaf);}
+.notfound-logo .dot{color:var(--school-yellow);}
 .notfound-mark{width:64px; height:64px; margin:0 auto 22px; border-radius:50%; background:var(--ice-50); display:flex; align-items:center; justify-content:center; color:var(--forest-secondary);}
 .notfound-mark svg{width:28px; height:28px;}
 .notfound-card h1{font-size:22px; margin-bottom:12px;}
@@ -747,10 +747,10 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
 .notfound-actions{display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
 
 .auth-shell{min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg, var(--forest) 0%, var(--forest-secondary) 65%, var(--forest-mid) 100%); padding:24px; position:relative; overflow:hidden;}
-.auth-shell::before{content:""; position:absolute; top:-10%; right:-8%; width:420px; height:420px; border-radius:50%; background:radial-gradient(circle, rgba(94,157,110,0.14), transparent 70%);}
+.auth-shell::before{content:""; position:absolute; top:-10%; right:-8%; width:420px; height:420px; border-radius:50%; background:radial-gradient(circle, rgba(120,168,134,0.14), transparent 70%);}
 .auth-card{background:var(--white); width:100%; max-width:420px; border-radius:var(--radius-lg); padding:40px 36px; box-shadow:var(--shadow-lg); position:relative;}
 .auth-card .logo{font-family:var(--font-heading); font-weight:800; font-size:19px; margin-bottom:18px; text-align:center;}
-.auth-card .logo .dot{color:var(--leaf);}
+.auth-card .logo .dot{color:var(--school-yellow);}
 .auth-card h1{font-size:22px; text-align:center; margin-bottom:6px;}
 .auth-card .sub{text-align:center; color:var(--muted); font-size:16px; margin-bottom:26px;}
 .auth-foot{text-align:center; margin-top:18px; font-size:16px; color:var(--muted);}
@@ -809,9 +809,9 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
   transition:border-color var(--dur-standard) var(--ease-standard), box-shadow var(--dur-standard) var(--ease-standard), transform var(--dur-micro) var(--ease-standard);
   position:relative;
 }
-.picker-card label:hover{border-color:var(--leaf);}
+.picker-card label:hover{border-color:var(--school-yellow-hover);}
 .picker-card input:focus-visible + label{outline:2.5px solid var(--forest-secondary); outline-offset:2px;}
-.picker-card input:checked + label{border-color:var(--leaf); box-shadow:0 0 0 3px rgba(94,157,110,0.16); background:#FBFEF7;}
+.picker-card input:checked + label{border-color:var(--school-yellow); box-shadow:0 0 0 3px rgba(241,199,91,0.25); background:var(--warning-bg);}
 .picker-thumb{width:40px; aspect-ratio:1/1; border-radius:9px; background:linear-gradient(135deg, var(--forest-secondary), var(--forest-mid)); display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;}
 .picker-thumb svg{width:19px; height:19px; color:var(--leaf-light);}
 .picker-thumb picture{display:block; width:100%; height:100%;}
@@ -824,7 +824,7 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
 .plan-icon svg{width:17px; height:17px;}
 .check-badge{
   position:absolute; top:10px; right:10px; width:22px; height:22px; border-radius:50%;
-  background:var(--leaf); display:flex; align-items:center; justify-content:center;
+  background:var(--school-yellow); display:flex; align-items:center; justify-content:center;
   opacity:0; transform:scale(.5); transition:opacity var(--dur-standard) var(--ease-spring), transform var(--dur-standard) var(--ease-spring);
 }
 .picker-card input:checked + label .check-badge{opacity:1; transform:scale(1);}
@@ -845,7 +845,7 @@ table tbody tr:hover{background:rgba(22,63,49,0.035);}
 .status-line svg{width:11px; height:11px;}
 .status-line.ok{background:var(--success-bg); color:var(--success-text);}
 .status-line.pending{background:var(--warning-bg); color:var(--warning-text);}
-.status-line.none{background:rgba(22,63,49,0.06); color:var(--muted);}
+.status-line.none{background:var(--neutral-mist); color:var(--muted);}
 
 footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-size:16px; border-top:1px solid var(--line); margin-top:20px;}
 
@@ -882,11 +882,11 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .site-header{background:var(--forest); position:sticky; top:0; z-index:50; padding-top:env(safe-area-inset-top);}
 .site-nav{display:flex; align-items:center; justify-content:space-between; height:72px; max-width:1400px;}
 .site-logo{color:var(--white); font-family:var(--font-heading); font-weight:800; font-size:18px; display:flex; align-items:center; min-height:var(--control-height); gap:8px; white-space:nowrap; flex-shrink:0;}
-.site-logo .dot{color:var(--leaf);}
+.site-logo .dot{color:var(--school-yellow);}
 .site-links{display:flex; align-items:center; gap:2px;}
 .site-links a{color:rgba(255,255,255,0.72); font-size:16px; font-weight:500; padding:8px 6px; border-radius:8px; white-space:nowrap; transition:background var(--dur-standard) var(--ease-standard), color var(--dur-standard) var(--ease-standard);}
 .site-links a:hover{color:var(--white); background:rgba(255,255,255,0.08);}
-.site-links a.active{color:var(--leaf-light); font-weight:700;}
+.site-links a.active{color:var(--school-yellow); font-weight:700;}
 .site-actions{display:flex; align-items:center; gap:6px;}
 
 /* ---------- language switch (Phase 4) ----------
@@ -945,7 +945,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   transition:background var(--dur-micro) var(--ease-standard), border-color var(--dur-micro) var(--ease-standard);
 }
 .site-links-mobile-checkschool:hover{background:rgba(255,255,255,0.09); border-color:rgba(255,255,255,0.22);}
-.site-links-mobile-checkschool svg{width:16px; height:16px; color:var(--leaf-light); flex-shrink:0;}
+.site-links-mobile-checkschool svg{width:16px; height:16px; color:var(--school-yellow); flex-shrink:0;}
 .site-links-mobile-nav{display:flex; flex-direction:column;}
 .site-links-mobile-actions{display:flex; flex-direction:column; gap:10px; margin-top:20px;}
 .site-links-mobile-actions .btn{width:100%; justify-content:center;}
@@ -960,7 +960,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   background:var(--forest);
 }
 .mobile-menu-brand{color:var(--white); font-family:var(--font-heading); font-weight:800; font-size:18px;}
-.mobile-menu-brand .dot{color:var(--leaf);}
+.mobile-menu-brand .dot{color:var(--school-yellow);}
 .mobile-menu-close{
   display:flex; align-items:center; justify-content:center; width:44px; height:44px; flex-shrink:0;
   background:rgba(255,255,255,0.08); border:none; border-radius:50%; color:#fff; cursor:pointer;
@@ -1045,20 +1045,20 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 }
 .tap-reader{
   background:var(--forest); border-radius:22px; padding:30px 24px; text-align:center;
-  border:1px solid rgba(255,255,255,0.08); box-shadow:0 30px 60px -20px rgba(0,0,0,0.5);
+  border:1px solid rgba(255,255,255,0.08); box-shadow:0 30px 60px -20px rgba(20,61,50,0.5);
 }
 .tap-reader .reader-ring{
   width:76px; height:76px; margin:0 auto 18px; border-radius:50%;
-  border:2px solid rgba(94,157,110,0.35); display:flex; align-items:center; justify-content:center;
+  border:2px solid rgba(241,199,91,0.35); display:flex; align-items:center; justify-content:center;
   position:relative;
 }
 .tap-reader .reader-ring::before{
-  content:""; position:absolute; inset:-8px; border-radius:50%; border:1.5px solid rgba(94,157,110,0.18);
+  content:""; position:absolute; inset:-8px; border-radius:50%; border:1.5px solid rgba(241,199,91,0.18);
 }
 .tap-reader .reader-ring svg{width:32px; height:32px; color:var(--leaf-light);}
 .tap-reader .ripple{
   position:absolute; inset:0; margin:auto; width:76px; height:76px; border-radius:50%;
-  border:1.5px solid var(--leaf); opacity:0; pointer-events:none;
+  border:1.5px solid var(--school-yellow); opacity:0; pointer-events:none;
 }
 .tap-reader .ripple.delay{animation-delay:180ms;}
 @keyframes tap-contact-scale{
@@ -1076,13 +1076,13 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 
 .tap-card{
   position:absolute; top:-38px; left:50%; width:150px; height:94px;
-  background:linear-gradient(135deg, var(--leaf), var(--leaf-hover));
-  border-radius:12px; box-shadow:0 16px 30px -10px rgba(94,157,110,0.5);
+  background:linear-gradient(135deg, var(--school-yellow), var(--school-yellow-hover));
+  border-radius:12px; box-shadow:0 16px 30px -10px rgba(241,199,91,0.5);
   padding:12px 14px; display:flex; flex-direction:column; justify-content:space-between;
   transform:translate(-50%,0) rotate(-8deg);
 }
-.tap-card .chip{width:20px; height:14px; border-radius:3px; background:rgba(22,63,49,0.35);}
-.tap-card .card-name{font-family:var(--font-heading); font-weight:800; font-size:11px; color:var(--forest);}
+.tap-card .chip{width:20px; height:14px; border-radius:3px; background:rgba(20,61,50,0.35);}
+.tap-card .card-name{font-family:var(--font-heading); font-weight:800; font-size:11px; color:var(--ink);}
 
 @keyframes tap-move{
   0%,15%{transform:translate(-50%,0) rotate(-8deg);}
@@ -1091,9 +1091,9 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   60%,100%{transform:translate(-50%,0) rotate(-8deg);}
 }
 @keyframes tap-pulse{
-  0%,35%{box-shadow:0 0 0 0 rgba(94,157,110,0.5);}
-  50%{box-shadow:0 0 0 14px rgba(94,157,110,0);}
-  70%,100%{box-shadow:0 0 0 0 rgba(94,157,110,0);}
+  0%,35%{box-shadow:0 0 0 0 rgba(241,199,91,0.5);}
+  50%{box-shadow:0 0 0 14px rgba(241,199,91,0);}
+  70%,100%{box-shadow:0 0 0 0 rgba(241,199,91,0);}
 }
 
 .tap-toast{
@@ -1148,12 +1148,12 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
    mocked data instead of a live feed — reused across the homepage,
    /parents, /schools, and /caterers rather than each page inventing its
    own "(illustrative example)" wording treatment. */
-.sample-tag{display:inline-flex; align-items:center; gap:6px; font-family:var(--font-heading); font-weight:700; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--leaf-dark); background:rgba(46,107,69,0.08); border-radius:100px; padding:4px 11px;}
+.sample-tag{display:inline-flex; align-items:center; gap:6px; font-family:var(--font-heading); font-weight:700; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--leaf-dark); background:rgba(57,116,81,0.08); border-radius:100px; padding:4px 11px;}
 .sample-tag svg{width:11px; height:11px;}
 /* Dark-surface variant — same component, safe contrast on navy (e.g. the
    dashboard preview card): border instead of a tinted fill, lime-500
    instead of the text-safe-on-white lime-700. */
-.sample-tag.on-dark{color:var(--leaf-light); background:transparent; border:1px solid rgba(94,157,110,0.4);}
+.sample-tag.on-dark{color:var(--leaf-light); background:transparent; border:1px solid rgba(120,168,134,0.4);}
 
 /* steps (real sequence: book -> tap -> collected -> notified) */
 .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:24px; counter-reset:step;}
@@ -1246,7 +1246,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .cta-band p{color:rgba(255,255,255,0.72);}
 .cta-band::before{
   content:""; position:absolute; top:0; left:0; width:100%; height:100%;
-  background:linear-gradient(100deg, transparent 62%, rgba(94,157,110,0.10) 62%, rgba(94,157,110,0.10) 64%, transparent 64%);
+  background:linear-gradient(100deg, transparent 62%, rgba(120,168,134,0.10) 62%, rgba(120,168,134,0.10) 64%, transparent 64%);
   /* Purely decorative — .wrap (the real content) is position:static, so
      without this, this absolutely-positioned full-cover stripe paints
      (and receives clicks) above it regardless of DOM order, silently
@@ -1261,13 +1261,13 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .site-foot a:hover{color:var(--leaf-light);}
 .site-foot-top{display:grid; grid-template-columns:minmax(0,1.4fr) minmax(0,2.6fr); gap:48px; padding-bottom:44px;}
 .site-foot-brand .site-logo{color:var(--white); font-family:var(--font-heading); font-weight:800; font-size:18px; display:inline-flex; margin-bottom:14px;}
-.site-foot-brand .site-logo .dot{color:var(--leaf);}
+.site-foot-brand .site-logo .dot{color:var(--school-yellow);}
 .site-foot-brand p{color:rgba(255,255,255,0.5); font-size:16px; line-height:1.6; max-width:280px; margin:0 0 16px;}
 .site-foot-links{display:grid; grid-template-columns:repeat(4,1fr); gap:24px;}
 .site-foot-links h4{font-family:var(--font-heading); font-weight:700; font-size:16px; letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.85); margin-bottom:16px;}
 .site-foot-links .foot-col{display:flex; flex-direction:column;}
 .site-foot-links a{display:flex; align-items:center; min-height:var(--control-height);}
-.site-foot-links a.active{color:var(--leaf-light); font-weight:700;}
+.site-foot-links a.active{color:var(--school-yellow); font-weight:700;}
 .site-foot-contact-row{display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap; padding-top:28px; padding-bottom:28px; border-top:1px solid rgba(255,255,255,0.08);}
 .site-foot-contact{display:flex; align-items:center; gap:24px; flex-wrap:wrap; font-size:16px;}
 .site-foot-contact span, .site-foot-contact a{display:inline-flex; align-items:center; min-height:var(--control-height); gap:8px; color:rgba(255,255,255,0.65);}
@@ -1604,7 +1604,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
     display:flex; align-items:center; padding:14px 6px; font-size:16px; font-weight:600;
     color:rgba(255,255,255,0.82); border-bottom:1px solid rgba(255,255,255,0.08);
   }
-  .site-links-mobile a.active{color:var(--leaf-light);}
+  .site-links-mobile a.active{color:var(--school-yellow);}
   @media (prefers-reduced-motion: reduce){
     .site-links-mobile{transition:opacity var(--dur-micro) linear; transform:none;}
   }
@@ -1628,7 +1628,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
     display:flex; align-items:center; padding:15px 6px; font-size:16px; font-weight:600;
     color:rgba(255,255,255,0.82); border-bottom:1px solid rgba(255,255,255,0.08);
   }
-  .app-links-mobile a.active{color:var(--leaf-light);}
+  .app-links-mobile a.active{color:var(--school-yellow);}
   @media (prefers-reduced-motion: reduce){
     .app-links-mobile{transition:opacity var(--dur-micro) linear; transform:none;}
   }
@@ -1794,7 +1794,7 @@ fieldset.field legend{font-weight:600;margin-bottom:10px;}
 .journey-label{display:flex;align-items:center;gap:10px;text-transform:uppercase;font-weight:700;font-family:var(--font-heading);font-size:14px;color:var(--forest);}
 .journey-number{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--forest);color:white;flex-shrink:0;}
 .journey-attention .journey-number{background:var(--school-yellow);color:var(--ink);}
-.journey-complete .journey-number{background:var(--leaf);color:var(--ink);}
+.journey-complete .journey-number{background:var(--leaf-dark);color:var(--white);}
 .journey-item h3{font-size:17px;margin:18px 0 8px;}
 .journey-item p{font-size:14px;color:var(--muted);}
 @media(max-width:1023px){.parent-journey{grid-template-columns:repeat(2,minmax(0,1fr));}}

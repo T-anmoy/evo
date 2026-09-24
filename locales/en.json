@@ -794,7 +794,6 @@
       "labelMessage": "Message",
       "placeholderMessage": "How can we help?",
       "submit": "Check demo message",
-      "secureHint": "Demo only — this form does not send or save messages.",
       "footnote": "You can also reach us directly using the contact details in the footer below.",
       "errRequired": "Name, email, and a short message are required.",
       "errName": "Enter your full name (letters only, at least 2 characters).",
