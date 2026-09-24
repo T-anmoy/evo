@@ -1,8 +1,9 @@
+<% const confidenceReveal = typeof reveal !== 'undefined' && reveal; /* opt-in: public pages only */ %>
 <aside class="food-confidence" aria-label="<%= t('food.confidenceTitle') %>">
-  <div class="food-confidence-copy"><span class="eyebrow"><%= t('food.confidenceTitle') %></span><p><%= t('food.programmeStatement') %></p></div>
-  <ul class="food-exclusions">
+  <div class="food-confidence-copy"<%- confidenceReveal ? ' data-reveal="up"' : '' %>><span class="eyebrow"><%= t('food.confidenceTitle') %></span><p><%= t('food.programmeStatement') %></p></div>
+  <ul class="food-exclusions"<%- confidenceReveal ? ' data-reveal-group' : '' %>>
     <% ['nut','shellfish','sesame','soy'].forEach(key => { %>
-      <li><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+      <li<%- confidenceReveal ? ' data-reveal="scale"' : '' %>><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
         <% if(key === 'nut') { %><path d="M11 8c-7 5-7 12-2 16s12 0 14-5c3-7-4-15-9-12M12 11c-5 8 2 11 6 10"/>
         <% } else if(key === 'shellfish') { %><path d="M6 20c0-15 20-15 20 0l-10 6Zm10-9v15M10 12l6 14m6-14-6 14"/>
         <% } else if(key === 'sesame') { %><path d="M10 7c-6 4-4 10 0 10s5-6 0-10Zm12 7c-6 4-4 10 0 10s5-6 0-10ZM10 21c-3 2-2 6 1 6"/>

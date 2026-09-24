@@ -23,17 +23,17 @@
 </section>
 
 <section class="section on-tint"><div class="wrap">
-  <ol class="parent-journey operational-journey"><% for(let i=1;i<=4;i++){ %><li class="journey-item"><span class="journey-label"><bdi class="journey-number">0<%= i %></bdi><%= t('caterers.flow.title'+i) %></span><p><%= t('caterers.flow.body'+i) %></p></li><% } %></ol>
+  <ol class="parent-journey operational-journey" data-reveal="sequence"><% for(let i=1;i<=4;i++){ %><li class="journey-item"><span class="journey-label"><bdi class="journey-number">0<%= i %></bdi><%= t('caterers.flow.title'+i) %></span><p><%= t('caterers.flow.body'+i) %></p></li><% } %></ol>
 </div></section>
 <!-- 2. Digital order queue (tangible kitchen proof) -->
 <section class="section" id="order-queue">
   <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow"><%= t('caterers.orderQueue.eyebrow') %></span>
-      <h2><%= t('caterers.orderQueue.heading') %></h2>
-      <p><%= t('caterers.orderQueue.intro') %></p>
+    <div class="section-head" data-reveal-group>
+      <span data-reveal="up" class="eyebrow"><%= t('caterers.orderQueue.eyebrow') %></span>
+      <h2 data-reveal="up"><%= t('caterers.orderQueue.heading') %></h2>
+      <p data-reveal="up"><%= t('caterers.orderQueue.intro') %></p>
     </div>
-    <div class="card">
+    <div class="card" data-reveal="fade">
       <div class="dash-preview-head" style="padding:0 0 16px;">
         <strong style="font-family:var(--font-heading); font-size:15px; color:var(--forest);"><%= t('caterers.orderQueue.cardHeading') %></strong>
         <span class="sample-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> <%= t('caterers.orderQueue.sampleTag') %></span>
@@ -61,10 +61,10 @@
 
 <section class="section on-tint" id="caterer-form">
   <div class="wrap partner-form-wrap">
-    <div class="section-head" style="margin:0;">
-      <span class="eyebrow"><%= t('caterers.form.eyebrow') %></span>
-      <h2><%= t('caterers.form.heading') %></h2>
-      <p><%= t('caterers.form.intro') %></p>
+    <div class="section-head" data-reveal-group style="margin:0;">
+      <span data-reveal="up" class="eyebrow"><%= t('caterers.form.eyebrow') %></span>
+      <h2 data-reveal="up"><%= t('caterers.form.heading') %></h2>
+      <p data-reveal="up"><%= t('caterers.form.intro') %></p>
     </div>
     <div class="card">
       <% if (typeof success !== 'undefined' && success) { %>

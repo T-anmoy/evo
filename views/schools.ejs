@@ -24,10 +24,10 @@
 </section>
 
 <section class="section"><div class="wrap operational-layout">
-  <div class="operational-list">
-    <% for(let i=1;i<=5;i++){ %><div><h2><%= t('schools.operations.title'+i) %></h2><p><%= t('schools.operations.body'+i) %></p></div><% } %>
+  <div class="operational-list" data-reveal-group>
+    <% for(let i=1;i<=5;i++){ %><div data-reveal="up"><h2><%= t('schools.operations.title'+i) %></h2><p><%= t('schools.operations.body'+i) %></p></div><% } %>
   </div>
-  <div class="card operational-example">
+  <div class="card operational-example" data-reveal="fade">
     <span class="sample-tag"><%= t('schools.dashboardPreview.productPreview') %></span>
     <h2><%= t('schools.dashboardPreview.overview') %></h2>
     <p><%= t('schools.dashboardPreview.intro') %></p>
@@ -42,10 +42,10 @@
 </div></section>
 <section class="section on-tint" id="partner-form">
   <div class="wrap partner-form-wrap">
-    <div class="section-head" style="margin:0 0 0;">
-      <span class="eyebrow"><%= t('schools.partnerForm.eyebrow') %></span>
-      <h2><%= t('schools.partnerForm.heading') %></h2>
-      <p><%= t('schools.partnerForm.intro') %></p>
+    <div class="section-head" data-reveal-group style="margin:0 0 0;">
+      <span data-reveal="up" class="eyebrow"><%= t('schools.partnerForm.eyebrow') %></span>
+      <h2 data-reveal="up"><%= t('schools.partnerForm.heading') %></h2>
+      <p data-reveal="up"><%= t('schools.partnerForm.intro') %></p>
     </div>
     <div class="card">
       <% if (typeof success !== 'undefined' && success) { %>

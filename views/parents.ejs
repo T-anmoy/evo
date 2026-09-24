@@ -16,45 +16,45 @@
       <p class="lede"><%= t('parents.hero.lede') %></p>
       <div class="action-row"><a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-primary"><%= t('common.createAccount') %></a><a href="<%= locale === 'ar' ? '/ar' : '/' %>#supported-schools"><%= t('nav.checkMySchool') %> →</a></div>
     </div>
-    <% if(menuItems[0]) { %><%- include('partials/food-card', {m:menuItems[0],variant:'featured',eager:true}) %><% } %>
-    <%- include('partials/food-confidence') %>
+    <% if(menuItems[0]) { %><%- include('partials/food-card', {m:menuItems[0],variant:'featured',eager:true,reveal:true}) %><% } %>
+    <%- include('partials/food-confidence', {reveal:true}) %>
   </div>
 </section>
 <!-- 3. Menu + nutrition + allergen information -->
 <section class="section" id="menu">
   <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow"><%= t('parents.menu.eyebrow') %></span>
-      <h2><%= t('parents.menu.heading') %></h2>
-      <p><%= t('parents.menu.intro') %></p>
+    <div class="section-head" data-reveal-group>
+      <span data-reveal="up" class="eyebrow"><%= t('parents.menu.eyebrow') %></span>
+      <h2 data-reveal="up"><%= t('parents.menu.heading') %></h2>
+      <p data-reveal="up"><%= t('parents.menu.intro') %></p>
     </div>
-    <div class="food-grid food-supporting">
-      <% menuItems.slice(1).forEach(m => { %><%- include('partials/food-card', {m,variant:'compact'}) %><% }) %>
+    <div class="food-grid food-supporting" data-reveal-group>
+      <% menuItems.slice(1).forEach(m => { %><%- include('partials/food-card', {m,variant:'compact',reveal:true}) %><% }) %>
     </div>
     <p class="nutrition-more"><%= t('parents.menu.footnote') %></p>
   </div>
 </section>
 
 <section class="section on-tint" id="journey"><div class="wrap">
-  <div class="section-head"><span class="eyebrow"><%= t('parents.journey.eyebrow') %></span><h2><%= t('parents.journey.heading') %></h2><p><%= t('parents.journey.intro') %></p></div>
+  <div class="section-head" data-reveal-group><span data-reveal="up" class="eyebrow"><%= t('parents.journey.eyebrow') %></span><h2 data-reveal="up"><%= t('parents.journey.heading') %></h2><p data-reveal="up"><%= t('parents.journey.intro') %></p></div>
   <%- include('partials/parent-journey') %>
 </div></section>
 <!-- 4. Calendar-aware pricing explanation -->
 <section class="section" id="pricing">
   <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow"><%= t('parents.pricing.eyebrow') %></span>
-      <h2><%= t('parents.pricing.heading') %></h2>
-      <p><%= t('parents.pricing.intro') %></p>
+    <div class="section-head" data-reveal-group>
+      <span data-reveal="up" class="eyebrow"><%= t('parents.pricing.eyebrow') %></span>
+      <h2 data-reveal="up"><%= t('parents.pricing.heading') %></h2>
+      <p data-reveal="up"><%= t('parents.pricing.intro') %></p>
     </div>
-    <div class="pricing-grid">
-      <div class="price-card">
+    <div class="pricing-grid" data-reveal-group>
+      <div class="price-card" data-reveal="up">
         <div class="price-tag"><%= t('parents.pricing.payAsYouGoTitle') %></div>
         <div class="price-amt"><bdi>KWD <%= (plans.single ? plans.single.rateKWD : 2).toFixed(3) %></bdi><span><%= t('parents.pricing.payAsYouGoPer') %></span></div>
         <p><%= t('parents.pricing.payAsYouGoBody') %></p>
         <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-outline" style="width:100%;"><%= t('parents.pricing.payAsYouGoCta') %></a>
       </div>
-      <div class="price-card">
+      <div class="price-card" data-reveal="up">
         <div class="price-tag"><%= t('parents.pricing.subscriptionTitle') %></div>
         <div class="price-amt"><bdi>KWD <%= (plans.single ? plans.single.rateKWD : 2).toFixed(3) %></bdi><span><%= t('parents.pricing.subscriptionPer') %></span></div>
         <p><%= t('parents.pricing.subscriptionBody') %></p>
@@ -67,10 +67,10 @@
 <!-- 5. Tap-to-collect + notification -->
 <section class="section" id="collection">
   <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow"><%= t('parents.collection.eyebrow') %></span>
-      <h2><%= t('parents.collection.heading') %></h2>
-      <p><%= t('parents.collection.intro') %></p>
+    <div class="section-head" data-reveal-group>
+      <span data-reveal="up" class="eyebrow"><%= t('parents.collection.eyebrow') %></span>
+      <h2 data-reveal="up"><%= t('parents.collection.heading') %></h2>
+      <p data-reveal="up"><%= t('parents.collection.intro') %></p>
     </div>
     <%- include('partials/collection-demo') %>
   </div>
@@ -78,13 +78,13 @@
 
 <!-- 6. Multiple children -->
 <section class="section on-tint" id="multiple-children">
-  <div class="wrap what-is-wrap">
-    <div>
+  <div class="wrap what-is-wrap" data-reveal-group>
+    <div data-reveal="up">
       <span class="eyebrow"><%= t('parents.multipleChildren.eyebrow') %></span>
       <h2><%= t('parents.multipleChildren.heading') %></h2>
       <p><%= t('parents.multipleChildren.intro') %></p>
     </div>
-    <div class="card" style="max-width:480px;">
+    <div class="card" data-reveal="up" style="max-width:480px;">
       <div class="dash-preview-head" style="padding:0 0 14px;">
         <strong style="font-family:var(--font-heading); font-size:15px; color:var(--forest);"><%= t('parents.multipleChildren.cardTitle') %></strong>
         <span class="sample-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> <%= t('parents.multipleChildren.sampleView') %></span>
@@ -112,7 +112,7 @@
 <!-- 7. App -->
 <section class="section" id="app">
   <div class="wrap app-section-wrap">
-    <div>
+    <div data-reveal="up">
       <span class="eyebrow"><%= t('parents.app.eyebrow') %></span>
       <h2><%= t('parents.app.headingLine1') %><br><%= t('parents.app.headingLine2') %></h2>
       <p class="app-capabilities"><%= t('home.app.flowMenu') %> <span aria-hidden="true">·</span> <%= t('home.app.flowSubscription') %> <span aria-hidden="true">·</span> <%= t('home.app.flowOrder') %></p>
@@ -145,11 +145,11 @@
 
 <!-- 9. Registration/login CTA -->
 <section class="cta-band">
-  <div class="wrap" style="text-align:center;">
-    <span class="eyebrow on-dark" style="justify-content:center;"><%= t('parents.finalCta.eyebrow') %></span>
-    <h2 style="margin-top:16px;"><%= t('parents.finalCta.heading') %></h2>
-    <p style="margin:14px auto 28px;"><%= t('parents.finalCta.body') %></p>
-    <div class="hero-actions" style="justify-content:center;">
+  <div class="wrap" style="text-align:center;" data-reveal-group>
+    <span data-reveal="up" class="eyebrow on-dark" style="justify-content:center;"><%= t('parents.finalCta.eyebrow') %></span>
+    <h2 data-reveal="up" style="margin-top:16px;"><%= t('parents.finalCta.heading') %></h2>
+    <p data-reveal="up" style="margin:14px auto 28px;"><%= t('parents.finalCta.body') %></p>
+    <div data-reveal="up" class="hero-actions" style="justify-content:center;">
       <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-school-yellow"><%= t('common.createAccount') %></a>
       <a href="<%= locale === 'ar' ? '/ar/login' : '/login' %>" class="btn btn-outline-light"><%= t('common.login') %></a>
     </div>

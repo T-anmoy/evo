@@ -18,16 +18,16 @@
   </div>
 </section>
 
-<section class="section contact-channels"><div class="wrap contact-channels-inner">
+<section class="section contact-channels"><div class="wrap contact-channels-inner" data-reveal="up">
   <div><h2><%= t('contact.pathways.parentTitle') %></h2><p><%= t('contact.pathways.parentBody') %></p><div class="action-row"><a href="mailto:info@evo360.tech" class="btn btn-primary"><bdi>info@evo360.tech</bdi></a><a href="https://wa.me/96599570836" class="btn btn-outline"><bdi>WhatsApp · +965 9957 0836</bdi></a></div></div>
   <nav class="contact-role-links"><a href="<%= locale === 'ar' ? '/ar/schools' : '/schools' %>#partner-form"><%= t('contact.pathways.schoolTitle') %> →</a><a href="<%= locale === 'ar' ? '/ar/caterers' : '/caterers' %>#caterer-form"><%= t('contact.pathways.catererTitle') %> →</a></nav>
 </div></section>
 
 <section class="section on-tint" id="parent-support">
   <div class="wrap" style="max-width:560px;">
-    <div class="section-head">
-      <span class="eyebrow"><%= t('contact.form.eyebrow') %></span>
-      <h2><%= t('contact.form.heading') %></h2>
+    <div class="section-head" data-reveal-group>
+      <span data-reveal="up" class="eyebrow"><%= t('contact.form.eyebrow') %></span>
+      <h2 data-reveal="up"><%= t('contact.form.heading') %></h2>
     </div>
     <% if (success) { %>
       <div class="alert alert-success" role="status"><%- include('partials/success-icon') %><span><%= t('contact.form.successMsg') %></span></div>

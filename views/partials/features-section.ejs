@@ -1,8 +1,8 @@
 <section class="section" id="features"><div class="wrap">
-  <div class="section-head"><span class="eyebrow"><%= t('featuresSection.eyebrow') %></span><h2><%= t('featuresSection.heading') %></h2><p><%= t('featuresSection.intro') %></p></div>
-  <div class="capability-map">
+  <div class="section-head" data-reveal-group><span data-reveal="up" class="eyebrow"><%= t('featuresSection.eyebrow') %></span><h2 data-reveal="up"><%= t('featuresSection.heading') %></h2><p data-reveal="up"><%= t('featuresSection.intro') %></p></div>
+  <div class="capability-map" data-reveal-group>
     <% [['parents','parents'],['schools','schools'],['caterers','caterers'],['students','parents'],['admins','schools']].forEach(([role,path]) => { %>
-      <section class="capability-unit"><h3><%= t('featuresSection.'+role+'Title') %></h3>
+      <section class="capability-unit" data-reveal="up"><h3><%= t('featuresSection.'+role+'Title') %></h3>
         <ul><li><%= t('featuresSection.'+role+'Chip1') %></li><li><%= t('featuresSection.'+role+'Chip2') %></li></ul>
         <a href="<%= locale === 'ar' ? '/ar' : '' %>/<%= path %>"><%= t('nav.for'+path.charAt(0).toUpperCase()+path.slice(1)) %> →</a>
       </section>

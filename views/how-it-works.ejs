@@ -22,18 +22,18 @@
   </div>
 </section>
 
-<section class="section"><div class="wrap"><h2><%= t('howItWorks.roleFlows.parentTitle') %></h2><p><%= t('parents.journey.intro') %></p><%- include('partials/parent-journey') %></div></section>
+<section class="section"><div class="wrap"><h2 data-reveal="up"><%= t('howItWorks.roleFlows.parentTitle') %></h2><p data-reveal="up"><%= t('parents.journey.intro') %></p><%- include('partials/parent-journey') %></div></section>
 
 <section class="section">
   <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow"><%= t('howItWorks.roleFlows.eyebrow') %></span>
-      <h2><%= t('howItWorks.roleFlows.heading') %></h2><p><%= t('howItWorks.roleNote') %></p>
+    <div class="section-head" data-reveal-group>
+      <span data-reveal="up" class="eyebrow"><%= t('howItWorks.roleFlows.eyebrow') %></span>
+      <h2 data-reveal="up"><%= t('howItWorks.roleFlows.heading') %></h2><p data-reveal="up"><%= t('howItWorks.roleNote') %></p>
     </div>
     <div class="role-journey-grid">
       <div class="role-journey-card">
         <h3><%= t('howItWorks.roleFlows.schoolTitle') %></h3>
-        <div class="process-rail">
+        <div class="process-rail" data-reveal="sequence">
           <div class="process-step"><span class="process-label"><%= t('howItWorks.roleFlows.schoolStep1') %></span></div>
           <div class="process-connector" aria-hidden="true"></div>
           <div class="process-step"><span class="process-label"><%= t('howItWorks.roleFlows.schoolStep2') %></span></div>
@@ -43,7 +43,7 @@
       </div>
       <div class="role-journey-card">
         <h3><%= t('howItWorks.roleFlows.catererTitle') %></h3>
-        <div class="process-rail">
+        <div class="process-rail" data-reveal="sequence">
           <div class="process-step"><span class="process-label"><%= t('howItWorks.roleFlows.catererStep1') %></span></div>
           <div class="process-connector" aria-hidden="true"></div>
           <div class="process-step"><span class="process-label"><%= t('howItWorks.roleFlows.catererStep2') %></span></div>
@@ -56,10 +56,10 @@
 </section>
 
 <section class="cta-band">
-  <div class="wrap" style="text-align:center;">
-    <span class="eyebrow on-dark" style="justify-content:center;"><%= t('howItWorks.cta.eyebrow') %></span>
-    <h2 style="margin-top:16px;"><%= t('howItWorks.cta.heading') %></h2>
-    <p style="margin:14px auto 28px;"><%= t('howItWorks.cta.body') %></p>
+  <div class="wrap" style="text-align:center;" data-reveal-group>
+    <span data-reveal="up" class="eyebrow on-dark" style="justify-content:center;"><%= t('howItWorks.cta.eyebrow') %></span>
+    <h2 data-reveal="up" style="margin-top:16px;"><%= t('howItWorks.cta.heading') %></h2>
+    <p data-reveal="up" style="margin:14px auto 28px;"><%= t('howItWorks.cta.body') %></p>
     <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-school-yellow"><%= t('common.createAccount') %></a>
   </div>
 </section>

@@ -94,15 +94,15 @@ const SHOW_TRUST_STATS = false;
 <!-- 4.3 Food / menu proof -->
 <section class="section on-tint" id="menu-proof">
   <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow"><%= t('home.menuProof.eyebrow') %></span>
-      <h2><%= t('home.menuProof.heading') %></h2>
-      <p><%= t('home.menuProof.intro') %></p>
+    <div class="section-head" data-reveal-group>
+      <span data-reveal="up" class="eyebrow"><%= t('home.menuProof.eyebrow') %></span>
+      <h2 data-reveal="up"><%= t('home.menuProof.heading') %></h2>
+      <p data-reveal="up"><%= t('home.menuProof.intro') %></p>
     </div>
-    <div class="food-grid home-food-grid">
-      <% menuItems.slice(0,2).forEach(m => { %><%- include('partials/food-card',{m}) %><% }) %>
+    <div class="food-grid home-food-grid" data-reveal-group>
+      <% menuItems.slice(0,2).forEach(m => { %><%- include('partials/food-card',{m, reveal:true}) %><% }) %>
     </div>
-    <%- include('partials/food-confidence') %>
+    <%- include('partials/food-confidence', {reveal:true}) %>
     <p class="nutrition-more"><%= t('home.menuProof.footnote') %></p>
     <div style="text-align:center; margin-top:24px;">
       <a href="<%= locale === 'ar' ? '/ar/parents' : '/parents' %>#menu" class="btn btn-outline"><%= t('home.menuProof.cta') %></a>
@@ -115,31 +115,31 @@ const SHOW_TRUST_STATS = false;
      sequence. This is the homepage summary; the full explanation (plus
      role-by-role flows) lives on /how-it-works. -->
 <section class="section on-tint" id="how-it-works"><div class="wrap">
-  <div class="section-head"><span class="eyebrow"><%= t('parents.journey.eyebrow') %></span><h2><%= t('parents.journey.heading') %></h2><p><%= t('parents.journey.intro') %></p></div>
+  <div class="section-head" data-reveal-group><span data-reveal="up" class="eyebrow"><%= t('parents.journey.eyebrow') %></span><h2 data-reveal="up"><%= t('parents.journey.heading') %></h2><p data-reveal="up"><%= t('parents.journey.intro') %></p></div>
   <%- include('partials/parent-journey') %>
 </div></section>
 
 <!-- 4.5 Collection proof -->
 <section class="section on-cream" id="collection-proof">
   <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow"><%= t('home.collectionProof.eyebrow') %></span>
-      <h2><%= t('home.collectionProof.heading') %></h2>
-      <p><%= t('home.collectionProof.intro') %></p>
+    <div class="section-head" data-reveal-group>
+      <span data-reveal="up" class="eyebrow"><%= t('home.collectionProof.eyebrow') %></span>
+      <h2 data-reveal="up"><%= t('home.collectionProof.heading') %></h2>
+      <p data-reveal="up"><%= t('home.collectionProof.intro') %></p>
     </div>
     <%- include('partials/collection-demo') %>
   </div>
 </section>
 <section class="proof-section" id="supported-schools">
   <div class="wrap-wide proof-wrap">
-    <div class="proof-intro">
+    <div class="proof-intro" data-reveal="up">
       <span class="eyebrow on-dark"><%= t('home.supportedSchools.eyebrow') %></span>
       <p><%- t('home.supportedSchools.intro', { link: `<a href="${locale === 'ar' ? '/ar/contact' : '/contact'}" style="color:#fff; text-decoration:underline;">${t('home.supportedSchools.introLink')}</a>` }) %></p>
     </div>
-    <ul class="proof-names">
-      <li><span class="proof-name">American Creativity Academy</span><span class="proof-tag"><%= t('home.supportedSchools.tag') %></span></li>
-      <li><span class="proof-name">Kuwait English School</span><span class="proof-tag"><%= t('home.supportedSchools.tag') %></span></li>
-      <li><span class="proof-name">The English School</span><span class="proof-tag"><%= t('home.supportedSchools.tag') %></span></li>
+    <ul class="proof-names" data-reveal-group>
+      <li data-reveal="up"><span class="proof-name">American Creativity Academy</span><span class="proof-tag"><%= t('home.supportedSchools.tag') %></span></li>
+      <li data-reveal="up"><span class="proof-name">Kuwait English School</span><span class="proof-tag"><%= t('home.supportedSchools.tag') %></span></li>
+      <li data-reveal="up"><span class="proof-name">The English School</span><span class="proof-tag"><%= t('home.supportedSchools.tag') %></span></li>
     </ul>
   </div>
 </section>
@@ -147,13 +147,13 @@ const SHOW_TRUST_STATS = false;
 
 <!-- 4.6 Multiple children -->
 <section class="section" id="multiple-children">
-  <div class="wrap what-is-wrap">
-    <div>
+  <div class="wrap what-is-wrap" data-reveal-group>
+    <div data-reveal="up">
       <span class="eyebrow"><%= t('home.multipleChildren.eyebrow') %></span>
       <h2><%= t('home.multipleChildren.heading') %></h2>
       <p><%= t('home.multipleChildren.intro') %></p>
     </div>
-    <div class="card" style="max-width:480px;">
+    <div class="card" data-reveal="up" style="max-width:480px;">
       <div class="dash-preview-head" style="padding:0 0 14px;">
         <strong style="font-family:var(--font-heading); font-size:15px; color:var(--forest);"><%= t('home.multipleChildren.cardTitle') %></strong>
         <span class="sample-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg> <%= t('home.multipleChildren.sampleView') %></span>
@@ -182,14 +182,14 @@ const SHOW_TRUST_STATS = false;
      /schools and /caterers, not here. -->
 <section class="section on-tint" id="b2b-pathways">
   <div class="wrap">
-    <div class="grid-2">
-      <div class="benefit-card">
+    <div class="grid-2" data-reveal-group>
+      <div class="benefit-card" data-reveal="up">
         <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9l8-5 8 5v12"/><path d="M9 21v-6h6v6"/></svg></div>
         <h3><%= t('home.b2b.schoolsTitle') %></h3>
         <p><%= t('home.b2b.schoolsBody') %></p>
         <a href="<%= locale === 'ar' ? '/ar/schools' : '/schools' %>" class="btn btn-primary btn-sm"><%= t('home.b2b.schoolsCta') %></a>
       </div>
-      <div class="benefit-card">
+      <div class="benefit-card" data-reveal="up">
         <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8 12 4l8 4-8 4-8-4Z"/><path d="M4 8v8l8 4 8-4V8"/></svg></div>
         <h3><%= t('home.b2b.caterersTitle') %></h3>
         <p><%= t('home.b2b.caterersBody') %></p>
@@ -202,11 +202,11 @@ const SHOW_TRUST_STATS = false;
 <!-- 4.8 App -->
 <section class="section" id="app">
   <div class="wrap app-section-wrap">
-    <div>
+    <div data-reveal="up">
       <span class="eyebrow"><%= t('home.app.eyebrow') %></span>
       <h2><%= t('home.app.headingLine1') %><br><%= t('home.app.headingLine2') %></h2>
       <p class="app-flow-intro"><%= t('home.app.flowIntro') %></p>
-      <div class="app-steps">
+      <div class="app-steps" data-reveal="sequence">
         <div class="app-step">
           <span class="app-step-num">01</span>
           <span class="app-step-label"><%= t('home.app.flowMenu') %></span>
@@ -278,10 +278,10 @@ const SHOW_TRUST_STATS = false;
 </section>
 
 <!-- 4.10 Final CTA — separated by intent, not one generic button -->
-<section class="cta-band"><div class="wrap closing-parent">
-  <span class="eyebrow on-dark"><%= t('home.finalCta.eyebrow') %></span>
-  <h2><%= t('home.finalCta.heading') %></h2><p><%= t('home.finalCta.parentBody') %></p>
-  <div class="action-row"><a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-school-yellow"><%= t('common.createAccount') %></a><a href="<%= locale === 'ar' ? '/ar/login' : '/login' %>" class="btn btn-outline-light"><%= t('common.login') %></a></div>
+<section class="cta-band"><div class="wrap closing-parent" data-reveal-group>
+  <span data-reveal="up" class="eyebrow on-dark"><%= t('home.finalCta.eyebrow') %></span>
+  <h2 data-reveal="up"><%= t('home.finalCta.heading') %></h2><p data-reveal="up"><%= t('home.finalCta.parentBody') %></p>
+  <div class="action-row" data-reveal="up"><a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-school-yellow"><%= t('common.createAccount') %></a><a href="<%= locale === 'ar' ? '/ar/login' : '/login' %>" class="btn btn-outline-light"><%= t('common.login') %></a></div>
 </div></section>
 </main>
 

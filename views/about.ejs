@@ -20,21 +20,21 @@
 
 <section class="section on-tint">
   <div class="wrap">
-    <div class="section-head">
-      <span class="eyebrow"><%= t('about.connects.eyebrow') %></span>
-      <h2><%= t('about.connects.heading') %></h2>
-      <p><%= t('about.connects.intro') %></p>
+    <div class="section-head" data-reveal-group>
+      <span data-reveal="up" class="eyebrow"><%= t('about.connects.eyebrow') %></span>
+      <h2 data-reveal="up"><%= t('about.connects.heading') %></h2>
+      <p data-reveal="up"><%= t('about.connects.intro') %></p>
     </div>
-    <div class="benefit-icon-grid">
-      <div class="benefit-card">
+    <div class="benefit-icon-grid" data-reveal-group>
+      <div class="benefit-card" data-reveal="up">
         <h3><%= t('about.connects.parentsTitle') %></h3>
         <p><%= t('about.connects.parentsBody') %></p>
       </div>
-      <div class="benefit-card">
+      <div class="benefit-card" data-reveal="up">
         <h3><%= t('about.connects.schoolsTitle') %></h3>
         <p><%= t('about.connects.schoolsBody') %></p>
       </div>
-      <div class="benefit-card">
+      <div class="benefit-card" data-reveal="up">
         <h3><%= t('about.connects.caterersTitle') %></h3>
         <p><%= t('about.connects.caterersBody') %></p>
       </div>
@@ -44,21 +44,21 @@
 
 <section class="section">
   <div class="wrap what-is-wrap">
-    <div>
+    <div data-reveal="up">
       <span class="eyebrow"><%= t('about.story.eyebrow') %></span>
       <h2><%= t('about.story.heading') %></h2>
       <p><%= t('about.story.intro') %></p>
     </div>
-    <div class="what-is-pillars">
-      <div class="what-is-pillar">
+    <div class="what-is-pillars" data-reveal-group>
+      <div class="what-is-pillar" data-reveal="up">
         <span class="what-is-num"><%= t('about.story.pillar1Label') %></span>
         <strong><%= t('about.story.pillar1Body') %></strong>
       </div>
-      <div class="what-is-pillar">
+      <div class="what-is-pillar" data-reveal="up">
         <span class="what-is-num"><%= t('about.story.pillar2Label') %></span>
         <strong><%= t('about.story.pillar2Body') %></strong>
       </div>
-      <div class="what-is-pillar">
+      <div class="what-is-pillar" data-reveal="up">
         <span class="what-is-num"><%= t('about.story.pillar3Label') %></span>
         <strong><%= t('about.story.pillar3Body') %></strong>
       </div>
@@ -67,10 +67,10 @@
 </section>
 
 <section class="section on-tint">
-  <div class="wrap" style="text-align:center; max-width:640px;">
-    <span class="eyebrow" style="justify-content:center;"><%= t('about.cta.eyebrow') %></span>
-    <h2 style="margin:16px 0 14px;"><%= t('about.cta.heading') %></h2>
-    <p style="color:var(--forest-secondary); font-size:15.5px; margin-bottom:28px;"><%= t('about.cta.body') %></p>
+  <div class="wrap" style="text-align:center; max-width:640px;" data-reveal-group>
+    <span data-reveal="up" class="eyebrow" style="justify-content:center;"><%= t('about.cta.eyebrow') %></span>
+    <h2 data-reveal="up" style="margin:16px 0 14px;"><%= t('about.cta.heading') %></h2>
+    <p data-reveal="up" style="color:var(--forest-secondary); font-size:15.5px; margin-bottom:28px;"><%= t('about.cta.body') %></p>
     <a href="<%= locale === 'ar' ? '/ar/contact' : '/contact' %>" class="btn btn-primary"><%= t('about.cta.button') %></a>
   </div>
 </section>

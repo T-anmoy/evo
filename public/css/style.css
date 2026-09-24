@@ -120,6 +120,10 @@
   --reveal-scale:.97;
   --stagger-step:50ms;
   --stagger-max:250ms;
+  /* Storytelling sequences (L4, one-shot): the beat between steps of the
+     parent journey. Process rails and the caterer flow run on fractions
+     of it, so every sequence stays in one rhythm family. */
+  --sequence-step:360ms;
 
   /* ---------- layout tokens (Phase 3 consolidation) ----------
      Named so a page's structural width/rhythm reads as intent, not a
@@ -1127,15 +1131,19 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   border:1.5px solid var(--school-yellow); opacity:0; pointer-events:none;
 }
 .tap-reader .ripple.delay{animation-delay:180ms;}
+/* Collection loop timing (5.2s): card rests to 15%, reaches the reader
+   at 32% — the reader ring and ripple answer on that same beat (peak
+   ~34%) rather than a third of a second later, so tap → response reads
+   as one cause and effect. */
 @keyframes tap-contact-scale{
-  0%,30%{transform:scale(1);}
-  38%{transform:scale(1.08);}
-  50%,100%{transform:scale(1);}
+  0%,31%{transform:scale(1);}
+  34%{transform:scale(1.06);}
+  44%,100%{transform:scale(1);}
 }
 @keyframes tap-ripple{
-  0%,30%{opacity:0; transform:scale(.8);}
-  38%{opacity:.55;}
-  60%{opacity:0; transform:scale(1.9);}
+  0%,31%{opacity:0; transform:scale(.8);}
+  34%{opacity:.55;}
+  56%{opacity:0; transform:scale(1.9);}
   100%{opacity:0; transform:scale(1.9);}
 }
 .tap-reader .reader-label{font-family:var(--font-heading); font-weight:700; font-size:12px; color:rgba(255,255,255,0.55); letter-spacing:0.04em;}
@@ -1150,10 +1158,14 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .tap-card .chip{width:20px; height:14px; border-radius:3px; background:rgba(20,61,50,0.35);}
 .tap-card .card-name{font-family:var(--font-heading); font-weight:800; font-size:11px; color:var(--ink);}
 
+/* Approach → contact (a barely-there .985 press at 32%) → release →
+   lift away while the confirmation arrives → settle back. */
 @keyframes tap-move{
   0%,15%{transform:translate(-50%,0) rotate(-8deg);}
-  32%{transform:translate(-50%,46px) rotate(-2deg);}
-  45%{transform:translate(-50%,10px) rotate(-4deg);}
+  30%{transform:translate(-50%,44px) rotate(-2.5deg);}
+  32%{transform:translate(-50%,46px) rotate(-2deg) scale(.985);}
+  36%{transform:translate(-50%,44px) rotate(-2deg) scale(1);}
+  46%{transform:translate(-50%,10px) rotate(-4deg);}
   60%,100%{transform:translate(-50%,0) rotate(-8deg);}
 }
 @keyframes tap-pulse{
@@ -1166,11 +1178,13 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
   margin-top:22px; background:var(--white); border-radius:14px; padding:14px 16px;
   display:flex; align-items:center; gap:12px; box-shadow:var(--shadow-lg);
 }
+/* Confirmation follows the reader's response (~260ms after contact),
+   rises 6px, then holds ~2.2s — long enough to read both lines — before
+   a soft fade ahead of the next loop. */
 @keyframes toast-in{
-  0%,40%{opacity:0; transform:translateY(10px);}
-  50%,88%{opacity:1; transform:translateY(0);}
-  96%{opacity:0; transform:translateY(6px);}
-  100%{opacity:0; transform:translateY(10px);}
+  0%,37%{opacity:0; transform:translateY(6px);}
+  45%,88%{opacity:1; transform:translateY(0);}
+  95%,100%{opacity:0; transform:translateY(4px);}
 }
 .tap-toast .toast-icon{width:34px; height:34px; border-radius:50%; background:var(--success-bg); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
 .tap-toast .toast-icon svg{width:16px; height:16px; color:var(--leaf-dark);}
@@ -1178,9 +1192,9 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .tap-toast .toast-title{font-family:var(--font-heading); font-weight:700; font-size:16px; color:var(--forest);}
 .tap-toast .toast-sub{font-size:16px; color:var(--muted); margin-top:2px;}
 @keyframes check-draw{
-  0%,42%{stroke-dashoffset:1px;}
-  55%,88%{stroke-dashoffset:0px;}
-  96%,100%{stroke-dashoffset:1px;}
+  0%,41%{stroke-dashoffset:1px;}
+  52%,88%{stroke-dashoffset:0px;}
+  95%,100%{stroke-dashoffset:1px;}
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -1957,6 +1971,16 @@ th{text-align:start;}
 .motion-ready [data-reveal="scale"].is-entering{animation-name:evo-reveal-scale;}
 @keyframes evo-reveal-up{from{opacity:0; transform:translateY(var(--reveal-distance));}}
 @keyframes evo-reveal-scale{from{opacity:0; transform:scale(var(--reveal-scale));}}
+/* Index/delay are per element: reset here so a reveal nested inside
+   another never inherits its ancestor's stagger (motion.js sets them
+   inline, which wins over this). */
+[data-reveal]{--reveal-index:0; --reveal-delay:0ms;}
+/* data-reveal="sequence": the container itself never fades — its steps
+   carry the pre-state and play in order once it's revealed (see the
+   parent journey / process rail rules). motion.js holds a sequence back
+   until ~30% of it is on screen. */
+.motion-ready [data-reveal="sequence"]:not(.is-revealed){opacity:1;}
+.motion-ready [data-reveal="sequence"].is-entering{animation:none;}
 @media (prefers-reduced-motion: reduce){
   .motion-ready [data-reveal]{opacity:1 !important; transform:none !important; animation:none !important;}
 }
@@ -1977,7 +2001,7 @@ th{text-align:start;}
 .home-hero-media picture,.home-hero-media img{display:block;width:100%;height:100%;object-fit:contain;}
 .home-food-grid{max-width:920px;margin-inline:auto;}
 .closing-parent{max-width:800px;}.closing-parent h2{margin-top:14px;}.closing-parent p{margin-block:16px 24px;}
-@media(max-width:767px){.home-hero-inner{grid-template-columns:minmax(0,1fr);gap:28px;}.home-hero-media-wrap{max-width:360px;}.home-hero{padding-block:32px;}.home-hero h1{font-size:clamp(30px,6vw,42px);}.home-hero .hero-copy>*{animation:none;opacity:1;transform:none;}}
+@media(max-width:767px){.home-hero-inner{grid-template-columns:minmax(0,1fr);gap:28px;}.home-hero-media-wrap{max-width:360px;}.home-hero{padding-block:32px;}.home-hero h1{font-size:clamp(30px,6vw,42px);}}
 
 .operational-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:start;}
 .operational-list{display:grid;gap:24px;}.operational-list>div{border-block-end:1px solid var(--line);padding-bottom:20px;}.operational-list h2{font-size:19px;margin-bottom:8px;}.operational-list p{font-size:15px;}
@@ -1996,3 +2020,153 @@ th{text-align:start;}
 .store-badge span{text-align:start;}
 .role-journey-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
 @media(max-width:767px){.contact-channels-inner,.role-journey-grid{grid-template-columns:minmax(0,1fr);}}
+
+/* ============================================================
+   Public-site motion (Phase 2) — built entirely on the Phase 1 tokens,
+   keyframes and reveal/sequence primitives. Everything here is wrapped
+   in prefers-reduced-motion: no-preference, so under reduced motion none
+   of it exists: every page renders complete and still.
+   Three signature moments carry the expression — the home hero arrival,
+   the Book → Pay → Tap → Notified journey, and the collection loop.
+   Everything else is a short fade/rise, grouped, played once.
+   All entrances use backwards fill: they cover their own delay, then let
+   go completely, so each element's own hover/transition rules resume.
+   ============================================================ */
+@keyframes evo-reveal-rise-scale{from{opacity:0; transform:translateY(var(--reveal-distance)) scale(var(--reveal-scale));}}
+/* Drawn connectors and journey rules. Origin and positioning live inside
+   the keyframes on purpose: they exist only while a line is drawing, so
+   once a sequence finishes every element's computed style is exactly
+   what it was before — nothing left behind at rest. Only one axis ever
+   scales, so --draw-origin is the inline-start edge *and* the top. */
+@keyframes evo-draw-x{from{transform-origin:var(--draw-origin); transform:scaleX(0);} to{transform-origin:var(--draw-origin); transform:scaleX(1);}}
+@keyframes evo-draw-y{from{transform-origin:var(--draw-origin); transform:scaleY(0);} to{transform-origin:var(--draw-origin); transform:scaleY(1);}}
+/* The journey's rule is its item's own border, which can't scale — so a
+   stand-in (::before) draws over it, positioned only for the duration,
+   while the item holds its real border transparent and itself relative. */
+@keyframes evo-hold-rule{from,to{border-color:transparent; position:relative;}}
+@keyframes evo-rule-x{
+  from{position:absolute; top:-2px; inset-inline:0; height:2px; transform-origin:var(--draw-origin); transform:scaleX(0);}
+  to{position:absolute; top:-2px; inset-inline:0; height:2px; transform-origin:var(--draw-origin); transform:scaleX(1);}
+}
+@keyframes evo-rule-y{
+  from{position:absolute; top:0; bottom:0; height:auto; inset-inline-start:-2px; width:2px; transform-origin:var(--draw-origin); transform:scaleY(0);}
+  to{position:absolute; top:0; bottom:0; height:auto; inset-inline-start:-2px; width:2px; transform-origin:var(--draw-origin); transform:scaleY(1);}
+}
+:root{--draw-origin:left top;}
+[dir="rtl"]{--draw-origin:right top;}
+
+@media (prefers-reduced-motion: no-preference){
+
+  /* ---------- Signature 1: home hero arrival (~700ms, CSS-only) ----------
+     Plays from first paint with no JS dependency, so there's nothing to
+     wait on and nothing to fail. Overlapping beats: eyebrow → headline →
+     lede → actions, with the portrait settling in alongside. The image's
+     loading priority is untouched and it starts after one short beat. */
+  .home-hero .hero-copy > *{animation:evo-reveal-up var(--dur-elevated) var(--ease-out) backwards;}
+  .home-hero .hero-copy > .eyebrow{--reveal-distance:6px;}
+  .home-hero .hero-copy > h1{--reveal-distance:12px; animation-delay:calc(var(--stagger-step) * 1.5);}
+  .home-hero .hero-copy > .lede{--reveal-distance:8px; animation-delay:calc(var(--stagger-step) * 3);}
+  .home-hero .hero-copy > .action-row{--reveal-distance:6px; animation-delay:calc(var(--stagger-step) * 4.5);}
+  .home-hero-media-wrap{
+    --reveal-distance:10px; --reveal-scale:.985;
+    animation:evo-reveal-rise-scale calc(var(--dur-elevated) + var(--stagger-step) * 2) var(--ease-out) var(--stagger-step) backwards;
+  }
+
+  /* ---------- page arrival (inner heroes, parent intro, auth, errors) ----
+     The same family as the home hero, one notch quieter. */
+  :is(.hero-inner-page .hero-copy, .parent-intro-copy) > *{
+    --reveal-distance:8px;
+    animation:evo-reveal-up var(--dur-elevated) var(--ease-out) backwards;
+  }
+  :is(.hero-inner-page .hero-copy, .parent-intro-copy) > :nth-child(2){animation-delay:var(--stagger-step);}
+  :is(.hero-inner-page .hero-copy, .parent-intro-copy) > :nth-child(3){animation-delay:calc(var(--stagger-step) * 2);}
+  :is(.hero-inner-page .hero-copy, .parent-intro-copy) > :nth-child(n+4){animation-delay:calc(var(--stagger-step) * 3);}
+
+  .auth-card{--reveal-distance:8px; animation:evo-reveal-up calc(var(--dur-elevated) * .9) var(--ease-out) backwards;}
+
+  .notfound-card > *{--reveal-distance:6px; animation:evo-reveal-up var(--dur-elevated) var(--ease-out) backwards;}
+  .notfound-card > .notfound-mark{--reveal-scale:.92; animation-name:evo-reveal-scale; animation-delay:var(--stagger-step);}
+  .notfound-card > h1{animation-delay:calc(var(--stagger-step) * 2);}
+  .notfound-card > p{animation-delay:calc(var(--stagger-step) * 3);}
+  .notfound-card > .notfound-actions{animation-delay:calc(var(--stagger-step) * 4);}
+
+  /* ---------- Signature 2: the parent journey (~1.7s, once) ----------
+     Each step's rule (its top border — inline-start border when stacked)
+     draws first, then its number and copy arrive: Book → Pay → Tap →
+     Notified, one beat (--sequence-step) apart. The real border is held
+     transparent only until its drawn stand-in finishes, so the resting
+     result is the original border, unchanged. Colors are the component's
+     own; motion only adds order. */
+  .parent-journey > :nth-child(1){--seq:0;}
+  .parent-journey > :nth-child(2){--seq:1;}
+  .parent-journey > :nth-child(3){--seq:2;}
+  .parent-journey > :nth-child(4){--seq:3;}
+  /* A short lead-in so the story always follows its section heading. */
+  .parent-journey{--seq-offset:calc(var(--stagger-step) * 3);}
+  .motion-ready .parent-journey[data-reveal]:not(.is-revealed) > .journey-item{border-color:transparent;}
+  .motion-ready .parent-journey[data-reveal]:not(.is-revealed) > .journey-item > *{opacity:0;}
+  .motion-ready .parent-journey.is-entering > .journey-item{
+    animation:evo-hold-rule calc(var(--seq) * var(--sequence-step) + var(--seq-offset) + var(--dur-standard)) linear;
+  }
+  .motion-ready .parent-journey.is-entering > .journey-item::before{
+    /* At rest: an in-flow, zero-height, empty block — layout-neutral. */
+    content:""; display:block; height:0; background:var(--line-strong); pointer-events:none;
+    animation:evo-rule-x var(--dur-standard) var(--ease-standard) calc(var(--seq) * var(--sequence-step) + var(--seq-offset)) backwards;
+  }
+  .motion-ready .parent-journey.is-entering > .journey-item > *{
+    --reveal-distance:6px;
+    animation:evo-reveal-up var(--dur-elevated) var(--ease-out) calc(var(--seq) * var(--sequence-step) + var(--seq-offset) + var(--stagger-step) * 2) backwards;
+  }
+  .motion-ready .parent-journey.is-entering .journey-number{
+    --reveal-scale:.8;
+    animation:evo-reveal-scale var(--dur-standard) var(--ease-out) calc(var(--seq) * var(--sequence-step) + var(--seq-offset) + var(--stagger-step) * 2) backwards;
+  }
+  /* The caterer flow shares the component but is an operational hand-off,
+     not the parent story: same order, a quicker beat. */
+  .operational-journey{--sequence-step:260ms;}
+
+  /* ---------- process rails (How It Works) + the home app steps ----------
+     Compact and subordinate to the journey: node, connector, node, …
+     on a beat of ~45% of the journey's, so a three-step rail completes in
+     under a second. Connectors grow from the first step's side (right in
+     Arabic, where the rail itself runs right-to-left). */
+  :is(.process-rail, .app-steps) > :nth-child(1){--seq:0;}
+  :is(.process-rail, .app-steps) > :nth-child(2){--seq:1;}
+  :is(.process-rail, .app-steps) > :nth-child(3){--seq:2;}
+  :is(.process-rail, .app-steps) > :nth-child(4){--seq:3;}
+  :is(.process-rail, .app-steps) > :nth-child(5){--seq:4;}
+  :is(.process-rail, .app-steps){--seq-unit:calc(var(--sequence-step) * .45); --seq-offset:0ms;}
+  .role-journey-card:nth-child(2) .process-rail{--seq-offset:calc(var(--sequence-step) * .5);}
+  .motion-ready :is(.process-rail, .app-steps)[data-reveal]:not(.is-revealed) > :is(.process-step, .app-step){opacity:0;}
+  .motion-ready :is(.process-rail, .app-steps)[data-reveal]:not(.is-revealed) > :is(.process-connector, .app-step-connector){transform:scaleX(0);}
+  .motion-ready :is(.process-rail, .app-steps).is-entering > :is(.process-step, .app-step){
+    --reveal-scale:.94;
+    animation:evo-reveal-scale var(--dur-standard) var(--ease-out) calc(var(--seq) * var(--seq-unit) + var(--seq-offset)) backwards;
+  }
+  .motion-ready :is(.process-rail, .app-steps).is-entering > :is(.process-connector, .app-step-connector){
+    animation:evo-draw-x var(--dur-fast) var(--ease-standard) calc(var(--seq) * var(--seq-unit) + var(--seq-offset)) backwards;
+  }
+
+  /* ---------- food: tactile on real pointers only ----------
+     Public food cards only (the ones pages opt into with data-reveal —
+     the authenticated menu renders the same partial without it). */
+  @media (hover:hover) and (pointer:fine){
+    .food-card[data-reveal]{transition:transform var(--dur-standard) var(--ease-out), box-shadow var(--dur-standard) var(--ease-out);}
+    .food-card[data-reveal]:hover{transform:translateY(-2px); box-shadow:var(--shadow-sm);}
+    .food-card[data-reveal] .food-image img{transition:transform calc(var(--dur-standard) + var(--stagger-step)) var(--ease-out);}
+    .food-card[data-reveal]:hover .food-image img{transform:scale(1.02);}
+  }
+
+  /* ---------- lighter on phones ----------
+     Shorter travel, tighter stagger, quicker story beat; the hero
+     portrait simply fades (no rise/scale) so the first screen stays calm. */
+  @media (max-width:600px){
+    :root{--reveal-distance:10px; --stagger-step:40ms; --sequence-step:320ms;}
+    .motion-ready .parent-journey.is-entering > .journey-item::before{animation-name:evo-rule-y;}
+    .motion-ready .process-rail[data-reveal]:not(.is-revealed) > .process-connector{transform:scaleY(0);}
+    .motion-ready .process-rail.is-entering > .process-connector{animation-name:evo-draw-y;}
+  }
+  @media (max-width:767px){
+    .home-hero-media-wrap{--reveal-distance:0px; --reveal-scale:1;}
+  }
+}

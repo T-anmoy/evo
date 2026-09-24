@@ -21,11 +21,33 @@
     if (observer) observer.unobserve(el);
   }
 
+  // A sequence (data-reveal="sequence": the parent journey, process
+  // rails) tells a story over ~1-2s, so it waits until a real share of it
+  // is on screen — 30% of the element, or 30% of the viewport for one
+  // taller than that — instead of starting on its first pixel. Every
+  // other reveal fires on entry.
+  function seenEnough(entry) {
+    if (entry.target.getAttribute('data-reveal') !== 'sequence') return true;
+    var root = entry.rootBounds;
+    return entry.intersectionRatio >= 0.3 || (root && entry.intersectionRect.height >= root.height * 0.3);
+  }
+
   function onIntersect(entries) {
+    // Stagger is counted per group *within this batch*, so whichever
+    // members arrive together (a row scrolled into view) step in from 0 —
+    // a later row never inherits a long delay from its document position.
+    var groups = [], counts = [];
     entries.forEach(function (entry) {
       var el = entry.target;
-      if (loops.indexOf(el) !== -1) el.classList.toggle('is-offscreen', !entry.isIntersecting);
-      else if (entry.isIntersecting) reveal(el, !reduced());
+      if (loops.indexOf(el) !== -1) { el.classList.toggle('is-offscreen', !entry.isIntersecting); return; }
+      if (!entry.isIntersecting || !seenEnough(entry)) return;
+      var group = el.closest('[data-reveal-group]');
+      if (group) {
+        var g = groups.indexOf(group);
+        if (g === -1) { g = groups.push(group) - 1; counts.push(0); }
+        el.style.setProperty('--reveal-index', counts[g]++);
+      }
+      reveal(el, !reduced());
     });
   }
 
@@ -51,14 +73,9 @@
     var root = document.documentElement;
     try {
       if (!('IntersectionObserver' in window)) throw new Error('no IntersectionObserver');
-      observer = new IntersectionObserver(onIntersect, { rootMargin: '0px 0px -8% 0px' });
-      // Stagger index within a group; the CSS caps the resulting delay
-      // at --stagger-max, so a long group can never trail on and on.
-      document.querySelectorAll('[data-reveal-group]').forEach(function (group) {
-        group.querySelectorAll('[data-reveal]').forEach(function (el, i) {
-          el.style.setProperty('--reveal-index', i);
-        });
-      });
+      // Thresholds 0/.15/.3 give seenEnough() a callback to act on as a
+      // sequence scrolls further in; plain reveals still act on the first.
+      observer = new IntersectionObserver(onIntersect, { rootMargin: '0px 0px -8% 0px', threshold: [0, 0.15, 0.3] });
       registerReveals(document);
       loops.forEach(function (el) { observer.observe(el); });
       // Two frames later, not now: the first frame renders the page

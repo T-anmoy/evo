@@ -3,7 +3,10 @@
       an h3 (the default, unchanged for every public caller), while a grid
       sitting directly under a page h1 wants an h2. */ %>
 <% const foodHeading = typeof headingLevel === 'undefined' ? 'h3' : headingLevel; %>
-<article class="food-card food-card--<%= foodVariant %>">
+<% /* Public pages pass reveal:true for the scroll entrance + pointer hover;
+      the authenticated menu omits it and stays still. */ %>
+<% const foodReveal = typeof reveal !== 'undefined' && reveal; %>
+<article class="food-card food-card--<%= foodVariant %>"<%- foodReveal ? ' data-reveal="up"' : '' %>>
   <div class="food-image"><%- include('dish-image', {m, eager: typeof eager !== 'undefined' && eager}) %></div>
   <div class="food-body">
     <% if(foodVariant === 'featured') { %><h2 lang="en" dir="auto"><%= m.name %></h2><% } else { %><<%= foodHeading %> lang="en" dir="auto"><%= m.name %></<%= foodHeading %>><% } %>
