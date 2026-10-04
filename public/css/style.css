@@ -2235,3 +2235,6 @@ th{text-align:start;}
 .terms-dialog .faq-content{grid-template-rows:1fr;}
 .terms-dialog .faq-answer{visibility:visible;}
 .terms-dialog form{display:flex;flex-wrap:wrap;gap:12px;}
+
+/* Client edits, Phase 5: balance the visible booking/payment journey. */
+@media(min-width:769px){.parent-journey.journey-two{grid-template-columns:repeat(2,minmax(0,1fr));}}

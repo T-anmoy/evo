@@ -22,13 +22,13 @@
   </div>
 </section>
 
-<section class="section"><div class="wrap"><h2 data-reveal="up"><%= t('howItWorks.roleFlows.parentTitle') %></h2><p data-reveal="up"><%= t('parents.journey.intro') %></p><%- include('partials/parent-journey') %></div></section>
+<section class="section"><div class="wrap"><h2 data-reveal="up"><%= t('howItWorks.roleFlows.parentTitle') %></h2><p data-reveal="up"><%= t(features.showCollection ? 'parents.journey.intro' : 'parents.journey.introWithoutCollection') %></p><%- include('partials/parent-journey') %></div></section>
 
 <section class="section">
   <div class="wrap">
     <div class="section-head" data-reveal-group>
       <span data-reveal="up" class="eyebrow"><%= t('howItWorks.roleFlows.eyebrow') %></span>
-      <h2 data-reveal="up"><%= t('howItWorks.roleFlows.heading') %></h2><p data-reveal="up"><%= t('howItWorks.roleNote') %></p>
+      <h2 data-reveal="up"><%= t('howItWorks.roleFlows.heading') %></h2><% if (features.showCollection) { %><p data-reveal="up"><%= t('howItWorks.roleNote') %></p><% } %>
     </div>
     <div class="role-journey-grid">
       <div class="role-journey-card">

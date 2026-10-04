@@ -13,6 +13,7 @@ const pino = require('pino');
 const pinoHttp = require('pino-http');
 const { csrfSync } = require('csrf-sync');
 const db = require('./db');
+const { FEATURES } = require('./lib/features');
 const { calculateBookingTotal, endOfMonthISO } = require('./lib/pricing');
 const { validateMealInput, bookingWindow } = require('./lib/booking-input');
 const { maskCivilId } = require('./lib/mask');
@@ -162,6 +163,7 @@ app.use((req, res, next) => {
     locale = 'en'; // unprefixed public/pre-auth pages are always English
   }
 
+  res.locals.features = FEATURES;
   res.locals.locale = locale;
   res.locals.lang = locale;
   res.locals.dir = locale === 'ar' ? 'rtl' : 'ltr';

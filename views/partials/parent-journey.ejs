@@ -1,5 +1,5 @@
-<ol class="parent-journey" data-reveal="sequence">
-  <% for(let step=1;step<=4;step++){ %>
+<ol class="parent-journey<%= features.showCollection ? '' : ' journey-two' %>" data-reveal="sequence">
+  <% for(let step=1;step<=(features.showCollection ? 4 : 2);step++){ %>
     <li class="journey-item<%= step === 3 ? ' journey-attention' : step === 4 ? ' journey-complete' : '' %>">
       <span class="journey-label"><bdi class="journey-number">0<%= step %></bdi> <%= t('parents.journey.step'+step+'Label') %></span>
       <h3><%= t('parents.journey.step'+step+'Title') %></h3>

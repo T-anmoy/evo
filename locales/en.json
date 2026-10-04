@@ -146,7 +146,8 @@
     "address": "Farwaniya, Kuwait",
     "instagram": "Instagram",
     "copyright": "© {year} Evo Meals · Kuwait",
-    "disclaimer": "Evo Meals connects parents with an independent catering partner — it does not prepare meals itself."
+    "disclaimer": "Evo Meals connects parents with an independent catering partner — it does not prepare meals itself.",
+    "taglineWithoutCollection": "School meals in Kuwait: food information and parent bookings in one place."
   },
   "a11y": {
     "skipToContent": "Skip to content"
@@ -180,7 +181,8 @@
       "ctaHowItWorks": "See How It Works",
       "toastTitle": "Sara tapped in — lunch collected",
       "toastSub": "12:04 PM · Arabiatta Chicken Pasta · illustrative example",
-      "imgAlt": "A student opening a school lunch box"
+      "imgAlt": "A student opening a school lunch box",
+      "ledeWithoutCollection": "Explore the food and arrange meals for your child in one parent account."
     },
     "supportedSchools": {
       "eyebrow": "Check your school",
@@ -336,7 +338,8 @@
       "headlineEm": "Every school day.",
       "lede": "See the food first. Choose a meal and plan, review the total, and explore how collection is recorded.",
       "toastTitle": "Ahmed tapped in — lunch collected",
-      "toastSub": "12:14 PM · Arabiatta Chicken Pasta · illustrative example"
+      "toastSub": "12:14 PM · Arabiatta Chicken Pasta · illustrative example",
+      "ledeWithoutCollection": "See the food first, choose your meals, and review the total."
     },
     "journey": {
       "eyebrow": "How it works for you",
@@ -364,7 +367,9 @@
       "phase2Label": "At school",
       "phase2Body": "Child collects",
       "phase3Label": "After collection",
-      "phase3Body": "You see the confirmation"
+      "phase3Body": "You see the confirmation",
+      "headingWithoutCollection": "From booking to payment.",
+      "introWithoutCollection": "Choose your meals and confirm a simulated payment. No money moves in this demo."
     },
     "menu": {
       "eyebrow": "A closer look at lunch",
@@ -599,7 +604,10 @@
     "bookMealCta": "Book now",
     "historyTitle": "Booking history",
     "historyBody": "Every booking, what it cost, and a one-tap cancel if plans change.",
-    "historyCta": "View history"
+    "historyCta": "View history",
+    "statusPendingWithoutCollection": "Booked",
+    "emptyNoStudentsBodyWithoutCollection": "Add your first child to start booking meals.",
+    "emptyNotificationsBodyWithoutCollection": "Booking confirmations and reminders will show up here."
   },
   "menu": {
     "eyebrow": "Sample menu",
@@ -974,7 +982,8 @@
     "statusUpcoming": "Booked",
     "footerStudentUnitOne": "student",
     "footerStudentUnitOther": "students",
-    "footerLine": "Evo Meals · School Admin · {count} {unit} on record at {school}"
+    "footerLine": "Evo Meals · School Admin · {count} {unit} on record at {school}",
+    "statPendingWithoutCollection": "Booked meals"
   },
   "adminNav": {
     "tag": "School Admin",

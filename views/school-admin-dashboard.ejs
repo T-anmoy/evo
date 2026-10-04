@@ -31,7 +31,7 @@
     </div>
     <div class="stat">
       <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg></div>
-      <div class="label"><%= t('schoolAdminDashboard.statPendingOrders') %></div>
+      <div class="label"><%= t(features.showCollection ? 'schoolAdminDashboard.statPendingOrders' : 'schoolAdminDashboard.statPendingWithoutCollection') %></div>
       <div class="value data-num"><%= pendingOrders %></div>
     </div>
   </div>
@@ -92,7 +92,7 @@
                 <td class="data-num"><bdi><%= fmtDate(b.startDate) %></bdi></td>
                 <td class="data-num"><bdi><%= fmtKWD(b.totalKWD) %></bdi></td>
                 <td>
-                  <% if (b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schoolAdminDashboard.statusCollected') %></span>
+                  <% if (features.showCollection && b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schoolAdminDashboard.statusCollected') %></span>
                   <% } else if (b.status === 'cancelled') { %><span class="badge badge-cancelled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg> <%= t('schoolAdminDashboard.statusCancelled') %></span>
                   <% } else { %><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> <%= t('schoolAdminDashboard.statusUpcoming') %></span><% } %>
                 </td>
@@ -109,7 +109,7 @@
                 <strong><%= b.student ? b.student.name : '—' %></strong>
                 <span lang="en" dir="auto"><%= b.menuItem ? b.menuItem.name : '—' %></span>
               </div>
-              <% if (b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schoolAdminDashboard.statusCollected') %></span>
+              <% if (features.showCollection && b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schoolAdminDashboard.statusCollected') %></span>
               <% } else if (b.status === 'cancelled') { %><span class="badge badge-cancelled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg> <%= t('schoolAdminDashboard.statusCancelled') %></span>
               <% } else { %><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> <%= t('schoolAdminDashboard.statusUpcoming') %></span><% } %>
             </div>

@@ -35,7 +35,7 @@ const SHOW_TRUST_STATS = false;
     <div class="hero-copy">
       <span class="eyebrow"><%= t('home.hero.eyebrow') %></span>
       <h1><%= t('home.hero.headlinePre') %> <em><%= t('home.hero.headlineEm') %></em></h1>
-      <p class="lede"><%= t('home.hero.lede') %></p>
+      <p class="lede"><%= t(features.showCollection ? 'home.hero.lede' : 'home.hero.ledeWithoutCollection') %></p>
       <div class="action-row">
         <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-school-yellow"><%= t('common.createAccount') %></a>
         <a href="#supported-schools"><%= t('home.hero.ctaCheckSchool') %> →</a>
@@ -115,11 +115,12 @@ const SHOW_TRUST_STATS = false;
      sequence. This is the homepage summary; the full explanation (plus
      role-by-role flows) lives on /how-it-works. -->
 <section class="section on-tint" id="how-it-works"><div class="wrap">
-  <div class="section-head" data-reveal-group><span data-reveal="up" class="eyebrow"><%= t('parents.journey.eyebrow') %></span><h2 data-reveal="up"><%= t('parents.journey.heading') %></h2><p data-reveal="up"><%= t('parents.journey.intro') %></p></div>
+  <div class="section-head" data-reveal-group><span data-reveal="up" class="eyebrow"><%= t('parents.journey.eyebrow') %></span><h2 data-reveal="up"><%= t(features.showCollection ? 'parents.journey.heading' : 'parents.journey.headingWithoutCollection') %></h2><p data-reveal="up"><%= t(features.showCollection ? 'parents.journey.intro' : 'parents.journey.introWithoutCollection') %></p></div>
   <%- include('partials/parent-journey') %>
 </div></section>
 
 <!-- 4.5 Collection proof -->
+<% if (features.showCollection) { %>
 <section class="section on-cream" id="collection-proof">
   <div class="wrap">
     <div class="section-head" data-reveal-group>
@@ -130,6 +131,7 @@ const SHOW_TRUST_STATS = false;
     <%- include('partials/collection-demo') %>
   </div>
 </section>
+<% } %>
 <section class="proof-section" id="supported-schools">
   <div class="wrap-wide proof-wrap">
     <div class="proof-intro" data-reveal="up">
@@ -164,7 +166,7 @@ const SHOW_TRUST_STATS = false;
           <strong>Ahmed</strong>
           <span><%= t('home.multipleChildren.child1School') %></span>
         </div>
-        <span class="status-line ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('home.multipleChildren.statusCollected') %></span>
+        <% if (features.showCollection) { %><span class="status-line ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('home.multipleChildren.statusCollected') %></span><% } else { %><span class="status-line pending"><%= t('home.multipleChildren.statusBooked') %></span><% } %>
       </div>
       <div class="student-row">
         <div class="avatar">S</div>
@@ -245,12 +247,14 @@ const SHOW_TRUST_STATS = false;
       <h2><%= t('home.faq.heading') %></h2>
     </div>
     <div class="faq-list">
+<% if (features.showCollection) { %>
       <div class="faq-item is-open">
         <button class="faq-summary" type="button" aria-expanded="true"><span><%= t('home.faq.q1') %></span><span class="plus" aria-hidden="true"></span></button>
         <div class="faq-content">
           <div class="faq-answer"><div class="faq-answer-inner"><%= t('home.faq.a1') %></div></div>
         </div>
       </div>
+<% } %>
       <div class="faq-item">
         <button class="faq-summary" type="button" aria-expanded="false"><span><%= t('home.faq.q2') %></span><span class="plus" aria-hidden="true"></span></button>
         <div class="faq-content">
@@ -263,12 +267,14 @@ const SHOW_TRUST_STATS = false;
           <div class="faq-answer"><div class="faq-answer-inner"><%= t('home.faq.a3') %></div></div>
         </div>
       </div>
+<% if (features.showCollection) { %>
       <div class="faq-item">
         <button class="faq-summary" type="button" aria-expanded="false"><span><%= t('home.faq.q4') %></span><span class="plus" aria-hidden="true"></span></button>
         <div class="faq-content">
           <div class="faq-answer"><div class="faq-answer-inner"><%= t('home.faq.a4') %></div></div>
         </div>
       </div>
+<% } %>
     </div>
     <p class="nutrition-more"><%- t('home.faq.footnote', {
       parents: `<a href="${locale === 'ar' ? '/ar/parents' : '/parents'}">${t('home.faq.footnoteParents')}</a>`,

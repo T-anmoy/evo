@@ -3,7 +3,7 @@
   <div class="capability-map" data-reveal-group>
     <% [['parents','parents'],['schools','schools'],['caterers','caterers'],['students','parents'],['admins','schools']].forEach(([role,path]) => { %>
       <section class="capability-unit" data-reveal="up"><h3><%= t('featuresSection.'+role+'Title') %></h3>
-        <ul><li><%= t('featuresSection.'+role+'Chip1') %></li><li><%= t('featuresSection.'+role+'Chip2') %></li></ul>
+        <ul><li><%= t('featuresSection.'+role+'Chip1') %></li><% if (role !== 'students' || features.showCollection) { %><li><%= t('featuresSection.'+role+'Chip2') %></li><% } %></ul>
         <a href="<%= locale === 'ar' ? '/ar' : '' %>/<%= path %>"><%= t('nav.for'+path.charAt(0).toUpperCase()+path.slice(1)) %> →</a>
       </section>
     <% }) %>

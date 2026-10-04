@@ -3,7 +3,7 @@
   <div class="wrap site-foot-top">
     <div class="site-foot-brand">
       <a href="<%= fp === '' ? '/' : fp %>" class="site-logo"><%- include('brand-logo', { variant: 'on-dark' }) %></a>
-      <p><%= t('footer.tagline') %></p>
+      <p><%= t(features.showCollection ? 'footer.tagline' : 'footer.taglineWithoutCollection') %></p>
     </div>
     <div class="site-foot-links">
       <div class="foot-col">

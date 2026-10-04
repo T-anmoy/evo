@@ -146,7 +146,8 @@
     "address": "الفروانية، الكويت",
     "instagram": "إنستغرام",
     "copyright": "© {year} Evo Meals · الكويت",
-    "disclaimer": "تربط Evo Meals أولياء الأمور بشريك تموين مستقل — ولا تتولى تحضير الوجبات بنفسها."
+    "disclaimer": "تربط Evo Meals أولياء الأمور بشريك تموين مستقل — ولا تتولى تحضير الوجبات بنفسها.",
+    "taglineWithoutCollection": "وجبات المدارس في الكويت: معلومات الطعام وحجوزات أولياء الأمور في مكان واحد."
   },
   "a11y": {
     "skipToContent": "تخطَّ إلى المحتوى"
@@ -180,7 +181,8 @@
       "ctaHowItWorks": "شاهد كيف يعمل النظام",
       "toastTitle": "سارة استلمت وجبتها بلمسة",
       "toastSub": "12:04 ظ · باستا أرابياتا بالدجاج · مثال توضيحي",
-      "imgAlt": "طالبة تفتح علبة وجبتها المدرسية"
+      "imgAlt": "طالبة تفتح علبة وجبتها المدرسية",
+      "ledeWithoutCollection": "استكشف الطعام ورتّب وجبات طفلك من حساب واحد لولي الأمر."
     },
     "supportedSchools": {
       "eyebrow": "تحقّق من مدرستك",
@@ -336,7 +338,8 @@
       "headlineEm": "في كل يوم دراسي.",
       "lede": "شاهد الطعام أولاً. اختر الوجبة والخطة وراجع الإجمالي واستكشف كيفية تسجيل الاستلام.",
       "toastTitle": "أحمد استلم وجبته بلمسة",
-      "toastSub": "12:14 ظ · باستا أرابياتا بالدجاج · مثال توضيحي"
+      "toastSub": "12:14 ظ · باستا أرابياتا بالدجاج · مثال توضيحي",
+      "ledeWithoutCollection": "تعرّف على الطعام أولًا، واختر وجباتك، وراجع الإجمالي."
     },
     "journey": {
       "eyebrow": "كيف يعمل النظام بالنسبة لك",
@@ -364,7 +367,9 @@
       "phase2Label": "في المدرسة",
       "phase2Body": "الطفل يستلم الوجبة",
       "phase3Label": "بعد الاستلام",
-      "phase3Body": "تصلك رسالة التأكيد"
+      "phase3Body": "تصلك رسالة التأكيد",
+      "headingWithoutCollection": "من الحجز إلى الدفع.",
+      "introWithoutCollection": "اختر وجباتك وأكّد الدفع التجريبي. لا تُنقل أي أموال في هذه النسخة التجريبية."
     },
     "menu": {
       "eyebrow": "نظرة أقرب على الغداء",
@@ -599,7 +604,10 @@
     "bookMealCta": "احجز الآن",
     "historyTitle": "سجل الحجوزات",
     "historyBody": "كل حجز، وتكلفته، وإمكانية إلغائه بلمسة واحدة إذا تغيّرت الخطط.",
-    "historyCta": "عرض السجل"
+    "historyCta": "عرض السجل",
+    "statusPendingWithoutCollection": "محجوزة",
+    "emptyNoStudentsBodyWithoutCollection": "أضف طفلك الأول لتبدأ حجز الوجبات.",
+    "emptyNotificationsBodyWithoutCollection": "ستظهر تأكيدات الحجز والتذكيرات هنا."
   },
   "menu": {
     "eyebrow": "قائمة نموذجية",
@@ -974,7 +982,8 @@
     "statusUpcoming": "محجوزة",
     "footerStudentUnitOne": "طالب",
     "footerStudentUnitOther": "طلاب",
-    "footerLine": "Evo Meals · إدارة المدرسة · {count} {unit} مسجَّل في {school}"
+    "footerLine": "Evo Meals · إدارة المدرسة · {count} {unit} مسجَّل في {school}",
+    "statPendingWithoutCollection": "الوجبات المحجوزة"
   },
   "adminNav": {
     "tag": "إدارة المدرسة",

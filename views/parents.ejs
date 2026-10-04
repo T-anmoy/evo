@@ -13,7 +13,7 @@
     <div class="parent-intro-copy">
       <span class="eyebrow"><%= t('parents.hero.eyebrow') %></span>
       <h1><%= t('parents.hero.headline1') %></h1>
-      <p class="lede"><%= t('parents.hero.lede') %></p>
+      <p class="lede"><%= t(features.showCollection ? 'parents.hero.lede' : 'parents.hero.ledeWithoutCollection') %></p>
       <div class="action-row"><a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-primary"><%= t('common.createAccount') %></a><a href="<%= locale === 'ar' ? '/ar' : '/' %>#supported-schools"><%= t('nav.checkMySchool') %> →</a></div>
     </div>
     <% if(menuItems[0]) { %><%- include('partials/food-card', {m:menuItems[0],variant:'featured',eager:true,reveal:true}) %><% } %>
@@ -36,7 +36,7 @@
 </section>
 
 <section class="section on-tint" id="journey"><div class="wrap">
-  <div class="section-head" data-reveal-group><span data-reveal="up" class="eyebrow"><%= t('parents.journey.eyebrow') %></span><h2 data-reveal="up"><%= t('parents.journey.heading') %></h2><p data-reveal="up"><%= t('parents.journey.intro') %></p></div>
+  <div class="section-head" data-reveal-group><span data-reveal="up" class="eyebrow"><%= t('parents.journey.eyebrow') %></span><h2 data-reveal="up"><%= t(features.showCollection ? 'parents.journey.heading' : 'parents.journey.headingWithoutCollection') %></h2><p data-reveal="up"><%= t(features.showCollection ? 'parents.journey.intro' : 'parents.journey.introWithoutCollection') %></p></div>
   <%- include('partials/parent-journey') %>
 </div></section>
 <!-- 4. Calendar-aware pricing explanation -->
@@ -65,6 +65,7 @@
 </section>
 
 <!-- 5. Tap-to-collect + notification -->
+<% if (features.showCollection) { %>
 <section class="section" id="collection">
   <div class="wrap">
     <div class="section-head" data-reveal-group>
@@ -75,6 +76,7 @@
     <%- include('partials/collection-demo') %>
   </div>
 </section>
+<% } %>
 
 <!-- 6. Multiple children -->
 <section class="section on-tint" id="multiple-children">
@@ -95,7 +97,7 @@
           <strong>Ahmed</strong>
           <span><%= t('parents.multipleChildren.child1School') %></span>
         </div>
-        <span class="status-line ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('parents.multipleChildren.statusCollected') %></span>
+        <% if (features.showCollection) { %><span class="status-line ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('parents.multipleChildren.statusCollected') %></span><% } else { %><span class="status-line pending"><%= t('parents.multipleChildren.statusBooked') %></span><% } %>
       </div>
       <div class="student-row">
         <div class="avatar">S</div>

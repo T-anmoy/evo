@@ -1,1 +1,2 @@
-<span class="badge badge-<%= status.toLowerCase() %>"><span aria-hidden="true"><%= status === 'Collected' ? '✓' : '◷' %></span> <%= t('caterers.orderQueue.status'+status) %></span>
+<% if (status !== 'Collected' || features.showCollection) { %><span class="badge badge-<%= status.toLowerCase() %>"><span aria-hidden="true"><%= status === 'Collected' ? '✓' : '◷' %></span> <%= t('caterers.orderQueue.status'+status) %></span>
+<% } else { %><span class="badge badge-upcoming"><%= t('caterers.orderQueue.statusUpcoming') %></span><% } %>
