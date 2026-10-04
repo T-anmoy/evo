@@ -1290,12 +1290,8 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 .faq-summary .plus::after{width:1.5px; height:9px; transition:opacity var(--dur-standard) var(--ease-standard);}
 .faq-item.is-open .faq-summary .plus{transform:rotate(180deg); border-color:var(--leaf);}
 .faq-item.is-open .faq-summary .plus::after{opacity:0;}
-/* Open/close is driven by [hidden] (motion.js), so the row itself opens
-   at once — no height animation, no layout thrash, nothing for a screen
-   reader to wait on. What moves is the answer text: a short fade and
-   2px settle as it appears (opening only; closing is immediate so the
-   list below never jumps late). Scoped to .motion-ready so answers that
-   are open on first paint never animate in. */
+/* The enhanced accordion animates answer height in motion.js, then applies
+   [hidden] after closing. Unenhanced policy text remains fully readable. */
 .faq-content{
   display:grid;
   grid-template-rows:1fr;
@@ -2333,3 +2329,7 @@ th{text-align:start;}
   .booking-calendar-note{padding:16px 20px;}
   .dashboard-page .period-meta,.dashboard-page .period-figures{min-width:0;overflow-wrap:anywhere;}
 }
+
+/* Accordion transitions resize only the answer; never drive page scrolling. */
+.faq-enhanced{overflow-anchor:none;}
+.faq-enhanced .faq-content{overflow:hidden;transition:none;transform:none;opacity:1;}

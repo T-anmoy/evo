@@ -143,30 +143,45 @@
       var content = item.querySelector('.faq-content');
       var list = item.closest('.faq-list');
       if (!button || !content || !list) return;
+      list.classList.add('faq-enhanced');
       if (!groups.has(list)) groups.set(list, []);
       var group = groups.get(list);
       content.id = 'faq-panel-' + index;
       button.id = 'faq-button-' + index;
       button.setAttribute('aria-controls', content.id);
       content.setAttribute('aria-labelledby', button.id);
-      function setOpen(open) {
+      var animation = null;
+      function setOpen(open, animate) {
+        var startHeight = content.hidden ? 0 : content.getBoundingClientRect().height;
+        if (animation) { animation.cancel(); animation = null; }
         item.classList.toggle('is-open', open);
         button.setAttribute('aria-expanded', String(open));
-        content.hidden = !open;
+        content.setAttribute('aria-hidden', String(!open));
+        content.inert = !open;
+        if (!animate || reduced() || typeof content.animate !== 'function') {
+          content.hidden = !open;
+          return;
+        }
+        content.hidden = false;
+        var endHeight = open ? content.scrollHeight : 0;
+        animation = content.animate([{ height: startHeight + 'px' }, { height: endHeight + 'px' }], {
+          duration: 220, easing: 'cubic-bezier(.2,0,0,1)'
+        });
+        var current = animation;
+        current.finished.then(function() {
+          if (animation !== current) return;
+          content.hidden = !open;
+          animation = null;
+        }).catch(function() { /* A newer toggle superseded this transition. */ });
       }
       setOpen(item.classList.contains('is-open') && !group.some(function(entry) { return !entry.content.hidden; }));
-      group.push({ content: content, setOpen: setOpen });
+      group.push({ content: content, button: button, setOpen: setOpen });
       button.addEventListener('click', function() {
-        var opening = content.hidden;
-        var previousTop = button.getBoundingClientRect().top;
-        if (opening) group.forEach(function(entry) { entry.setOpen(false); });
-        setOpen(opening);
-        // Keep the tapped heading in place when a long answer above collapses.
-        // Dialogs scroll internally; changing their answers must not move the page.
-        var delta = button.getBoundingClientRect().top - previousTop;
-        var scroller = list.closest('.terms-dialog-body');
-        if (scroller) scroller.scrollTop += delta;
-        else if (delta) window.scrollBy({ top: delta, behavior: 'instant' });
+        var opening = button.getAttribute('aria-expanded') !== 'true';
+        if (opening) group.forEach(function(entry) {
+          if (entry.button !== button && entry.button.getAttribute('aria-expanded') === 'true') entry.setOpen(false, true);
+        });
+        setOpen(opening, true);
       });
     });
   }
