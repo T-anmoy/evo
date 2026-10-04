@@ -1,98 +1,23 @@
 <!DOCTYPE html>
-<html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
-<head>
-<%- include('partials/head', { title: t('meta.history.title') }) %>
-</head>
-<body>
-<%- include('partials/appnav', { active: 'history' }) %>
-
+<html lang="<%= lang %>" dir="<%= dir %>">
+<head><%- include('partials/head', { title: t('meta.history.title') }) %></head>
+<body><%- include('partials/appnav', { active: 'history' }) %>
 <main class="page" id="main-content">
-  <div class="page-head">
-    <span class="eyebrow"><%= t('history.eyebrow') %></span>
-    <h1><%= t('history.heading') %></h1>
-    <p><%= t('history.intro') %></p>
-  </div>
-
-  <% if (typeof cancelled !== 'undefined' && cancelled) { %>
-    <div class="alert alert-success" role="status"><%- include('partials/success-icon') %><span><%= t('history.cancelledAlert') %></span></div>
-  <% } %>
-  <% if (typeof cancelRejected !== 'undefined' && cancelRejected) { %>
-    <div class="alert alert-error" role="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('history.cancelRejectedAlert') %></span></div>
-  <% } %>
-
+  <div class="page-head"><span class="eyebrow"><%= t('history.eyebrow') %></span><h1><%= t('history.heading') %></h1><p><%= t('history.intro') %></p></div>
   <div class="card">
-    <% if (bookings.length === 0) { %>
-      <div class="empty-state">
-        <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></div>
-        <p><strong><%= t('history.emptyTitle') %></strong><%= t('history.emptyBody') %></p>
-        <a href="/booking" class="btn btn-primary btn-sm" style="margin-top:16px;"><%= t('history.emptyCta') %></a>
-      </div>
+    <% if (!subscriptions.length) { %><div class="empty-state"><p><strong><%= t('history.emptyTitle') %></strong><%= t('history.emptyBody') %></p><a href="/booking" class="btn btn-primary"><%= t('history.emptyCta') %></a></div>
     <% } else { %>
-      <div class="data-table-view has-card-alternative">
-        <table>
-          <thead>
-            <tr><th><%= t('history.colStudent') %></th><th><%= t('history.colMeal') %></th><th><%= t('history.colPlan') %></th><th><%= t('history.colDate') %></th><th><%= t('history.colTotal') %></th><th><%= t('history.colStatus') %></th><th></th></tr>
-          </thead>
-          <tbody>
-            <% bookings.forEach(b => { %>
-              <% const confirmMsg = t('history.confirmCancel', { name: b.student ? b.student.name : t('history.confirmCancelFallback'), amount: fmtKWD(b.totalKWD) }); %>
-              <tr>
-                <td><%= b.student ? b.student.name : '—' %></td>
-                <td lang="en" dir="auto"><%= b.menuItem ? b.menuItem.name : '—' %></td>
-                <td><%= b.planType === 'monthly' ? t('history.planMonthly') : t('history.planDays', { days: b.days, unit: t(b.days === 1 ? 'dashboard.dayUnitOne' : 'dashboard.dayUnitOther') }) %></td>
-                <td class="data-num"><bdi><%= fmtDate(b.startDate) %></bdi></td>
-                <td class="data-num"><bdi><%= fmtKWD(b.totalKWD) %></bdi></td>
-                <td>
-                  <% if (features.showCollection && b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('history.statusCollected') %> <span class="data-num"><bdi><%= b.collectedAt ? fmtTime(b.collectedAt) : '' %></bdi></span></span>
-                  <% } else if (b.status === 'cancelled') { %><span class="badge badge-cancelled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg> <%= t('history.statusCancelled') %></span>
-                  <% } else { %><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> <%= t('history.statusUpcoming') %></span><% } %>
-                </td>
-                <td>
-                  <% if (b.status === 'upcoming') { %>
-                    <form method="POST" action="/history/<%= b.id %>/cancel" class="cancel-booking-form" data-confirm-message="<%= confirmMsg %>">
-                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                      <button type="submit" class="btn btn-danger"><%= t('history.cancelBooking') %></button>
-                    </form>
-                  <% } %>
-                </td>
-              </tr>
-            <% }) %>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="data-card-view">
-        <% bookings.forEach(b => { %>
-          <% const confirmMsgCard = t('history.confirmCancel', { name: b.student ? b.student.name : t('history.confirmCancelFallback'), amount: fmtKWD(b.totalKWD) }); %>
-          <div class="data-card">
-            <div class="data-card-head">
-              <div>
-                <strong><%= b.student ? b.student.name : '—' %></strong>
-                <span lang="en" dir="auto"><%= b.menuItem ? b.menuItem.name : '—' %></span>
-              </div>
-              <% if (features.showCollection && b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('history.statusCollected') %></span>
-              <% } else if (b.status === 'cancelled') { %><span class="badge badge-cancelled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg> <%= t('history.statusCancelled') %></span>
-              <% } else { %><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> <%= t('history.statusUpcoming') %></span><% } %>
-            </div>
-            <div class="data-card-row"><span class="k"><%= t('history.colPlan') %></span><span class="v"><%= b.planType === 'monthly' ? t('history.planMonthly') : t('history.planDays', { days: b.days, unit: t(b.days === 1 ? 'dashboard.dayUnitOne' : 'dashboard.dayUnitOther') }) %></span></div>
-            <div class="data-card-row"><span class="k"><%= t('history.colDate') %></span><span class="v data-num"><bdi><%= fmtDate(b.startDate) %></bdi></span></div>
-            <div class="data-card-row"><span class="k"><%= t('history.colTotal') %></span><span class="v data-num"><bdi><%= fmtKWD(b.totalKWD) %></bdi></span></div>
-            <% if (features.showCollection && b.status === 'collected' && b.collectedAt) { %>
-              <div class="data-card-row"><span class="k"><%= t('history.statusCollected') %></span><span class="v data-num"><bdi><%= fmtTime(b.collectedAt) %></bdi></span></div>
-            <% } %>
-            <% if (b.status === 'upcoming') { %>
-              <form method="POST" action="/history/<%= b.id %>/cancel" class="cancel-booking-form" data-confirm-message="<%= confirmMsgCard %>">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <button type="submit" class="btn btn-danger"><%= t('history.cancelBooking') %></button>
-              </form>
-            <% } %>
-          </div>
-        <% }) %>
+      <div class="responsive-records history-records">
+        <div class="data-table-view"><table><thead><tr>
+          <% ['colStudent','colSchool','colMonths','colMealDays','colTotal','colPaid','colInvoice'].forEach(key=>{ %><th scope="col"><%= t('history.'+key) %></th><% }) %>
+        </tr></thead><tbody><% subscriptions.forEach(s=>{ %><tr>
+          <td><%= s.student_name %></td><td><%= s.school %></td><td><%= s.months.map(m=>fmtMonth(m.month,locale)).join(' / ') %></td><td><%= s.meal_days %></td><td><bdi><%= fmtKWD(s.total_kwd) %></bdi></td><td><%= fmtDate(s.paid_at) %></td><td><a class="btn btn-outline" href="/history/<%= s.id %>/invoice.pdf"><%= t('subscription.invoice') %></a></td>
+        </tr><% }) %></tbody></table></div>
+        <div class="data-card-view"><% subscriptions.forEach(s=>{ %><article class="data-card"><h2><%= s.student_name %></h2>
+          <dl class="record-details"><% for(const [key,value] of [['colSchool',s.school],['colMonths',s.months.map(m=>fmtMonth(m.month,locale)).join(' / ')],['colMealDays',s.meal_days],['colTotal',fmtKWD(s.total_kwd)],['colPaid',fmtDate(s.paid_at)]]){ %><div><dt><%= t('history.'+key) %></dt><dd><bdi><%= value %></bdi></dd></div><% } %></dl>
+          <a class="btn btn-outline" href="/history/<%= s.id %>/invoice.pdf"><%= t('subscription.invoice') %></a>
+        </article><% }) %></div>
       </div>
     <% } %>
   </div>
-</main>
-
-<%- include('partials/appfoot') %>
-</body>
-</html>
+</main><%- include('partials/appfoot') %></body></html>

@@ -868,22 +868,14 @@ app.get('/menu', requireAuth, (req, res) => {
 require('./lib/subscription-routes')(app, db, requireAuth);
 
 app.get('/history', requireAuth, (req, res) => {
-  res.render('history', { bookings: [], parentId:req.session.parentId, cancelled:false, cancelRejected:false });
+  res.render('history', { subscriptions: db.getSubscriptions(req.session.parentId), parentId:req.session.parentId });
 });
-
-app.post('/history/:id/cancel', requireAuth, (req, res) => {
-  const parent = currentParent(req);
-  const booking = db.findBookingById(Number(req.params.id));
-  const student = booking ? db.findStudentById(booking.studentId) : null;
-  // Ownership and status are both required, unchanged. What is new is
-  // that the parent is told which of the two outcomes happened instead of
-  // landing on a silently identical page.
-  if (booking && student && student.parentId === parent.id && booking.status === 'upcoming') {
-    // Cancellation and refund happen in a single database transaction.
-    const cancelled = db.cancelAndRefund({ bookingId: booking.id, parentId: parent.id });
-    return res.redirect(cancelled ? '/history?cancelled=1' : '/history?cancelfailed=1');
-  }
-  res.redirect('/history?cancelfailed=1');
+app.get('/history/:subscriptionId/invoice.pdf', requireAuth, (req, res, next) => {
+  const subscription = db.getSubscription(Number(req.params.subscriptionId), req.session.parentId);
+  if (!subscription) return res.status(404).render('404', { parentId:req.session.parentId });
+  const doc = require('./lib/invoice').invoiceDocument(subscription, currentParent(req));
+  res.type('application/pdf').attachment(subscription.invoice_number + '.pdf');
+  doc.on('error', next); doc.pipe(res); doc.end();
 });
 
 app.get('/profile', requireAuth, (req, res) => {

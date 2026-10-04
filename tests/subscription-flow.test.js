@@ -63,3 +63,13 @@ test('saved meal changes enforce the cutoff atomically',async()=>{
  assert.throws(()=>db.changeSubscriptionMeals(1,sub.id,sub.first_month,{[date]:'3'},new Date(addDays(date,-2)+'T00:00:00+03:00')),{code:'cutoff'});
  assert.equal(db.getSubscriptionMeals(sub.id)[0].menu_item_id,2);
 });
+test('history lists paid subscriptions and invoice PDF has attachment headers',async()=>{
+ const sub=db.getSubscriptions(1)[0];const history=await request('/history');assert.equal(history.status,200);assert.match(history.body,/Booking history/);assert.doesNotMatch(history.body,/cancel-booking-form|badge-collected/);
+ const res=await fetch(base+`/history/${sub.id}/invoice.pdf`,{headers:{cookie}});assert.equal(res.status,200);assert.equal(res.headers.get('content-type'),'application/pdf');assert.equal(res.headers.get('content-disposition'),`attachment; filename="${sub.invoice_number}.pdf"`);const bytes=Buffer.from(await res.arrayBuffer());assert.equal(bytes.subarray(0,4).toString(),'%PDF');
+ assert.equal((await request('/history/99999/invoice.pdf')).status,404);
+});
+test('cancel and renew endpoints are gone and do not change subscriptions',async()=>{
+ const before=JSON.stringify(db.getSubscriptions(1));
+ for(const route of ['/history/1/cancel','/booking/1/renew'])assert.equal((await request(route,{})).status,404);
+ assert.equal(JSON.stringify(db.getSubscriptions(1)),before);
+});

@@ -354,25 +354,6 @@ function bookAndCharge({ studentId, menuItemId, planType, startDate, days, total
   })();
 }
 
-// Atomic: cancel the booking and log the notification. The refund is
-// simulated back to the original (simulated) payment method — there's no
-// wallet credit step now, just as there's no real gateway behind the charge.
-function cancelAndRefund({ bookingId, parentId }) {
-  return db.transaction(() => {
-    const booking = findBookingById(bookingId);
-    if (!booking || booking.status !== 'upcoming') return null;
-    updateBooking(bookingId, { status: 'cancelled' });
-    const student = findStudentById(booking.studentId);
-    const studentName = student ? student.name : 'Booking';
-    insertNotification({
-      parentId, type: 'booking_cancelled', relatedId: booking.id,
-      message: `${studentName} — Booking cancelled: KWD ${booking.totalKWD.toFixed(3)} refunded to your original payment method (demo — simulated).`,
-      params: { studentName, amountKWD: booking.totalKWD }
-    });
-    return findBookingById(bookingId);
-  })();
-}
-
 // ---------- Notifications ----------
 function getNotificationsForParent(parentId, limit) {
   const rows = db.prepare("SELECT * FROM notifications WHERE parent_id = ? AND (? OR type != 'collected') ORDER BY created_at DESC, id DESC LIMIT ?")
@@ -456,7 +437,7 @@ module.exports = {
   getPlans,
   getSchoolDaysInRange,
   getBookingsForParent, createBooking, updateBooking, findBookingById,
-  bookAndCharge, cancelAndRefund,
+  bookAndCharge,
   getStaffBookingsByParent, createStaffBooking,
   getNotificationsForParent, getUnreadNotificationCount, markNotificationRead, markAllNotificationsRead, ensureRenewalNotification,
   findSchoolAdminByEmail, findSchoolAdminById, getStudentsBySchool, getBookingsForSchool,

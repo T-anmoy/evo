@@ -267,15 +267,13 @@ const SHOW_TRUST_STATS = false;
           <div class="faq-answer"><div class="faq-answer-inner"><%= t('home.faq.a3') %></div></div>
         </div>
       </div>
-<% if (features.showCollection) { %>
       <div class="faq-item">
         <button class="faq-summary" type="button" aria-expanded="false"><span><%= t('home.faq.q4') %></span><span class="plus" aria-hidden="true"></span></button>
         <div class="faq-content">
           <div class="faq-answer"><div class="faq-answer-inner"><%= t('home.faq.a4') %></div></div>
         </div>
       </div>
-<% } %>
-    </div>
+   </div>
     <p class="nutrition-more"><%- t('home.faq.footnote', {
       parents: `<a href="${locale === 'ar' ? '/ar/parents' : '/parents'}">${t('home.faq.footnoteParents')}</a>`,
       features: `<a href="${locale === 'ar' ? '/ar/how-it-works#features' : '/how-it-works#features'}">${t('home.faq.footnoteFeatures')}</a>`

@@ -249,11 +249,11 @@
       "q1": "How does the \"tap\" actually work?",
       "a1": "The illustration shows a child tapping a meal card and a collection confirmation appearing for the parent. This demo has no connected reader. A collection record does not confirm that the meal was eaten.",
       "q2": "How is payment handled here?",
-      "a2": "You review the calculated KWD total before confirming. Payment and refunds are simulated in this demo; no KNET transaction takes place.",
+      "a2": "You review the calculated KWD total before confirming. Payment is simulated in this demo; no KNET transaction takes place.",
       "q3": "My child has an allergy. How does that get handled?",
       "a3": "The programme statement names Nuts, Shellfish, Sesame and Soy. Dish records are sample information. Student allergy notes are reference notes only; the demo does not check or match allergies automatically. Contact the team about a specific dietary requirement.",
-      "q4": "What if I need to cancel a booking?",
-      "a4": "History lets you cancel any booking still marked Booked — once it is Collected or Cancelled, that option is gone. The demo records a simulated refund; it does not move money.",
+      "q4": "Can I change my daily meals?",
+      "a4": "Open View/change meals from your confirmation. Paid subscription meals can be changed until 48 hours before that meal day in Kuwait.",
       "footnote": "Booking, pricing, and the full parent journey: see {parents}. Platform-wide capabilities: see {features}.",
       "footnoteParents": "For Parents",
       "footnoteFeatures": "Features"
@@ -592,7 +592,7 @@
     "bookMealBody": "Pick a student, a meal, and a plan — total calculates automatically.",
     "bookMealCta": "Book now",
     "historyTitle": "Booking history",
-    "historyBody": "Every booking, what it cost, and a one-tap cancel if plans change.",
+    "historyBody": "View your paid subscriptions and download invoices.",
     "historyCta": "View history",
     "statusPendingWithoutCollection": "Booked",
     "emptyNoStudentsBodyWithoutCollection": "Add your first child to start booking meals.",
@@ -871,12 +871,12 @@
   },
   "history": {
     "eyebrow": "Order history",
-    "heading": "Bookings & meal history",
-    "intro": "Every booking is listed here, with a one-tap cancellation option if your plans change.",
+    "heading": "Booking history",
+    "intro": "View your past subscriptions and download their invoices.",
     "emptyTitle": "No bookings yet",
-    "emptyBody": "Once you book a meal, it'll show up here — with a one-tap cancel and refund if plans change.",
+    "emptyBody": "Your paid subscriptions and invoices will appear here.",
     "emptyCta": "Book your first meal",
-    "colStudent": "Student",
+    "colStudent": "Child",
     "colMeal": "Meal",
     "colPlan": "Plan",
     "colDate": "Date",
@@ -885,13 +885,12 @@
     "planMonthly": "Monthly",
     "planDays": "{days} {unit}",
     "statusCollected": "Collected",
-    "statusCancelled": "Cancelled",
     "statusUpcoming": "Booked",
-    "cancelBooking": "Cancel booking",
-    "confirmCancel": "Cancel this booking for {name}?\n\n{amount} will be refunded to your original payment method immediately (demo — simulated). This can't be undone — you'll need to book again if you change your mind.",
-    "confirmCancelFallback": "this student",
-    "cancelledAlert": "Booking cancelled — the amount was refunded to your original payment method (demo — simulated, no real payment network was contacted).",
-    "cancelRejectedAlert": "That booking could not be cancelled. Only your own bookings that are still booked and not yet collected can be cancelled."
+    "colSchool": "School",
+    "colMonths": "Months covered",
+    "colMealDays": "Meal days",
+    "colPaid": "Paid on",
+    "colInvoice": "Invoice"
   },
   "profile": {
     "eyebrow": "Your account",
@@ -1116,5 +1115,21 @@
       "cutoff": "One or more meal days are past the 48-hour change cutoff. No changes were saved.",
       "staleDraft": "This booking draft was replaced. Return to Meal booking to continue."
     }
+  },
+  "invoice": {
+    "heading": "Invoice",
+    "number": "Invoice number",
+    "date": "Invoice date",
+    "parent": "Parent",
+    "civilId": "Civil ID (masked)",
+    "child": "Child",
+    "school": "School",
+    "class": "Class",
+    "month": "Month",
+    "mealDays": "Meal days",
+    "rate": "Rate (KWD)",
+    "amount": "Amount (KWD)",
+    "total": "Total",
+    "payment": "Payment method: KNET (simulated — no real payment processed)"
   }
 }

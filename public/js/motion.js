@@ -338,27 +338,6 @@
     });
   }
 
-  // A form marked data-confirm-message asks for confirmation before it's
-  // allowed to submit at all (e.g. cancelling a booking in history.ejs).
-  // The message is read from a data attribute rather than built inline
-  // into an onsubmit="confirm('...')" string — a data attribute is decoded
-  // once by the browser as plain text, whereas a value spliced into an
-  // inline JS string literal (even after HTML-escaping) can still break out
-  // of that literal if the interpolated value — e.g. a parent's own child's
-  // name — contains a quote character. Registered before initGenericValidation
-  // / initSubmitFeedback so a "no" here can stop those later handlers via
-  // stopImmediatePropagation, on the same submit event.
-  function initConfirmForms() {
-    document.querySelectorAll('form[data-confirm-message]').forEach(function (form) {
-      form.addEventListener('submit', function (e) {
-        if (!window.confirm(form.dataset.confirmMessage)) {
-          e.preventDefault();
-          e.stopImmediatePropagation();
-        }
-      });
-    });
-  }
-
   // ---------- footer active-page link ----------
   // The nav bars already mark the current page (server-side, via the
   // `active` param); the footer link lists never got the same treatment.
@@ -395,7 +374,6 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     initCollection();
-    initConfirmForms();
     initFaq();
     initFieldValidation();
     initGenericValidation();
