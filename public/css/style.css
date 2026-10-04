@@ -2232,8 +2232,6 @@ th{text-align:start;}
 .terms-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .terms-dialog-head h2{font-size:22px;}
 .terms-dialog-body{overflow-y:auto;overscroll-behavior:contain;min-height:0;}
-.terms-dialog .faq-content{grid-template-rows:1fr;}
-.terms-dialog .faq-answer{visibility:visible;}
 .terms-dialog form{display:flex;flex-wrap:wrap;gap:12px;}
 
 /* Client edits, Phase 5: balance the visible booking/payment journey. */
@@ -2261,3 +2259,11 @@ th{text-align:start;}
 /* Client edits, Phase 9: switch invoice records to cards before columns crowd. */
 @media(max-width:1100px){.history-records .data-table-view{display:none;}.history-records .data-card-view{display:grid;gap:16px;}}
 .history-records td{overflow-wrap:anywhere;white-space:normal;}
+
+/* Client edits QA: retain 44px header controls beside the supplied logo in Arabic. */
+@media(max-width:400px){
+  .app-header .nav-toggle span{display:none;}
+  .app-header .nav-toggle{min-width:44px;padding-inline:8px;}
+  .app-header .app-user .btn{padding-inline:6px;}
+}
+@media(max-width:360px){.app-header .brand-logo img{height:24px;}}

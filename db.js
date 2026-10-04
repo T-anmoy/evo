@@ -1,11 +1,8 @@
 // db.js — SQLite-backed data layer (via better-sqlite3).
 //
 // This replaced the original JSON-file datastore. Every function here keeps
-// the exact name and signature it had before, so server.js did not need to
-// change for the swap itself — only the two spots that needed real
-// transactional safety (booking + notification, cancellation + refund)
-// gained new atomic functions (see bookAndCharge / cancelAndRefund below),
-// and the two spots that needed live pricing gained getPlans().
+// legacy read helpers for historical data. Parent purchases use the additive
+// subscription store; the legacy bookings table has no application write path.
 
 const fs = require('fs');
 const path = require('path');
@@ -31,10 +28,8 @@ db.pragma('foreign_keys = ON');
 // example holidays. Generated relative to the seeding date (like the
 // __TODAY__ tokens below) rather than hardcoded, so the demo always has
 // real day-level data to price against, regardless of when it's reseeded.
-// The one real daily/per-meal rate — prices both the single-day plan and,
-// multiplied by real school days, the monthly subscription (see
-// lib/pricing.js). Single source of truth: seeded into the `plans` table
-// below and reused here at seed time so demo totals match production math.
+// The one real daily/per-meal rate, multiplied by configured school days
+// for subscriptions and retained for the separate Staff booking path.
 const DAILY_RATE_KWD = 2.000;
 
 const CALENDAR_SCHOOLS = SCHOOLS;
@@ -296,24 +291,6 @@ function getBookingsForParent(parentId) {
     ORDER BY b.start_date DESC
   `).all(parentId).map(mapBooking);
 }
-function createBooking(booking) {
-  const info = db.prepare(`
-    INSERT INTO bookings (student_id, menu_item_id, plan_type, start_date, days, total_kwd, status, collected_at)
-    VALUES (@studentId, @menuItemId, @planType, @startDate, @days, @totalKWD, 'upcoming', NULL)
-  `).run(booking);
-  return mapBooking(db.prepare('SELECT * FROM bookings WHERE id = ?').get(info.lastInsertRowid));
-}
-function updateBooking(id, fields) {
-  const existing = mapBooking(db.prepare('SELECT * FROM bookings WHERE id = ?').get(id));
-  if (!existing) return null;
-  const merged = { ...existing, ...fields };
-  db.prepare(`
-    UPDATE bookings SET student_id = @studentId, menu_item_id = @menuItemId, plan_type = @planType,
-      start_date = @startDate, days = @days, total_kwd = @totalKWD, status = @status, collected_at = @collectedAt
-    WHERE id = @id
-  `).run(merged);
-  return mapBooking(db.prepare('SELECT * FROM bookings WHERE id = ?').get(id));
-}
 function findBookingById(id) {
   return mapBooking(db.prepare('SELECT * FROM bookings WHERE id = ?').get(id));
 }
@@ -323,35 +300,6 @@ function insertNotification({ parentId, type, message, params, relatedId }) {
     INSERT INTO notifications (parent_id, type, message, params, related_id, read, created_at)
     VALUES (?, ?, ?, ?, ?, 0, ?)
   `).run(parentId, type, message, params ? JSON.stringify(params) : null, relatedId || null, new Date().toISOString());
-}
-
-// Atomic: create the booking and log the confirmation notification in one
-// transaction. Payment is a direct simulated charge per period (no wallet
-// to debit) — same "demo only, no real payment processed" simulation the
-// old wallet top-up used, just without a stored balance in between.
-//
-// `message` is always composed in English and stored as a fallback (for
-// legacy display paths and any consumer that isn't locale-aware); `params`
-// carries the structured data so server.js can re-render the same
-// notification in the viewer's current locale (see app.locals.notifMessage).
-function bookAndCharge({ studentId, menuItemId, planType, startDate, days, totalKWD, parentId, detailType }) {
-  return db.transaction(() => {
-    const booking = createBooking({ studentId, menuItemId, planType, startDate, days, totalKWD });
-    const student = findStudentById(studentId);
-    const menuItem = findMenuItem(menuItemId);
-    const studentName = student ? student.name : 'Your child';
-    const mealName = menuItem ? menuItem.name : 'Meal plan';
-    const resolvedDetailType = detailType || (planType === 'monthly' ? 'monthly' : 'single');
-    const detailText = resolvedDetailType === 'renewed'
-      ? 'renewed subscription'
-      : `${days} ${resolvedDetailType === 'monthly' ? 'real school day(s) this month' : 'day(s)'}`;
-    insertNotification({
-      parentId, type: 'booking_confirmed', relatedId: booking.id,
-      message: `${studentName} — Booking confirmed: ${mealName}, ${detailText}, KWD ${totalKWD.toFixed(3)} charged.`,
-      params: { studentName, mealName, detailType: resolvedDetailType, days, amountKWD: totalKWD }
-    });
-    return booking;
-  })();
 }
 
 // ---------- Notifications ----------
@@ -436,8 +384,7 @@ module.exports = {
   getMenuItems, findMenuItem,
   getPlans,
   getSchoolDaysInRange,
-  getBookingsForParent, createBooking, updateBooking, findBookingById,
-  bookAndCharge,
+  getBookingsForParent, findBookingById,
   getStaffBookingsByParent, createStaffBooking,
   getNotificationsForParent, getUnreadNotificationCount, markNotificationRead, markAllNotificationsRead, ensureRenewalNotification,
   findSchoolAdminByEmail, findSchoolAdminById, getStudentsBySchool, getBookingsForSchool,

@@ -984,7 +984,9 @@
     "body": "The link might be old, or the address might be off by a character. Either way, nothing tapped — let's get you back to somewhere real.",
     "backToDashboard": "Back to your dashboard",
     "backToHome": "Back to the homepage",
-    "login": "Log in"
+    "login": "Log in",
+    "headingWithoutCollection": "This page could not be found.",
+    "bodyWithoutCollection": "The link may be old or the address may be incorrect. Return to your dashboard or the homepage."
   },
   "food": {
     "confidenceTitle": "Food confidence",

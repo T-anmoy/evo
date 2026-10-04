@@ -10,8 +10,8 @@
     <div class="notfound-mark" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 8.5a8 8 0 0 1 12 0M8.5 11a4.5 4.5 0 0 1 7 0M12 14v.01"/></svg>
     </div>
-    <h1><%= t('notFound.heading') %></h1>
-    <p><%= t('notFound.body') %></p>
+    <h1><%= t(features.showCollection ? 'notFound.heading' : 'notFound.headingWithoutCollection') %></h1>
+    <p><%= t(features.showCollection ? 'notFound.body' : 'notFound.bodyWithoutCollection') %></p>
     <div class="notfound-actions">
       <% if (typeof parentId !== 'undefined' && parentId) { %>
         <a href="/dashboard" class="btn btn-primary"><%= t('notFound.backToDashboard') %></a>

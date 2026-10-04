@@ -1,0 +1,501 @@
+
+> evo360-demo-system@1.0.0 test
+> node --test tests/*.test.js
+
+TAP version 13
+# ◇ injected env (4) from .env // tip: ⌁ auth for agents [www.vestauth.com]
+#   [migrate] applied 001_init.sql
+#   [migrate] applied 002_menu_nutrition.sql
+#   [migrate] applied 003_admin_inquiries_notifications.sql
+#   [migrate] applied 004_school_calendar_remove_wallet.sql
+#   [migrate] applied 005_notification_i18n_params.sql
+#   [migrate] applied 006_student_class_section.sql
+#   [migrate] applied 007_subscriptions.sql
+# Subtest: strict dates reject calendar rollover, malformed and non-string input
+ok 1 - strict dates reject calendar rollover, malformed and non-string input
+  ---
+  duration_ms: 205.321542
+  type: 'test'
+  ...
+# Subtest: Staff retains menu and date boundaries
+ok 2 - Staff retains menu and date boundaries
+  ---
+  duration_ms: 0.244417
+  type: 'test'
+  ...
+# Subtest: legacy parent booking POST cannot create new bookings
+ok 3 - legacy parent booking POST cannot create new bookings
+  ---
+  duration_ms: 4.707791
+  type: 'test'
+  ...
+# Subtest: Staff validates menu/date without writing invalid records
+ok 4 - Staff validates menu/date without writing invalid records
+  ---
+  duration_ms: 15.378917
+  type: 'test'
+  ...
+# Subtest: Arabic month validation stays Arabic
+ok 5 - Arabic month validation stays Arabic
+  ---
+  duration_ms: 9.61275
+  type: 'test'
+  ...
+# Subtest: Terms starts checked, remains required, and a deselected POST is rejected and retained
+ok 6 - Terms starts checked, remains required, and a deselected POST is rejected and retained
+  ---
+  duration_ms: 15.192125
+  type: 'test'
+  ...
+# Subtest: Reset known and unknown accounts show the same honest outcome
+ok 7 - Reset known and unknown accounts show the same honest outcome
+  ---
+  duration_ms: 9.010958
+  type: 'test'
+  ...
+# Subtest: Arabic Contact form posts to Arabic and tells the truth on success
+ok 8 - Arabic Contact form posts to Arabic and tells the truth on success
+  ---
+  duration_ms: 10.364875
+  type: 'test'
+  ...
+# ◇ injected env (4) from .env // tip: ⌘ override existing { override: true }
+#   [migrate] applied 001_init.sql
+#   [migrate] applied 002_menu_nutrition.sql
+#   [migrate] applied 003_admin_inquiries_notifications.sql
+#   [migrate] applied 004_school_calendar_remove_wallet.sql
+#   [migrate] applied 005_notification_i18n_params.sql
+#   [migrate] applied 006_student_class_section.sql
+#   [migrate] applied 007_subscriptions.sql
+# {"level":30,"time":1791099949756,"pid":10071,"hostname":"TANMOYs-Laptop.local","req":{"id":1,"method":"GET","url":"/login","query":{},"params":{},"headers":{"host":"127.0.0.1:55125","connection":"keep-alive","cookie":"[redacted]","accept":"*/*","accept-language":"*","sec-fetch-mode":"cors","user-agent":"node","accept-encoding":"gzip, deflate"},"remoteAddress":"::ffff:127.0.0.1","remotePort":55128},"res":{"statusCode":200,"headers":{"content-security-policy":"default-src 'self';base-uri 'self';font-src 'self' https://fonts.gstatic.com;form-action 'self';frame-ancestors 'none';img-src 'self' data:;object-src 'none';script-src 'self' 'nonce-3XyFGHmtC16Un1ntuPAqWw==';script-src-attr 'none';style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;connect-src 'self'","cross-origin-opener-policy":"same-origin","cross-origin-resource-policy":"same-origin","origin-agent-cluster":"?1","referrer-policy":"no-referrer","strict-transport-security":"max-age=31536000; includeSubDomains","x-content-type-options":"nosniff","x-dns-prefetch-control":"off","x-download-options":"noopen","x-frame-options":"SAMEORIGIN","x-permitted-cross-domain-policies":"none","x-xss-protection":"0","content-type":"text/html; charset=utf-8","etag":"W/\\"1803-bW5o241nOwy+mD3Jb4aOkJWDhLg\\"","set-cookie":"[redacted]","vary":"Accept-Encoding","content-encoding":"gzip"}},"responseTime":17,"msg":"request completed"}
+# {"level":30,"time":1791099949925,"pid":10071,"hostname":"TANMOYs-Laptop.local","req":{"id":2,"method":"POST","url":"/login","query":{},"params":{},"headers":{"host":"127.0.0.1:55125","connection":"keep-alive","cookie":"[redacted]","content-type":"application/x-www-form-urlencoded","accept":"*/*","accept-language":"*","sec-fetch-mode":"cors","user-agent":"node","accept-encoding":"gzip, deflate","content-length":"301"},"remoteAddress":"::ffff:127.0.0.1","remotePort":55128},"res":{"statusCode":302,"headers":{"content-security-policy":"default-src 'self';base-uri 'self';font-src 'self' https://fonts.gstatic.com;form-action 'self';frame-ancestors 'none';img-src 'self' data:;object-src 'none';script-src 'self' 'nonce-9HrEvjrm9cPXkZrBJ9tWPw==';script-src-attr 'none';style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;connect-src 'self'","cross-origin-opener-policy":"same-origin","cross-origin-resource-policy":"same-origin","origin-agent-cluster":"?1","referrer-policy":"no-referrer","strict-transport-security":"max-age=31536000; includeSubDomains","x-content-type-options":"nosniff","x-dns-prefetch-control":"off","x-download-options":"noopen","x-frame-options":"SAMEORIGIN","x-permitted-cross-domain-policies":"none","x-xss-protection":"0","ratelimit-policy":"10;w=900","ratelimit-limit":"10","ratelimit-remaining":"9","ratelimit-reset":"900","location":"/dashboard","vary":"Accept, Accept-Encoding","content-type":"text/plain; charset=utf-8","content-length":"32","set-cookie":"[redacted]"}},"responseTime":139,"msg":"request completed"}
+# {"level":30,"time":1791099949949,"pid":10071,"hostname":"TANMOYs-Laptop.local","req":{"id":3,"method":"GET","url":"/profile","query":{},"params":{},"headers":{"host":"127.0.0.1:55125","connection":"keep-alive","cookie":"[redacted]","accept":"*/*","accept-language":"*","sec-fetch-mode":"cors","user-agent":"node","accept-encoding":"gzip, deflate"},"remoteAddress":"::ffff:127.0.0.1","remotePort":55135},"res":{"statusCode":200,"headers":{"content-security-policy":"default-src 'self';base-uri 'self';font-src 'self' https://fonts.gstatic.com;form-action 'self';frame-ancestors 'none';img-src 'self' data:;object-src 'none';script-src 'self' 'nonce-t8rBF4yccw0LwW+cdPIgnA==';script-src-attr 'none';style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;connect-src 'self'","cross-origin-opener-policy":"same-origin","cross-origin-resource-policy":"same-origin","origin-agent-cluster":"?1","referrer-policy":"no-referrer","strict-transport-security":"max-age=31536000; includeSubDomains","x-content-type-options":"nosniff","x-dns-prefetch-control":"off","x-download-options":"noopen","x-frame-options":"SAMEORIGIN","x-permitted-cross-domain-policies":"none","x-xss-protection":"0","content-type":"text/html; charset=utf-8","etag":"W/\\"3b5e-fICxO2wLW5DT035mSNMGLbWZm58\\"","set-cookie":"[redacted]","vary":"Accept-Encoding","content-encoding":"gzip"}},"responseTime":22,"msg":"request completed"}
+# Subtest: the logged-in parent's own Civil ID is masked on /profile
+ok 9 - the logged-in parent's own Civil ID is masked on /profile
+  ---
+  duration_ms: 219.612042
+  type: 'test'
+  ...
+# {"level":30,"time":1791099949959,"pid":10071,"hostname":"TANMOYs-Laptop.local","req":{"id":4,"method":"GET","url":"/students","query":{},"params":{},"headers":{"host":"127.0.0.1:55125","connection":"keep-alive","cookie":"[redacted]","accept":"*/*","accept-language":"*","sec-fetch-mode":"cors","user-agent":"node","accept-encoding":"gzip, deflate"},"remoteAddress":"::ffff:127.0.0.1","remotePort":55128},"res":{"statusCode":200,"headers":{"content-security-policy":"default-src 'self';base-uri 'self';font-src 'self' https://fonts.gstatic.com;form-action 'self';frame-ancestors 'none';img-src 'self' data:;object-src 'none';script-src 'self' 'nonce-ptzkZoXv/CWHYn+hX+MlDA==';script-src-attr 'none';style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;connect-src 'self'","cross-origin-opener-policy":"same-origin","cross-origin-resource-policy":"same-origin","origin-agent-cluster":"?1","referrer-policy":"no-referrer","strict-transport-security":"max-age=31536000; includeSubDomains","x-content-type-options":"nosniff","x-dns-prefetch-control":"off","x-download-options":"noopen","x-frame-options":"SAMEORIGIN","x-permitted-cross-domain-policies":"none","x-xss-protection":"0","content-type":"text/html; charset=utf-8","etag":"W/\\"504a-Ph2aHo+wTiiOzHCf+XPI3VU3ny0\\"","vary":"Accept-Encoding","content-encoding":"gzip"}},"responseTime":7,"msg":"request completed"}
+# Subtest: children's Civil IDs are masked in the /students list
+ok 10 - children's Civil IDs are masked in the /students list
+  ---
+  duration_ms: 9.452375
+  type: 'test'
+  ...
+# {"level":30,"time":1791099949967,"pid":10071,"hostname":"TANMOYs-Laptop.local","req":{"id":5,"method":"GET","url":"/students/1/edit","query":{},"params":{},"headers":{"host":"127.0.0.1:55125","connection":"keep-alive","cookie":"[redacted]","accept":"*/*","accept-language":"*","sec-fetch-mode":"cors","user-agent":"node","accept-encoding":"gzip, deflate"},"remoteAddress":"::ffff:127.0.0.1","remotePort":55128},"res":{"statusCode":200,"headers":{"content-security-policy":"default-src 'self';base-uri 'self';font-src 'self' https://fonts.gstatic.com;form-action 'self';frame-ancestors 'none';img-src 'self' data:;object-src 'none';script-src 'self' 'nonce-cD5h6EVmfYoA7B1OQ3XrAA==';script-src-attr 'none';style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;connect-src 'self'","cross-origin-opener-policy":"same-origin","cross-origin-resource-policy":"same-origin","origin-agent-cluster":"?1","referrer-policy":"no-referrer","strict-transport-security":"max-age=31536000; includeSubDomains","x-content-type-options":"nosniff","x-dns-prefetch-control":"off","x-download-options":"noopen","x-frame-options":"SAMEORIGIN","x-permitted-cross-domain-policies":"none","x-xss-protection":"0","content-type":"text/html; charset=utf-8","etag":"W/\\"4e23-hvXfo535lww5yk6iJI8B5pSOkfc\\"","vary":"Accept-Encoding","content-encoding":"gzip"}},"responseTime":7,"msg":"request completed"}
+# Subtest: a child's Civil ID is masked (and read-only) on the /students edit form
+ok 11 - a child's Civil ID is masked (and read-only) on the /students edit form
+  ---
+  duration_ms: 8.614166
+  type: 'test'
+  ...
+# ◇ injected env (4) from .env // tip: ⌘ override existing { override: true }
+#   [migrate] applied 001_init.sql
+#   [migrate] applied 002_menu_nutrition.sql
+#   [migrate] applied 003_admin_inquiries_notifications.sql
+#   [migrate] applied 004_school_calendar_remove_wallet.sql
+#   [migrate] applied 005_notification_i18n_params.sql
+#   [migrate] applied 006_student_class_section.sql
+#   [migrate] applied 007_subscriptions.sql
+# Subtest: collection feature flag hides and restores the illustrative flow in both languages
+ok 12 - collection feature flag hides and restores the illustrative flow in both languages
+  ---
+  duration_ms: 191.103166
+  type: 'test'
+  ...
+# ◇ injected env (4) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+#   [migrate] applied 001_init.sql
+#   [migrate] applied 002_menu_nutrition.sql
+#   [migrate] applied 003_admin_inquiries_notifications.sql
+#   [migrate] applied 004_school_calendar_remove_wallet.sql
+#   [migrate] applied 005_notification_i18n_params.sql
+#   [migrate] applied 006_student_class_section.sql
+#   [migrate] applied 007_subscriptions.sql
+# Subtest: signing in issues a new session identifier
+ok 13 - signing in issues a new session identifier
+  ---
+  duration_ms: 206.210291
+  type: 'test'
+  ...
+# Subtest: the pre-login CSRF token does not survive the session change
+ok 14 - the pre-login CSRF token does not survive the session change
+  ---
+  duration_ms: 92.242041
+  type: 'test'
+  ...
+# Subtest: registering also issues a new session identifier
+ok 15 - registering also issues a new session identifier
+  ---
+  duration_ms: 94.879959
+  type: 'test'
+  ...
+# Subtest: school admin sign-in issues a new session identifier
+ok 16 - school admin sign-in issues a new session identifier
+  ---
+  duration_ms: 83.716792
+  type: 'test'
+  ...
+# Subtest: the locale chosen before signing in survives the session change
+ok 17 - the locale chosen before signing in survives the session change
+  ---
+  duration_ms: 101.782375
+  type: 'test'
+  ...
+# Subtest: logout is a CSRF-protected POST, not a GET
+ok 18 - logout is a CSRF-protected POST, not a GET
+  ---
+  duration_ms: 119.301792
+  type: 'test'
+  ...
+# Subtest: school admin logout is also a POST
+ok 19 - school admin logout is also a POST
+  ---
+  duration_ms: 92.671417
+  type: 'test'
+  ...
+# Subtest: a content security policy is sent, and inline scripts carry its nonce
+ok 20 - a content security policy is sent, and inline scripts carry its nonce
+  ---
+  duration_ms: 7.452417
+  type: 'test'
+  ...
+# Subtest: each request gets its own nonce
+ok 21 - each request gets its own nonce
+  ---
+  duration_ms: 9.934291
+  type: 'test'
+  ...
+# Subtest: an unhandled error returns a generic page, not a stack trace
+ok 22 - an unhandled error returns a generic page, not a stack trace
+  ---
+  duration_ms: 2.949667
+  type: 'test'
+  ...
+# Subtest: unauthenticated write endpoints are rate limited
+ok 23 - unauthenticated write endpoints are rate limited
+  ---
+  duration_ms: 47.03275
+  type: 'test'
+  ...
+# Subtest: English and Arabic have identical leaf-key sets
+ok 24 - English and Arabic have identical leaf-key sets
+  ---
+  duration_ms: 3.22375
+  type: 'test'
+  ...
+# Subtest: literal translation keys and concatenated prefixes all resolve
+ok 25 - literal translation keys and concatenated prefixes all resolve
+  ---
+  duration_ms: 12.690166
+  type: 'test'
+  ...
+# Subtest: computed key families include every supported value
+ok 26 - computed key families include every supported value
+  ---
+  duration_ms: 4.388584
+  type: 'test'
+  ...
+# Subtest: removed translation keys are no longer referenced
+ok 27 - removed translation keys are no longer referenced
+  ---
+  duration_ms: 2.130042
+  type: 'test'
+  ...
+# Subtest: maskCivilId
+    # Subtest: shows only the last 4 digits of a 12-digit Civil ID
+    ok 1 - shows only the last 4 digits of a 12-digit Civil ID
+      ---
+      duration_ms: 0.798625
+      type: 'test'
+      ...
+    # Subtest: never contains any of the leading digits unmasked
+    ok 2 - never contains any of the leading digits unmasked
+      ---
+      duration_ms: 0.18525
+      type: 'test'
+      ...
+    # Subtest: is idempotent-safe on short/empty input (does not throw)
+    ok 3 - is idempotent-safe on short/empty input (does not throw)
+      ---
+      duration_ms: 0.06
+      type: 'test'
+      ...
+    1..3
+ok 28 - maskCivilId
+  ---
+  duration_ms: 2.328042
+  type: 'suite'
+  ...
+# Subtest: calendar pricing multiplies the configured daily rate and rounds to fils
+ok 29 - calendar pricing multiplies the configured daily rate and rounds to fils
+  ---
+  duration_ms: 1.1185
+  type: 'test'
+  ...
+# Subtest: calendar pricing never substitutes an invented rate or day count
+ok 30 - calendar pricing never substitutes an invented rate or day count
+  ---
+  duration_ms: 0.298625
+  type: 'test'
+  ...
+# Subtest: endOfMonthISO
+    # Subtest: mid-month date resolves to the last day of that month
+    ok 1 - mid-month date resolves to the last day of that month
+      ---
+      duration_ms: 1.0165
+      type: 'test'
+      ...
+    # Subtest: a date near month-end resolves to the same month's last day
+    ok 2 - a date near month-end resolves to the same month's last day
+      ---
+      duration_ms: 0.071083
+      type: 'test'
+      ...
+    # Subtest: handles a 30-day month correctly
+    ok 3 - handles a 30-day month correctly
+      ---
+      duration_ms: 0.63675
+      type: 'test'
+      ...
+    # Subtest: handles February in a non-leap year correctly
+    ok 4 - handles February in a non-leap year correctly
+      ---
+      duration_ms: 0.146625
+      type: 'test'
+      ...
+    # Subtest: handles February in a leap year correctly
+    ok 5 - handles February in a leap year correctly
+      ---
+      duration_ms: 0.051459
+      type: 'test'
+      ...
+    1..5
+ok 31 - endOfMonthISO
+  ---
+  duration_ms: 2.242083
+  type: 'suite'
+  ...
+# ◇ injected env (4) from .env // tip: ⌘ multiple files { path: ['.env.local', '.env'] }
+#   [migrate] applied 001_init.sql
+#   [migrate] applied 002_menu_nutrition.sql
+#   [migrate] applied 003_admin_inquiries_notifications.sql
+#   [migrate] applied 004_school_calendar_remove_wallet.sql
+#   [migrate] applied 005_notification_i18n_params.sql
+#   [migrate] applied 006_student_class_section.sql
+#   [migrate] applied 007_subscriptions.sql
+# Subtest: a future timestamp is never rendered as elapsed past time
+ok 32 - a future timestamp is never rendered as elapsed past time
+  ---
+  duration_ms: 112.9125
+  type: 'test'
+  ...
+# Subtest: a just-passed timestamp still reads as just now
+ok 33 - a just-passed timestamp still reads as just now
+  ---
+  duration_ms: 0.798458
+  type: 'test'
+  ...
+# Subtest: dish images resolve from the record id, independent of display name
+ok 34 - dish images resolve from the record id, independent of display name
+  ---
+  duration_ms: 0.20975
+  type: 'test'
+  ...
+# Subtest: dish images still resolve by name for records outside the asset map
+ok 35 - dish images still resolve by name for records outside the asset map
+  ---
+  duration_ms: 1.285625
+  type: 'test'
+  ...
+# Subtest: an unknown dish falls back to no image rather than the wrong one
+ok 36 - an unknown dish falls back to no image rather than the wrong one
+  ---
+  duration_ms: 0.320459
+  type: 'test'
+  ...
+# Subtest: class migration normalizes known equivalents and leaves unknown classes unchanged
+ok 37 - class migration normalizes known equivalents and leaves unknown classes unchanged
+  ---
+  duration_ms: 8.624833
+  type: 'test'
+  ...
+# ◇ injected env (4) from .env // tip: ⌘ custom filepath { path: '/custom/path/.env' }
+#   [migrate] applied 001_init.sql
+#   [migrate] applied 002_menu_nutrition.sql
+#   [migrate] applied 003_admin_inquiries_notifications.sql
+#   [migrate] applied 004_school_calendar_remove_wallet.sql
+#   [migrate] applied 005_notification_i18n_params.sql
+#   [migrate] applied 006_student_class_section.sql
+#   [migrate] applied 007_subscriptions.sql
+# Subtest: payment is gated by a draft and step order
+ok 38 - payment is gated by a draft and step order
+  ---
+  duration_ms: 237.29175
+  type: 'test'
+  ...
+# Subtest: happy path saves daily choices, confirms payment once, and refuses overlaps
+ok 39 - happy path saves daily choices, confirms payment once, and refuses overlaps
+  ---
+  duration_ms: 56.985
+  type: 'test'
+  ...
+# Subtest: changed database price returns to review with no payment
+ok 40 - changed database price returns to review with no payment
+  ---
+  duration_ms: 36.487
+  type: 'test'
+  ...
+# Subtest: foreign subscription, confirmation and student cannot be accessed
+ok 41 - foreign subscription, confirmation and student cannot be accessed
+  ---
+  duration_ms: 9.108333
+  type: 'test'
+  ...
+# Subtest: saved meal changes enforce the cutoff atomically
+ok 42 - saved meal changes enforce the cutoff atomically
+  ---
+  duration_ms: 1.273
+  type: 'test'
+  ...
+# Subtest: history lists paid subscriptions and invoice PDF has attachment headers
+ok 43 - history lists paid subscriptions and invoice PDF has attachment headers
+  ---
+  duration_ms: 423.280916
+  type: 'test'
+  ...
+# Subtest: cancel and renew endpoints are gone and do not change subscriptions
+ok 44 - cancel and renew endpoints are gone and do not change subscriptions
+  ---
+  duration_ms: 5.320958
+  type: 'test'
+  ...
+# Subtest: tampered session quote cannot change the charge
+ok 45 - tampered session quote cannot change the charge
+  ---
+  duration_ms: 23.999125
+  type: 'test'
+  ...
+# Subtest: daily selection rejects non-meal dates, other months and invalid menu ids
+ok 46 - daily selection rejects non-meal dates, other months and invalid menu ids
+  ---
+  duration_ms: 32.189083
+  type: 'test'
+  ...
+# Subtest: paid meals change through HTTP before cutoff; locked dates are rejected
+ok 47 - paid meals change through HTTP before cutoff; locked dates are rejected
+  ---
+  duration_ms: 27.649875
+  type: 'test'
+  ...
+# Subtest: real foreign parent records remain private across all routes
+ok 48 - real foreign parent records remain private across all routes
+  ---
+  duration_ms: 11.092125
+  type: 'test'
+  ...
+# Subtest: month validation refuses malformed counts and incomplete calendars
+ok 49 - month validation refuses malformed counts and incomplete calendars
+  ---
+  duration_ms: 25.448208
+  type: 'test'
+  ...
+# Subtest: calendar startup coverage is complete, idempotent and preserves existing rows
+ok 50 - calendar startup coverage is complete, idempotent and preserves existing rows
+  ---
+  duration_ms: 3.05925
+  type: 'test'
+  ...
+# Subtest: removed marketing routes redirect by locale and stay out of the sitemap
+ok 51 - removed marketing routes redirect by locale and stay out of the sitemap
+  ---
+  duration_ms: 6.773209
+  type: 'test'
+  ...
+# Subtest: corporate inquiry validates fields, preserves values, and stores its range
+ok 52 - corporate inquiry validates fields, preserves values, and stores its range
+  ---
+  duration_ms: 22.414667
+  type: 'test'
+  ...
+# Subtest: class and section lists reject unlisted values and preserve other fields
+ok 53 - class and section lists reject unlisted values and preserve other fields
+  ---
+  duration_ms: 21.592834
+  type: 'test'
+  ...
+# Subtest: six-month payment creates all rows and a stale draft cannot pay
+ok 54 - six-month payment creates all rows and a stale draft cannot pay
+  ---
+  duration_ms: 32.906333
+  type: 'test'
+  ...
+# Subtest: a late transaction failure rolls back subscription, months, meals and payment
+ok 55 - a late transaction failure rolls back subscription, months, meals and payment
+  ---
+  duration_ms: 20.503125
+  type: 'test'
+  ...
+# Subtest: new subscriptions are visible in parent and school dashboards
+ok 56 - new subscriptions are visible in parent and school dashboards
+  ---
+  duration_ms: 98.65325
+  type: 'test'
+  ...
+# Subtest: first month uses inclusive seven-day boundary, including leap years and year rollover
+ok 57 - first month uses inclusive seven-day boundary, including leap years and year rollover
+  ---
+  duration_ms: 2.569417
+  type: 'test'
+  ...
+# Subtest: Kuwait date changes at 21:00 UTC
+ok 58 - Kuwait date changes at 21:00 UTC
+  ---
+  duration_ms: 0.677333
+  type: 'test'
+  ...
+# Subtest: month bounds accept one and six, reject invalid numbers without coercion
+ok 59 - month bounds accept one and six, reject invalid numbers without coercion
+  ---
+  duration_ms: 1.465459
+  type: 'test'
+  ...
+# Subtest: complete month derives days, holidays and rounded price from the calendar
+ok 60 - complete month derives days, holidays and rounded price from the calendar
+  ---
+  duration_ms: 0.889417
+  type: 'test'
+  ...
+# Subtest: partial and duplicate calendar days cannot price a month
+ok 61 - partial and duplicate calendar days cannot price a month
+  ---
+  duration_ms: 0.562333
+  type: 'test'
+  ...
+# Subtest: zero totals, invalid prices, and overlapping months are refused
+ok 62 - zero totals, invalid prices, and overlapping months are refused
+  ---
+  duration_ms: 0.691291
+  type: 'test'
+  ...
+# Subtest: rotation sorts menu ids, excludes Dessert and repeats by meal-day index
+ok 63 - rotation sorts menu ids, excludes Dessert and repeats by meal-day index
+  ---
+  duration_ms: 0.67025
+  type: 'test'
+  ...
+# Subtest: 48-hour cutoff is exclusive and measured from Kuwait midnight
+ok 64 - 48-hour cutoff is exclusive and measured from Kuwait midnight
+  ---
+  duration_ms: 0.081667
+  type: 'test'
+  ...
+1..64
+# tests 70
+# suites 2
+# pass 70
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1381.667541

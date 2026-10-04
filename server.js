@@ -822,10 +822,11 @@ app.post('/students', requireAuth, (req, res) => {
   const t = res.locals.t;
   const { id, name, civilId, school, class: klass, section, gender, allergies } = req.body;
   if (id && db.findStudentById(Number(id))?.parentId !== parent.id) return res.status(404).render('404', { parentId: parent.id });
+  const string = value => typeof value === 'string' ? value.trim() : '';
   const fields = {
-    name: (name || '').trim(),
-    school, class: (klass || '').trim(), section: (section || '').trim(),
-    gender, allergies: (allergies || '').trim()
+    name: string(name),
+    school, class: string(klass), section: string(section),
+    gender, allergies: string(allergies)
   };
 
   // Never trust the client's data-validate hints alone — re-check name,

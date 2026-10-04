@@ -20,7 +20,7 @@
       <% if(meals.some(m=>m.editable)){ %><button class="btn btn-primary" type="submit"><%= t('subscription.saveMeals') %></button><% } %>
     </div>
   </form>
-  <% if(draft){ %><div class="action-row"><a href="/booking/terms" class="btn btn-primary" data-terms-dialog="terms-dialog"><%= t('subscription.proceed') %></a><a class="btn btn-outline" href="/booking/review"><%= t('subscription.titles.review') %></a></div>
+  <% if(draft){ %><div class="action-row"><button type="submit" form="daily-meals-form" name="proceed" value="terms" class="btn btn-primary" data-terms-dialog="terms-dialog" data-save-meals="daily-meals-form"><%= t('subscription.proceed') %></button><a class="btn btn-outline" href="/booking/review"><%= t('subscription.titles.review') %></a></div>
     <p class="hint"><%= t('subscription.saveBeforeProceed') %></p>
     <%- include('partials/terms-dialog', { payment: true }) %><script src="/js/terms-dialog.js" defer></script>
   <% } %>

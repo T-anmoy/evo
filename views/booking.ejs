@@ -23,7 +23,7 @@
       <div class="field"><label for="booking-student"><%= t('booking.labelStudent') %></label><input id="booking-student" value="<%= student.name %>" readonly></div>
       <div class="field"><label for="booking-class"><%= t('students.labelClass') %></label><input id="booking-class" value="<%= student.class %>" readonly></div>
       <div class="field"><label for="months-count"><%= t('subscription.numberMonths') %></label>
-        <select name="months" id="months-count" required><% for(let n=1;n<=6;n++){ %><option value="<%= n %>" <%= count===n ? 'selected' : '' %>><%= n %></option><% } %></select>
+        <select name="months" id="months-count" required><% for(let n=1;n<=maxMonths;n++){ %><option value="<%= n %>" <%= count===n ? 'selected' : '' %>><%= n %></option><% } %></select>
       </div>
       <p><%= t('subscription.monthPreview') %></p><ul class="month-preview"><% preview.forEach((month,i)=>{ %><li data-month-index="<%= i %>" <%= i>=count ? 'hidden' : '' %>><%= fmtMonth(month,locale) %></li><% }) %></ul>
       <div class="action-row"><button class="btn btn-outline" type="submit" formmethod="GET" formaction="/booking/new"><%= t('subscription.preview') %></button><button class="btn btn-primary" type="submit"><%= t('subscription.next') %></button></div>
