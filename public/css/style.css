@@ -2267,3 +2267,11 @@ th{text-align:start;}
   .app-header .app-user .btn{padding-inline:6px;}
 }
 @media(max-width:360px){.app-header .brand-logo img{height:24px;}}
+
+/* Home partner pathways: aligned content and actions across both cards. */
+#b2b-pathways .benefit-card{display:flex;flex-direction:column;align-items:flex-start;padding:clamp(24px,3vw,32px);}
+#b2b-pathways .benefit-card-icon{flex-shrink:0;margin-bottom:20px;}
+#b2b-pathways .benefit-card h3{font-size:20px;line-height:1.4;margin-bottom:10px;}
+#b2b-pathways .benefit-card p{flex:1;margin:0 0 24px;}
+#b2b-pathways .benefit-card > .btn{margin-top:auto;max-width:100%;white-space:normal;text-align:center;}
+@media(max-width:480px){#b2b-pathways .benefit-card > .btn{width:100%;}}
