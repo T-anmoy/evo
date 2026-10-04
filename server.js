@@ -147,7 +147,7 @@ const SESSION_LOCALE_PATH_PREFIXES = [
 // crawler must never be pointed at an hreflang alternate that 404s (e.g.
 // /ar/privacy, which doesn't exist), and a page-with-no-Arabic-route must
 // never claim to have a canonical link to a language variant it doesn't have.
-const BILINGUAL_PAGES = ['/', '/schools', '/parents', '/how-it-works', '/features', '/login', '/register', '/forgot-password', '/caterers', '/about', '/contact'];
+const BILINGUAL_PAGES = ['/', '/schools', '/parents', '/how-it-works', '/login', '/register', '/forgot-password', '/caterers', '/about', '/contact'];
 
 app.use((req, res, next) => {
   const p = req.path;
@@ -493,7 +493,7 @@ app.get(['/how-it-works', '/ar/how-it-works'], (req, res) => {
 });
 
 app.get(['/features', '/ar/features'], (req, res) => {
-  res.render('features', { parentId: req.session.parentId });
+  res.redirect(301, (req.path.startsWith('/ar') ? '/ar' : '') + '/how-it-works#features');
 });
 
 app.get(['/about', '/ar/about'], (req, res) => {
@@ -581,8 +581,6 @@ Allow: /caterers
 Allow: /ar/caterers
 Allow: /how-it-works
 Allow: /ar/how-it-works
-Allow: /features
-Allow: /ar/features
 Allow: /about
 Allow: /ar/about
 Allow: /contact

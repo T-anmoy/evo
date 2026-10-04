@@ -2238,3 +2238,6 @@ th{text-align:start;}
 
 /* Client edits, Phase 5: balance the visible booking/payment journey. */
 @media(min-width:769px){.parent-journey.journey-two{grid-template-columns:repeat(2,minmax(0,1fr));}}
+
+/* Client edits, Phase 6: three booking-guide steps. */
+@media(min-width:769px){.parent-journey.journey-three{grid-template-columns:repeat(3,minmax(0,1fr));}}

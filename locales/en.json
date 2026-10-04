@@ -267,36 +267,23 @@
   },
   "howItWorks": {
     "hero": {
-      "eyebrow": "How It Works",
-      "heading": "Three seats. One school meal journey.",
-      "lede": "Start with the parent journey, then see the responsibilities of {schools} and {caterers}.",
-      "ledeParents": "parents",
-      "ledeSchools": "schools",
-      "ledeCaterers": "caterers"
-    },
-    "roleFlows": {
-      "eyebrow": "Shared responsibilities",
-      "heading": "Around the parent journey",
-      "parentTitle": "Parent",
-      "parentStep1": "Book",
-      "parentStep2": "Pay",
-      "parentStep3": "Tap",
-      "parentStep4": "Notified",
-      "schoolTitle": "School",
-      "schoolStep1": "Set up",
-      "schoolStep2": "Monitor",
-      "schoolStep3": "Report",
-      "catererTitle": "Caterer",
-      "catererStep1": "Receive",
-      "catererStep2": "Prepare",
-      "catererStep3": "Deliver"
+      "eyebrow": "How it works",
+      "heading": "Book a month of meals in three steps.",
+      "lede": "The same steps apply whether you're booking school meals or meals at work."
     },
     "cta": {
       "eyebrow": "Ready when you are",
       "heading": "See what this looks like for you.",
-      "body": "Whether you're a parent, a school, or a caterer, there's a dedicated page with the details."
+      "body": "Explore school meals or meals for your workplace."
     },
-    "roleNote": "School setup and catering handoffs are service concepts. The demo dashboard shows records; reader, payment and delivery integrations are not connected."
+    "steps": {
+      "title1": "Choose your months",
+      "body1": "Select how many months you want to subscribe for. Each month is charged only for its working days.",
+      "title2": "Choose your daily meals",
+      "body2": "Review each month, then pick the meal for every day. A default menu is filled in for you, and you can change it later.",
+      "title3": "Pay to confirm",
+      "body3": "Accept the payment terms and pay via KNET. Meal service starts 7 days after successful payment."
+    }
   },
   "featuresSection": {
     "eyebrow": "Platform features",
