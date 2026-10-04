@@ -1,0 +1,8 @@
+<span class="brand-logo brand-logo-<%= variant %>" dir="ltr">
+  <% if (variant === 'on-dark') { %>
+    <picture><source srcset="/images/brand/evo360logo.webp" type="image/webp"><img src="/images/brand/evo360logo.png" width="4104" height="1212" alt="<%= t('meta.siteName') %>"></picture>
+  <% } else { %>
+    <picture><source srcset="/images/brand/evo-mark.webp" type="image/webp"><img src="/images/brand/evo-mark.png" width="975" height="1212" alt="<%= t('meta.siteName') %>"></picture>
+    <span aria-hidden="true">Evo <span class="dot">Meals</span></span>
+  <% } %>
+</span>

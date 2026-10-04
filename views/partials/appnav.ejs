@@ -1,7 +1,7 @@
 <a href="#main-content" class="skip-link"><%= t('a11y.skipToContent') %></a>
 <header class="app-header">
   <div class="wrap app-nav">
-    <a href="/dashboard" class="app-logo"><span>Evo <span class="dot">Meals</span></span></a>
+    <a href="/dashboard" class="app-logo"><%- include('brand-logo', { variant: 'on-dark' }) %></a>
     <nav class="app-links">
       <a href="/dashboard" class="<%= active === 'dashboard' ? 'active' : '' %>" <%= active === 'dashboard' ? 'aria-current="page"' : '' %>><%= t('appNav.dashboard') %></a>
       <a href="/students" class="<%= active === 'students' ? 'active' : '' %>" <%= active === 'students' ? 'aria-current="page"' : '' %>><%= t('appNav.students') %></a>
@@ -72,7 +72,7 @@
   </div>
   <nav class="app-links-mobile" id="appLinksMobile" hidden inert>
     <div class="mobile-menu-head">
-      <span class="mobile-menu-brand">Evo <span class="dot">Meals</span></span>
+      <span class="mobile-menu-brand"><%- include('brand-logo', { variant: 'on-dark' }) %></span>
       <button type="button" class="mobile-menu-close" id="appLinksMobileClose" aria-label="<%= t('nav.closeMenu') %>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
       </button>

@@ -2,7 +2,7 @@
 <footer class="site-foot">
   <div class="wrap site-foot-top">
     <div class="site-foot-brand">
-      <a href="<%= fp === '' ? '/' : fp %>" class="site-logo"><span>Evo <span class="dot">Meals</span></span></a>
+      <a href="<%= fp === '' ? '/' : fp %>" class="site-logo"><%- include('brand-logo', { variant: 'on-dark' }) %></a>
       <p><%= t('footer.tagline') %></p>
     </div>
     <div class="site-foot-links">

@@ -12,7 +12,7 @@
         <span class="lang-switch-divider" aria-hidden="true">|</span>
         <a href="/locale/ar?returnTo=<%= encodeURIComponent(currentPath) %>" lang="ar" hreflang="ar" aria-current="<%= locale === 'ar' ? 'true' : 'false' %>" class="<%= locale === 'ar' ? 'is-current' : '' %>">العربية</a>
       </div>
-      <div class="logo"><span>Evo <span class="dot">Meals</span></span></div>
+      <div class="logo"><%- include('partials/brand-logo', { variant: 'on-light' }) %></div>
       <span class="eyebrow" style="justify-content:center; margin-bottom:10px;"><%= t('schoolAdminLogin.eyebrow') %></span>
       <h1><%= t('schoolAdminLogin.heading') %></h1>
       <p class="sub"><%= t('schoolAdminLogin.subtitle') %></p>

@@ -2,7 +2,7 @@
 <header class="site-header">
   <% const p = locale === 'ar' ? '/ar' : ''; %>
   <div class="wrap-wide site-nav">
-    <a href="<%= p %>/" class="site-logo"><span>Evo <span class="dot">Meals</span></span></a>
+    <a href="<%= p %>/" class="site-logo"><%- include('brand-logo', { variant: 'on-dark' }) %></a>
     <nav class="site-links">
       <a href="<%= p %>/parents" class="<%= active === 'parents' ? 'active' : '' %>" <%= active === 'parents' ? 'aria-current="page"' : '' %>><%= t('nav.forParents') %></a>
       <a href="<%= p %>/schools" class="<%= active === 'schools' ? 'active' : '' %>" <%= active === 'schools' ? 'aria-current="page"' : '' %>><%= t('nav.forSchools') %></a>
@@ -30,7 +30,7 @@
   </div>
   <nav class="site-links-mobile" id="siteLinksMobile" hidden inert>
     <div class="mobile-menu-head">
-      <span class="mobile-menu-brand">Evo <span class="dot">Meals</span></span>
+      <span class="mobile-menu-brand"><%- include('brand-logo', { variant: 'on-dark' }) %></span>
       <button type="button" class="mobile-menu-close" id="siteLinksMobileClose" aria-label="<%= t('nav.closeMenu') %>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
       </button>

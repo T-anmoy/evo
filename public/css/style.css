@@ -2216,3 +2216,11 @@ th{text-align:start;}
   .trend-bar-col:nth-child(13) .trend-bar-fill{--i:12;}
   .trend-bar-col:nth-child(14) .trend-bar-fill{--i:13;}
 }
+
+/* Client edits, Phase 2: supplied brand artwork, without recoloring or mirroring. */
+.brand-logo{display:inline-flex;align-items:center;gap:10px;vertical-align:middle;flex-shrink:0;}
+.brand-logo picture{display:block;flex-shrink:0;}
+.brand-logo img{height:36px;width:auto;max-width:none;transform:none;}
+.brand-logo-on-light{color:var(--forest);}
+.brand-logo-on-light .dot{color:var(--forest);}
+@media(max-width:480px){.brand-logo img{height:28px;}.brand-logo{gap:8px;}}
