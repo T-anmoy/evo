@@ -134,12 +134,17 @@
     NAME_PATTERN = /^(?=.*[^\d\s])[^\d]{2,60}$/;
   }
 
-  // Native controls keep disclosure content available with or without JS.
+  // One answer per list. Separate lists (including Terms dialogs) stay independent.
+  // Without JavaScript the document keeps all policy text available.
   function initFaq() {
+    var groups = new Map();
     document.querySelectorAll('.faq-item').forEach(function(item, index) {
       var button = item.querySelector('.faq-summary');
       var content = item.querySelector('.faq-content');
-      if (!button || !content) return;
+      var list = item.closest('.faq-list');
+      if (!button || !content || !list) return;
+      if (!groups.has(list)) groups.set(list, []);
+      var group = groups.get(list);
       content.id = 'faq-panel-' + index;
       button.id = 'faq-button-' + index;
       button.setAttribute('aria-controls', content.id);
@@ -149,8 +154,20 @@
         button.setAttribute('aria-expanded', String(open));
         content.hidden = !open;
       }
-      setOpen(item.classList.contains('is-open'));
-      button.addEventListener('click', function() { setOpen(content.hidden); });
+      setOpen(item.classList.contains('is-open') && !group.some(function(entry) { return !entry.content.hidden; }));
+      group.push({ content: content, setOpen: setOpen });
+      button.addEventListener('click', function() {
+        var opening = content.hidden;
+        var previousTop = button.getBoundingClientRect().top;
+        if (opening) group.forEach(function(entry) { entry.setOpen(false); });
+        setOpen(opening);
+        // Keep the tapped heading in place when a long answer above collapses.
+        // Dialogs scroll internally; changing their answers must not move the page.
+        var delta = button.getBoundingClientRect().top - previousTop;
+        var scroller = list.closest('.terms-dialog-body');
+        if (scroller) scroller.scrollTop += delta;
+        else if (delta) window.scrollBy({ top: delta, behavior: 'instant' });
+      });
     });
   }
 

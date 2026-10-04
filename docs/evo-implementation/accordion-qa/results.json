@@ -1,0 +1,365 @@
+{
+  "checks": [
+    {
+      "route": "/privacy",
+      "width": 320,
+      "motion": "reduce",
+      "items": 16
+    },
+    {
+      "route": "/privacy",
+      "width": 375,
+      "motion": "reduce",
+      "items": 16
+    },
+    {
+      "route": "/privacy",
+      "width": 768,
+      "motion": "reduce",
+      "items": 16
+    },
+    {
+      "route": "/privacy",
+      "width": 1032,
+      "motion": "reduce",
+      "items": 16
+    },
+    {
+      "route": "/privacy",
+      "width": 1440,
+      "motion": "reduce",
+      "items": 16
+    },
+    {
+      "route": "/terms",
+      "width": 320,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/terms",
+      "width": 375,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/terms",
+      "width": 768,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/terms",
+      "width": 1032,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/terms",
+      "width": 1440,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/",
+      "width": 320,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/",
+      "width": 375,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/",
+      "width": 768,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/",
+      "width": 1032,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/",
+      "width": 1440,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/ar",
+      "width": 320,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/ar",
+      "width": 375,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/ar",
+      "width": 768,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/ar",
+      "width": 1032,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/ar",
+      "width": 1440,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/register",
+      "width": 320,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/register",
+      "width": 375,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/register",
+      "width": 768,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/register",
+      "width": 1032,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/register",
+      "width": 1440,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/ar/register",
+      "width": 320,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/ar/register",
+      "width": 375,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/ar/register",
+      "width": 768,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/ar/register",
+      "width": 1032,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/ar/register",
+      "width": 1440,
+      "motion": "reduce",
+      "items": 3
+    },
+    {
+      "route": "/privacy",
+      "width": 320,
+      "motion": "no-preference",
+      "items": 16
+    },
+    {
+      "route": "/privacy",
+      "width": 375,
+      "motion": "no-preference",
+      "items": 16
+    },
+    {
+      "route": "/privacy",
+      "width": 768,
+      "motion": "no-preference",
+      "items": 16
+    },
+    {
+      "route": "/privacy",
+      "width": 1032,
+      "motion": "no-preference",
+      "items": 16
+    },
+    {
+      "route": "/privacy",
+      "width": 1440,
+      "motion": "no-preference",
+      "items": 16
+    },
+    {
+      "route": "/terms",
+      "width": 320,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/terms",
+      "width": 375,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/terms",
+      "width": 768,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/terms",
+      "width": 1032,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/terms",
+      "width": 1440,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/",
+      "width": 320,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/",
+      "width": 375,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/",
+      "width": 768,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/",
+      "width": 1032,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/",
+      "width": 1440,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/ar",
+      "width": 320,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/ar",
+      "width": 375,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/ar",
+      "width": 768,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/ar",
+      "width": 1032,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/ar",
+      "width": 1440,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/register",
+      "width": 320,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/register",
+      "width": 375,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/register",
+      "width": 768,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/register",
+      "width": 1032,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/register",
+      "width": 1440,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/ar/register",
+      "width": 320,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/ar/register",
+      "width": 375,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/ar/register",
+      "width": 768,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/ar/register",
+      "width": 1032,
+      "motion": "no-preference",
+      "items": 3
+    },
+    {
+      "route": "/ar/register",
+      "width": 1440,
+      "motion": "no-preference",
+      "items": 3
+    }
+  ],
+  "errors": []
+}
