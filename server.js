@@ -17,7 +17,7 @@ const { calculateBookingTotal, endOfMonthISO } = require('./lib/pricing');
 const { validateMealInput, bookingWindow } = require('./lib/booking-input');
 const { maskCivilId } = require('./lib/mask');
 const {
-  isValidName, isValidEmail, isValidCivilId, isValidPhone, isValidOrgName, isValidClassSection,
+  isValidName, isValidEmail, isValidCivilId, isValidPhone, isValidOrgName, isValidClass, isValidSection, CLASSES, SECTIONS,
   isStrongPassword, isValidSchool, isValidAllergies
 } = require('./lib/validate');
 const { t: translate, SUPPORTED_LOCALES } = require('./lib/i18n');
@@ -284,6 +284,8 @@ app.locals.assetVersion = (file) => {
   return version;
 };
 app.locals.maskCivilId = maskCivilId;
+app.locals.classes = CLASSES;
+app.locals.sections = SECTIONS;
 app.locals.bookingWindow = bookingWindow;
 // Notifications are stored as "Student Name — rest of the message" —
 // split so the template can bold the name (the fact a parent scans for)
@@ -955,6 +957,7 @@ app.post('/students', requireAuth, (req, res) => {
   const parent = currentParent(req);
   const t = res.locals.t;
   const { id, name, civilId, school, class: klass, section, gender, allergies } = req.body;
+  if (id && db.findStudentById(Number(id))?.parentId !== parent.id) return res.status(404).render('404', { parentId: parent.id });
   const fields = {
     name: (name || '').trim(),
     school, class: (klass || '').trim(), section: (section || '').trim(),
@@ -977,7 +980,8 @@ app.post('/students', requireAuth, (req, res) => {
   // posted value is actually one of them, since a direct POST can send
   // anything regardless of what the dropdown offered.
   if (!isValidSchool(school)) return rerenderWithError({ school: t('students.errSchool') });
-  if (!isValidClassSection(klass) || !isValidClassSection(section)) return rerenderWithError({ class: t('students.errClass') });
+  if (!isValidClass(klass)) return rerenderWithError({ class: t('students.errClass') });
+  if (!isValidSection(section)) return rerenderWithError({ section: t('students.errSection') });
   if (!isValidAllergies(allergies)) return rerenderWithError({ allergies: t('students.errAllergies') });
   if (!id && !isValidCivilId(civilId)) return rerenderWithError({ civilId: t('students.errCivilId') });
 

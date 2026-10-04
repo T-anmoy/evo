@@ -23,6 +23,7 @@
   <div class="students-layout<%= showFormExpanded ? '' : ' students-layout--stacked' %>">
     <div class="card">
       <h2 class="dash-section-title"><%= t('students.allStudents') %></h2>
+      <a href="/students#add-student" class="btn btn-primary" data-add-student><%= t('students.addButton') %></a>
       <% if (students.length === 0) { %>
         <div class="empty-state">
           <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"/></svg></div>
@@ -42,7 +43,7 @@
       <% } %>
     </div>
     <% if (showFormExpanded) { %>
-      <div class="card">
+      <div class="card" id="add-student">
         <h2 class="dash-section-title"><%= editing ? t('students.editTitle') : t('students.addTitle') %></h2>
 <%- include('partials/student-form') %>      </div>
     <% } else { %>
@@ -59,5 +60,6 @@
 </main>
 
 <%- include('partials/appfoot') %>
+<script src="/js/students.js" defer></script>
 </body>
 </html>

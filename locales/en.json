@@ -823,7 +823,7 @@
     "hintDefaultSchool": "Defaulted to {name}'s school — change it if this child is somewhere else.",
     "labelClass": "Class",
     "placeholderClass": "e.g. Grade 3",
-    "errClass": "Use a shorter class/section value (letters, numbers, spaces).",
+    "errClass": "Choose a class from the list.",
     "errSchool": "Choose a school from the list.",
     "errAllergies": "Keep allergy notes under 200 characters, with no < or > characters.",
     "labelSection": "Section",
@@ -844,7 +844,34 @@
     "emptyBody": "Add your first child using the form on the left.",
     "allergiesTitle": "Allergies: {allergies}",
     "hasAllergiesLabel": "Has allergies on file",
-    "edit": "Edit"
+    "edit": "Edit",
+    "addButton": "+ Add student",
+    "reselect": "Please re-select",
+    "errSection": "Choose a section from the list.",
+    "classes": {
+      "KG1": "KG1",
+      "KG2": "KG2",
+      "Grade 1": "Grade 1",
+      "Grade 2": "Grade 2",
+      "Grade 3": "Grade 3",
+      "Grade 4": "Grade 4",
+      "Grade 5": "Grade 5",
+      "Grade 6": "Grade 6",
+      "Grade 7": "Grade 7",
+      "Grade 8": "Grade 8",
+      "Grade 9": "Grade 9",
+      "Grade 10": "Grade 10",
+      "Grade 11": "Grade 11",
+      "Grade 12": "Grade 12"
+    },
+    "sections": {
+      "A": "A",
+      "B": "B",
+      "C": "C",
+      "D": "D",
+      "E": "E",
+      "F": "F"
+    }
   },
   "history": {
     "eyebrow": "Order history",
