@@ -14,7 +14,8 @@ const pinoHttp = require('pino-http');
 const { csrfSync } = require('csrf-sync');
 const db = require('./db');
 const { FEATURES } = require('./lib/features');
-const { calculateBookingTotal, endOfMonthISO } = require('./lib/pricing');
+const { endOfMonthISO } = require('./lib/pricing');
+const { todayInKuwait, addDays } = require('./lib/subscription');
 const { validateMealInput, bookingWindow } = require('./lib/booking-input');
 const { maskCivilId } = require('./lib/mask');
 const {
@@ -138,7 +139,7 @@ app.use(session({
 const AR_PREFIX = '/ar';
 const SESSION_LOCALE_PATH_PREFIXES = [
   '/dashboard', '/students', '/booking', '/menu', '/history', '/profile',
-  '/staff', '/notifications', '/school-admin'
+  '/staff', '/notifications', '/school-admin', '/subscriptions'
 ];
 // Pages with a real, translated /ar/... counterpart — used both by the
 // locale middleware below (to decide whether a canonical/hreflang alt-locale
@@ -285,6 +286,8 @@ app.locals.assetVersion = (file) => {
   assetVersions.set(file, { modified, version });
   return version;
 };
+app.locals.fmtMonth = (month, locale = 'en') => new Date(month + '-01T00:00:00Z').toLocaleDateString(locale === 'ar' ? 'ar-KW' : 'en-GB', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+app.locals.fmtMealDate = (date, locale = 'en') => new Date(date + 'T00:00:00Z').toLocaleDateString(locale === 'ar' ? 'ar-KW' : 'en-GB', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
 app.locals.maskCivilId = maskCivilId;
 app.locals.classes = CLASSES;
 app.locals.sections = SECTIONS;
@@ -335,6 +338,7 @@ app.locals.timeAgo = (iso, t) => {
 app.locals.notifMessage = (n, t, fmtKWD) => {
   if (!n.params) return n.message;
   const p = n.params;
+  if (n.type === 'subscription_confirmed') return t('notifications.subscriptionConfirmed', { ...p, total: fmtKWD(p.total) });
   if (n.type === 'booking_confirmed') {
     const amount = fmtKWD(p.amountKWD);
     if (p.detailType === 'renewed') {
@@ -422,7 +426,7 @@ app.get(['/', '/ar'], (req, res) => {
   res.render('home', {
     parentId: req.session.parentId,
     menuItems: db.getMenuItems(),
-    plans: db.getPlans()
+    plans: db.getPlans(), dailyRateKWD: db.getDailyRate()
   });
 });
 
@@ -457,7 +461,7 @@ app.get(['/parents', '/ar/parents'], (req, res) => {
   res.render('parents', {
     parentId: req.session.parentId,
     menuItems: db.getMenuItems(),
-    plans: db.getPlans()
+    dailyRateKWD: db.getDailyRate()
   });
 });
 
@@ -757,149 +761,34 @@ app.post('/school-admin/logout', (req, res) => {
 app.get('/school-admin/dashboard', requireSchoolAdmin, (req, res) => {
   const admin = currentSchoolAdmin(req);
   const students = db.getStudentsBySchool(admin.school);
-  const bookings = db.getBookingsForSchool(admin.school);
-  const todayISO = new Date().toISOString().split('T')[0];
-
-  const isActiveToday = (b) => {
-    if (b.status === 'cancelled') return false;
-    if (b.planType === 'monthly') {
-      // A monthly subscription's coverage runs through the end of the
-      // calendar month it started in — not 30 raw days, which could bleed
-      // into the next month regardless of the school's real calendar.
-      return b.startDate <= todayISO && todayISO <= endOfMonthISO(b.startDate);
-    }
-    return b.startDate === todayISO;
-  };
-
-  const activeSubscriptions = bookings.filter(b => b.planType === 'monthly' && b.status !== 'cancelled' && isActiveToday(b)).length;
-  const todaysMeals = bookings.filter(isActiveToday).length;
-  const pendingOrders = bookings.filter(b => b.status === 'upcoming').length;
-
-  // 14-day trend: bookings grouped by start date, real counts from real rows.
-  const TREND_DAYS = 14;
-  const trend = [];
-  for (let i = TREND_DAYS - 1; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const iso = d.toISOString().split('T')[0];
-    const count = bookings.filter(b => b.startDate === iso && b.status !== 'cancelled').length;
-    trend.push({ date: iso, count });
-  }
-  const trendMax = Math.max(1, ...trend.map(t => t.count));
-
-  const recentActivity = bookings.slice(0, 10).map(b => ({
-    ...b,
-    student: students.find(s => s.id === b.studentId),
-    menuItem: db.findMenuItem(b.menuItemId)
-  }));
-
-  res.render('school-admin-dashboard', {
-    admin, students, bookings, activeSubscriptions, todaysMeals, pendingOrders,
-    recentActivity, trend, trendMax, parentId: req.session.parentId
-  });
+  const subscriptions = [...new Set(students.map(s => s.parentId))].flatMap(id => db.getSubscriptions(id)).filter(s => s.school === admin.school);
+  const today = todayInKuwait();
+  const meals = subscriptions.flatMap(s => db.getSubscriptionMeals(s.id));
+  const activeSubscriptions = subscriptions.filter(s => s.months.some(m => m.month === today.slice(0,7))).length;
+  const todaysMeals = meals.filter(m => m.date === today).length;
+  const pendingOrders = meals.filter(m => m.date > today && m.date <= addDays(today,7)).length;
+  const trend = Array.from({ length:14 }, (_, i) => { const date=addDays(today,i-13); return { date, count:meals.filter(m=>m.date===date).length }; });
+  const recentActivity = subscriptions.sort((a,b)=>b.created_at.localeCompare(a.created_at) || b.id-a.id).slice(0,10);
+  res.render('school-admin-dashboard', { admin, students, activeSubscriptions, todaysMeals, pendingOrders,
+    recentActivity, trend, trendMax:Math.max(1,...trend.map(t=>t.count)), parentId:req.session.parentId });
 });
 
 // ---------- protected pages ----------
 app.get('/dashboard', requireAuth, (req, res) => {
   const parent = currentParent(req);
   const students = db.getStudentsByParent(parent.id);
-  const bookings = db.getBookingsForParent(parent.id);
-  const todayISO = new Date().toISOString().split('T')[0];
-
-  const isActiveToday = (b) => {
-    if (b.status === 'cancelled') return false;
-    if (b.planType === 'monthly') {
-      // A monthly subscription's coverage runs through the end of the
-      // calendar month it started in — not 30 raw days.
-      return b.startDate <= todayISO && todayISO <= endOfMonthISO(b.startDate);
-    }
-    // single-day plan: only counts as "today" if it's actually dated today
-    return b.startDate === todayISO;
-  };
-
-  // Today's meal is the second thing a parent needs after the child's
-  // name, so the dish is resolved here rather than leaving the template
-  // with only a status word.
-  const studentStatus = students.map(s => {
-    const todaysBooking = bookings.find(b => b.studentId === s.id && isActiveToday(b));
-    return {
-      student: s,
-      booking: todaysBooking || null,
-      menuItem: todaysBooking ? db.findMenuItem(todaysBooking.menuItemId) : null
-    };
+  const subscriptions = db.getSubscriptions(parent.id);
+  const today = todayInKuwait();
+  const studentStatus = students.map(student => {
+    const subscription = subscriptions.find(s => s.student_id===student.id && s.months.some(m=>m.month===today.slice(0,7)));
+    const meal = subscription ? db.getSubscriptionMeals(subscription.id).find(m=>m.date===today) : null;
+    return { student, booking:meal ? { status:'upcoming' } : null, menuItem:meal ? db.findMenuItem(meal.menu_item_id) : null };
   });
-
-  const activeBookingCount = bookings.filter(b => b.status !== 'cancelled').length;
-
-  // Quick rebook: offer to repeat the most recent non-cancelled booking
-  // without going through the full flow again.
-  const lastBooking = bookings.find(b => b.status !== 'cancelled') || null;
-  const lastBookingView = lastBooking ? {
-    id: lastBooking.id,
-    studentName: (students.find(s => s.id === lastBooking.studentId) || {}).name || 'that student',
-    mealName: (db.findMenuItem(lastBooking.menuItemId) || {}).name || 'that meal'
-  } : null;
-
-  // Active subscription periods: replaces the old wallet-balance stat — with
-  // exact per-period charging, what a parent needs to see is which period
-  // is currently covering their child, how many real school days it spans,
-  // and what was actually paid for it.
-  const activeSubscriptionPeriods = bookings
-    .filter(b => b.planType === 'monthly' && b.status !== 'cancelled' && isActiveToday(b))
-    .map(b => {
-      const student = students.find(s => s.id === b.studentId);
-      const menuItem = db.findMenuItem(b.menuItemId);
-      return {
-        studentName: student ? student.name : 'Your child',
-        mealName: menuItem ? menuItem.name : 'Meal plan',
-        startDate: b.startDate,
-        endDate: endOfMonthISO(b.startDate),
-        days: b.days,
-        totalKWD: b.totalKWD
-      };
-    });
-
-  // Renewal: a monthly plan within 7 days of the end of its calendar-month
-  // coverage gets a real one-tap "Renew" action instead of sending the
-  // parent through the booking flow again from scratch.
-  const RENEWAL_WINDOW_DAYS = 7;
-  const renewalCandidates = bookings
-    .filter(b => b.planType === 'monthly' && b.status !== 'cancelled')
-    // Skip a plan once it's already been renewed — a newer monthly booking
-    // for the same student means this one has been superseded, even though
-    // its own row is still technically "upcoming"/"collected".
-    .filter(b => !bookings.some(other =>
-      other.studentId === b.studentId && other.planType === 'monthly' &&
-      other.status !== 'cancelled' && other.startDate > b.startDate
-    ))
-    .map(b => {
-      const windowEnd = new Date(`${endOfMonthISO(b.startDate)}T00:00:00Z`);
-      const daysLeft = Math.ceil((windowEnd - new Date()) / (1000 * 60 * 60 * 24));
-      return { booking: b, daysLeft };
-    })
-    .filter(({ daysLeft }) => daysLeft >= 0 && daysLeft <= RENEWAL_WINDOW_DAYS)
-    .map(({ booking, daysLeft }) => {
-      const student = students.find(s => s.id === booking.studentId);
-      const menuItem = db.findMenuItem(booking.menuItemId);
-      db.ensureRenewalNotification({
-        parentId: parent.id, bookingId: booking.id,
-        studentName: student ? student.name : 'Your child', daysLeft
-      });
-      return {
-        bookingId: booking.id, daysLeft,
-        studentName: student ? student.name : 'your child',
-        mealName: menuItem ? menuItem.name : 'their meal plan'
-      };
-    });
-
-  const notifications = db.getNotificationsForParent(parent.id, 12);
-  const unreadNotificationCount = db.getUnreadNotificationCount(parent.id);
-
-  res.render('dashboard', {
-    parent, students, studentStatus, activeBookingCount, lastBooking: lastBookingView,
-    activeSubscriptionPeriods, renewalCandidates, notifications, unreadNotificationCount, parentId: parent.id,
-    renewed: req.query.renewed === '1', norenewaldays: req.query.norenewaldays === '1'
-  });
+  const activeSubscriptionPeriods = subscriptions.flatMap(s=>s.months.filter(m=>m.month===today.slice(0,7)).map(m=>({
+    studentName:s.student_name, startDate:m.month+'-01', endDate:endOfMonthISO(m.month+'-01'), days:m.meal_days, totalKWD:m.amount_kwd
+  })));
+  res.render('dashboard', { parent, students, studentStatus, activeSubscriptionPeriods, activeBookingCount:subscriptions.length,
+    notifications:db.getNotificationsForParent(parent.id,12), unreadNotificationCount:db.getUnreadNotificationCount(parent.id), parentId:parent.id });
 });
 
 app.post('/notifications/:id/read', requireAuth, (req, res) => {
@@ -912,35 +801,6 @@ app.post('/notifications/read-all', requireAuth, (req, res) => {
   const parent = currentParent(req);
   db.markAllNotificationsRead(parent.id);
   res.redirect('/dashboard');
-});
-
-app.post('/booking/:id/renew', requireAuth, (req, res) => {
-  const parent = currentParent(req);
-  const original = db.findBookingById(Number(req.params.id));
-  const student = original ? db.findStudentById(original.studentId) : null;
-  if (!original || !student || student.parentId !== parent.id) return res.redirect('/dashboard');
-
-  // Recalculated fresh against the NEW month's real calendar — never a
-  // repeat of the previous period's amount, since a different month can
-  // have a different number of real school days.
-  const plans = db.getPlans();
-  const newStartDate = new Date().toISOString().split('T')[0];
-  const monthEndISO = endOfMonthISO(newStartDate);
-  const schoolDays = db.getSchoolDaysInRange(student.school, newStartDate, monthEndISO);
-  const { total, days } = calculateBookingTotal({ planType: original.planType, plans, schoolDays });
-
-  if (days === 0) {
-    return res.redirect('/dashboard?norenewaldays=1');
-  }
-
-  if (!Number.isFinite(total) || total <= 0) return res.redirect('/dashboard?norenewaldays=1');
-
-  db.bookAndCharge({
-    studentId: student.id, menuItemId: original.menuItemId, planType: original.planType,
-    startDate: newStartDate, days, totalKWD: total, parentId: parent.id,
-    detailType: 'renewed'
-  });
-  res.redirect('/dashboard?renewed=1');
 });
 
 app.get('/students', requireAuth, (req, res) => {
@@ -1005,131 +865,10 @@ app.get('/menu', requireAuth, (req, res) => {
   res.render('menu', { menuItems: db.getMenuItems(), parentId: req.session.parentId });
 });
 
-// Real school-day dates for every school one of this parent's students
-// attends, over the next ~120 days — embedded into the booking page so the
-// client-side total can be computed live (exact charge for a chosen start
-// date) without a server round-trip on every date change.
-function schoolCalendarForStudents(students) {
-  const { today: todayISO, horizon: horizonISO } = bookingWindow();
-  const schools = [...new Set(students.map(s => s.school))];
-  const schoolCalendar = {};
-  schools.forEach(school => {
-    schoolCalendar[school] = db.getSchoolDaysInRange(school, todayISO, horizonISO);
-  });
-  return schoolCalendar;
-}
-
-app.get('/booking', requireAuth, (req, res) => {
-  const parent = currentParent(req);
-  const students = db.getStudentsByParent(parent.id);
-  const menuItems = db.getMenuItems();
-  const plans = db.getPlans();
-  const studentIds = students.map(s => s.id);
-  const rebookRaw = req.query.rebook ? db.findBookingById(Number(req.query.rebook)) : null;
-  const rebook = (rebookRaw && studentIds.includes(rebookRaw.studentId)) ? rebookRaw : null;
-
-  // Smart defaults for a fresh (non-rebook) booking: the student picked
-  // most recently, and whichever meal this parent books most often — a
-  // returning parent shouldn't have to reselect from scratch every time.
-  const pastBookings = db.getBookingsForParent(parent.id);
-  const mostRecentStudentId = pastBookings.length ? pastBookings.reduce((a, b) => (b.id > a.id ? b : a)).studentId : null;
-  const menuCounts = {};
-  pastBookings.forEach(b => { menuCounts[b.menuItemId] = (menuCounts[b.menuItemId] || 0) + 1; });
-  const mostBookedMenuId = Object.keys(menuCounts).length
-    ? Number(Object.keys(menuCounts).reduce((a, b) => (menuCounts[b] > menuCounts[a] ? b : a)))
-    : null;
-
-  // Success is reached by redirect after a successful POST (see below),
-  // so the confirmation is rendered from the stored booking rather than
-  // from a POST response a refresh could replay. Ownership is re-checked
-  // here: the id in the query string proves nothing on its own.
-  const bookedRaw = req.query.booked ? db.findBookingById(Number(req.query.booked)) : null;
-  const booked = (bookedRaw && studentIds.includes(bookedRaw.studentId)) ? bookedRaw : null;
-  const bookedStudent = booked ? students.find(s => s.id === booked.studentId) : null;
-  const success = booked
-    ? res.locals.t('booking.successMsg', { name: bookedStudent.name, amount: app.locals.fmtKWD(booked.totalKWD) })
-    : null;
-
-  res.render('booking', {
-    students, menuItems, plans, error: null, success,
-    parentId: parent.id, rebook,
-    defaultStudentId: mostRecentStudentId, defaultMenuId: menuItems.some(m => String(m.id) === req.query.meal) ? Number(req.query.meal) : mostBookedMenuId,
-    schoolCalendar: schoolCalendarForStudents(students),
-    dailyRateKWD: plans.single ? plans.single.rateKWD : 2
-  });
-});
-
-app.post('/booking', requireAuth, (req, res) => {
-  const parent = currentParent(req);
-  const students = db.getStudentsByParent(parent.id);
-  const menuItems = db.getMenuItems();
-  const { studentId, menuItemId, planType, startDate, days } = req.body;
-
-  const plans = db.getPlans();
-  const schoolCalendar = schoolCalendarForStudents(students);
-  const dailyRateKWD = plans.single ? plans.single.rateKWD : 2;
-  const renderArgs = { students, menuItems, plans, parentId: parent.id, rebook: null, schoolCalendar, dailyRateKWD, values: req.body };
-
-  const t = res.locals.t;
-  const validationError = validateMealInput(req.body, { students, menuItems, calendar: schoolCalendar, ...bookingWindow() });
-  const fail = key => res.status(422).render('booking', { ...renderArgs, error: t('booking.' + key), success: null });
-  if (validationError) return fail(validationError);
-  const student = students.find(s => s.id === Number(studentId));
-  if (!Number.isFinite(plans.single?.rateKWD) || plans.single.rateKWD <= 0) return fail('errInvalidPrice');
-  // Real, always-correct total calculation — the direct fix for the
-  // KWD 0.00 bug found in the live system audit. A monthly plan is priced
-  // against the real school days between the chosen start date and the end
-  // of that calendar month — never a flat rate.
-  let total, resolvedDays;
-  if (planType === 'monthly') {
-    const monthEndISO = endOfMonthISO(startDate);
-    const schoolDays = db.getSchoolDaysInRange(student.school, startDate, monthEndISO);
-    ({ total, days: resolvedDays } = calculateBookingTotal({ planType, plans, schoolDays }));
-    if (resolvedDays === 0) {
-      return res.status(422).render('booking', {
-        ...renderArgs, success: null,
-        error: t('booking.errNoSchoolDaysServer', { school: student.school, startDate })
-      });
-    }
-  } else {
-    ({ total, days: resolvedDays } = calculateBookingTotal({ planType, days, plans }));
-  }
-
-  if (!Number.isFinite(total) || total <= 0) return fail('errInvalidPrice');
-
-  const booking = db.bookAndCharge({
-    studentId: student.id,
-    menuItemId: Number(menuItemId),
-    planType,
-    startDate,
-    days: resolvedDays,
-    totalKWD: total,
-    parentId: parent.id,
-    detailType: planType === 'monthly' ? 'monthly' : 'single'
-  });
-
-  // POST -> redirect -> GET. Rendering the confirmation straight from the
-  // POST left the booking as the page's current request, so a refresh (or
-  // a back-then-forward) re-submitted it and charged a second booking.
-  // This is not payment idempotency — a real provider integration still
-  // needs its own idempotency key — it only removes the accidental
-  // browser-level resubmission.
-  res.redirect(`/booking?booked=${booking.id}`);
-});
+require('./lib/subscription-routes')(app, db, requireAuth);
 
 app.get('/history', requireAuth, (req, res) => {
-  const parent = currentParent(req);
-  const students = db.getStudentsByParent(parent.id);
-  const bookings = db.getBookingsForParent(parent.id).map(b => ({
-    ...b,
-    student: students.find(s => s.id === b.studentId),
-    menuItem: db.findMenuItem(b.menuItemId)
-  }));
-  res.render('history', {
-    bookings, parentId: parent.id,
-    cancelled: req.query.cancelled === '1',
-    cancelRejected: req.query.cancelfailed === '1'
-  });
+  res.render('history', { bookings: [], parentId:req.session.parentId, cancelled:false, cancelRejected:false });
 });
 
 app.post('/history/:id/cancel', requireAuth, (req, res) => {
@@ -1183,14 +922,14 @@ function staffView(req, res, error = null, status = 200) {
   res.status(status).render('staff', {
     bookings, parentId: parent.id,
     success: req.query.success === '1', error, values: req.method === 'POST' ? req.body : {},
-    menuItems: db.getMenuItems(), dailyRateKWD: db.getPlans().single?.rateKWD
+    menuItems: db.getMenuItems(), dailyRateKWD: db.getDailyRate()
   });
 }
 app.get('/staff', requireAuth, (req, res) => staffView(req, res));
 app.post('/staff', requireAuth, (req, res) => {
   const error = validateMealInput(req.body, { menuItems: db.getMenuItems(), staff: true, ...bookingWindow() });
   if (error) return staffView(req, res, res.locals.t('booking.' + error), 422);
-  const rate = db.getPlans().single?.rateKWD;
+  const rate = db.getDailyRate();
   if (!Number.isFinite(rate) || rate <= 0) return staffView(req, res, res.locals.t('booking.errInvalidPrice'), 422);
   db.createStaffBooking({ staffId: currentParent(req).id, menuItemId: Number(req.body.menuItemId), startDate: req.body.startDate, totalKWD: rate });
   res.redirect('/staff?success=1');

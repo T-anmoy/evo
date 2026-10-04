@@ -11,7 +11,9 @@ const fs = require('fs');
 const path = require('path');
 const Database = require('better-sqlite3');
 const { migrate } = require('./db/migrate');
-const { endOfMonthISO } = require('./lib/pricing');
+const { todayInKuwait } = require('./lib/subscription');
+const { SCHOOLS } = require('./lib/validate');
+const { FEATURES } = require('./lib/features');
 
 const DB_FILE = process.env.DATABASE_FILE || path.join(__dirname, 'evo360.db');
 const SEED_FILE = path.join(__dirname, 'seed.json');
@@ -35,27 +37,27 @@ db.pragma('foreign_keys = ON');
 // below and reused here at seed time so demo totals match production math.
 const DAILY_RATE_KWD = 2.000;
 
-const CALENDAR_SCHOOLS = ['The English School', 'Kuwait English School', 'American Creativity Academy'];
+const CALENDAR_SCHOOLS = SCHOOLS;
 const CALENDAR_WINDOW_DAYS_BACK = 45;
-const CALENDAR_WINDOW_DAYS_FORWARD = 150;
+
 const CALENDAR_HOLIDAY_OFFSETS = [9, 10, 38]; // illustrative example holidays, relative to seeding day
 
 function generateCalendarDays(today) {
   const start = new Date(today);
-  start.setDate(start.getDate() - CALENDAR_WINDOW_DAYS_BACK);
+  start.setUTCDate(start.getUTCDate() - CALENDAR_WINDOW_DAYS_BACK);
   const end = new Date(today);
-  end.setDate(end.getDate() + CALENDAR_WINDOW_DAYS_FORWARD);
+  end.setUTCMonth(end.getUTCMonth() + 9, 0);
 
   const holidayISODates = new Set(CALENDAR_HOLIDAY_OFFSETS.map(offset => {
     const d = new Date(today);
-    d.setDate(d.getDate() + offset);
+    d.setUTCDate(d.getUTCDate() + offset);
     return d.toISOString().split('T')[0];
   }));
 
   const days = [];
-  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+  for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
     const iso = d.toISOString().split('T')[0];
-    const dayOfWeek = d.getDay(); // 0 = Sun ... 6 = Sat
+    const dayOfWeek = d.getUTCDay(); // 0 = Sun ... 6 = Sat
     const isWeekend = dayOfWeek === 5 || dayOfWeek === 6; // Kuwait weekend: Fri/Sat
     const isSchoolDay = !isWeekend && !holidayISODates.has(iso);
     days.push({ date: iso, isSchoolDay });
@@ -63,15 +65,18 @@ function generateCalendarDays(today) {
   return days;
 }
 
-// Real school days between startISO and endISO (inclusive), counted from an
-// in-memory generated calendar — used at seed time so demo booking totals
-// are computed the exact same way the live app will compute them later.
-function countSchoolDaysInRange(calendarDays, startISO, endISO) {
-  return calendarDays.filter(d => d.isSchoolDay && d.date >= startISO && d.date <= endISO).length;
+// Fill missing placeholder calendar rows at startup; never overwrite school-supplied rows.
+function ensureCalendarCoverage() {
+  const days = generateCalendarDays(new Date(todayInKuwait() + 'T00:00:00Z'));
+  const insert = db.prepare('INSERT OR IGNORE INTO school_calendar_days(school,date,is_school_day) VALUES(?,?,?)');
+  db.transaction(() => { CALENDAR_SCHOOLS.forEach(school => days.forEach(d => insert.run(school, d.date, d.isSchoolDay ? 1 : 0))); })();
 }
 
 migrate(db);
 seedIfEmpty();
+ensureCalendarCoverage();
+const subscriptions = require('./db/subscriptions')(db);
+subscriptions.seedDemoSubscriptions(JSON.parse(fs.readFileSync(SEED_FILE, 'utf8')));
 
 // ---------- row <-> object mapping ----------
 function mapParent(r) {
@@ -119,38 +124,7 @@ function seedIfEmpty() {
   if (count > 0) return;
 
   const seed = JSON.parse(fs.readFileSync(SEED_FILE, 'utf-8'));
-  const today = new Date();
-  const todayISODate = today.toISOString().split('T')[0];
-  const todayCollected = new Date(today);
-  todayCollected.setHours(12, 14, 0, 0);
-
-  // Generate the placeholder school calendar now so monthly bookings below
-  // can be priced against real (illustrative) school-day counts, the same
-  // way the live app prices them — rather than seeding a stale flat number.
-  const calendarDays = generateCalendarDays(today);
-  const studentSchool = {};
-  seed.students.forEach(s => { studentSchool[s.id] = s.school; });
-  const dailyRateKWD = DAILY_RATE_KWD;
-
-  seed.bookings.forEach(b => {
-    if (b.startDate === '__TODAY__') b.startDate = todayISODate;
-    if (b.collectedAt === '__TODAY_1214__') b.collectedAt = todayCollected.toISOString();
-    if (b.totalKWD === '__CALC__') {
-      const school = studentSchool[b.studentId];
-      const monthEndISO = endOfMonthISO(b.startDate);
-      const schoolDayCount = countSchoolDaysInRange(calendarDays, b.startDate, monthEndISO);
-      b.days = schoolDayCount;
-      b.totalKWD = Math.round(dailyRateKWD * schoolDayCount * 1000) / 1000;
-    }
-  });
-  (seed.notifications || []).forEach(n => {
-    if (n.createdAt === '__TODAY_1214__') n.createdAt = todayCollected.toISOString();
-    if (typeof n.message === 'string' && n.message.includes('__CALC_TOTAL__')) {
-      const relatedBooking = seed.bookings.find(b => b.id === n.relatedId);
-      const amount = relatedBooking ? relatedBooking.totalKWD.toFixed(3) : '0.000';
-      n.message = n.message.replace('__CALC_TOTAL__', amount);
-    }
-  });
+  const calendarDays = generateCalendarDays(new Date(todayInKuwait() + 'T00:00:00Z'));
 
   const insertAll = db.transaction(() => {
     const insertParent = db.prepare(`
@@ -178,12 +152,6 @@ function seedIfEmpty() {
     CALENDAR_SCHOOLS.forEach(school => {
       calendarDays.forEach(d => insertCalendarDay.run(school, d.date, d.isSchoolDay ? 1 : 0));
     });
-
-    const insertBooking = db.prepare(`
-      INSERT INTO bookings (id, student_id, menu_item_id, plan_type, start_date, days, total_kwd, status, collected_at)
-      VALUES (@id, @studentId, @menuItemId, @planType, @startDate, @days, @totalKWD, @status, @collectedAt)
-    `);
-    seed.bookings.forEach(b => insertBooking.run(b));
 
     const insertStaffBooking = db.prepare(`
       INSERT INTO staff_bookings (id, staff_id, menu_item_id, start_date, total_kwd, status)
@@ -407,8 +375,8 @@ function cancelAndRefund({ bookingId, parentId }) {
 
 // ---------- Notifications ----------
 function getNotificationsForParent(parentId, limit) {
-  const rows = db.prepare('SELECT * FROM notifications WHERE parent_id = ? ORDER BY created_at DESC, id DESC LIMIT ?')
-    .all(parentId, limit || 20);
+  const rows = db.prepare("SELECT * FROM notifications WHERE parent_id = ? AND (? OR type != 'collected') ORDER BY created_at DESC, id DESC LIMIT ?")
+    .all(parentId, FEATURES.showCollection ? 1 : 0, limit || 20);
   return rows.map(r => ({
     id: r.id, parentId: r.parent_id, type: r.type, message: r.message,
     params: r.params ? JSON.parse(r.params) : null,
@@ -416,7 +384,7 @@ function getNotificationsForParent(parentId, limit) {
   }));
 }
 function getUnreadNotificationCount(parentId) {
-  return db.prepare('SELECT COUNT(*) AS c FROM notifications WHERE parent_id = ? AND read = 0').get(parentId).c;
+  return db.prepare("SELECT COUNT(*) AS c FROM notifications WHERE parent_id = ? AND read = 0 AND (? OR type != 'collected')").get(parentId, FEATURES.showCollection ? 1 : 0).c;
 }
 function markNotificationRead(id, parentId) {
   db.prepare('UPDATE notifications SET read = 1 WHERE id = ? AND parent_id = ?').run(id, parentId);
@@ -480,6 +448,7 @@ function createInquiry(inquiry) {
 }
 
 module.exports = {
+  ...subscriptions, ensureCalendarCoverage,
   resetToSeed,
   findParentByCivilId, findParentById, createParent, updateParent,
   getStudentsByParent, findStudentById, createStudent, updateStudent,

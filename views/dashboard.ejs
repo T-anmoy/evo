@@ -13,16 +13,6 @@
     <p><%= t('dashboard.intro') %></p>
   </div>
 
-  <% if (renewed) { %><div class="alert alert-success" role="status"><%- include('partials/success-icon') %><span><%= t('dashboard.renewedAlert') %></span></div><% } %>
-  <% if (typeof norenewaldays !== 'undefined' && norenewaldays) { %><div class="alert alert-error" role="alert"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= t('dashboard.noRenewalDaysAlert') %></span></div><% } %>
-
-  <%
-     /* Order follows what a parent actually opens this page to find out:
-        which child, what is booked for them today, whether it has been
-        collected, then anything needing an action, then the plan that is
-        paying for it. Account totals are a footnote to that question, not
-        three cards competing with it. */
-  %>
   <section class="card dash-today" aria-labelledby="todays-status-heading">
     <h2 class="dash-section-title" id="todays-status-heading"><%= t('dashboard.todaysStatusHeading') %></h2>
     <% if (studentStatus.length === 0) { %>
@@ -54,37 +44,9 @@
     <% } %>
   </section>
 
-  <% if ((renewalCandidates && renewalCandidates.length > 0) || (typeof lastBooking !== 'undefined' && lastBooking)) { %>
-    <section class="dash-actions" aria-labelledby="dash-actions-heading">
-      <h2 class="dash-section-title" id="dash-actions-heading"><%= t('dashboard.actionsHeading') %></h2>
-      <% if (renewalCandidates && renewalCandidates.length > 0) { %>
-        <% renewalCandidates.forEach(rc => { %>
-          <div class="card renewal-card">
-            <div class="renewal-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
-            <div class="renewal-body">
-              <strong><%= t('dashboard.renewalEndsIn', { name: rc.studentName, days: rc.daysLeft, unit: t('dashboard.' + (rc.daysLeft === 1 ? 'dayUnitOne' : 'dayUnitOther')) }) %></strong>
-              <span><%= t('dashboard.renewalBody', { meal: rc.mealName }) %></span>
-            </div>
-            <form method="POST" action="/booking/<%= rc.bookingId %>/renew">
-              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-              <button type="submit" class="btn btn-primary btn-sm"><%= t('dashboard.renewButton') %></button>
-            </form>
-          </div>
-        <% }) %>
-      <% } %>
-
-      <% if (typeof lastBooking !== 'undefined' && lastBooking) { %>
-        <div class="card quick-rebook-card">
-          <div class="quick-rebook-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8 12 4l8 4-8 4-8-4Z"/><path d="M4 8v8l8 4 8-4V8"/></svg></div>
-          <div class="quick-rebook-body">
-            <strong><%= t('dashboard.quickRebookTitle') %></strong>
-            <span><%= t('dashboard.quickRebookBody', { meal: lastBooking.mealName, name: lastBooking.studentName }) %></span>
-          </div>
-          <a href="/booking?rebook=<%= lastBooking.id %>" class="btn btn-primary"><%= t('dashboard.quickRebookCta') %></a>
-        </div>
-      <% } %>
-    </section>
-  <% } %>
+  <section class="dash-actions"><h2 class="dash-section-title"><%= t('dashboard.actionsHeading') %></h2>
+    <% students.forEach(student=>{ %><div class="card renewal-card"><strong><%= student.name %></strong><a class="btn btn-primary" href="/booking/new?student=<%= student.id %>"><%= t('subscription.bookMore') %></a></div><% }) %>
+  </section>
 
   <% if (activeSubscriptionPeriods.length > 0) { %>
     <section class="card" style="margin-bottom:24px;" aria-labelledby="current-period-heading">
@@ -93,7 +55,6 @@
         <div class="period-row">
           <div class="period-meta">
             <strong><%= p.studentName %></strong>
-            <span lang="en" dir="auto"><%= p.mealName %></span>
             <span><bdi><%= fmtDate(p.startDate) %> – <%= fmtDate(p.endDate) %></bdi></span>
           </div>
           <div class="period-figures">

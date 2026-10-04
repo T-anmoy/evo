@@ -2241,3 +2241,19 @@ th{text-align:start;}
 
 /* Client edits, Phase 6: three booking-guide steps. */
 @media(min-width:769px){.parent-journey.journey-three{grid-template-columns:repeat(3,minmax(0,1fr));}}
+
+/* Client edits, Phase 8: subscription steps and daily meal controls. */
+.subscription-page{max-width:1000px;}
+.subscription-page .hint{margin-block:12px 20px;}
+.subscription-page .card{min-width:0;}
+.subscription-page .action-row{flex-wrap:wrap;margin-block:20px;}
+.subscription-page h2{font-size:20px;}
+.subscription-months{display:grid;gap:16px;margin-block:24px;}
+.subscription-month .record-details{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;}
+.subscription-total{font-size:20px;margin-block:24px;}
+.month-preview{padding-inline-start:24px;margin-bottom:20px;}
+.month-switch{display:flex;align-items:end;gap:12px;flex-wrap:wrap;margin-block:24px;}
+.month-switch .field{margin:0;flex:1;min-width:180px;}
+.meal-day{display:grid;grid-template-columns:minmax(150px,1fr) minmax(0,2fr);align-items:center;gap:16px;padding-block:12px;border-bottom:1px solid var(--line);}
+.meal-day select{width:100%;min-width:0;}
+@media(max-width:768px){.subscription-month .record-details{grid-template-columns:1fr;}.meal-day{grid-template-columns:1fr;gap:6px;}}

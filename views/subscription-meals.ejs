@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="<%= lang %>" dir="<%= dir %>">
+<head><%- include('partials/head', { title: t('meta.booking.title') }) %></head>
+<body><%- include('partials/appnav', { active: 'booking' }) %>
+<main class="page subscription-page" id="main-content">
+  <div class="page-head"><h1><%= t('subscription.titles.meals') %></h1><p><%= student.name %> · <%= student.school %></p></div>
+  <% if (error) { %><div class="alert alert-error" role="alert"><%= error %></div><% } %>
+  <% if (saved) { %><div class="alert alert-success" role="status"><%= t('subscription.saved') %></div><% } %>
+  <p><%= t('subscription.changeNote') %></p><p class="hint"><%= t('subscription.cutoffNote') %></p>
+  <form method="GET" class="month-switch"><div class="field"><label for="month"><%= t('subscription.month') %></label><select id="month" name="month"><% months.forEach(value=>{ %><option value="<%= value %>" <%= value===month?'selected':'' %>><%= fmtMonth(value,locale) %></option><% }) %></select></div><button class="btn btn-outline"><%= t('subscription.showMonth') %></button></form>
+  <form method="POST" action="<%= draft ? '/booking/meals' : '/subscriptions/'+subscription.id+'/meals' %>" id="daily-meals-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="month" value="<%= month %>">
+    <% if (draft) { %><input type="hidden" name="token" value="<%= draft.token %>"><% } %>
+    <div class="card daily-meals">
+      <% meals.forEach(meal=>{ %><div class="field meal-day">
+        <label for="meal-<%= meal.date %>"><%= fmtMealDate(meal.date,locale) %></label>
+        <% if(meal.editable){ %><select id="meal-<%= meal.date %>" name="meals[<%= meal.date %>]" required><% menuItems.forEach(item=>{ %><option value="<%= item.id %>" <%= item.id===meal.menu_item_id?'selected':'' %>><%= item.name %> · <%= item.calories %> <%= t('common.kcal') %></option><% }) %></select>
+        <% } else { %><p><%= meal.name %> · <%= meal.calories %> <%= t('common.kcal') %> <span class="hint"><%= t('subscription.locked') %></span></p><% } %>
+      </div><% }) %>
+      <% if(meals.some(m=>m.editable)){ %><button class="btn btn-primary" type="submit"><%= t('subscription.saveMeals') %></button><% } %>
+    </div>
+  </form>
+  <% if(draft){ %><div class="action-row"><a href="/booking/terms" class="btn btn-primary" data-terms-dialog="terms-dialog"><%= t('subscription.proceed') %></a><a class="btn btn-outline" href="/booking/review"><%= t('subscription.titles.review') %></a></div>
+    <p class="hint"><%= t('subscription.saveBeforeProceed') %></p>
+    <%- include('partials/terms-dialog', { payment: true }) %><script src="/js/terms-dialog.js" defer></script>
+  <% } %>
+</main><%- include('partials/appfoot') %></body></html>

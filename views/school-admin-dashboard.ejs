@@ -78,46 +78,17 @@
         <p><strong><%= t('schoolAdminDashboard.emptyTitle') %></strong><%= t('schoolAdminDashboard.emptyBody') %></p>
       </div>
     <% } else { %>
-      <div class="data-table-view has-card-alternative">
-        <table>
-          <thead>
-            <tr><th><%= t('schoolAdminDashboard.colStudent') %></th><th><%= t('schoolAdminDashboard.colMeal') %></th><th><%= t('schoolAdminDashboard.colPlan') %></th><th><%= t('schoolAdminDashboard.colDate') %></th><th><%= t('schoolAdminDashboard.colTotal') %></th><th><%= t('schoolAdminDashboard.colStatus') %></th></tr>
-          </thead>
-          <tbody>
-            <% recentActivity.forEach(b => { %>
-              <tr>
-                <td><%= b.student ? b.student.name : '—' %></td>
-                <td lang="en" dir="auto"><%= b.menuItem ? b.menuItem.name : '—' %></td>
-                <td><%= b.planType === 'monthly' ? t('schoolAdminDashboard.planMonthly') : t('schoolAdminDashboard.planDays', { days: b.days, unit: t(b.days === 1 ? 'dashboard.dayUnitOne' : 'dashboard.dayUnitOther') }) %></td>
-                <td class="data-num"><bdi><%= fmtDate(b.startDate) %></bdi></td>
-                <td class="data-num"><bdi><%= fmtKWD(b.totalKWD) %></bdi></td>
-                <td>
-                  <% if (features.showCollection && b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schoolAdminDashboard.statusCollected') %></span>
-                  <% } else if (b.status === 'cancelled') { %><span class="badge badge-cancelled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg> <%= t('schoolAdminDashboard.statusCancelled') %></span>
-                  <% } else { %><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> <%= t('schoolAdminDashboard.statusUpcoming') %></span><% } %>
-                </td>
-              </tr>
-            <% }) %>
-          </tbody>
-        </table>
-      </div>
-      <div class="data-card-view">
-        <% recentActivity.forEach(b => { %>
-          <div class="data-card">
-            <div class="data-card-head">
-              <div>
-                <strong><%= b.student ? b.student.name : '—' %></strong>
-                <span lang="en" dir="auto"><%= b.menuItem ? b.menuItem.name : '—' %></span>
-              </div>
-              <% if (features.showCollection && b.status === 'collected') { %><span class="badge badge-collected"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%= t('schoolAdminDashboard.statusCollected') %></span>
-              <% } else if (b.status === 'cancelled') { %><span class="badge badge-cancelled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg> <%= t('schoolAdminDashboard.statusCancelled') %></span>
-              <% } else { %><span class="badge badge-upcoming"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> <%= t('schoolAdminDashboard.statusUpcoming') %></span><% } %>
-            </div>
-            <div class="data-card-row"><span class="k"><%= t('schoolAdminDashboard.colPlan') %></span><span class="v"><%= b.planType === 'monthly' ? t('schoolAdminDashboard.planMonthly') : t('schoolAdminDashboard.planDays', { days: b.days, unit: t(b.days === 1 ? 'dashboard.dayUnitOne' : 'dashboard.dayUnitOther') }) %></span></div>
-            <div class="data-card-row"><span class="k"><%= t('schoolAdminDashboard.colDate') %></span><span class="v data-num"><bdi><%= fmtDate(b.startDate) %></bdi></span></div>
-            <div class="data-card-row"><span class="k"><%= t('schoolAdminDashboard.colTotal') %></span><span class="v data-num"><bdi><%= fmtKWD(b.totalKWD) %></bdi></span></div>
-          </div>
-        <% }) %>
+      <div class="responsive-records">
+        <div class="data-table-view"><table><thead><tr>
+          <% ['colStudent','colMonths','colMealDays','colPaid','colTotal'].forEach(key=>{ %><th><%= t('schoolAdminDashboard.'+key) %></th><% }) %>
+        </tr></thead><tbody><% recentActivity.forEach(b=>{ %><tr>
+          <td><%= b.student_name %></td><td><%= b.months.map(m=>fmtMonth(m.month,locale)).join(' / ') %></td><td><%= b.meal_days %></td><td><%= fmtDate(b.paid_at) %></td><td><bdi><%= fmtKWD(b.total_kwd) %></bdi></td>
+        </tr><% }) %></tbody></table></div>
+        <div class="data-card-view"><% recentActivity.forEach(b=>{ %><article class="data-card"><h3><%= b.student_name %></h3><p><%= b.months.map(m=>fmtMonth(m.month,locale)).join(' / ') %></p><dl class="record-details">
+          <div><dt><%= t('schoolAdminDashboard.colMealDays') %></dt><dd><%= b.meal_days %></dd></div>
+          <div><dt><%= t('schoolAdminDashboard.colPaid') %></dt><dd><%= fmtDate(b.paid_at) %></dd></div>
+          <div><dt><%= t('schoolAdminDashboard.colTotal') %></dt><dd><bdi><%= fmtKWD(b.total_kwd) %></bdi></dd></div>
+        </dl></article><% }) %></div>
       </div>
     <% } %>
   </div>

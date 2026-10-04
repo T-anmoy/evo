@@ -1,295 +1,66 @@
 <!DOCTYPE html>
-<html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
-<head>
-<%- include('partials/head', { title: t('meta.booking.title') }) %>
-</head>
+<html lang="<%= lang %>" dir="<%= dir %>">
+<head><%- include('partials/head', { title: t('meta.booking.title') }) %></head>
 <body>
 <%- include('partials/appnav', { active: 'booking' }) %>
-
-<main class="page" id="main-content" style="max-width:680px;">
-  <div class="page-head">
-    <span class="eyebrow"><%= t('booking.eyebrow') %></span>
-    <h1><%= t('booking.heading') %></h1>
-    <p><%= t('booking.intro') %></p>
-  </div>
-
-  <% if (error) { %><div class="alert alert-error" role="alert" tabindex="-1"><%= error %></div><% } %>
-  <% if (success) { %><div class="alert alert-success" role="status"><%- include('partials/success-icon') %><span><%= success %></span></div><% } %>
-  <% if (typeof rebook !== 'undefined' && rebook) { %>
-    <div class="alert alert-info"><%= t('booking.rebookInfo') %></div>
-  <% } %>
-
-  <div class="card">
-    <% if (students.length === 0) { %>
-      <div class="empty-state">
-        <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"/></svg></div>
-        <p><strong><%= t('booking.emptyTitle') %></strong><%= t('booking.emptyBody') %></p>
-        <a href="/students" class="btn btn-primary btn-sm" style="margin-top:16px;"><%= t('booking.emptyCta') %></a>
+<main class="page subscription-page" id="main-content">
+  <div class="page-head"><span class="eyebrow"><%= t('booking.eyebrow') %></span><h1><%= t('subscription.titles.' + step) %></h1></div>
+  <% if (error) { %><div class="alert alert-error" role="alert"><%= error %></div><% } %>
+  <% if (step === 'list') { %>
+    <p class="hint"><%= t('subscription.calendarNote') %></p>
+    <% if (!students.length) { %><div class="card empty-state"><p><%= t('booking.emptyBody') %></p><a href="/students#add-student" class="btn btn-primary"><%= t('students.addButton') %></a></div><% } %>
+    <div class="grid-2">
+      <% students.forEach(student => { %><article class="card">
+        <h2><%= student.name %></h2><p><%= student.mealType %></p><p><%= student.school %> · <%= student.class %></p>
+        <a class="btn btn-primary" href="/booking/new?student=<%= student.id %>"><%= t('subscription.bookNow') %></a>
+      </article><% }) %>
+    </div>
+  <% } else if (step === 'new') { %>
+    <p class="alert alert-info"><%= t('subscription.leadBanner') %></p>
+    <div class="card"><form method="POST" action="/booking/review">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="student" value="<%= student.id %>">
+      <div class="field"><label for="booking-date"><%= t('subscription.bookingDate') %></label><input id="booking-date" value="<%= today %>" readonly></div>
+      <div class="field"><label for="booking-student"><%= t('booking.labelStudent') %></label><input id="booking-student" value="<%= student.name %>" readonly></div>
+      <div class="field"><label for="booking-class"><%= t('students.labelClass') %></label><input id="booking-class" value="<%= student.class %>" readonly></div>
+      <div class="field"><label for="months-count"><%= t('subscription.numberMonths') %></label>
+        <select name="months" id="months-count" required><% for(let n=1;n<=6;n++){ %><option value="<%= n %>" <%= count===n ? 'selected' : '' %>><%= n %></option><% } %></select>
       </div>
-    <% } else { %>
-      <% // Rebooking wins if present; otherwise fall back to this parent's
-         // own smart defaults (most recently used student, most-booked
-         // meal) computed on the server, so a fresh booking never starts
-         // from an arbitrary "first in the list" pick. %>
-      <% const rebookStudentId = (typeof rebook !== 'undefined' && rebook) ? rebook.studentId : (typeof defaultStudentId !== 'undefined' ? defaultStudentId : null); %>
-      <% const rebookMenuId = (typeof rebook !== 'undefined' && rebook) ? rebook.menuItemId : ((typeof defaultMenuId !== 'undefined' && defaultMenuId) ? defaultMenuId : (menuItems[0] && menuItems[0].id)); %>
-      <% const rebookPlan = (typeof rebook !== 'undefined' && rebook) ? rebook.planType : 'monthly'; %>
-      <% const v = typeof values !== 'undefined' ? values : {}; %>
-      <form method="POST" action="/booking" id="bookingForm">
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-
-        <div class="field">
-          <label for="studentSelect"><%= t('booking.labelStudent') %></label>
-          <select name="studentId" id="studentSelect" required>
-            <% students.forEach(s => { %>
-              <option value="<%= s.id %>" data-school="<%= s.school %>" data-class="<%= s.class %>" <%= s.id === (v.studentId ? Number(v.studentId) : rebookStudentId) ? 'selected' : '' %>><%= s.name %> — <%= s.school %></option>
-            <% }) %>
-          </select>
-          <span class="hint" id="agePortionHint"></span>
-        </div>
-
-        <fieldset class="field">
-          <legend><%= t('booking.labelMeal') %> <span style="font-weight:400; color:var(--muted);"><%= t('booking.labelMealHint') %></span></legend>
-          <div class="picker-grid">
-            <% menuItems.forEach((m, i) => { %>
-              <div class="picker-card">
-                <input type="radio" name="menuItemId" id="meal-<%= m.id %>" value="<%= m.id %>" <%= m.id === (v.menuItemId ? Number(v.menuItemId) : rebookMenuId) ? 'checked' : '' %> required>
-                <label for="meal-<%= m.id %>">
-                  <span class="picker-thumb"><%- include('partials/dish-image', { m: m }) %></span>
-                  <span class="picker-body">
-                    <strong><%= m.name %></strong>
-                    <span class="picker-meta"><bdi><%= m.calories %> <%= t('common.kcal') %> · <%= m.protein %>g <%= t('common.protein') %></bdi></span>
-                  </span>
-                  <span class="check-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-                </label>
-                <details class="food-disclosure booking-food-detail"><summary><%= t('food.details') %></summary><%- include('partials/food-details', {m}) %></details>
-              </div>
-            <% }) %>
-          </div>
-        </fieldset>
-
-        <fieldset class="field">
-          <legend><%= t('booking.labelPlan') %></legend>
-          <div class="picker-grid plan-picker">
-            <div class="picker-card">
-              <input type="radio" name="planType" id="plan-single" value="single" <%= (v.planType || rebookPlan) === 'single' ? 'checked' : '' %>>
-              <label for="plan-single">
-                <span class="plan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
-                <span class="picker-body">
-                  <strong><%= t('booking.planSingleTitle') %></strong>
-                  <span class="picker-meta data-num"><bdi>KWD <%= dailyRateKWD.toFixed(3) %></bdi> <%= t('booking.planSinglePer') %></span>
-                </span>
-                <span class="check-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-              </label>
-            </div>
-            <div class="picker-card">
-              <input type="radio" name="planType" id="plan-monthly" value="monthly" <%= (v.planType || rebookPlan) === 'monthly' ? 'checked' : '' %>>
-              <label for="plan-monthly">
-                <span class="popular-tag"><%= t('booking.planMonthlyBadge') %></span>
-                <span class="plan-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 0 1 4 4L7 21l-5 1 1-5Z"/></svg></span>
-                <span class="picker-body">
-                  <strong><%= t('booking.planMonthlyTitle') %></strong>
-                  <span class="picker-meta"><%= t('booking.planMonthlyMeta') %></span>
-                </span>
-                <span class="check-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-              </label>
-            </div>
-          </div>
-        </fieldset>
-
-        <div class="form-row">
-          <div class="field">
-            <label for="startDate"><%= t('booking.labelStartDate') %></label>
-            <input type="date" name="startDate" id="startDate" value="<%= v.startDate || bookingWindow().today %>" min="<%= bookingWindow().today %>" max="<%= bookingWindow().horizon %>" required>
-          </div>
-          <div class="field" id="daysField">
-            <label for="daysInput"><%= t('booking.labelDays') %></label>
-            <input type="number" name="days" id="daysInput" inputmode="numeric" value="<%= v.days === undefined ? 5 : v.days %>" min="1" max="30" step="1">
-          </div>
-        </div>
-
-        <p id="calendarNote" class="hint" style="margin:-6px 0 18px;"></p>
-
-        <%
-           /* What is actually being bought, spelled out before the
-              Confirm button — child, meal, plan, date, days charged and
-              the payment state. Rendered from the selections the server
-              already knows about, so it is correct on first paint and
-              with JavaScript off; the script below keeps it in step as
-              the parent changes things. The day count and the total stay
-              deliberately unstated until dates are reviewed rather than
-              showing a placeholder number that isn't the real charge. */
-           const selStudentId = v.studentId ? Number(v.studentId) : rebookStudentId;
-           const selMenuId = v.menuItemId ? Number(v.menuItemId) : rebookMenuId;
-           const selPlan = v.planType || rebookPlan;
-           const selStudent = students.find(s => s.id === selStudentId) || students[0];
-           const selMenu = menuItems.find(m => m.id === selMenuId) || menuItems[0];
-           const selDate = v.startDate || bookingWindow().today;
-           const selDays = v.days === undefined ? 5 : v.days;
-        %>
-        <section class="booking-summary" aria-labelledby="booking-summary-heading">
-          <h2 class="dash-section-title" id="booking-summary-heading"><%= t('booking.summaryHeading') %></h2>
-          <dl class="booking-summary-list">
-            <div><dt><%= t('booking.summaryChild') %></dt><dd id="summaryChild"><%= selStudent ? selStudent.name : '—' %></dd></div>
-            <div><dt><%= t('booking.summaryMeal') %></dt><dd id="summaryMeal" lang="en" dir="auto"><%= selMenu ? selMenu.name : '—' %></dd></div>
-            <div><dt><%= t('booking.summaryPlan') %></dt><dd id="summaryPlan"><%= selPlan === 'monthly' ? t('booking.planMonthlyTitle') : t('booking.planSingleTitle') %></dd></div>
-            <div><dt><%= t('booking.summaryDate') %></dt><dd id="summaryDate" class="data-num"><bdi><%= fmtDate(selDate) %></bdi></dd></div>
-            <div><dt id="summaryDaysLabel"><%= selPlan === 'monthly' ? t('booking.summaryMonthlyDays') : t('booking.summaryDays') %></dt><dd id="summaryDays" class="data-num"><bdi><%= selPlan === 'monthly' ? t('booking.summaryDaysPending') : selDays %></bdi></dd></div>
-            <div><dt><%= t('booking.summaryPaymentLabel') %></dt><dd><%= t('booking.summaryPaymentState') %></dd></div>
-          </dl>
-        </section>
-
-        <div class="confirm-bar" id="confirmBar">
-          <div id="totalBox" style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="color:rgba(255,255,255,0.65); font-size:13px; font-weight:500;"><%= t('booking.totalDue') %></span>
-            <strong aria-live="polite" id="totalAmt" class="data-num" style="color:var(--leaf-light); font-size:20px;"><bdi><%= t('booking.previewTotal') %></bdi></strong>
-          </div>
-          <button type="submit" class="btn btn-light" style="width:100%;" id="confirmBtn"><%= t('booking.confirmCta') %></button>
-        </div>
-        <p class="hint" style="text-align:center; margin-top:8px;"><%= t('booking.knetHint') %></p>
+      <p><%= t('subscription.monthPreview') %></p><ul class="month-preview"><% preview.forEach((month,i)=>{ %><li data-month-index="<%= i %>" <%= i>=count ? 'hidden' : '' %>><%= fmtMonth(month,locale) %></li><% }) %></ul>
+      <div class="action-row"><button class="btn btn-outline" type="submit" formmethod="GET" formaction="/booking/new"><%= t('subscription.preview') %></button><button class="btn btn-primary" type="submit"><%= t('subscription.next') %></button></div>
+    </form></div>
+    <script src="/js/subscription.js" defer></script>
+  <% } else if (step === 'review') { %>
+    <p><%= student.name %> · <%= student.school %></p>
+    <%- include('partials/subscription-review', { months: draft.months, totalKWD: draft.totalKWD }) %>
+    <% if (!draft.error || draft.error === 'priceChanged') { %><a href="/booking/meals" class="btn btn-primary"><%= t('subscription.next') %></a><% } %>
+    <a class="btn btn-outline" href="/booking/new?student=<%= student.id %>"><%= t('subscription.startAgain') %></a>
+  <% } else if (step === 'terms') { %>
+    <div class="card">
+      <% if (locale === 'ar') { %><p><%= t('termsDialog.englishNote') %></p><% } %>
+      <div class="legal-content" lang="en" dir="ltr"><%- include('partials/terms-content') %></div>
+      <form method="POST" action="/booking/accept-terms"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="token" value="<%= draft.token %>">
+        <button class="btn btn-primary"><%= t('termsDialog.accept') %></button><a href="/booking/meals" class="btn btn-outline"><%= t('termsDialog.decline') %></a>
       </form>
-    <% } %>
-  </div>
+    </div>
+  <% } else if (step === 'payment') { %>
+    <div class="card"><h2><%= student.name %></h2><p><%= student.school %></p>
+      <%- include('partials/subscription-review', { months: draft.months, totalKWD: draft.totalKWD }) %>
+      <fieldset class="field"><legend><%= t('subscription.paymentMethod') %></legend><label><input type="radio" name="method" value="KNET" checked> <%= t('subscription.knet') %></label></fieldset>
+      <p><%= t('subscription.payable') %>: <bdi><%= fmtKWD(draft.totalKWD) %></bdi></p><p class="hint"><%= t('subscription.simulated') %></p>
+      <a href="/booking/knet" class="btn btn-primary"><%= t('subscription.continuePayment') %></a>
+    </div>
+  <% } else if (step === 'knet') { %>
+    <div class="card"><h2><%= t('meta.siteName') %></h2><p class="alert alert-info"><%= t('subscription.simulated') %></p>
+      <p><%= t('subscription.payable') %>: <bdi><%= fmtKWD(draft.totalKWD) %></bdi></p>
+      <form method="POST" action="/booking/pay"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="token" value="<%= draft.token %>"><button class="btn btn-primary"><%= t('subscription.pay') %></button></form>
+    </div>
+  <% } else if (step === 'confirmation') { %>
+    <div class="card"><div class="alert alert-success" role="status"><%- include('partials/success-icon') %><span><%= t('subscription.confirmed') %></span></div>
+      <h2><%= subscription.student_name %></h2><p><%= subscription.school %></p><p><bdi><%= subscription.invoice_number %> · <%= fmtKWD(subscription.total_kwd) %></bdi></p>
+      <p class="hint"><%= t('subscription.simulated') %></p>
+      <div class="action-row"><a class="btn btn-primary" href="/history/<%= subscription.id %>/invoice.pdf"><%= t('subscription.invoice') %></a><a class="btn btn-outline" href="/subscriptions/<%= subscription.id %>/meals"><%= t('subscription.changeMeals') %></a><a class="btn btn-outline" href="/dashboard"><%= t('notFound.backToDashboard') %></a></div>
+    </div>
+  <% } %>
 </main>
-
-<script nonce="<%= cspNonce %>">
-  var SCHOOL_CALENDAR = <%- JSON.stringify(schoolCalendar) %>;
-  var DAILY_RATE = <%- JSON.stringify(dailyRateKWD) %>;
-  // Translated fragments for the client-side live-preview calculation
-  // below — the same strings the server would use if this were a full
-  // page reload, so the preview never drifts into English while the rest
-  // of the page is Arabic (or vice versa).
-  var T = {
-    agePortionHint: <%- JSON.stringify(t('booking.agePortionHint')) %>,
-    noSchoolDaysNote: <%- JSON.stringify(t('booking.noSchoolDaysNote')) %>,
-    realSchoolDaysNote: <%- JSON.stringify(t('booking.realSchoolDaysNote')) %>,
-    realSchoolDayUnitOne: <%- JSON.stringify(t('booking.realSchoolDayUnitOne')) %>,
-    realSchoolDayUnitOther: <%- JSON.stringify(t('booking.realSchoolDayUnitOther')) %>,
-    planSingleTitle: <%- JSON.stringify(t('booking.planSingleTitle')) %>,
-    planMonthlyTitle: <%- JSON.stringify(t('booking.planMonthlyTitle')) %>,
-    summaryDays: <%- JSON.stringify(t('booking.summaryDays')) %>,
-    summaryMonthlyDays: <%- JSON.stringify(t('booking.summaryMonthlyDays')) %>
-  };
-  // Same en-GB numerals the server's fmtDate produces, so the summary
-  // doesn't switch date format the moment the script updates it.
-  function fmtDateLike(iso) {
-    var d = new Date(iso + 'T00:00:00Z');
-    if (!isFinite(d.getTime())) return iso;
-    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'UTC' });
-  }
-  // Change feedback: after the first calculation (which only fills in
-  // the page as rendered), any value that actually changes gets the
-  // shared settle beat — just that value, so the parent sees exactly
-  // what their choice affected. EvoMotion.settle restarts cleanly every
-  // time and is a no-op under reduced motion.
-  var feedbackLive = false;
-  function acknowledge(el) {
-    if (feedbackLive && window.EvoMotion) window.EvoMotion.settle(el);
-  }
-  function setSummary(id, text) {
-    var el = document.getElementById(id);
-    if (!el) return;
-    var target = el.querySelector('bdi') || el;
-    if (target.textContent !== text) { target.textContent = text; acknowledge(el); }
-  }
-  function fmt(str, vars) {
-    return str.replace(/\{(\w+)\}/g, function (m, k) { return (k in vars) ? vars[k] : m; });
-  }
-
-  function endOfMonthISO(dateISO) {
-    var d = new Date(dateISO + 'T00:00:00Z');
-    var end = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0));
-    return end.toISOString().split('T')[0];
-  }
-
-  function schoolDaysInRange(school, startISO, endISO) {
-    var days = SCHOOL_CALENDAR[school] || [];
-    return days.filter(function (d) { return d >= startISO && d <= endISO; });
-  }
-
-  function recalc(){
-    var planEl = document.querySelector('input[name="planType"]:checked');
-    var plan = planEl ? planEl.value : 'single';
-    var daysField = document.getElementById('daysField');
-    var daysInput = document.getElementById('daysInput');
-    var note = document.getElementById('calendarNote');
-    var confirmBtn = document.getElementById('confirmBtn');
-    var studentSelect = document.getElementById('studentSelect');
-    var startDateInput = document.getElementById('startDate');
-    var ageHint = document.getElementById('agePortionHint');
-    if (!studentSelect || !daysField || !note || !confirmBtn || !startDateInput) return;
-    var selected = studentSelect.options[studentSelect.selectedIndex];
-    if (selected) setSummary('summaryChild', selected.textContent.split(' — ')[0]);
-    var mealEl = document.querySelector('input[name="menuItemId"]:checked');
-    if (mealEl) {
-      var mealLabel = document.querySelector('label[for="' + mealEl.id + '"] strong');
-      if (mealLabel) setSummary('summaryMeal', mealLabel.textContent);
-    }
-    setSummary('summaryPlan', plan === 'monthly' ? T.planMonthlyTitle : T.planSingleTitle);
-    if (startDateInput.value) setSummary('summaryDate', fmtDateLike(startDateInput.value));
-    var daysLabelEl = document.getElementById('summaryDaysLabel');
-    if (daysLabelEl) daysLabelEl.textContent = plan === 'monthly' ? T.summaryMonthlyDays : T.summaryDays;
-    if (ageHint && selected) {
-      var klass = selected.getAttribute('data-class');
-      ageHint.textContent = klass ? fmt(T.agePortionHint, { className: klass }) : '';
-    }
-
-    // The total acknowledges every real change (see acknowledge above).
-    var totalEl = document.getElementById('totalAmt');
-    function setTotal(text) {
-      if (totalEl.textContent === text) return;
-      totalEl.querySelector('bdi').textContent = text;
-      acknowledge(totalEl);
-    }
-
-    if (plan === 'monthly') {
-      daysField.style.display = 'none';
-      daysInput.disabled = true;
-      var selectedOption = studentSelect.options[studentSelect.selectedIndex];
-      var school = selectedOption ? selectedOption.getAttribute('data-school') : null;
-      var startISO = startDateInput.value;
-      if (school && startISO) {
-        var monthEndISO = endOfMonthISO(startISO);
-        var realDays = schoolDaysInRange(school, startISO, monthEndISO);
-        var total = Math.round(realDays.length * DAILY_RATE * 1000) / 1000;
-        setTotal('KWD ' + total.toFixed(3));
-        setSummary('summaryDays', String(realDays.length));
-        if (realDays.length === 0) {
-          note.textContent = fmt(T.noSchoolDaysNote, { school: school, startDate: startISO });
-          confirmBtn.disabled = true;
-        } else {
-          note.textContent = fmt(T.realSchoolDaysNote, {
-            count: realDays.length,
-            unit: realDays.length === 1 ? T.realSchoolDayUnitOne : T.realSchoolDayUnitOther,
-            school: school, startDate: startISO, monthEnd: monthEndISO
-          });
-          confirmBtn.disabled = false;
-        }
-      } else {
-        note.textContent = '';
-        confirmBtn.disabled = false;
-      }
-    } else {
-      daysField.style.display = 'block';
-      daysInput.disabled = false;
-      note.textContent = '';
-      confirmBtn.disabled = false;
-      var d = Math.max(1, parseInt(daysInput.value, 10) || 1);
-      setSummary('summaryDays', String(d));
-      setTotal('KWD ' + (d * DAILY_RATE).toFixed(3));
-    }
-  }
-  document.querySelectorAll('input[name="planType"]').forEach(function(el){ el.addEventListener('change', recalc); });
-  document.querySelectorAll('input[name="menuItemId"]').forEach(function(el){ el.addEventListener('change', recalc); });
-  var daysInputEl = document.getElementById('daysInput');
-  if (daysInputEl) daysInputEl.addEventListener('input', recalc);
-  var studentSelectEl = document.getElementById('studentSelect');
-  if (studentSelectEl) studentSelectEl.addEventListener('change', recalc);
-  var startDateEl = document.getElementById('startDate');
-  if (startDateEl) startDateEl.addEventListener('change', recalc);
-  document.addEventListener('DOMContentLoaded', function () { recalc(); feedbackLive = true; });
-</script>
-
 <%- include('partials/appfoot') %>
-</body>
-</html>
+</body></html>

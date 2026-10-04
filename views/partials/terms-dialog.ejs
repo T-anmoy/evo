@@ -10,6 +10,7 @@
   <% if (payment) { %>
     <form method="POST" action="/booking/accept-terms">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="token" value="<%= draft.token %>">
       <button class="btn btn-primary" type="submit"><%= t('termsDialog.accept') %></button>
       <button class="btn btn-outline" type="button" data-dialog-close><%= t('termsDialog.decline') %></button>
     </form>

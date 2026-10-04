@@ -49,14 +49,8 @@
     </div>
     <div class="pricing-grid" data-reveal-group>
       <div class="price-card" data-reveal="up">
-        <div class="price-tag"><%= t('parents.pricing.payAsYouGoTitle') %></div>
-        <div class="price-amt"><bdi>KWD <%= (plans.single ? plans.single.rateKWD : 2).toFixed(3) %></bdi><span><%= t('parents.pricing.payAsYouGoPer') %></span></div>
-        <p><%= t('parents.pricing.payAsYouGoBody') %></p>
-        <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-outline" style="width:100%;"><%= t('parents.pricing.payAsYouGoCta') %></a>
-      </div>
-      <div class="price-card" data-reveal="up">
         <div class="price-tag"><%= t('parents.pricing.subscriptionTitle') %></div>
-        <div class="price-amt"><bdi>KWD <%= (plans.single ? plans.single.rateKWD : 2).toFixed(3) %></bdi><span><%= t('parents.pricing.subscriptionPer') %></span></div>
+        <div class="price-amt"><bdi>KWD <%= dailyRateKWD.toFixed(3) %></bdi><span><%= t('parents.pricing.subscriptionPer') %></span></div>
         <p><%= t('parents.pricing.subscriptionBody') %></p>
         <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-outline" style="width:100%;"><%= t('parents.pricing.subscriptionCta') %></a>
       </div>
