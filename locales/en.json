@@ -983,5 +983,12 @@
     "body": "The problem has been recorded. Nothing you were doing was charged or changed by this — try again in a moment.",
     "backToDashboard": "Back to your dashboard",
     "backToHome": "Back to the homepage"
+  },
+  "termsDialog": {
+    "title": "Terms of Use",
+    "close": "Close",
+    "englishNote": "The Terms are currently available in English.",
+    "accept": "Accept",
+    "decline": "Decline"
   }
 }

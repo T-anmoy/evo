@@ -60,7 +60,7 @@
         </div>
         <div class="field <%= re.agreeTerms ? 'invalid' : '' %>" data-consent="true">
           <input type="checkbox" id="agreeTerms" name="agreeTerms" data-validate="required" <%= !values || values.agreeTerms ? 'checked' : '' %> required aria-describedby="agreeTerms-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.agreeTerms) ? 'true' : 'false' %>">
-          <label for="agreeTerms" class="consent-label"><%= t('register.agreeTermsPre') %> <a href="/terms" style="color:var(--leaf-dark); font-weight:600;"><%= t('register.agreeTermsLink') %><%= locale === 'ar' ? ' (English)' : '' %></a><span class="req">*</span></label>
+          <label for="agreeTerms" class="consent-label"><%= t('register.agreeTermsPre') %> <a href="/terms" target="_blank" rel="noopener" data-terms-dialog="terms-dialog" style="color:var(--leaf-dark); font-weight:600;"><%= t('register.agreeTermsLink') %><%= locale === 'ar' ? ' (English)' : '' %></a><span class="req">*</span></label>
           <div class="field-error" id="agreeTerms-error"><span><%= re.agreeTerms || t('register.errAgreeTerms') %></span></div>
         </div>
         <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('register.submit') %></button>
@@ -68,5 +68,7 @@
       <div class="auth-foot"><%= t('register.haveAccount') %> <a href="<%= locale === 'ar' ? '/ar/login' : '/login' %>" style="color:var(--leaf-dark); font-weight:600;"><%= t('register.logIn') %></a></div>
     </div>
   </main>
+  <%- include('partials/terms-dialog', { payment: false }) %>
+  <script src="/js/terms-dialog.js" defer></script>
 </body>
 </html>

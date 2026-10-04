@@ -1,0 +1,17 @@
+<dialog id="terms-dialog" class="terms-dialog" aria-labelledby="terms-dialog-title">
+  <div class="terms-dialog-head">
+    <h2 id="terms-dialog-title" tabindex="-1" autofocus><%= t('termsDialog.title') %></h2>
+    <button type="button" class="btn btn-outline" data-dialog-close><%= t('termsDialog.close') %></button>
+  </div>
+  <% if (locale === 'ar') { %><p><%= t('termsDialog.englishNote') %></p><% } %>
+  <div class="terms-dialog-body legal-content" lang="en" dir="ltr" tabindex="0">
+    <%- include('terms-content') %>
+  </div>
+  <% if (payment) { %>
+    <form method="POST" action="/booking/accept-terms">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button class="btn btn-primary" type="submit"><%= t('termsDialog.accept') %></button>
+      <button class="btn btn-outline" type="button" data-dialog-close><%= t('termsDialog.decline') %></button>
+    </form>
+  <% } %>
+</dialog>

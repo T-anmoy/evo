@@ -2224,3 +2224,14 @@ th{text-align:start;}
 .brand-logo-on-light{color:var(--forest);}
 .brand-logo-on-light .dot{color:var(--forest);}
 @media(max-width:480px){.brand-logo img{height:28px;}.brand-logo{gap:8px;}}
+
+/* Client edits, Phase 3: native Terms dialog. */
+.terms-dialog{margin:auto;width:min(760px,calc(100% - 24px));max-height:calc(100dvh - 32px);padding:20px;border:1px solid var(--line);border-radius:var(--radius);background:var(--white);color:var(--ink-900);}
+.terms-dialog[open]{display:flex;flex-direction:column;gap:16px;}
+.terms-dialog::backdrop{background:rgba(0,0,0,.55);}
+.terms-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.terms-dialog-head h2{font-size:22px;}
+.terms-dialog-body{overflow-y:auto;overscroll-behavior:contain;min-height:0;}
+.terms-dialog .faq-content{grid-template-rows:1fr;}
+.terms-dialog .faq-answer{visibility:visible;}
+.terms-dialog form{display:flex;flex-wrap:wrap;gap:12px;}
