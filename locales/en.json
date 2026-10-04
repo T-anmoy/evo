@@ -124,7 +124,8 @@
     "closeMenu": "Close menu",
     "closeLabel": "Close",
     "langSwitchLabel": "Switch language",
-    "checkMySchool": "Check My School"
+    "checkMySchool": "Check My School",
+    "corporate": "Corporate Meals"
   },
   "footer": {
     "tagline": "School meals in Kuwait: food information, parent bookings and collection records in one place.",
@@ -147,7 +148,9 @@
     "instagram": "Instagram",
     "copyright": "© {year} Evo Meals · Kuwait",
     "disclaimer": "Evo Meals connects parents with an independent catering partner — it does not prepare meals itself.",
-    "taglineWithoutCollection": "School meals in Kuwait: food information and parent bookings in one place."
+    "taglineWithoutCollection": "School meals in Kuwait: food information and parent bookings in one place.",
+    "corporateHeading": "Corporate Meals",
+    "corporate": "Corporate Meals"
   },
   "a11y": {
     "skipToContent": "Skip to content"
@@ -225,7 +228,10 @@
       "schoolsCta": "Partner With Evo Meals",
       "caterersTitle": "For Caterers",
       "caterersBody": "Discuss orders, preparation and school fulfilment.",
-      "caterersCta": "Become a Catering Partner"
+      "caterersCta": "Become a Catering Partner",
+      "corporateTitle": "Corporate Meals",
+      "corporateBody": "Fresh daily meals for office teams.",
+      "corporateCta": "Set up workplace meals"
     },
     "app": {
       "eyebrow": "The Evo Meals app",
@@ -1013,5 +1019,42 @@
     "englishNote": "The Terms are currently available in English.",
     "accept": "Accept",
     "decline": "Decline"
+  },
+  "corporate": {
+    "hero": {
+      "eyebrow": "Corporate Meals",
+      "heading": "Fresh daily meals for office teams.",
+      "lede": "Book a month of working-day meals, choose what you eat each day, and pay once — the same simple booking flow our schools use.",
+      "cta": "Set up workplace meals"
+    },
+    "point1": "Monthly subscription, charged for working days only",
+    "point2": "Choose your meal for every day, change it later",
+    "point3": "Secure KNET payment",
+    "howBookingWorks": "How booking works",
+    "simulated": "Payments in this demo are simulated. No real payment is processed.",
+    "form": {
+      "eyebrow": "Corporate Meals",
+      "heading": "Set up meals for your workplace.",
+      "intro": "This demo saves your corporate inquiry, but does not notify an external team.",
+      "successMsg": "Corporate inquiry saved in the demo. Contact the team directly to discuss workplace meals.",
+      "labelOrgName": "Company name",
+      "labelContactName": "Contact name",
+      "labelEmail": "Work email",
+      "labelPhone": "Phone",
+      "labelScale": "Number of employees",
+      "labelMessage": "Message",
+      "placeholderMessage": "Tell us about meals for your workplace.",
+      "submit": "Save corporate inquiry",
+      "errOrgName": "Enter your company's name (not digits-only).",
+      "errContactName": "Enter a contact name (letters only, at least 2 characters).",
+      "errEmail": "A valid email address is required.",
+      "errPhone": "Enter a valid phone number (8–15 digits).",
+      "errMessage": "Tell us a little more — between 10 and 2,000 characters.",
+      "errScale": "Choose an employee range from the list.",
+      "range0": "1–25",
+      "range1": "26–100",
+      "range2": "101–250",
+      "range3": "250+"
+    }
   }
 }

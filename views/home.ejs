@@ -181,7 +181,7 @@ const SHOW_TRUST_STATS = false;
 </section>
 
 <!-- 4.7 B2B pathways — concise panels only; the full sales story lives on
-     /schools and /caterers, not here. -->
+     /schools and /corporate-meals, not here. -->
 <section class="section on-tint" id="b2b-pathways">
   <div class="wrap">
     <div class="grid-2" data-reveal-group>
@@ -193,9 +193,9 @@ const SHOW_TRUST_STATS = false;
       </div>
       <div class="benefit-card" data-reveal="up">
         <div class="benefit-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8 12 4l8 4-8 4-8-4Z"/><path d="M4 8v8l8 4 8-4V8"/></svg></div>
-        <h3><%= t('home.b2b.caterersTitle') %></h3>
-        <p><%= t('home.b2b.caterersBody') %></p>
-        <a href="/caterers" class="btn btn-primary btn-sm"><%= t('home.b2b.caterersCta') %></a>
+        <h3><%= t('home.b2b.corporateTitle') %></h3>
+        <p><%= t('home.b2b.corporateBody') %></p>
+        <a href="<%= locale === 'ar' ? '/ar' : '' %>/corporate-meals" class="btn btn-primary btn-sm"><%= t('home.b2b.corporateCta') %></a>
       </div>
     </div>
   </div>

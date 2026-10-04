@@ -147,7 +147,7 @@ const SESSION_LOCALE_PATH_PREFIXES = [
 // crawler must never be pointed at an hreflang alternate that 404s (e.g.
 // /ar/privacy, which doesn't exist), and a page-with-no-Arabic-route must
 // never claim to have a canonical link to a language variant it doesn't have.
-const BILINGUAL_PAGES = ['/', '/schools', '/parents', '/how-it-works', '/login', '/register', '/forgot-password', '/caterers', '/about', '/contact'];
+const BILINGUAL_PAGES = ['/', '/schools', '/parents', '/how-it-works', '/login', '/register', '/forgot-password', '/corporate-meals', '/about', '/contact'];
 
 app.use((req, res, next) => {
   const p = req.path;
@@ -461,31 +461,35 @@ app.get(['/parents', '/ar/parents'], (req, res) => {
   });
 });
 
-app.get(['/caterers', '/ar/caterers'], (req, res) => {
-  res.render('caterers', { parentId: req.session.parentId, success: req.query.success || null, errors: null, formData: null });
+app.get(['/caterers', '/ar/caterers'], (req, res) => res.redirect(301, (req.path.startsWith('/ar') ? '/ar' : '') + '/corporate-meals'));
+
+app.get(['/corporate-meals', '/ar/corporate-meals'], (req, res) => {
+  res.render('corporate-meals', { parentId: req.session.parentId, success: req.query.success || null, errors: null, formData: null });
 });
 
-app.post(['/caterers/inquiry', '/ar/caterers/inquiry'], writeFormLimiter, (req, res) => {
+app.post(['/corporate-meals/inquiry', '/ar/corporate-meals/inquiry'], writeFormLimiter, (req, res) => {
   const { organizationName, contactName, email, phone, scaleInfo, message } = req.body;
   const t = res.locals.t;
   const errors = {};
-  if (!isValidOrgName(organizationName)) errors.organizationName = t('caterers.form.errOrgName');
-  if (!isValidName(contactName)) errors.contactName = t('caterers.form.errContactName');
-  if (!isValidEmail(email)) errors.email = t('caterers.form.errEmail');
-  if (phone && !isValidPhone(phone)) errors.phone = t('caterers.form.errPhone');
-  if (!message || message.trim().length < 10 || message.trim().length > 2000) errors.message = t('caterers.form.errMessage');
+  if (!isValidOrgName(organizationName)) errors.organizationName = t('corporate.form.errOrgName');
+  if (!isValidName(contactName)) errors.contactName = t('corporate.form.errContactName');
+  if (!isValidEmail(email)) errors.email = t('corporate.form.errEmail');
+  if (phone && !isValidPhone(phone)) errors.phone = t('corporate.form.errPhone');
+  if (typeof message !== 'string' || message.trim().length < 10 || message.trim().length > 2000) errors.message = t('corporate.form.errMessage');
+
+  if (!['1–25','26–100','101–250','250+'].includes(scaleInfo)) errors.scaleInfo = t('corporate.form.errScale');
 
   if (Object.keys(errors).length) {
-    return res.render('caterers', { parentId: req.session.parentId, success: null, errors, formData: req.body });
+    return res.status(422).render('corporate-meals', { parentId: req.session.parentId, success: null, errors, formData: req.body });
   }
 
   db.createInquiry({
-    type: 'caterer', organizationName: organizationName.trim(), contactName: contactName.trim(),
+    type: 'corporate', organizationName: organizationName.trim(), contactName: contactName.trim(),
     contactRole: '', email: email.trim(), phone: (phone || '').trim(),
     scaleInfo: (scaleInfo || '').trim(), currentArrangement: '', message: message.trim()
   });
-  logger.info({ organizationName }, 'caterer application received');
-  res.redirect((req.path.startsWith('/ar') ? '/ar/caterers' : '/caterers') + '?success=1');
+  logger.info({ organizationName }, 'corporate inquiry received');
+  res.redirect((req.path.startsWith('/ar') ? '/ar/corporate-meals' : '/corporate-meals') + '?success=1');
 });
 
 app.get(['/how-it-works', '/ar/how-it-works'], (req, res) => {
@@ -577,8 +581,8 @@ Allow: /schools
 Allow: /ar/schools
 Allow: /parents
 Allow: /ar/parents
-Allow: /caterers
-Allow: /ar/caterers
+Allow: /corporate-meals
+Allow: /ar/corporate-meals
 Allow: /how-it-works
 Allow: /ar/how-it-works
 Allow: /about

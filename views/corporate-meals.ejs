@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="<%= typeof lang !== 'undefined' ? lang : 'en' %>" dir="<%= typeof dir !== 'undefined' ? dir : 'ltr' %>">
+<head>
+<%- include('partials/head', { title: t('meta.caterers.title'), description: t('meta.caterers.description') }) %>
+</head>
+<body>
+
+<%- include('partials/sitenav', { active: 'corporate' }) %>
+<main id="main-content" tabindex="-1">
+
+<!-- 1. Hero -->
+<section class="hero hero-inner-page">
+  <div class="wrap-wide">
+    <div class="hero-copy" style="max-width:640px;">
+      <span class="eyebrow on-dark"><%= t('corporate.hero.eyebrow') %></span>
+      <h1><%= t('corporate.hero.heading') %></h1>
+      <p class="lede"><%= t('corporate.hero.lede') %></p>
+      <div class="hero-actions">
+        <a href="#corporate-form" class="btn btn-light"><%= t('corporate.hero.cta') %></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section"><div class="wrap">
+  <ul class="checklist"><% for(let i=1;i<=3;i++){ %><li><%= t('corporate.point'+i) %></li><% } %></ul>
+  <a href="<%= locale === 'ar' ? '/ar' : '' %>/how-it-works" class="btn btn-outline"><%= t('corporate.howBookingWorks') %></a>
+  <p class="hint"><%= t('corporate.simulated') %></p>
+</div></section>
+
+<section class="section on-tint" id="corporate-form">
+  <div class="wrap partner-form-wrap">
+    <div class="section-head" data-reveal-group style="margin:0;">
+      <span data-reveal="up" class="eyebrow"><%= t('corporate.form.eyebrow') %></span>
+      <h2 data-reveal="up"><%= t('corporate.form.heading') %></h2>
+      <p data-reveal="up"><%= t('corporate.form.intro') %></p>
+    </div>
+    <div class="card">
+      <% if (typeof success !== 'undefined' && success) { %>
+        <div class="alert alert-success" role="status"><%- include('partials/success-icon') %><span><%= t('corporate.form.successMsg') %></span></div>
+      <% } else { %>
+        <% var fd = (typeof formData !== 'undefined' && formData) ? formData : {}; var errs = (typeof errors !== 'undefined' && errors) ? errors : {}; %>
+        <form method="POST" action="<%= locale === 'ar' ? '/ar/corporates/inquiry' : '/corporates/inquiry' %>" id="corporateInquiryForm" novalidate>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <div class="field <%= errs.organizationName ? 'invalid' : '' %>">
+            <label for="corporateOrgName"><%= t('corporate.form.labelOrgName') %></label>
+            <input type="text" id="corporateOrgName" name="organizationName" value="<%= fd.organizationName || '' %>" required data-validate="required" aria-describedby="corporateOrgName-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.organizationName) ? 'true' : 'false' %>">
+            <div class="field-error" id="corporateOrgName-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.organizationName || t('corporate.form.errOrgName') %></span></div>
+          </div>
+          <div class="field <%= errs.contactName ? 'invalid' : '' %>">
+            <label for="corporateContactName"><%= t('corporate.form.labelContactName') %></label>
+            <input type="text" id="corporateContactName" name="contactName" value="<%= fd.contactName || '' %>" required data-validate="name" aria-describedby="corporateContactName-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.contactName) ? 'true' : 'false' %>">
+            <div class="field-error" id="corporateContactName-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.contactName || t('corporate.form.errContactName') %></span></div>
+          </div>
+          <div class="form-row">
+            <div class="field <%= errs.email ? 'invalid' : '' %>">
+              <label for="corporateContactEmail"><%= t('corporate.form.labelEmail') %></label>
+              <input type="email" id="corporateContactEmail" name="email" value="<%= fd.email || '' %>" inputmode="email" required data-validate="email" aria-describedby="corporateContactEmail-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.email) ? 'true' : 'false' %>">
+              <div class="field-error" id="corporateContactEmail-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.email || t('corporate.form.errEmail') %></span></div>
+            </div>
+            <div class="field <%= errs.phone ? 'invalid' : '' %>">
+              <label for="corporateContactPhone"><%= t('corporate.form.labelPhone') %></label>
+              <input type="tel" id="corporateContactPhone" name="phone" value="<%= fd.phone || '' %>" inputmode="tel" data-validate="phone" placeholder="+965 ..." aria-describedby="corporateContactPhone-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.phone) ? 'true' : 'false' %>">
+              <div class="field-error" id="corporateContactPhone-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.phone || t('corporate.form.errPhone') %></span></div>
+            </div>
+          </div>
+          <div class="field <%= errs.scaleInfo ? 'invalid' : '' %>">
+            <label for="corporateScale"><%= t('corporate.form.labelScale') %></label>
+            <select id="corporateScale" name="scaleInfo" required aria-describedby="corporateScale-error" aria-invalid="<%= errs.scaleInfo ? 'true' : 'false' %>">
+              <% ['1–25','26–100','101–250','250+'].forEach((value,i)=>{ %><option value="<%= value %>" <%= fd.scaleInfo === value ? 'selected' : '' %>><%= t('corporate.form.range'+i) %></option><% }) %>
+            </select>
+            <div class="field-error" id="corporateScale-error"><%= errs.scaleInfo || t('corporate.form.errScale') %></div>
+          </div>
+          <div class="field <%= errs.message ? 'invalid' : '' %>">
+            <label for="corporateMessage"><%= t('corporate.form.labelMessage') %></label>
+            <textarea id="corporateMessage" name="message" rows="4" required maxlength="2000" data-validate="minlength:10" placeholder="<%= t('corporate.form.placeholderMessage') %>" aria-describedby="corporateMessage-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.message) ? 'true' : 'false' %>"><%= fd.message || '' %></textarea>
+            <div class="field-error" id="corporateMessage-error"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span><%= errs.message || t('corporate.form.errMessage') %></span></div>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;"><%= t('corporate.form.submit') %></button>
+        </form>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+</main>
+<%- include('partials/sitefoot') %>
+
+</body>
+</html>
