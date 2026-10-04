@@ -1050,7 +1050,8 @@
       "invalidMeals": "Choose a valid meal for each meal day in the selected month.",
       "cutoff": "One or more meal days are past the 48-hour change cutoff. No changes were saved.",
       "staleDraft": "This booking draft was replaced. Return to Meal booking to continue."
-    }
+    },
+    "regularMeal": "Regular Meal"
   },
   "invoice": {
     "heading": "Invoice",

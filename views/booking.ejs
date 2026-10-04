@@ -7,11 +7,11 @@
   <div class="page-head"><span class="eyebrow"><%= t('booking.eyebrow') %></span><h1><%= t('subscription.titles.' + step) %></h1></div>
   <% if (error) { %><div class="alert alert-error" role="alert"><%= error %></div><% } %>
   <% if (step === 'list') { %>
-    <p class="hint"><%= t('subscription.calendarNote') %></p>
+    <p class="hint booking-calendar-note"><%= t('subscription.calendarNote') %></p>
     <% if (!students.length) { %><div class="card empty-state"><p><%= t('booking.emptyBody') %></p><a href="/students#add-student" class="btn btn-primary"><%= t('students.addButton') %></a></div><% } %>
-    <div class="grid-2">
-      <% students.forEach(student => { %><article class="card">
-        <h2><%= student.name %></h2><p><%= student.mealType %></p><p><%= student.school %> · <%= student.class %></p>
+    <div class="booking-students">
+      <% students.forEach(student => { %><article class="card booking-student-card">
+        <div class="booking-student-heading"><span class="avatar" aria-hidden="true"><%= student.name.charAt(0) %></span><h2><bdi><%= student.name %></bdi></h2></div><p class="booking-meal-type"><bdi><%= student.mealType === "Regular Meal" ? t("subscription.regularMeal") : student.mealType %></bdi></p><p class="booking-student-school"><bdi><%= student.school %></bdi> · <%= t("students.classes." + student.class) %></p>
         <a class="btn btn-primary" href="/booking/new?student=<%= student.id %>"><%= t('subscription.bookNow') %></a>
       </article><% }) %>
     </div>

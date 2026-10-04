@@ -6,13 +6,14 @@
 <body>
 <%- include('partials/appnav', { active: 'dashboard' }) %>
 
-<main class="page" id="main-content">
+<main class="page dashboard-page" id="main-content">
   <div class="page-head">
     <span class="eyebrow"><%= t('dashboard.eyebrow') %></span>
-    <h1><%= parent.name %></h1>
+    <h1><bdi><%= parent.name %></bdi></h1>
     <p><%= t('dashboard.intro') %></p>
   </div>
 
+  <div class="dashboard-overview">
   <section class="card dash-today" aria-labelledby="todays-status-heading">
     <h2 class="dash-section-title" id="todays-status-heading"><%= t('dashboard.todaysStatusHeading') %></h2>
     <% if (studentStatus.length === 0) { %>
@@ -26,11 +27,11 @@
         <div class="student-row">
           <div class="avatar"><%= student.name.charAt(0) %></div>
           <div class="student-meta">
-            <strong><%= student.name %></strong>
+            <strong><bdi><%= student.name %></bdi></strong>
             <% if (booking && menuItem) { %>
-              <span class="student-meal" lang="en" dir="auto"><%= menuItem.name %></span>
+              <span class="student-meal"><bdi><%= menuItem.name %></bdi></span>
             <% } %>
-            <span><%= student.school %> · <%= student.class %></span>
+            <span><bdi><%= student.school %></bdi> · <%= t("students.classes." + student.class) %></span>
           </div>
           <% if (features.showCollection && booking && booking.status === 'collected') { %>
             <span class="status-line ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg> <%- t('dashboard.statusCollectedAt', { time: `<bdi>${fmtTime(booking.collectedAt)}</bdi>` }) %></span>
@@ -44,9 +45,11 @@
     <% } %>
   </section>
 
-  <section class="dash-actions"><h2 class="dash-section-title"><%= t('dashboard.actionsHeading') %></h2>
-    <% students.forEach(student=>{ %><div class="card renewal-card"><strong><%= student.name %></strong><a class="btn btn-primary" href="/booking/new?student=<%= student.id %>"><%= t('subscription.bookMore') %></a></div><% }) %>
+  <section class="card dash-actions"><h2 class="dash-section-title"><%= t('dashboard.actionsHeading') %></h2>
+    <% students.forEach(student=>{ %><div class="card renewal-card"><strong><bdi><%= student.name %></bdi></strong><a class="btn btn-primary" href="/booking/new?student=<%= student.id %>"><%= t('subscription.bookMore') %></a></div><% }) %>
   </section>
+
+  </div>
 
   <% if (activeSubscriptionPeriods.length > 0) { %>
     <section class="card" style="margin-bottom:24px;" aria-labelledby="current-period-heading">
@@ -112,7 +115,7 @@
     <bdi><%= t('dashboard.summaryBookings', { count: activeBookingCount, unit: t('dashboard.' + (activeBookingCount === 1 ? 'summaryBookingUnitOne' : 'summaryBookingUnitOther')) }) %></bdi>
   </p>
 
-  <div class="grid-2" style="margin-top:24px;">
+  <div class="grid-2 dashboard-shortcuts" style="margin-top:24px;">
     <div class="card">
       <h3 style="font-size:15px; margin-bottom:10px;"><%= t('dashboard.bookMealTitle') %></h3>
       <p style="font-size:13.5px; color:var(--muted); margin-bottom:16px;"><%= t('dashboard.bookMealBody') %></p>
