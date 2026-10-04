@@ -18,11 +18,11 @@
   </div>
 </section>
 
-<section class="section"><div class="wrap">
-  <ol class="parent-journey journey-three" data-reveal="sequence">
+<section class="section" id="booking-guide"><div class="wrap">
+  <ol class="booking-guide" data-reveal-group>
     <% for(let step=1;step<=3;step++){ %>
-      <li class="journey-item">
-        <span class="journey-label"><bdi class="journey-number">0<%= step %></bdi></span>
+      <li class="booking-guide-card" data-reveal="up">
+        <span class="booking-guide-label"><bdi class="journey-number">0<%= step %></bdi></span>
         <h2><%= t('howItWorks.steps.title'+step) %></h2>
         <p><%= t('howItWorks.steps.body'+step) %></p>
       </li>

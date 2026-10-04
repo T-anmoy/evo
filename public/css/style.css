@@ -2275,3 +2275,21 @@ th{text-align:start;}
 #b2b-pathways .benefit-card p{flex:1;margin:0 0 24px;}
 #b2b-pathways .benefit-card > .btn{margin-top:auto;max-width:100%;white-space:normal;text-align:center;}
 @media(max-width:480px){#b2b-pathways .benefit-card > .btn{width:100%;}}
+
+/* Single subscription price: centered at every viewport, with a readable unit. */
+.pricing-grid.pricing-single{grid-template-columns:minmax(0,1fr);max-width:480px;}
+.pricing-single .price-card{padding:clamp(24px,4vw,40px);}
+.pricing-single .price-amt{display:flex;flex-direction:column;align-items:center;gap:8px;line-height:1.15;margin:24px 0;}
+.pricing-single .price-amt bdi{white-space:nowrap;font-size:clamp(32px,5vw,44px);}
+.pricing-single .price-amt span{line-height:1.5;}
+.pricing-single .price-card p{line-height:1.7;margin-bottom:28px;}
+
+/* Booking guide: three balanced cards, using the shared staggered reveal. */
+.booking-guide{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;}
+.booking-guide-card{min-width:0;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(24px,3vw,32px);}
+.booking-guide-label{display:block;margin-bottom:24px;}
+.booking-guide .journey-number{width:48px;height:48px;font-family:var(--font-heading);font-weight:700;font-size:16px;}
+.booking-guide h2{font-size:clamp(20px,2vw,24px);line-height:1.35;margin:0 0 14px;text-wrap:balance;}
+.booking-guide p{font-size:16px;line-height:1.7;color:var(--muted);margin:0;}
+@media(min-width:961px){.booking-guide h2{min-height:2.7em;}}
+@media(max-width:960px){.booking-guide{grid-template-columns:minmax(0,1fr);max-width:640px;margin-inline:auto;}.booking-guide-label{margin-bottom:20px;}}

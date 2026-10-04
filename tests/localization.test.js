@@ -18,13 +18,13 @@ test('computed key families include every supported value',()=>{
  for(const n of [1,2,3])for(const prefix of ['howItWorks.steps.title','howItWorks.steps.body','corporate.point'])required.push(prefix+n);
  add('corporate.form.range',[0,1,2,3]);
  for(const n of [1,2,3,4,5])for(const suffix of ['title','body'])required.push('schools.operations.'+suffix+n);
- for(const role of ['parents','schools','caterers','students','admins'])for(const suffix of ['Title','Chip1','Chip2'])required.push('featuresSection.'+role+suffix);
+ for(const role of ['parents','schools','corporate','students','admins'])for(const suffix of ['Title','Chip1','Chip2'])required.push('featuresSection.'+role+suffix);
  add('history.',['colStudent','colSchool','colMonths','colMealDays','colTotal','colPaid','colInvoice']);
  add('schoolAdminDashboard.',['colStudent','colMonths','colMealDays','colPaid','colTotal']);
  add('subscription.',['totalDays','holidayDays','mealDays','rate','amount']);
  add('subscription.titles.',['list','new','review','meals','terms','payment','knet','confirmation']);
  add('food.',['nut','shellfish','sesame','soy']);add('menu.',['kcal','protein','carbs','fat']);
- add('nav.',['forParents','forSchools','corporate']);add('caterers.orderQueue.status',['Collected','Upcoming']);
+ add('nav.',['forParents','forSchools','corporate']);add('mealQueue.status',['Collected','Upcoming']);
  add('dashboard.',['schoolDayUnitOne','schoolDayUnitOther','summaryChildUnitOne','summaryChildUnitOther','summaryBookingUnitOne','summaryBookingUnitOther','dayUnitOne','dayUnitOther']);
  for(const file of ['lib/subscription.js','db/subscriptions.js'])for(const m of fs.readFileSync(path.join(__dirname,'..',file),'utf8').matchAll(/(?:SubscriptionError\(|fail\()'([^']+)'/g))required.push('subscription.errors.'+m[1]);
  for(const key of required)assert.ok(keys.has(key),'Missing computed key '+key);

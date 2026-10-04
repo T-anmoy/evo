@@ -32,9 +32,9 @@
     <h2><%= t('schools.dashboardPreview.overview') %></h2>
     <p><%= t('schools.dashboardPreview.intro') %></p>
     <dl class="record-details">
-      <div><dt><%= t('caterers.orderQueue.colStudent') %></dt><dd><bdi>Ahmed A.</bdi></dd></div>
-      <div><dt><%= t('caterers.orderQueue.colMeal') %></dt><dd><bdi>Arabiatta Chicken Pasta</bdi></dd></div>
-      <div><dt><%= t('caterers.orderQueue.colStatus') %></dt><dd><%- include('partials/example-status',{status:'Upcoming'}) %></dd></div>
+      <div><dt><%= t('mealQueue.colStudent') %></dt><dd><bdi>Ahmed A.</bdi></dd></div>
+      <div><dt><%= t('mealQueue.colMeal') %></dt><dd><bdi>Arabiatta Chicken Pasta</bdi></dd></div>
+      <div><dt><%= t('mealQueue.colStatus') %></dt><dd><%- include('partials/example-status',{status:'Upcoming'}) %></dd></div>
     </dl>
     <a href="/school-admin/login" class="btn btn-outline"><%= t('meta.schoolAdminLogin.title') %></a>
     <a class="food-book-link" href="<%= locale === 'ar' ? '/ar/parents' : '/parents' %>"><%= t('schools.parentExperience.cta') %> →</a>
@@ -96,7 +96,7 @@
               <label for="schoolArrangement"><%= t('schools.partnerForm.labelCurrentArrangement') %></label>
               <select id="schoolArrangement" name="currentArrangement">
                 <option value="No formal program" <%= fd.currentArrangement === 'No formal program' ? 'selected' : '' %>><%= t('schools.partnerForm.optNoFormal') %></option>
-                <option value="Informal caterer arrangement" <%= fd.currentArrangement === 'Informal caterer arrangement' ? 'selected' : '' %>><%= t('schools.partnerForm.optInformal') %></option>
+                <option value="Informal arrangement with a corporate meal provider" <%= fd.currentArrangement === 'Informal arrangement with a corporate meal provider' ? 'selected' : '' %>><%= t('schools.partnerForm.optInformal') %></option>
                 <option value="Existing digital system" <%= fd.currentArrangement === 'Existing digital system' ? 'selected' : '' %>><%= t('schools.partnerForm.optExisting') %></option>
                 <option value="Other" <%= fd.currentArrangement === 'Other' ? 'selected' : '' %>><%= t('schools.partnerForm.optOther') %></option>
               </select>

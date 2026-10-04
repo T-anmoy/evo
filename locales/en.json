@@ -42,17 +42,13 @@
     "booking": {
       "title": "Book a Meal — Evo Meals"
     },
-    "caterers": {
-      "title": "For Caterers — Evo Meals School Meal Management Platform",
-      "description": "Explore Evo Meals: school meal information, parent booking and collection records. Demonstration integrations are identified."
-    },
     "about": {
       "title": "About — Evo Meals",
       "description": "Explore Evo Meals: school meal information, parent booking and collection records. Demonstration integrations are identified."
     },
     "contact": {
       "title": "Contact — Evo Meals",
-      "description": "Get in touch with Evo Meals — parent support, school partnerships, and catering partnerships each have their own contact pathway."
+      "description": "Get in touch with Evo Meals for parent support, school partnerships, and corporate meals."
     },
     "students": {
       "title": "Students — Evo Meals"
@@ -77,6 +73,10 @@
     },
     "serverError": {
       "title": "Something went wrong — Evo Meals"
+    },
+    "corporate": {
+      "title": "Corporate Meals — Evo Meals",
+      "description": "Explore daily meals for office teams and inquire about setting up meals for your workplace."
     }
   },
   "common": {
@@ -114,7 +114,6 @@
     "home": "Home",
     "forParents": "For Parents",
     "forSchools": "For Schools",
-    "forCaterers": "For Caterers",
     "howItWorks": "How It Works",
     "features": "Features",
     "about": "About",
@@ -137,8 +136,6 @@
     "schoolsHeading": "Schools",
     "forSchools": "For Schools",
     "partnerWithUs": "Partner With Us",
-    "caterersHeading": "Caterers",
-    "forCaterers": "For Caterers",
     "companyHeading": "Company",
     "about": "About Evo Meals",
     "contact": "Contact",
@@ -147,7 +144,7 @@
     "address": "Farwaniya, Kuwait",
     "instagram": "Instagram",
     "copyright": "© {year} Evo Meals · Kuwait",
-    "disclaimer": "Evo Meals connects parents with an independent catering partner — it does not prepare meals itself.",
+    "disclaimer": "Evo Meals connects parents with an independent corporate meal provider — it does not prepare meals itself.",
     "taglineWithoutCollection": "School meals in Kuwait: food information and parent bookings in one place.",
     "corporateHeading": "Corporate Meals",
     "corporate": "Corporate Meals"
@@ -226,9 +223,6 @@
       "schoolsTitle": "For Schools",
       "schoolsBody": "Run your school meal programme with less manual coordination.",
       "schoolsCta": "Partner With Evo Meals",
-      "caterersTitle": "For Caterers",
-      "caterersBody": "Discuss orders, preparation and school fulfilment.",
-      "caterersCta": "Become a Catering Partner",
       "corporateTitle": "Corporate Meals",
       "corporateBody": "Fresh daily meals for office teams.",
       "corporateCta": "Set up workplace meals"
@@ -266,9 +260,9 @@
       "schoolTitle": "School",
       "schoolBody": "Talk to us about running your programme on Evo Meals.",
       "schoolCta": "Partner With Evo Meals",
-      "catererTitle": "Caterer",
-      "catererBody": "Discuss your kitchen’s role in a school meal programme.",
-      "catererCta": "Become a Catering Partner"
+      "corporateTitle": "Corporate Meals",
+      "corporateBody": "Discuss daily meals for your workplace.",
+      "corporateCta": "Set up workplace meals"
     }
   },
   "howItWorks": {
@@ -301,26 +295,26 @@
     "schoolsTitle": "Schools",
     "schoolsChip1": "School-scoped dashboard",
     "schoolsChip2": "Booking counts and activity",
-    "caterersTitle": "Caterers",
-    "caterersChip1": "Preparation flow — illustrative",
-    "caterersChip2": "No connected caterer portal",
     "studentsTitle": "Students",
     "studentsChip1": "Linked to a parent account",
     "studentsChip2": "Card collection — illustrative",
     "adminsTitle": "Administrators",
     "adminsChip1": "School administrator sign-in",
-    "adminsChip2": "No central admin or revenue reports"
+    "adminsChip2": "No central admin or revenue reports",
+    "corporateTitle": "Corporate Meals",
+    "corporateChip1": "Workplace meal inquiries",
+    "corporateChip2": "Inquiry only — no corporate booking portal"
   },
   "features": {
     "hero": {
       "eyebrow": "Features",
       "heading": "A clear role for every part of the school day.",
-      "lede": "Organized by who uses it — parents, schools, caterers, students, and administrators."
+      "lede": "Organized by who uses it — parents, schools, corporate teams, students, and administrators."
     },
     "cta": {
       "eyebrow": "Ready when you are",
       "heading": "See what this looks like for you.",
-      "body": "Whether you're a parent, a school, or a caterer, there's a dedicated page with the details."
+      "body": "Whether you are a parent, a school, or a corporate team, there is a dedicated page with the details."
     }
   },
   "parents": {
@@ -462,7 +456,7 @@
       "opt1000plus": "1,000+",
       "labelCurrentArrangement": "Current meal arrangement",
       "optNoFormal": "No formal program",
-      "optInformal": "Informal caterer arrangement",
+      "optInformal": "Informal arrangement with a corporate meal provider",
       "optExisting": "Existing digital system",
       "optOther": "Other",
       "labelMessage": "Tell us more",
@@ -664,66 +658,6 @@
     "renewalDue": "{student} — Subscription ending in {days} {unit}: renew to keep meals booked without a gap.",
     "subscriptionConfirmed": "{student} — Subscription confirmed: {months} month(s), {total}. Payment simulated."
   },
-  "caterers": {
-    "hero": {
-      "eyebrow": "For Caterers",
-      "heading": "Clear orders. Thoughtful preparation.",
-      "lede": "Explore the catering workflow around school meals: understand demand, prepare and fulfil. The example is illustrative; this demo has no connected caterer portal.",
-      "cta": "Partner with us"
-    },
-    "orderQueue": {
-      "eyebrow": "What lands in your kitchen",
-      "heading": "What an order record can show.",
-      "intro": "The queue below is an illustrative example, not a live feed.",
-      "cardHeading": "Example order records",
-      "sampleTag": "Illustrative example",
-      "colStudent": "Student",
-      "colSchool": "School",
-      "colMeal": "Meal",
-      "colStatus": "Status",
-      "statusCollected": "Collected",
-      "statusUpcoming": "Booked",
-      "row1Student": "Ahmed A.",
-      "row2Student": "Sara A.",
-      "row3Student": "Student C.",
-      "schoolThird": "The English School",
-      "footnote": "Illustrative records only. No orders are transmitted to a kitchen by this demo."
-    },
-    "form": {
-      "eyebrow": "Partner with us",
-      "heading": "Tell us about your kitchen.",
-      "intro": "Describe your kitchen and capacity. This demo saves your inquiry; it does not notify an external team.",
-      "introStrong": "within one business day",
-      "successMsg": "Inquiry saved in this demo. Contact the team directly to discuss catering.",
-      "labelOrgName": "Company / kitchen name",
-      "labelContactName": "Contact person",
-      "labelEmail": "Email",
-      "labelPhone": "Phone",
-      "labelScale": "Current capacity / operation size",
-      "optUnder200": "Under 200 meals/day",
-      "opt200to500": "200–500 meals/day",
-      "opt500to1500": "500–1,500 meals/day",
-      "opt1500plus": "1,500+ meals/day",
-      "labelMessage": "Tell us about your kitchen",
-      "placeholderMessage": "Schools you currently serve (if any), cuisine specialties, anything else useful...",
-      "submit": "Save catering inquiry",
-      "errOrgName": "Enter your company's name (not digits-only).",
-      "errContactName": "Enter a contact name (letters only, at least 2 characters).",
-      "errEmail": "A valid email address is required.",
-      "errPhone": "Enter a valid phone number (8–15 digits).",
-      "errMessage": "Tell us a little more — between 10 and 2,000 characters."
-    },
-    "flow": {
-      "title1": "Orders",
-      "body1": "Identify the meal, student and school.",
-      "title2": "Demand visibility",
-      "body2": "Agree how bookings reach the kitchen.",
-      "title3": "Preparation",
-      "body3": "Plan quantities and preparation with the school.",
-      "title4": "Fulfilment",
-      "body4": "Coordinate delivery and the school handover."
-    }
-  },
   "about": {
     "hero": {
       "eyebrow": "About Evo Meals",
@@ -732,13 +666,13 @@
     "connects": {
       "eyebrow": "What the platform connects",
       "heading": "One system, three sides of the same school day.",
-      "intro": "Parents, schools and caterers have different responsibilities around the same meal.",
+      "intro": "Parents, schools and corporate teams each have a place in the meal programme.",
       "parentsTitle": "Parents",
       "parentsBody": "Choose meals, arrange bookings and read recorded status.",
       "schoolsTitle": "Schools",
       "schoolsBody": "View school-specific bookings and account activity.",
-      "caterersTitle": "Caterers",
-      "caterersBody": "Discuss preparation and fulfilment; the catering flow here is illustrative."
+      "corporateTitle": "Corporate Meals",
+      "corporateBody": "Discuss daily meals for your office team through the corporate inquiry form."
     },
     "story": {
       "eyebrow": "Our approach",
@@ -747,13 +681,13 @@
       "pillar1Label": "Our approach",
       "pillar1Body": "Build partnerships that are strengthened through feedback and constant learning, with every meal served.",
       "pillar2Label": "Our focus",
-      "pillar2Body": "Deliver a seamless experience for parents, schools, and caterers.",
+      "pillar2Body": "Deliver a seamless experience for parents, schools, and corporate teams.",
       "pillar3Label": "Our standard",
       "pillar3Body": "Reliable data, honest information — so every decision is an informed one."
     },
     "cta": {
       "eyebrow": "Get in touch",
-      "heading": "Whether you're a parent, a school, or a caterer —",
+      "heading": "Whether you are a parent, a school, or a corporate team —",
       "body": "We'd like to hear from you.",
       "button": "Contact us"
     },
@@ -761,7 +695,7 @@
       "eyebrow": "Our story",
       "heading": "Our story",
       "paragraph1": "Evo Meals wasn't built in a boardroom. It was shaped by real feedback from parents and schools, refined until it delivered on two things: meals students actually enjoy, and parents' peace of mind over what their child eats.",
-      "paragraph2": "What began as a way to give a parent visibility into what their child eats at school has grown into something bigger — a single, real-time system connecting an entire school community: parents, students, schools, and caterers."
+      "paragraph2": "What began as a way to give a parent visibility into what their child eats at school has grown into something bigger — a single, real-time system connecting an entire school community: parents, students, schools, and corporate meal providers."
     }
   },
   "contact": {
@@ -777,9 +711,9 @@
       "schoolTitle": "School partnership",
       "schoolBody": "Bring Evo Meals to your school's meal programme.",
       "schoolCta": "Go to school form",
-      "catererTitle": "Catering partnership",
-      "catererBody": "Connect your kitchen to a school's meal programme.",
-      "catererCta": "Go to catering form"
+      "corporateTitle": "Corporate Meals",
+      "corporateBody": "Arrange daily meals for your workplace.",
+      "corporateCta": "Go to corporate inquiry form"
     },
     "form": {
       "eyebrow": "Parent support",
@@ -790,7 +724,6 @@
       "labelRole": "I am a...",
       "optParent": "Parent",
       "optSchool": "School",
-      "optCaterer": "Caterer",
       "optOther": "Other",
       "labelMessage": "Message",
       "placeholderMessage": "How can we help?",
@@ -799,7 +732,8 @@
       "errRequired": "Name, email, and a short message are required.",
       "errName": "Enter your full name (letters only, at least 2 characters).",
       "errEmail": "Enter a valid email address.",
-      "errMessage": "Add a little more detail — between 10 and 2,000 characters."
+      "errMessage": "Add a little more detail — between 10 and 2,000 characters.",
+      "optCorporate": "Corporate"
     }
   },
   "students": {
@@ -914,7 +848,7 @@
     "priceLabel": "Staff meal price",
     "submit": "Book Staff Meal",
     "yourBookings": "Your staff bookings",
-    "scopeNote": "This books a meal against your own parent account. It is not a separate staff sign-in, and it does not grant any school or catering role.",
+    "scopeNote": "This books a meal against your own parent account. It is not a separate staff sign-in, and it does not grant any school or corporate role.",
     "colMeal": "Meal",
     "colDate": "Date",
     "colTotal": "Total",
@@ -1133,5 +1067,23 @@
     "amount": "Amount (KWD)",
     "total": "Total",
     "payment": "Payment method: KNET (simulated — no real payment processed)"
+  },
+  "mealQueue": {
+    "eyebrow": "What lands in your kitchen",
+    "heading": "What an order record can show.",
+    "intro": "The queue below is an illustrative example, not a live feed.",
+    "cardHeading": "Example order records",
+    "sampleTag": "Illustrative example",
+    "colStudent": "Student",
+    "colSchool": "School",
+    "colMeal": "Meal",
+    "colStatus": "Status",
+    "statusCollected": "Collected",
+    "statusUpcoming": "Booked",
+    "row1Student": "Ahmed A.",
+    "row2Student": "Sara A.",
+    "row3Student": "Student C.",
+    "schoolThird": "The English School",
+    "footnote": "Illustrative records only. No orders are transmitted to a kitchen by this demo."
   }
 }
