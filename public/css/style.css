@@ -1857,7 +1857,7 @@ footer.app-foot{padding:36px 24px; text-align:center; color:var(--muted); font-s
 /* Food: one content contract, three deliberate densities; source imagery is square. */
 .food-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:28px;}
 .food-card{min-width:0;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
-.food-image{aspect-ratio:1;min-width:0;overflow:hidden;background:var(--cream);}
+.food-image{aspect-ratio:1 / 1;min-width:0;overflow:hidden;background:var(--cream);}
 .food-image picture,.food-image img{display:block;width:100%;height:100%;object-fit:contain;}
 .food-image svg{width:100%;height:100%;padding:25%;}
 .food-body{padding:22px;min-width:0;}
@@ -2354,7 +2354,6 @@ th{text-align:start;}
 .school-category-panel>h3{margin-bottom:20px;}
 .school-dish-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;}
 .school-dish-grid .food-card{min-width:0;}
-.school-dish-grid .food-image{aspect-ratio:4 / 3;}
 .school-dish-grid .food-image img{object-fit:cover;}
 .school-dish-grid .food-body{padding:20px;}
 .school-dish-grid h3{font-size:20px;}

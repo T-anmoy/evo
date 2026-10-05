@@ -43,7 +43,7 @@ Additional reversible choices:
 
 - The inline school form remains available alongside the enhanced dialog, including with JavaScript enabled. Without JavaScript, all nonempty category panels are shown in order.
 - Unknown slugs leave the current valid session selection intact. Only a valid explicit selection updates the session. A parent without one sees their first child's active school.
-- The shared grid uses three desktop columns, two tablet columns and one mobile column. Existing dish images use a 4:3 frame, `object-fit: cover` and lazy loading.
+- The shared grid uses three desktop columns, two tablet columns and one mobile column. Following the client’s square-image refinement, all dish images use a 1:1 frame. School menu images retain `object-fit: cover` and lazy loading.
 - Demo seed subscriptions use an illustrative Thursday payment before the current month's first Sunday. Existing deployed subscriptions are neither rewritten nor recreated.
 - Browser QA creates additional children in a disposable database because the demo children already have paid current-month subscriptions. The existing unique student/month rule correctly blocks a second booking for that month.
 
@@ -153,3 +153,7 @@ Items observed and left outside scope:
 | 6 | Commit containing this report | Phase 6: tests and QA |
 
 The delivery message records the final commit SHA and the verified `origin/main` push result. The report cannot embed its own commit hash; resolve that exact commit with `git log -1 --format=%H -- docs/evo-implementation/SCHOOL-MENUS-REPORT.md`.
+
+## Follow-up: square food images
+
+On 5 October 2026, the client requested 1:1 proportions for every food placeholder. Removed the school-menu 4:3 override so Home, Parents and account Menu all inherit the shared square image frame. Browser checks verified 256 visible image instances across 80 page/viewport combinations in English and Arabic at 320, 344, 375, 390, 430, 768, 1024 and 1440px, with zero horizontal overflow or page errors. All 80 tests passed. The earlier screenshots above document the original six-phase delivery before this refinement.
