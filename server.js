@@ -870,7 +870,7 @@ app.post('/students', requireAuth, (req, res) => {
 });
 
 app.get('/menu', requireAuth, (req, res) => {
-  res.render('menu', { menuItems: db.getMenuItems(), parentId: req.session.parentId });
+  res.render('menu', { schoolMenus: [...new Set(db.getStudentsByParent(req.session.parentId).map(s => s.school))].map(name => db.getSchoolByName(name)).filter(Boolean).map(school => ({ school, groups: db.getMenuForSchool(school.id) })), parentId: req.session.parentId });
 });
 
 require('./lib/subscription-routes')(app, db, requireAuth);

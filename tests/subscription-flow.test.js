@@ -34,7 +34,7 @@ test('happy path saves daily choices, confirms payment once, and refuses overlap
  await request('/booking/meals?month='+month);await ready();
  const paid=await request('/booking/pay',{token,totalKWD:'0.001'});assert.equal(paid.status,302,paid.body);assert.match(paid.location,/\/booking\/confirmation\/\d+/);
  const id=Number(paid.location.split('/').pop());const sub=db.getSubscription(id,1);
- assert.equal(sub.total_kwd,dates.length*db.getDailyRate());assert.ok(db.getSubscriptionMeals(id).every(m=>m.menu_item_id===4));
+ assert.equal(sub.total_kwd,dates.length*db.getSchoolDailyRate('Kuwait English School'));assert.ok(db.getSubscriptionMeals(id).every(m=>m.menu_item_id===4));
  assert.equal((await request(paid.location)).status,200);
  assert.equal((await request('/booking/pay',{token})).location,paid.location);
  assert.equal(db.getSubscriptions(1).length,before+1);
@@ -45,11 +45,11 @@ test('happy path saves daily choices, confirms payment once, and refuses overlap
 });
 test('changed database price returns to review with no payment',async()=>{
  await begin('2');await ready();const before=db.getSubscriptions(1).length;
- sql.prepare("UPDATE plans SET rate_kwd=3 WHERE code='single'").run();
+ sql.prepare("UPDATE schools SET daily_rate_kwd=3 WHERE id=2").run();
  const response=await request('/booking/pay',{token});assert.equal(response.location,'/booking/review');assert.equal(db.getSubscriptions(1).length,before);
  const review=await request('/booking/review');assert.match(review.body,/price changed/);
  assert.equal((await request('/booking/payment')).location,'/booking/meals');
- sql.prepare("UPDATE plans SET rate_kwd=2 WHERE code='single'").run();
+ sql.prepare("UPDATE schools SET daily_rate_kwd=2 WHERE id=2").run();
 });
 test('foreign subscription, confirmation and student cannot be accessed',async()=>{
  for(const route of ['/subscriptions/99999/meals','/booking/confirmation/99999','/booking/new?student=99999'])assert.equal((await request(route)).status,404);
@@ -60,7 +60,7 @@ test('saved meal changes enforce the cutoff atomically',async()=>{
  const date=db.getSubscriptionMeals(sub.id)[0].date;const {addDays}=require('../lib/subscription');
  db.changeSubscriptionMeals(1,sub.id,sub.first_month,{[date]:'2'},new Date(addDays(date,-3)+'T00:00:00+03:00'));
  assert.equal(db.getSubscriptionMeals(sub.id)[0].menu_item_id,2);
- assert.throws(()=>db.changeSubscriptionMeals(1,sub.id,sub.first_month,{[date]:'3'},new Date(addDays(date,-2)+'T00:00:00+03:00')),{code:'cutoff'});
+ assert.throws(()=>db.changeSubscriptionMeals(1,sub.id,sub.first_month,{[date]:'2'},new Date(addDays(date,-2)+'T00:00:00+03:00')),{code:'cutoff'});
  assert.equal(db.getSubscriptionMeals(sub.id)[0].menu_item_id,2);
 });
 test('history lists paid subscriptions and invoice PDF has attachment headers',async()=>{
@@ -95,7 +95,7 @@ test('paid meals change through HTTP before cutoff; locked dates are rejected',a
 });
 test('real foreign parent records remain private across all routes',async()=>{
  const parent=db.createParent({civilId:'222222222222',name:'Other Parent',email:'other@example.test',phone:'99999999',passwordHash:'unused'});const student=newStudent(parent.id);
- const {firstBookableMonth,defaultMeals}=require('../lib/subscription');const quote=db.quoteSubscription(student.id,parent.id,1);const draft={...quote,studentId:student.id,monthsCount:1,firstMonth:firstBookableMonth(),token:'test-foreign',meals:defaultMeals(quote.months,db.getMenuItems()),termsAccepted:true,acceptedAt:new Date().toISOString(),stage:'knet'};const sub=db.paySubscription(parent.id,draft);
+ const {firstBookableMonth,defaultMeals}=require('../lib/subscription');const quote=db.quoteSubscription(student.id,parent.id,1);const draft={...quote,studentId:student.id,monthsCount:1,firstMonth:firstBookableMonth(),token:'test-foreign',meals:defaultMeals(quote.months,db.getSchoolMenuItems(db.getSchoolByName(student.school).id)),termsAccepted:true,acceptedAt:new Date().toISOString(),stage:'knet'};const sub=db.paySubscription(parent.id,draft);
  for(const route of [`/subscriptions/${sub.id}/meals`,`/history/${sub.id}/invoice.pdf`,`/booking/confirmation/${sub.id}`,`/booking/new?student=${student.id}`])assert.equal((await request(route)).status,404);
  assert.equal((await request(`/subscriptions/${sub.id}/meals`,{month:draft.firstMonth})).status,404);
  assert.equal((await request('/booking/review',{student:String(student.id),months:'1'})).status,404);
@@ -135,7 +135,7 @@ test('six-month payment creates all rows and a stale draft cannot pay',async()=>
  const student=newStudent();await begin(String(student.id),'6');const oldToken=token;await begin(String(student.id),'6');assert.notEqual(token,oldToken);
  assert.equal((await request('/booking/accept-terms',{token:oldToken})).status,409);
  await ready();const result=await request('/booking/pay',{token});const id=Number(result.location.split('/').pop());const sub=db.getSubscription(id,1);
- assert.equal(sub.months.length,6);assert.equal(db.getSubscriptionMeals(id).length,sub.meal_days);assert.equal(sub.total_kwd,sub.meal_days*db.getDailyRate());
+ assert.equal(sub.months.length,6);assert.equal(db.getSubscriptionMeals(id).length,sub.meal_days);assert.equal(sub.total_kwd,sub.meal_days*db.getSchoolDailyRate('Kuwait English School'));
 });
 test('a late transaction failure rolls back subscription, months, meals and payment',async()=>{
  const student=newStudent();await begin(String(student.id));await ready();

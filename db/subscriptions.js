@@ -1,6 +1,8 @@
 const { calculateSubscription, subscriptionMonths, monthDates, firstBookableMonth, todayInKuwait, defaultMeals,
   canChangeMeal, SubscriptionError } = require('../lib/subscription');
 module.exports = function subscriptionStore(sql) {
+  const schools = require('./schools')(sql);
+  const menuFor = name => schools.getSchoolMenuItems(schools.getSchoolByName(name)?.id || -1);
   const fail = code => { throw new SubscriptionError(code); };
   function getDailyRate() { return sql.prepare("SELECT rate_kwd FROM plans WHERE code = 'single'").get()?.rate_kwd; }
   function getSubscription(id, parentId) {
@@ -25,7 +27,7 @@ module.exports = function subscriptionStore(sql) {
     const calendar = sql.prepare('SELECT date,is_school_day FROM school_calendar_days WHERE school=? AND date>=? AND date<=? ORDER BY date')
       .all(student.school, names[0] + '-01', monthDates(names.at(-1)).at(-1));
     const bookedMonths = sql.prepare('SELECT month FROM subscription_months WHERE student_id=?').all(studentId).map(r => r.month);
-    return { ...calculateSubscription({ count, firstMonth, dailyRate: getDailyRate(), calendar, bookedMonths }), school: student.school };
+    return { ...calculateSubscription({ count, firstMonth, dailyRate: schools.getSchoolDailyRate(student.school), calendar, bookedMonths }), school: student.school };
   }
   function getSubscriptionMeals(id) {
     return sql.prepare(`SELECT sm.*, mi.name, mi.calories FROM subscription_meals sm JOIN menu_items mi ON mi.id=sm.menu_item_id
@@ -58,7 +60,7 @@ module.exports = function subscriptionStore(sql) {
       if (quote.school !== draft.school || quote.totalKWD !== draft.totalKWD || JSON.stringify(quote.months) !== JSON.stringify(draft.months)) {
         const error = new SubscriptionError('priceChanged'); error.quote = quote; throw error;
       }
-      const menu = sql.prepare('SELECT * FROM menu_items ORDER BY id').all();
+      const menu = menuFor(quote.school);
       const meals = defaultMeals(quote.months, menu);
       for (const date of Object.keys(meals)) {
         if (draft.meals[date] !== undefined) {
@@ -75,7 +77,7 @@ module.exports = function subscriptionStore(sql) {
       if (!sub || !sub.months.some(m => m.month === month)) fail('invalidStudent');
       if (!choices || typeof choices !== 'object' || Array.isArray(choices)) fail('invalidMeals');
       const rows = getSubscriptionMeals(id).filter(r => r.date.startsWith(month));
-      const menu = sql.prepare('SELECT id FROM menu_items').all().map(r => r.id);
+      const menu = menuFor(sub.school).map(r => r.id);
       for (const [date, value] of Object.entries(choices)) {
         if (!rows.some(r => r.date === date) || typeof value !== 'string' || !/^[1-9]\d*$/.test(value) || !menu.includes(Number(value))) fail('invalidMeals');
         if (!canChangeMeal(date, now)) fail('cutoff');
@@ -95,7 +97,7 @@ module.exports = function subscriptionStore(sql) {
       const student = sql.prepare('SELECT id FROM students WHERE parent_id=? AND civil_id=?').get(parent.id, sample.studentCivilId);
       if (!student || sql.prepare('SELECT id FROM subscriptions WHERE student_id=?').get(student.id)) continue;
       const quote = quoteSubscription(student.id, parent.id, 1, firstBookableMonth(todayInKuwait(paidAt)));
-      const meals = defaultMeals(quote.months, sql.prepare('SELECT * FROM menu_items').all());
+      const meals = defaultMeals(quote.months, menuFor(quote.school));
       sql.transaction(() => writeSubscription({ parentId: parent.id, studentId: student.id, token: `seed-${student.id}`, quote, meals, acceptedAt: paidAt, paidAt }))();
     }
   }

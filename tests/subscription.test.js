@@ -27,9 +27,9 @@ test('zero totals, invalid prices, and overlapping months are refused',()=>{
  for(const rate of [0,-1,NaN,Infinity,undefined])assert.throws(()=>s.calculateSubscription({count:1,firstMonth:'2026-01',dailyRate:rate,calendar:calendar('2026-01')}),{code:'invalidPrice'});
  assert.throws(()=>s.calculateSubscription({count:1,firstMonth:'2026-01',dailyRate:2,calendar:calendar('2026-01'),bookedMonths:['2026-01']}),{code:'overlap'});
 });
-test('rotation sorts menu ids, excludes Dessert and repeats by meal-day index',()=>{
+test('rotation sorts menu ids, uses only Main items and repeats by meal-day index',()=>{
  const q=s.calculateSubscription({count:1,firstMonth:'2026-01',dailyRate:2,calendar:calendar('2026-01')});
- const meals=s.defaultMeals(q.months,[{id:3,tag:'Dessert'},{id:2,tag:'Regular Meal'},{id:1,tag:'Regular Meal'}]);
+ const meals=s.defaultMeals(q.months,[{id:3,category:'snack'},{id:2,category:'main'},{id:1,category:'main'}]);
  assert.deepEqual(Object.values(meals).slice(0,5),[1,2,1,2,1]);
 });
 test('48-hour cutoff is exclusive and measured from Kuwait midnight',()=>{

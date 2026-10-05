@@ -13,9 +13,9 @@
     <p><%= t('menu.intro') %></p>
   </div>
 
-  <div class="food-grid">
-    <% menuItems.forEach(m => { %><%- include('partials/food-card', {m, bookable:true, headingLevel:'h2'}) %><% }) %>
-  </div>
+  <% if(!schoolMenus.length){ %><p class="card"><%= t('schoolMenu.prompt') %></p><a href="/students#add-student" class="btn btn-primary"><%= t('students.addButton') %></a><% } %>
+  <% schoolMenus.forEach(({school,groups})=>{ %><section class="account-school-menu"><h2><bdi><%= school.name %></bdi></h2><p><%= t('schoolMenu.intro') %></p><%- include('partials/school-menu',{school,groups}) %></section><% }) %>
+  <script src="/js/school-menu.js" defer></script>
   <%- include('partials/food-confidence') %>
 </main>
 
