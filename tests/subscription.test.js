@@ -2,8 +2,8 @@ const {test} = require('node:test');
 const assert = require('node:assert/strict');
 const s = require('../lib/subscription');
 const calendar = month => s.monthDates(month).map((date,i)=>({date,is_school_day:i<19?1:0}));
-test('first month uses inclusive seven-day boundary, including leap years and year rollover',()=>{
- for(const [date,expected] of [['2025-11-22','2025-12'],['2026-10-25','2026-11'],['2026-10-26','2026-12'],['2026-12-25','2027-01'],['2028-02-23','2028-03'],['2028-02-24','2028-04']])assert.equal(s.firstBookableMonth(date),expected);
+test('weekly service start follows Kuwait Thursday cutoff, Sunday week and rollovers',()=>{
+ for(const [now,date] of [['2026-10-04T12:00:00+03:00','2026-10-11'],['2026-10-08T23:59:59+03:00','2026-10-11'],['2026-10-09T00:00:00+03:00','2026-10-18'],['2026-10-10T12:00:00+03:00','2026-10-18'],['2026-12-31T23:59:59+03:00','2027-01-03'],['2027-01-01T00:00:00+03:00','2027-01-10']]) assert.equal(s.nextServiceStart(now),date);
 });
 test('Kuwait date changes at 21:00 UTC',()=>{
  assert.equal(s.todayInKuwait('2026-10-04T20:59:59Z'),'2026-10-04');
@@ -32,8 +32,18 @@ test('rotation sorts menu ids, uses only Main items and repeats by meal-day inde
  const meals=s.defaultMeals(q.months,[{id:3,category:'snack'},{id:2,category:'main'},{id:1,category:'main'}]);
  assert.deepEqual(Object.values(meals).slice(0,5),[1,2,1,2,1]);
 });
-test('48-hour cutoff is exclusive and measured from Kuwait midnight',()=>{
- assert.equal(s.canChangeMeal('2026-10-10','2026-10-07T20:59:59Z'),true);
- assert.equal(s.canChangeMeal('2026-10-10','2026-10-07T21:00:00Z'),false);
- assert.equal(s.canChangeMeal('2026-10-10','2026-10-08T00:00:00Z'),false);
+test('meal changes use the same next-service boundary',()=>{
+ assert.equal(s.canChangeMeal('2026-10-11','2026-10-08T23:59:59+03:00'),true);
+ assert.equal(s.canChangeMeal('2026-10-11','2026-10-09T00:00:00+03:00'),false);
+ assert.equal(s.canChangeMeal('2026-10-18','2026-10-09T00:00:00+03:00'),true);
+});
+test('partial first month counts only its window and following months are full',()=>{
+ const q=s.calculateSubscription({count:2,firstMonth:'2026-10',serviceStart:'2026-10-11',dailyRate:2,calendar:[...calendar('2026-10'),...calendar('2026-11')]});
+ assert.deepEqual([q.months[0].totalDays,q.months[0].mealDays,q.months[0].holidayDays,q.months[0].amountKWD],[21,9,12,18]);assert.equal(q.months[1].totalDays,30);
+});
+test('empty first window rolls to next full month; incomplete windows cannot roll',()=>{
+ const rows=[...calendar('2026-10').map(r=>({...r,is_school_day:0})),...calendar('2026-11')];
+ const input={count:1,firstMonth:'2026-10',serviceStart:'2026-10-11',dailyRate:2,calendar:rows};
+ const q=s.calculateSubscription(input);assert.equal(q.months[0].month,'2026-11');assert.equal(q.months[0].totalDays,30);assert.equal(q.totalKWD,38);
+ assert.throws(()=>s.calculateSubscription({...input,calendar:rows.filter(r=>r.date!=='2026-10-12')}),{code:'incompleteCalendar'});
 });

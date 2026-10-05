@@ -32,7 +32,7 @@
   <% } else if (step === 'review') { %>
     <p><%= student.name %> · <%= student.school %></p>
     <%- include('partials/subscription-review', { months: draft.months, totalKWD: draft.totalKWD }) %>
-    <% if (!draft.error || draft.error === 'priceChanged') { %><a href="/booking/meals" class="btn btn-primary"><%= t('subscription.next') %></a><% } %>
+    <% if (!draft.error || draft.error === 'priceChanged' || draft.error === 'expired') { %><a href="/booking/meals" class="btn btn-primary"><%= t('subscription.next') %></a><% } %>
     <a class="btn btn-outline" href="/booking/new?student=<%= student.id %>"><%= t('subscription.startAgain') %></a>
   <% } else if (step === 'terms') { %>
     <div class="card">

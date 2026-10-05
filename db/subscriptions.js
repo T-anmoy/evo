@@ -1,5 +1,5 @@
 const { calculateSubscription, subscriptionMonths, monthDates, firstBookableMonth, todayInKuwait, defaultMeals,
-  canChangeMeal, SubscriptionError } = require('../lib/subscription');
+  canChangeMeal, nextServiceStart, subscriptionStart, addDays, SubscriptionError } = require('../lib/subscription');
 module.exports = function subscriptionStore(sql) {
   const schools = require('./schools')(sql);
   const menuFor = name => schools.getSchoolMenuItems(schools.getSchoolByName(name)?.id || -1);
@@ -10,7 +10,7 @@ module.exports = function subscriptionStore(sql) {
       p.method, p.status AS payment_status FROM subscriptions s JOIN students st ON st.id=s.student_id
       JOIN payments p ON p.subscription_id=s.id WHERE s.id=? AND s.parent_id=?`).get(id, parentId);
     if (!row) return null;
-    row.months = sql.prepare('SELECT * FROM subscription_months WHERE subscription_id=? ORDER BY month').all(id);
+    row.months = sql.prepare('SELECT * FROM subscription_months WHERE subscription_id=? ORDER BY month').all(id).map(m => ({...m, startDate: addDays(monthDates(m.month).at(-1), 1-m.total_days), endDate: monthDates(m.month).at(-1)}));
     row.meal_days = row.months.reduce((n, m) => n + m.meal_days, 0);
     return row;
   }
@@ -20,14 +20,15 @@ module.exports = function subscriptionStore(sql) {
   function findConsumedDraft(token, parentId) {
     return sql.prepare('SELECT id FROM subscriptions WHERE draft_token=? AND parent_id=?').get(token, parentId);
   }
-  function quoteSubscription(studentId, parentId, count, firstMonth = firstBookableMonth()) {
+  function quoteSubscription(studentId, parentId, count, firstMonth = firstBookableMonth(), serviceStart = subscriptionStart(), eligibilityStart = nextServiceStart()) {
     const student = sql.prepare('SELECT * FROM students WHERE id=? AND parent_id=?').get(studentId, parentId);
     if (!student) fail('invalidStudent');
     const names = subscriptionMonths(count, firstMonth);
+    const lastMonth = subscriptionMonths(2, names.at(-1))[1];
     const calendar = sql.prepare('SELECT date,is_school_day FROM school_calendar_days WHERE school=? AND date>=? AND date<=? ORDER BY date')
-      .all(student.school, names[0] + '-01', monthDates(names.at(-1)).at(-1));
+      .all(student.school, names[0] + '-01', monthDates(lastMonth).at(-1));
     const bookedMonths = sql.prepare('SELECT month FROM subscription_months WHERE student_id=?').all(studentId).map(r => r.month);
-    return { ...calculateSubscription({ count, firstMonth, dailyRate: schools.getSchoolDailyRate(student.school), calendar, bookedMonths }), school: student.school };
+    return { ...calculateSubscription({ count, firstMonth, dailyRate: schools.getSchoolDailyRate(student.school), calendar, bookedMonths, serviceStart }), school: student.school, eligibilityStart };
   }
   function getSubscriptionMeals(id) {
     return sql.prepare(`SELECT sm.*, mi.name, mi.calories FROM subscription_meals sm JOIN menu_items mi ON mi.id=sm.menu_item_id
@@ -54,8 +55,8 @@ module.exports = function subscriptionStore(sql) {
       const consumed = findConsumedDraft(draft.token, parentId);
       if (consumed) return consumed;
       if (!draft.termsAccepted || !draft.acceptedAt || draft.stage !== 'knet') fail('stepOrder');
-      if (draft.firstMonth < firstBookableMonth(todayInKuwait(now))) fail('expired');
-      const quote = quoteSubscription(draft.studentId, parentId, draft.monthsCount, draft.firstMonth);
+      if (draft.eligibilityStart !== nextServiceStart(now)) fail('expired');
+      const quote = quoteSubscription(draft.studentId, parentId, draft.monthsCount, firstBookableMonth(now), subscriptionStart(now), nextServiceStart(now));
       // Compare all dated rows as well as money: calendar changes need fresh review even if totals match.
       if (quote.school !== draft.school || quote.totalKWD !== draft.totalKWD || JSON.stringify(quote.months) !== JSON.stringify(draft.months)) {
         const error = new SubscriptionError('priceChanged'); error.quote = quote; throw error;
@@ -89,14 +90,14 @@ module.exports = function subscriptionStore(sql) {
   function seedDemoSubscriptions(seed) {
     const parent = sql.prepare("SELECT id FROM parents WHERE civil_id='111111111111'").get();
     if (!parent) return;
-    // An illustrative payment made seven days before this month keeps demo dashboards useful.
-    const firstMonth = todayInKuwait().slice(0, 7);
-    const { addDays } = require('../lib/subscription');
-    const paidAt = addDays(firstMonth + '-01', -7) + 'T00:00:00+03:00';
+    // Illustrative payment on the Thursday before this month's first Sunday.
+    const first = todayInKuwait().slice(0, 7) + '-01';
+    const firstSunday = addDays(first, (7-new Date(first+'T00:00:00Z').getUTCDay()) % 7);
+    const paidAt = addDays(firstSunday, -3) + 'T12:00:00+03:00';
     for (const sample of seed.subscriptions || []) {
       const student = sql.prepare('SELECT id FROM students WHERE parent_id=? AND civil_id=?').get(parent.id, sample.studentCivilId);
       if (!student || sql.prepare('SELECT id FROM subscriptions WHERE student_id=?').get(student.id)) continue;
-      const quote = quoteSubscription(student.id, parent.id, 1, firstBookableMonth(todayInKuwait(paidAt)));
+      const quote = quoteSubscription(student.id, parent.id, 1, firstBookableMonth(paidAt), subscriptionStart(paidAt), nextServiceStart(paidAt));
       const meals = defaultMeals(quote.months, menuFor(quote.school));
       sql.transaction(() => writeSubscription({ parentId: parent.id, studentId: student.id, token: `seed-${student.id}`, quote, meals, acceptedAt: paidAt, paidAt }))();
     }

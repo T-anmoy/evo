@@ -792,7 +792,7 @@ app.get('/dashboard', requireAuth, (req, res) => {
     return { student, booking:meal ? { status:'upcoming' } : null, menuItem:meal ? db.findMenuItem(meal.menu_item_id) : null };
   });
   const activeSubscriptionPeriods = subscriptions.flatMap(s=>s.months.filter(m=>m.month===today.slice(0,7)).map(m=>({
-    studentName:s.student_name, startDate:m.month+'-01', endDate:endOfMonthISO(m.month+'-01'), days:m.meal_days, totalKWD:m.amount_kwd
+    studentName:s.student_name, startDate:m.startDate, endDate:m.endDate, days:m.meal_days, totalKWD:m.amount_kwd
   })));
   res.render('dashboard', { parent, students, studentStatus, activeSubscriptionPeriods, activeBookingCount:subscriptions.length,
     notifications:db.getNotificationsForParent(parent.id,12), unreadNotificationCount:db.getUnreadNotificationCount(parent.id), parentId:parent.id });

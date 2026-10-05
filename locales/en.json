@@ -247,7 +247,7 @@
       "q3": "My child has an allergy. How does that get handled?",
       "a3": "The programme statement names Nuts, Shellfish, Sesame and Soy. Dish records are sample information. Student allergy notes are reference notes only; the demo does not check or match allergies automatically. Contact the team about a specific dietary requirement.",
       "q4": "Can I change my daily meals?",
-      "a4": "Open View/change meals from your confirmation. Paid subscription meals can be changed until 48 hours before that meal day in Kuwait.",
+      "a4": "Book and change meal selection by Thursday of the current week to begin meal service from Sunday of the upcoming week.",
       "footnote": "Booking, pricing, and the full parent journey: see {parents}. Platform-wide capabilities: see {features}.",
       "footnoteParents": "For Parents",
       "footnoteFeatures": "Features"
@@ -282,7 +282,7 @@
       "title2": "Choose your daily meals",
       "body2": "Review each month, then pick the meal for every day. A default menu is filled in for you, and you can change it later.",
       "title3": "Pay to confirm",
-      "body3": "Accept the payment terms and pay via KNET. Meal service starts 7 days after successful payment."
+      "body3": "Accept the payment terms and pay via KNET. Book and change meal selection by Thursday of the current week to begin meal service from Sunday of the upcoming week."
     }
   },
   "featuresSection": {
@@ -986,7 +986,7 @@
     },
     "calendarNote": "Meal dates follow your school's academic calendar. Meals are charged and served on working days only. This demo uses an illustrative placeholder calendar.",
     "bookNow": "Book Now",
-    "leadBanner": "Meal service will start 7 days after successful payment.",
+    "leadBanner": "Book and change meal selection by Thursday of the current week to begin meal service from Sunday of the upcoming week.",
     "bookingDate": "Booking date",
     "numberMonths": "Number of months",
     "monthPreview": "Months covered",
@@ -1011,7 +1011,7 @@
     "month": "Month",
     "showMonth": "Show month",
     "changeNote": "You can change these later.",
-    "cutoffNote": "Meals can be changed until 48 hours before the meal day, measured from midnight in Kuwait.",
+    "cutoffNote": "Book and change meal selection by Thursday of the current week to begin meal service from Sunday of the upcoming week.",
     "locked": "Changes closed",
     "saveMeals": "Save meals",
     "saved": "Meal choices saved.",
@@ -1031,7 +1031,7 @@
       "expired": "The start month is no longer available with the required service lead time. Please choose your months again.",
       "priceChanged": "The calendar, school or price changed. Review the updated subscription and accept the terms again. No payment was processed.",
       "invalidMeals": "Choose a valid meal for each meal day in the selected month.",
-      "cutoff": "One or more meal days are past the 48-hour change cutoff. No changes were saved.",
+      "cutoff": "One or more meal days are before the next eligible service week. No changes were saved.",
       "staleDraft": "This booking draft was replaced. Return to Meal booking to continue."
     },
     "regularMeal": "Regular Meal"

@@ -1,6 +1,7 @@
 <div class="subscription-months">
   <% months.forEach(m => { %><article class="card subscription-month">
     <h2><%= fmtMonth(m.month,locale) %></h2>
+    <p><bdi><%= fmtDate(m.startDate) %> – <%= fmtDate(m.endDate) %></bdi></p>
     <dl class="record-details">
       <% for (const [key, value] of [['totalDays',m.totalDays],['holidayDays',m.holidayDays],['mealDays',m.mealDays],['rate',fmtKWD(m.rateKWD)],['amount',fmtKWD(m.amountKWD)]]) { %>
         <div><dt><%= t('subscription.'+key) %></dt><dd><bdi><%= value %></bdi></dd></div>

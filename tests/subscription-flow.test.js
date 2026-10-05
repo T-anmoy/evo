@@ -4,11 +4,11 @@ const fs=require('node:fs');const os=require('node:os');const path=require('node
 const file=path.join(os.tmpdir(),`evo-subscriptions-${process.pid}.db`);
 process.env.DATABASE_FILE=file;process.env.SESSION_SECRET='test-only';process.env.LOG_LEVEL='silent';
 const app=require('../server'), db=require('../db'), SQL=require('better-sqlite3');
-const sql=new SQL(file);let server,base,cookie='',csrf='',token='';
+const sql=new SQL(file);let server,base,cookie='',csrf='',token='',bookingStudent,priceStudent;
 async function request(route,fields){const res=await fetch(base+route,{method:fields?'POST':'GET',headers:{cookie,'content-type':'application/x-www-form-urlencoded'},body:fields?new URLSearchParams({...fields,_csrf:csrf}):undefined,redirect:'manual'});if(res.headers.get('set-cookie'))cookie=res.headers.get('set-cookie').split(';')[0];const body=await res.text();const c=body.match(/name="_csrf" value="([^"]+)"/);if(c)csrf=c[1];const d=body.match(/name="token" value="([^"]+)"/);if(d)token=d[1];return {status:res.status,body,headers:res.headers,location:res.headers.get('location')};}
-before(async()=>{server=app.listen(0);base=`http://localhost:${server.address().port}`;await request('/login');await request('/login',{civilId:'111111111111',password:'demo1234'});await request('/dashboard');});
+before(async()=>{bookingStudent=db.createStudent({...db.findStudentById(1),civilId:'123450000001'});priceStudent=db.createStudent({...db.findStudentById(2),civilId:'123450000002'});server=app.listen(0);base=`http://localhost:${server.address().port}`;await request('/login');await request('/login',{civilId:'111111111111',password:'demo1234'});await request('/dashboard');});
 after(()=>{server.close();sql.close();for(const suffix of ['','-wal','-shm'])fs.rmSync(file+suffix,{force:true});});
-async function begin(student='1',months='1'){
+async function begin(student=String(bookingStudent.id),months='1'){
  const r=await request('/booking/review',{student,months});assert.equal(r.status,302,r.body);assert.equal(r.location,'/booking/review');
  assert.equal((await request('/booking/review')).status,200);
  const meals=await request('/booking/meals');assert.equal(meals.status,200,meals.body);
@@ -17,7 +17,7 @@ async function begin(student='1',months='1'){
 async function ready(){assert.equal((await request('/booking/accept-terms',{token})).location,'/booking/payment');assert.equal((await request('/booking/payment')).status,200);assert.equal((await request('/booking/knet')).status,200);}
 test('payment is gated by a draft and step order',async()=>{
  assert.equal((await request('/booking/knet')).location,'/booking');
- const r=await request('/booking/review',{student:'1',months:'1'});assert.equal(r.status,302);
+ const r=await request('/booking/review',{student:String(bookingStudent.id),months:'1'});assert.equal(r.status,302);
  assert.equal((await request('/booking/pay',{})).status,409);
  const page=await request('/booking/review');assert.equal(page.status,200);
  await request('/booking/meals');assert.equal((await request('/booking/pay',{token})).location,'/booking/terms');
@@ -40,11 +40,11 @@ test('happy path saves daily choices, confirms payment once, and refuses overlap
  assert.equal(db.getSubscriptions(1).length,before+1);
  assert.equal(sql.prepare('SELECT COUNT(*) c FROM payments WHERE subscription_id=?').get(id).c,1);
  assert.equal(sql.prepare('SELECT COUNT(*) c FROM terms_acceptances WHERE subscription_id=?').get(id).c,1);
- assert.equal((await request('/booking/review',{student:'1',months:'1'})).status,422);
- assert.throws(()=>sql.prepare('INSERT INTO subscription_months(subscription_id,student_id,month,total_days,holiday_days,meal_days,rate_kwd,amount_kwd) VALUES(?,?,?,?,?,?,?,?)').run(id,1,month,31,12,19,2,38),/UNIQUE/);
+ assert.equal((await request('/booking/review',{student:String(bookingStudent.id),months:'1'})).status,422);
+ assert.throws(()=>sql.prepare('INSERT INTO subscription_months(subscription_id,student_id,month,total_days,holiday_days,meal_days,rate_kwd,amount_kwd) VALUES(?,?,?,?,?,?,?,?)').run(id,bookingStudent.id,month,31,12,19,2,38),/UNIQUE/);
 });
 test('changed database price returns to review with no payment',async()=>{
- await begin('2');await ready();const before=db.getSubscriptions(1).length;
+ await begin(String(priceStudent.id));await ready();const before=db.getSubscriptions(1).length;
  sql.prepare("UPDATE schools SET daily_rate_kwd=3 WHERE id=2").run();
  const response=await request('/booking/pay',{token});assert.equal(response.location,'/booking/review');assert.equal(db.getSubscriptions(1).length,before);
  const review=await request('/booking/review');assert.match(review.body,/price changed/);
@@ -102,7 +102,7 @@ test('real foreign parent records remain private across all routes',async()=>{
 });
 test('month validation refuses malformed counts and incomplete calendars',async()=>{
  const student=newStudent();for(const months of ['0','7','1.5','Infinity','1x',''])assert.equal((await request('/booking/review',{student:String(student.id),months})).status,422);
- const month=require('../lib/subscription').firstBookableMonth();const row=sql.prepare('SELECT * FROM school_calendar_days WHERE school=? AND date=?').get(student.school,month+'-01');
+ const month=require('../lib/subscription').firstBookableMonth();const row=sql.prepare('SELECT * FROM school_calendar_days WHERE school=? AND date=?').get(student.school,require('../lib/subscription').subscriptionStart());
  sql.prepare('DELETE FROM school_calendar_days WHERE school=? AND date=?').run(student.school,row.date);
  try{const r=await request('/booking/review',{student:String(student.id),months:'1'});assert.equal(r.status,422);assert.match(r.body,/complete calendar/);}finally{sql.prepare('INSERT INTO school_calendar_days(school,date,is_school_day) VALUES(?,?,?)').run(student.school,row.date,row.is_school_day);}
 });
