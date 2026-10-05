@@ -1,0 +1,809 @@
+{
+  "checkedAt": "2026-10-05T13:01:29.616Z",
+  "results": [
+    {
+      "label": "en parents no selection 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "en parents kuwait-english-school 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "en parents american-creativity-academy 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "en parents the-english-school 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "en how-it-works 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "en parents no selection 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "en parents kuwait-english-school 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "en parents american-creativity-academy 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "en parents the-english-school 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "en how-it-works 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "en parents no selection 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "en parents kuwait-english-school 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "en parents american-creativity-academy 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "en parents the-english-school 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "en how-it-works 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "en parents no selection 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "en parents kuwait-english-school 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "en parents american-creativity-academy 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "en parents the-english-school 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "en how-it-works 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "en parents no selection 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "en parents kuwait-english-school 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "en parents american-creativity-academy 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "en parents the-english-school 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "en how-it-works 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "en parents no selection 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "en parents kuwait-english-school 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "en parents american-creativity-academy 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "en parents the-english-school 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "en how-it-works 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "en parents no selection 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "en parents kuwait-english-school 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "en parents american-creativity-academy 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "en parents the-english-school 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "en how-it-works 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "en parents no selection 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "en parents kuwait-english-school 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "en parents american-creativity-academy 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "en parents the-english-school 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "en how-it-works 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "ar parents no selection 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "ar parents kuwait-english-school 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "ar parents american-creativity-academy 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "ar parents the-english-school 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "ar how-it-works 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "ar parents no selection 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "ar parents kuwait-english-school 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "ar parents american-creativity-academy 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "ar parents the-english-school 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "ar how-it-works 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "ar parents no selection 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "ar parents kuwait-english-school 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "ar parents american-creativity-academy 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "ar parents the-english-school 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "ar how-it-works 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "ar parents no selection 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "ar parents kuwait-english-school 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "ar parents american-creativity-academy 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "ar parents the-english-school 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "ar how-it-works 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "ar parents no selection 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "ar parents kuwait-english-school 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "ar parents american-creativity-academy 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "ar parents the-english-school 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "ar how-it-works 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "ar parents no selection 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "ar parents kuwait-english-school 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "ar parents american-creativity-academy 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "ar parents the-english-school 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "ar how-it-works 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "ar parents no selection 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "ar parents kuwait-english-school 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "ar parents american-creativity-academy 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "ar parents the-english-school 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "ar how-it-works 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "ar parents no selection 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "ar parents kuwait-english-school 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "ar parents american-creativity-academy 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "ar parents the-english-school 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "ar how-it-works 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "en mobile menu selector",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "en keyboard selector, Escape/focus, scroll lock, RTL/LTR arrows, Home/End, mobile nav selector",
+      "pass": true
+    },
+    {
+      "label": "ar mobile menu selector",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "ar keyboard selector, Escape/focus, scroll lock, RTL/LTR arrows, Home/End, mobile nav selector",
+      "pass": true
+    },
+    {
+      "label": "en no-JavaScript inline school selection and all categories",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "ar no-JavaScript inline school selection and all categories",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "en review per-school rate and partial dates",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "en payment",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "en confirmation",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "en /menu 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "en /booking 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "en /history 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "en /subscriptions/3/meals 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "en /menu 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "en /booking 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "en /history 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "en /subscriptions/3/meals 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "en /menu 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "en /booking 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "en /history 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "en /subscriptions/3/meals 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "en /menu 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "en /booking 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "en /history 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "en /subscriptions/3/meals 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "en /menu 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "en /booking 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "en /history 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "en /subscriptions/3/meals 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "en /menu 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "en /booking 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "en /history 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "en /subscriptions/3/meals 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "en /menu 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "en /booking 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "en /history 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "en /subscriptions/3/meals 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "en /menu 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "en /booking 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "en /history 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "en /subscriptions/3/meals 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "en full booking with JS",
+      "school": "Kuwait English School",
+      "rate": 2,
+      "days": 13,
+      "total": 26,
+      "options": [
+        1,
+        2,
+        4,
+        5
+      ]
+    },
+    {
+      "label": "ar review per-school rate and partial dates",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "ar payment",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "ar confirmation",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "ar /menu 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "ar /booking 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "ar /history 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "ar /subscriptions/4/meals 320",
+      "width": 320,
+      "scroll": 320
+    },
+    {
+      "label": "ar /menu 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "ar /booking 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "ar /history 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "ar /subscriptions/4/meals 344",
+      "width": 344,
+      "scroll": 344
+    },
+    {
+      "label": "ar /menu 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "ar /booking 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "ar /history 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "ar /subscriptions/4/meals 375",
+      "width": 375,
+      "scroll": 375
+    },
+    {
+      "label": "ar /menu 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "ar /booking 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "ar /history 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "ar /subscriptions/4/meals 390",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "label": "ar /menu 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "ar /booking 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "ar /history 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "ar /subscriptions/4/meals 430",
+      "width": 430,
+      "scroll": 430
+    },
+    {
+      "label": "ar /menu 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "ar /booking 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "ar /history 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "ar /subscriptions/4/meals 768",
+      "width": 768,
+      "scroll": 768
+    },
+    {
+      "label": "ar /menu 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "ar /booking 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "ar /history 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "ar /subscriptions/4/meals 1024",
+      "width": 1024,
+      "scroll": 1024
+    },
+    {
+      "label": "ar /menu 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "ar /booking 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "ar /history 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "ar /subscriptions/4/meals 1440",
+      "width": 1440,
+      "scroll": 1440
+    },
+    {
+      "label": "ar full booking with JS",
+      "school": "American Creativity Academy",
+      "rate": 2.5,
+      "days": 13,
+      "total": 32.5,
+      "options": [
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "errors": []
+}

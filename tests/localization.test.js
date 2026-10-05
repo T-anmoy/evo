@@ -22,6 +22,7 @@ test('computed key families include every supported value',()=>{
  add('history.',['colStudent','colSchool','colMonths','colMealDays','colTotal','colPaid','colInvoice']);
  add('schoolAdminDashboard.',['colStudent','colMonths','colMealDays','colPaid','colTotal']);
  add('subscription.',['totalDays','holidayDays','mealDays','rate','amount']);
+ add('schoolMenu.categories.',['main','side','drink','snack']);
  add('subscription.titles.',['list','new','review','meals','terms','payment','knet','confirmation']);
  add('food.',['nut','shellfish','sesame','soy']);add('menu.',['kcal','protein','carbs','fat']);
  add('nav.',['forParents','forSchools','corporate']);add('mealQueue.status',['Collected','Upcoming']);

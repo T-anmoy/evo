@@ -5,8 +5,11 @@
     let trigger, previousOverflow;
     document.querySelectorAll('[data-school-selector]').forEach(link => link.addEventListener('click', event => {
       event.preventDefault(); trigger = link;
-      const menu = link.closest('.site-links-mobile.open');
-      if (menu) { document.getElementById('siteLinksMobileClose').click(); trigger = document.getElementById('siteNavToggle'); }
+      const menu = link.closest('.site-links-mobile');
+      if (menu) {
+        if (menu.classList.contains('open')) document.getElementById('siteLinksMobileClose').click();
+        trigger = document.getElementById('siteNavToggle');
+      }
       previousOverflow = document.documentElement.style.overflow;
       document.documentElement.style.overflow = 'hidden';
       dialog.showModal();

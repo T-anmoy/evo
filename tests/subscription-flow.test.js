@@ -146,5 +146,83 @@ test('a late transaction failure rolls back subscription, months, meals and paym
 test('new subscriptions are visible in parent and school dashboards',async()=>{
  await request('/locale/en?returnTo=/dashboard');const dashboard=await request('/dashboard');assert.equal(dashboard.status,200);assert.match(dashboard.body,/Book more months/);assert.doesNotMatch(dashboard.body,/Quick rebook|action="\/booking\/\d+\/renew/);
  const originalCookie=cookie;await request('/school-admin/login');await request('/school-admin/login',{email:'admin@kes.evomeals.demo',password:'admin1234'});
- const admin=await request('/school-admin/dashboard');assert.equal(admin.status,200);assert.match(admin.body,/Meals in the next 7 days/);assert.match(admin.body,/Ahmed/);assert.doesNotMatch(admin.body,/Sara|Collected/);cookie=originalCookie;await request('/dashboard');
+ const admin=await request('/school-admin/dashboard');assert.equal(admin.status,200);assert.match(admin.body,/Meals in the next 7 days/);assert.match(admin.body,/Ahmed/);assert.doesNotMatch(admin.body,/Sara|Collected/);cookie=originalCookie;await request('/login');await request('/login',{civilId:'111111111111',password:'demo1234'});await request('/dashboard');
+});
+test('school menu groups are filtered, ordered and omit empty categories',()=>{
+ const schools=db.getSchools();assert.equal(schools.length,3);assert.deepEqual(require('../lib/validate').SCHOOLS,schools.map(s=>s.name));
+ const groups=schools.map(s=>db.getMenuForSchool(s.id));assert.deepEqual(groups.map(g=>g.map(x=>x.category)),[['main','snack'],['main'],['main','snack']]);
+ assert.deepEqual(groups[0].flatMap(g=>g.items.map(m=>m.id)),[1,2,4,5]);assert.deepEqual(groups[1].flatMap(g=>g.items.map(m=>m.id)),[2,3,4]);
+ const rotation=require('../lib/subscription').defaultMeals([{mealDates:['a','b','c','d']}],db.getSchoolMenuItems(3));assert.deepEqual(Object.values(rotation),[1,3,1,3]);
+ assert.throws(()=>require('../lib/subscription').defaultMeals([{mealDates:['a']}],db.getSchoolMenuItems(3).filter(m=>m.category==='snack')),{code:'noMenu'});
+ // Exercise all four categories with reversible fixture edits, without inventing dishes.
+ try {
+   sql.prepare("UPDATE menu_items SET category='side' WHERE id=2").run();
+   sql.prepare("UPDATE menu_items SET category='drink' WHERE id=4").run();
+   assert.deepEqual(db.getMenuForSchool(1).map(g=>g.category),['main','side','drink','snack']);
+   assert.deepEqual(db.getMenuForSchool(-1),[]);
+ } finally { sql.prepare("UPDATE menu_items SET category='main' WHERE id IN (2,4)").run(); }
+});
+test('public school selection validates slugs, persists, and defaults to the first child',async()=>{
+ const saved=cookie;cookie='';
+ try {
+  let r=await request('/parents?school=not-a-school');assert.equal(r.status,200);assert.doesNotMatch(r.body,/class="school-dish-grid"/);
+  r=await request('/parents?school=american-creativity-academy');assert.match(r.body,/id="school-2-panel-main"/);assert.doesNotMatch(r.body,/panel-snack/);
+  r=await request('/ar/parents');assert.match(r.body,/id="school-2-panel-main"/);
+  r=await request('/parents?school=bad');assert.match(r.body,/id="school-2-panel-main"/);
+  r=await request('/parents?school=the-english-school');assert.match(r.body,/id="school-3-panel-snack"/);
+ } finally {cookie=saved;}
+ const r=await request('/parents');assert.match(r.body,/id="school-1-panel-main"/);
+ const menu=await request('/menu');assert.match(menu.body,/id="school-1-panel-main"/);assert.match(menu.body,/id="school-2-panel-main"/);assert.equal((menu.body.match(/id="school-1-panel-main"/g)||[]).length,1);
+});
+test('marketing removes public pricing and redundant Parents dish sections',async()=>{
+ for(const p of ['/','/parents','/schools','/corporate-meals','/about','/how-it-works'])for(const prefix of ['','/ar']){
+  const r=await request(prefix+(p==='/'?'':p)||'/');assert.equal(r.status,200);assert.doesNotMatch(r.body,/KWD\s*2\.000|id="pricing"|parents\.pricing/);
+  if(p==='/parents')assert.doesNotMatch(r.body,/food-card--featured|food-supporting|id="menu"/);
+ }
+});
+test('off-school dishes are rejected in drafts, payment and paid meal changes',async()=>{
+ const student=newStudent();const r=await begin(String(student.id));const month=r.body.match(/name="month" value="([^"]+)"/)[1];const dates=[...r.body.matchAll(/name="meals\[([^\]]+)\]"/g)].map(m=>m[1]);
+ assert.doesNotMatch(r.body,/<option value="2"/);assert.equal((await request('/booking/meals',{token,month,...Object.fromEntries(dates.map(d=>[`meals[${d}]`,'2']))})).status,422);
+ await ready();const paid=await request('/booking/pay',{token});const id=Number(paid.location.split('/').pop());
+ assert.equal((await request(`/subscriptions/${id}/meals`,{month,[`meals[${dates[0]}]`]:'2'})).status,422);
+ const other=newStudent(),quote=db.quoteSubscription(other.id,1,1),rules=require('../lib/subscription');const draft={...quote,studentId:other.id,monthsCount:1,firstMonth:quote.months[0].month,token:'off-menu-payment',meals:rules.defaultMeals(quote.months,db.getSchoolMenuItems(3)),termsAccepted:true,acceptedAt:new Date().toISOString(),stage:'knet'};draft.meals[quote.months[0].mealDates[0]]=2;
+ assert.throws(()=>db.paySubscription(1,draft),{code:'invalidMeals'});
+});
+test('school rate is used at review and pay; later rate edits do not rewrite history',async()=>{
+ const student=newStudent();const oldRate=db.getSchoolDailyRate(student.school);
+ try{
+  sql.prepare('UPDATE schools SET daily_rate_kwd=3.75 WHERE id=3').run();await begin(String(student.id));let review=await request('/booking/review');assert.match(review.body,/3\.750/);await request('/booking/meals');await ready();
+  sql.prepare('UPDATE schools SET daily_rate_kwd=4.25 WHERE id=3').run();assert.equal((await request('/booking/pay',{token})).location,'/booking/review');assert.match((await request('/booking/review')).body,/4\.250/);await request('/booking/meals');await ready();
+  const paid=await request('/booking/pay',{token});const id=Number(paid.location.split('/').pop());const record=db.getSubscription(id,1);assert.equal(record.total_kwd,record.meal_days*4.25);
+  sql.prepare('UPDATE schools SET daily_rate_kwd=5 WHERE id=3').run();assert.equal(db.getSubscription(id,1).total_kwd,record.total_kwd);assert.equal(db.getSubscription(id,1).daily_rate_kwd,4.25);
+ }finally{sql.prepare('UPDATE schools SET daily_rate_kwd=? WHERE id=3').run(oldRate);}
+});
+test('crossing the weekly cutoff expires a draft and locks the earlier week',()=>{
+ const rules=require('../lib/subscription'),student=newStudent();const first=rules.subscriptionStart();const now=rules.addDays(first,-3)+'T23:59:59+03:00';const after=rules.addDays(first,-2)+'T00:00:00+03:00';
+ const quote=db.quoteSubscription(student.id,1,1,first.slice(0,7),first,rules.nextServiceStart(now));const draft={...quote,studentId:student.id,monthsCount:1,firstMonth:quote.months[0].month,token:'cutoff-expiration',meals:rules.defaultMeals(quote.months,db.getSchoolMenuItems(3)),termsAccepted:true,acceptedAt:now,stage:'knet'};
+ assert.throws(()=>db.paySubscription(1,draft,new Date(after)),{code:'expired'});
+ const paid=db.paySubscription(1,draft,new Date(now));const date=quote.months[0].mealDates[0];db.changeSubscriptionMeals(1,paid.id,date.slice(0,7),{[date]:'3'},new Date(now));
+ assert.throws(()=>db.changeSubscriptionMeals(1,paid.id,date.slice(0,7),{[date]:'1'},new Date(after)),{code:'cutoff'});
+});
+test('month preview and review both roll an empty first window forward',async()=>{
+ const rules=require('../lib/subscription'),student=newStudent(),start=rules.subscriptionStart(),end=rules.monthDates(start.slice(0,7)).at(-1);
+ const rows=sql.prepare('SELECT * FROM school_calendar_days WHERE school=? AND date BETWEEN ? AND ?').all(student.school,start,end);
+ try {
+  sql.prepare('UPDATE school_calendar_days SET is_school_day=0 WHERE school=? AND date BETWEEN ? AND ?').run(student.school,start,end);
+  const quote=db.quoteSubscription(student.id,1,1),next=rules.subscriptionMonths(2,start.slice(0,7))[1];assert.equal(quote.months[0].month,next);assert.equal(quote.months[0].startDate,next+'-01');
+  const preview=await request('/booking/new?student='+student.id);
+  assert.equal(preview.status,200);assert.ok(preview.body.includes('data-month-index="0"'));
+  const firstLabel=preview.body.match(/data-month-index="0"[^>]*>([^<]+)</)[1];
+  const meals=await begin(String(student.id));assert.match(meals.body,new RegExp('name="month" value="'+next+'"'));
+  const review=await request('/booking/review');assert.ok(review.body.includes(firstLabel));
+ } finally { const restore=sql.prepare('UPDATE school_calendar_days SET is_school_day=? WHERE school=? AND date=?');rows.forEach(r=>restore.run(r.is_school_day,r.school,r.date)); }
+});
+test('expired draft returns to a fresh review and requires payment terms again',async()=>{
+ const student=newStudent();await begin(String(student.id));await ready();const before=db.getSubscriptions(1).length;
+ const Layer=require('express/lib/router/layer'),rules=require('../lib/subscription');
+ const layer=new Layer('/',{end:false},(req,res,next)=>{if(req.path==='/booking/pay'&&req.session.subscriptionDraft)req.session.subscriptionDraft.eligibilityStart=rules.addDays(rules.nextServiceStart(),-7);next();});
+ const position=app._router.stack.findIndex(l=>l.name==='session')+1;app._router.stack.splice(position,0,layer);
+ try {assert.equal((await request('/booking/pay',{token})).location,'/booking/review');assert.equal(db.getSubscriptions(1).length,before);
+  const review=await request('/booking/review');assert.equal(review.status,200);assert.match(review.body,/href="\/booking\/meals"/);assert.equal((await request('/booking/payment')).location,'/booking/meals');
+ } finally { app._router.stack.splice(app._router.stack.indexOf(layer),1); }
 });
