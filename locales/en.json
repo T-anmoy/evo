@@ -278,11 +278,11 @@
     },
     "steps": {
       "title1": "Choose your months",
-      "body1": "Select how many months you want to subscribe for. Each month is charged only for its working days.",
+      "body1": "Select Number of months you want to subscribe for. (You are only charged for the working days)",
       "title2": "Choose your daily meals",
-      "body2": "Review each month, then pick the meal for every day. A default menu is filled in for you, and you can change it later.",
+      "body2": "Select your preferred meal for each day. (Meal selection can also be altered later)",
       "title3": "Pay to confirm",
-      "body3": "Accept the payment terms and pay via KNET. Book and change meal selection by Thursday of the current week to begin meal service from Sunday of the upcoming week."
+      "body3": "Accept the payment terms and pay via KNET. Book and change meal selection by Thursday of the Current week to begin meal service from Sunday of the upcoming week."
     }
   },
   "featuresSection": {
