@@ -46,6 +46,7 @@ const logger = pino({
 });
 
 const app = express();
+app.locals.getSchools = db.getSchools;
 const PORT = process.env.PORT || 3000;
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 

@@ -40,7 +40,7 @@
         <div class="field <%= se.school ? 'invalid' : '' %>">
           <label for="students-school"><%= t('students.labelSchool') %></label>
           <select id="students-school" name="school" required aria-describedby="students-school-error" aria-invalid="<%= (typeof errors !== 'undefined' && errors && errors.school) ? 'true' : 'false' %>">
-            <% ['Kuwait English School','American Creativity Academy','The English School'].forEach(s => { %>
+            <% getSchools().map(school => school.name).forEach(s => { %>
               <option value="<%= s %>" <%= defaultSchool === s ? 'selected' : '' %>><%= s %></option>
             <% }) %>
           </select>

@@ -9,7 +9,7 @@ const path = require('path');
 const Database = require('better-sqlite3');
 const { migrate } = require('./db/migrate');
 const { todayInKuwait } = require('./lib/subscription');
-const { SCHOOLS } = require('./lib/validate');
+
 const { FEATURES } = require('./lib/features');
 
 const DB_FILE = process.env.DATABASE_FILE || path.join(__dirname, 'evo360.db');
@@ -32,7 +32,7 @@ db.pragma('foreign_keys = ON');
 // for subscriptions and retained for the separate Staff booking path.
 const DAILY_RATE_KWD = 2.000;
 
-const CALENDAR_SCHOOLS = SCHOOLS;
+
 const CALENDAR_WINDOW_DAYS_BACK = 45;
 
 const CALENDAR_HOLIDAY_OFFSETS = [9, 10, 38]; // illustrative example holidays, relative to seeding day
@@ -64,10 +64,11 @@ function generateCalendarDays(today) {
 function ensureCalendarCoverage() {
   const days = generateCalendarDays(new Date(todayInKuwait() + 'T00:00:00Z'));
   const insert = db.prepare('INSERT OR IGNORE INTO school_calendar_days(school,date,is_school_day) VALUES(?,?,?)');
-  db.transaction(() => { CALENDAR_SCHOOLS.forEach(school => days.forEach(d => insert.run(school, d.date, d.isSchoolDay ? 1 : 0))); })();
+  db.transaction(() => { schools.getSchools().map(s => s.name).forEach(school => days.forEach(d => insert.run(school, d.date, d.isSchoolDay ? 1 : 0))); })();
 }
 
 migrate(db);
+const schools = require('./db/schools')(db);
 seedIfEmpty();
 ensureCalendarCoverage();
 const subscriptions = require('./db/subscriptions')(db);
@@ -92,7 +93,7 @@ function mapStudent(r) {
 function mapMenuItem(r) {
   if (!r) return undefined;
   return {
-    id: r.id, name: r.name, tag: r.tag, calories: r.calories, protein: r.protein,
+    id: r.id, name: r.name, category: r.category, tag: r.tag, calories: r.calories, protein: r.protein,
     carbs: r.carbs, fat: r.fat, ingredients: r.ingredients,
     allergenFree: JSON.parse(r.allergen_free || '[]')
   };
@@ -135,16 +136,19 @@ function seedIfEmpty() {
     seed.students.forEach(s => insertStudent.run(s));
 
     const insertMenuItem = db.prepare(`
-      INSERT INTO menu_items (id, name, tag, calories, protein, carbs, fat, ingredients, allergen_free)
-      VALUES (@id, @name, @tag, @calories, @protein, @carbs, @fat, @ingredients, @allergenFree)
+      INSERT INTO menu_items (id, name, tag, calories, protein, carbs, fat, ingredients, allergen_free, category)
+      VALUES (@id, @name, @tag, @calories, @protein, @carbs, @fat, @ingredients, @allergenFree, @category)
     `);
     seed.menuItems.forEach(m => insertMenuItem.run({ ...m, allergenFree: JSON.stringify(m.allergenFree || []) }));
+
+    const assign = db.prepare('INSERT OR IGNORE INTO school_menu_items(school_id,menu_item_id) VALUES(?,?)');
+    seed.schools.forEach(s => s.menuItemIds.forEach(id => assign.run(s.id, id)));
 
     // Placeholder school calendar — see generateCalendarDays() above.
     const insertCalendarDay = db.prepare(`
       INSERT INTO school_calendar_days (school, date, is_school_day) VALUES (?, ?, ?)
     `);
-    CALENDAR_SCHOOLS.forEach(school => {
+    schools.getSchools().map(s => s.name).forEach(school => {
       calendarDays.forEach(d => insertCalendarDay.run(school, d.date, d.isSchoolDay ? 1 : 0));
     });
 
@@ -377,7 +381,7 @@ function createInquiry(inquiry) {
 }
 
 module.exports = {
-  ...subscriptions, ensureCalendarCoverage,
+  ...subscriptions, ...schools, ensureCalendarCoverage,
   resetToSeed,
   findParentByCivilId, findParentById, createParent, updateParent,
   getStudentsByParent, findStudentById, createStudent, updateStudent,
