@@ -165,6 +165,13 @@ app.use((req, res, next) => {
     locale = 'en'; // unprefixed public/pre-auth pages are always English
   }
 
+  const requestedSchool = db.getSchoolBySlug(req.query.school);
+  if (requestedSchool) req.session.selectedSchool = requestedSchool.slug;
+  let selectedSchool = db.getSchoolBySlug(req.session.selectedSchool);
+  if (!selectedSchool && req.session.parentId) {
+    selectedSchool = db.getSchoolByName(db.getStudentsByParent(req.session.parentId)[0]?.school);
+  }
+  res.locals.selectedSchool = selectedSchool || null;
   res.locals.features = FEATURES;
   res.locals.locale = locale;
   res.locals.lang = locale;
@@ -461,8 +468,7 @@ app.post(['/schools/inquiry', '/ar/schools/inquiry'], writeFormLimiter, (req, re
 app.get(['/parents', '/ar/parents'], (req, res) => {
   res.render('parents', {
     parentId: req.session.parentId,
-    menuItems: db.getMenuItems(),
-    dailyRateKWD: db.getDailyRate()
+    groups: res.locals.selectedSchool ? db.getMenuForSchool(res.locals.selectedSchool.id) : []
   });
 });
 

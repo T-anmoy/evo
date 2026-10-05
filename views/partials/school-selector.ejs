@@ -1,0 +1,10 @@
+<dialog class="terms-dialog school-selector" id="school-selector" aria-labelledby="school-selector-title">
+  <div class="terms-dialog-head"><h2 id="school-selector-title"><%= t('schoolMenu.selectTitle') %></h2></div>
+  <form method="GET" action="<%= locale === 'ar' ? '/ar' : '' %>/parents#school-menu">
+    <fieldset class="school-choices"><legend class="sr-only"><%= t('schoolMenu.selectTitle') %></legend>
+      <% getSchools().forEach(s => { %><label class="school-choice"><input type="radio" name="school" value="<%= s.slug %>" required <%= selectedSchool?.id === s.id ? 'checked' : '' %>><span><%= s.name %></span></label><% }) %>
+    </fieldset>
+    <div class="action-row"><button class="btn btn-primary" type="submit"><%= t('schoolMenu.confirm') %></button><button class="btn btn-outline" type="button" data-school-close><%= t('schoolMenu.cancel') %></button></div>
+  </form>
+</dialog>
+<script src="/js/school-menu.js" defer></script>

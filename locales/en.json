@@ -123,7 +123,7 @@
     "closeMenu": "Close menu",
     "closeLabel": "Close",
     "langSwitchLabel": "Switch language",
-    "checkMySchool": "Check My School",
+    "checkMySchool": "Select Your School",
     "corporate": "Corporate Meals"
   },
   "footer": {
@@ -177,7 +177,7 @@
       "headlinePre": "School lunch. Clearly arranged.",
       "headlineEm": "Every school day.",
       "lede": "Explore the food, arrange meals for your child, and see recorded collection status in one parent account.",
-      "ctaCheckSchool": "Check Your School",
+      "ctaCheckSchool": "Select Your School",
       "ctaHowItWorks": "See How It Works",
       "toastTitle": "Sara tapped in — lunch collected",
       "toastSub": "12:04 PM · Arabiatta Chicken Pasta · illustrative example",
@@ -323,10 +323,9 @@
       "headline1": "Know what they'll eat.",
       "headline2": "Know when they collect it.",
       "headlineEm": "Every school day.",
-      "lede": "See the food first. Choose a meal and plan, review the total, and explore how collection is recorded.",
+      "lede": "Know what's in. Choose what's right.",
       "toastTitle": "Ahmed tapped in — lunch collected",
-      "toastSub": "12:14 PM · Arabiatta Chicken Pasta · illustrative example",
-      "ledeWithoutCollection": "See the food first, choose your meals, and review the total."
+      "toastSub": "12:14 PM · Arabiatta Chicken Pasta · illustrative example"
     },
     "journey": {
       "eyebrow": "How it works for you",
@@ -357,22 +356,6 @@
       "phase3Body": "You see the confirmation",
       "headingWithoutCollection": "From booking to payment.",
       "introWithoutCollection": "Choose your meals and confirm a simulated payment. No money moves in this demo."
-    },
-    "menu": {
-      "eyebrow": "A closer look at lunch",
-      "heading": "Food you can explore before booking.",
-      "intro": "Sample dishes with ingredients, nutrition and stored allergen information.",
-      "allergenPill": "Allergen information available per dish",
-      "footnote": "Sample dishes and reference nutrition; confirm current meal details with the team."
-    },
-    "pricing": {
-      "eyebrow": "Pricing",
-      "heading": "One price, shown before you pay.",
-      "intro": "Review the calculated price before confirming. Payments here are simulated.",
-      "subscriptionTitle": "Monthly subscription",
-      "subscriptionPer": "/configured school day",
-      "subscriptionBody": "Choose the number of months. Each month is charged only for its working days.",
-      "subscriptionCta": "Start a subscription"
     },
     "collection": {
       "eyebrow": "The moment that matters",
@@ -1086,5 +1069,24 @@
     "row3Student": "Student C.",
     "schoolThird": "The English School",
     "footnote": "Illustrative records only. No orders are transmitted to a kitchen by this demo."
+  },
+  "schoolMenu": {
+    "selectTitle": "Select your school",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "eyebrow": "School menus",
+    "heading": "Explore your school’s menu.",
+    "intro": "Illustrative menu assignments using existing demo dishes; confirmed school menus are not yet supplied.",
+    "change": "Change school",
+    "prompt": "Select your school to see its menu",
+    "show": "Show menu",
+    "empty": "There are no menu items for this school yet.",
+    "categoriesLabel": "Meal categories",
+    "categories": {
+      "main": "Main",
+      "side": "Side",
+      "drink": "Drinks",
+      "snack": "Snack"
+    }
   }
 }

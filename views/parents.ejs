@@ -13,51 +13,23 @@
     <div class="parent-intro-copy">
       <span class="eyebrow"><%= t('parents.hero.eyebrow') %></span>
       <h1><%= t('parents.hero.headline1') %></h1>
-      <p class="lede"><%= t(features.showCollection ? 'parents.hero.lede' : 'parents.hero.ledeWithoutCollection') %></p>
-      <div class="action-row"><a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-primary"><%= t('common.createAccount') %></a><a href="<%= locale === 'ar' ? '/ar' : '/' %>#supported-schools"><%= t('nav.checkMySchool') %> →</a></div>
+      <p class="lede"><%= t('parents.hero.lede') %></p>
+      <div class="action-row"><a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-primary"><%= t('common.createAccount') %></a><a href="#school-menu" data-school-selector><%= t('nav.checkMySchool') %> →</a></div>
     </div>
-    <% if(menuItems[0]) { %><%- include('partials/food-card', {m:menuItems[0],variant:'featured',eager:true,reveal:true}) %><% } %>
     <%- include('partials/food-confidence', {reveal:true}) %>
   </div>
 </section>
-<!-- 3. Menu + nutrition + allergen information -->
-<section class="section" id="menu">
-  <div class="wrap">
-    <div class="section-head" data-reveal-group>
-      <span data-reveal="up" class="eyebrow"><%= t('parents.menu.eyebrow') %></span>
-      <h2 data-reveal="up"><%= t('parents.menu.heading') %></h2>
-      <p data-reveal="up"><%= t('parents.menu.intro') %></p>
-    </div>
-    <div class="food-grid food-supporting" data-reveal-group>
-      <% menuItems.slice(1).forEach(m => { %><%- include('partials/food-card', {m,variant:'compact',reveal:true}) %><% }) %>
-    </div>
-    <p class="nutrition-more"><%= t('parents.menu.footnote') %></p>
-  </div>
-</section>
+<section class="section" id="school-menu"><div class="wrap">
+  <div class="section-head"><span class="eyebrow"><%= t('schoolMenu.eyebrow') %></span><h2><%= t('schoolMenu.heading') %></h2><p><%= t('schoolMenu.intro') %></p></div>
+  <% if(selectedSchool){ %><div class="school-menu-heading"><h2><bdi><%= selectedSchool.name %></bdi></h2><a href="#school-menu" data-school-selector class="btn btn-outline"><%= t('schoolMenu.change') %></a></div><% } else { %><p><%= t('schoolMenu.prompt') %></p><% } %>
+  <form method="GET" action="#school-menu" class="school-inline-form"><div class="field"><label for="school"><%= t('schoolMenu.selectTitle') %></label><select id="school" name="school" required><option value=""><%= t('schoolMenu.selectTitle') %></option><% getSchools().forEach(s=>{ %><option value="<%= s.slug %>" <%= selectedSchool?.id===s.id?'selected':'' %>><%= s.name %></option><% }) %></select></div><button class="btn btn-primary"><%= t('schoolMenu.show') %></button></form>
+  <% if(selectedSchool){ %><%- include('partials/school-menu',{school:selectedSchool,groups}) %><% } %>
+</div></section>
 
 <section class="section on-tint" id="journey"><div class="wrap">
   <div class="section-head" data-reveal-group><span data-reveal="up" class="eyebrow"><%= t('parents.journey.eyebrow') %></span><h2 data-reveal="up"><%= t(features.showCollection ? 'parents.journey.heading' : 'parents.journey.headingWithoutCollection') %></h2><p data-reveal="up"><%= t(features.showCollection ? 'parents.journey.intro' : 'parents.journey.introWithoutCollection') %></p></div>
   <%- include('partials/parent-journey') %>
 </div></section>
-<!-- 4. Calendar-aware pricing explanation -->
-<section class="section" id="pricing">
-  <div class="wrap">
-    <div class="section-head" data-reveal-group>
-      <span data-reveal="up" class="eyebrow"><%= t('parents.pricing.eyebrow') %></span>
-      <h2 data-reveal="up"><%= t('parents.pricing.heading') %></h2>
-      <p data-reveal="up"><%= t('parents.pricing.intro') %></p>
-    </div>
-    <div class="pricing-grid pricing-single" data-reveal-group>
-      <div class="price-card" data-reveal="up">
-        <div class="price-tag"><%= t('parents.pricing.subscriptionTitle') %></div>
-        <div class="price-amt"><bdi>KWD <%= dailyRateKWD.toFixed(3) %></bdi><span><%= t('parents.pricing.subscriptionPer') %></span></div>
-        <p><%= t('parents.pricing.subscriptionBody') %></p>
-        <a href="<%= locale === 'ar' ? '/ar/register' : '/register' %>" class="btn btn-outline" style="width:100%;"><%= t('parents.pricing.subscriptionCta') %></a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- 5. Tap-to-collect + notification -->
 <% if (features.showCollection) { %>
 <section class="section" id="collection">

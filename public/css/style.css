@@ -2333,3 +2333,29 @@ th{text-align:start;}
 /* Accordion transitions resize only the answer; never drive page scrolling. */
 .faq-enhanced{overflow-anchor:none;}
 .faq-enhanced .faq-content{overflow:hidden;transition:none;transform:none;opacity:1;}
+
+/* School selection and categorized menus. */
+.school-selector{max-width:600px;}
+.school-selector form,.school-choices{display:flex;flex-direction:column;gap:12px;width:100%;}
+.school-choices{border:0;padding:0;min-width:0;}
+.school-choice{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:var(--radius-sm);padding:18px;min-height:56px;cursor:pointer;}
+.school-choice:has(input:checked){border-color:var(--forest);background:var(--ice-50);}
+.school-choice input{width:20px;height:20px;flex-shrink:0;}
+.school-choice span{overflow-wrap:anywhere;}
+.school-inline-form,.school-menu-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-block:24px;}
+.school-inline-form{justify-content:flex-start;align-items:end;}
+.school-inline-form .field{margin:0;flex:1;min-width:0;max-width:480px;}
+.school-category-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-block:24px;}
+.school-category-tab{display:flex;align-items:center;gap:8px;min-height:44px;padding:12px 18px;background:var(--white);color:var(--forest);border:1px solid var(--line);border-radius:var(--radius-sm);font:inherit;cursor:pointer;}
+.school-category-tab svg{width:20px;height:20px;}
+.school-category-tab[aria-selected=true]{background:var(--forest);color:var(--white);}
+.school-category-panel{margin-block:24px;}
+.school-category-panel>h3{margin-bottom:20px;}
+.school-dish-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;}
+.school-dish-grid .food-card{min-width:0;}
+.school-dish-grid .food-image{aspect-ratio:2 / 1;}
+.school-dish-grid .food-body{padding:20px;}
+.school-dish-grid h3{font-size:20px;}
+.school-dish-grid .food-nutrition{grid-template-columns:repeat(2,minmax(0,1fr));}
+@media(max-width:1100px){.school-dish-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:600px){.school-dish-grid{grid-template-columns:minmax(0,1fr);}.school-inline-form{align-items:stretch;flex-direction:column;}.school-inline-form .field{max-width:none;}.school-menu-heading h2{font-size:24px;}}
