@@ -1,0 +1,635 @@
+{
+  "source": "https://www.ars.usda.gov/is/np/NutritiveValueofFoods/NutritiveValueofFoods.pdf",
+  "publication": "USDA Nutritive Value of Foods, 2002, Table 9 (SR13); rounded reference values; Tr treated as 0 for estimates",
+  "ingredients": {
+    "rice": {
+      "name": "Cooked enriched white rice",
+      "food_number": 636,
+      "reference_serving_g": 158.0,
+      "reference_values": {
+        "calories": 205.0,
+        "protein": 4.0,
+        "carbs": 45.0,
+        "fat": 0
+      },
+      "per100g": {
+        "calories": 129.746835,
+        "protein": 2.531646,
+        "carbs": 28.481013,
+        "fat": 0.0
+      }
+    },
+    "pasta": {
+      "name": "Cooked enriched spaghetti",
+      "food_number": 646,
+      "reference_serving_g": 140.0,
+      "reference_values": {
+        "calories": 197.0,
+        "protein": 7.0,
+        "carbs": 40.0,
+        "fat": 1.0
+      },
+      "per100g": {
+        "calories": 140.714286,
+        "protein": 5.0,
+        "carbs": 28.571429,
+        "fat": 0.714286
+      }
+    },
+    "chicken": {
+      "name": "Roasted chicken breast, meat only",
+      "food_number": 876,
+      "reference_serving_g": 86.0,
+      "reference_values": {
+        "calories": 142.0,
+        "protein": 27.0,
+        "carbs": 0.0,
+        "fat": 3.0
+      },
+      "per100g": {
+        "calories": 165.116279,
+        "protein": 31.395349,
+        "carbs": 0.0,
+        "fat": 3.488372
+      }
+    },
+    "beef": {
+      "name": "Broiled ground beef, 83% lean",
+      "food_number": 739,
+      "reference_serving_g": 85.0,
+      "reference_values": {
+        "calories": 218.0,
+        "protein": 22.0,
+        "carbs": 0.0,
+        "fat": 14.0
+      },
+      "per100g": {
+        "calories": 256.470588,
+        "protein": 25.882353,
+        "carbs": 0.0,
+        "fat": 16.470588
+      }
+    },
+    "potato": {
+      "name": "Baked potato flesh",
+      "food_number": 1164,
+      "reference_serving_g": 156.0,
+      "reference_values": {
+        "calories": 145.0,
+        "protein": 3.0,
+        "carbs": 34.0,
+        "fat": 0
+      },
+      "per100g": {
+        "calories": 92.948718,
+        "protein": 1.923077,
+        "carbs": 21.794872,
+        "fat": 0.0
+      }
+    },
+    "fries": {
+      "name": "Oven-heated frozen French fries",
+      "food_number": 1171,
+      "reference_serving_g": 50.0,
+      "reference_values": {
+        "calories": 100.0,
+        "protein": 2.0,
+        "carbs": 16.0,
+        "fat": 4.0
+      },
+      "per100g": {
+        "calories": 200.0,
+        "protein": 4.0,
+        "carbs": 32.0,
+        "fat": 8.0
+      }
+    },
+    "mozzarella": {
+      "name": "Part-skim mozzarella",
+      "food_number": 70,
+      "reference_serving_g": 28.0,
+      "reference_values": {
+        "calories": 79.0,
+        "protein": 8.0,
+        "carbs": 1.0,
+        "fat": 5.0
+      },
+      "per100g": {
+        "calories": 282.142857,
+        "protein": 28.571429,
+        "carbs": 3.571429,
+        "fat": 17.857143
+      }
+    },
+    "cheddar": {
+      "name": "Cheddar",
+      "food_number": 54,
+      "reference_serving_g": 28.0,
+      "reference_values": {
+        "calories": 114.0,
+        "protein": 7.0,
+        "carbs": 0,
+        "fat": 9.0
+      },
+      "per100g": {
+        "calories": 407.142857,
+        "protein": 25.0,
+        "carbs": 0.0,
+        "fat": 32.142857
+      }
+    },
+    "tomato": {
+      "name": "Canned tomato sauce",
+      "food_number": 1216,
+      "reference_serving_g": 245.0,
+      "reference_values": {
+        "calories": 74.0,
+        "protein": 3.0,
+        "carbs": 18.0,
+        "fat": 0
+      },
+      "per100g": {
+        "calories": 30.204082,
+        "protein": 1.22449,
+        "carbs": 7.346939,
+        "fat": 0.0
+      }
+    },
+    "bread": {
+      "name": "White bread",
+      "food_number": 415,
+      "reference_serving_g": 25.0,
+      "reference_values": {
+        "calories": 67.0,
+        "protein": 2.0,
+        "carbs": 12.0,
+        "fat": 1.0
+      },
+      "per100g": {
+        "calories": 268.0,
+        "protein": 8.0,
+        "carbs": 48.0,
+        "fat": 4.0
+      }
+    },
+    "bun": {
+      "name": "Hamburger bun",
+      "food_number": 644,
+      "reference_serving_g": 43.0,
+      "reference_values": {
+        "calories": 123.0,
+        "protein": 4.0,
+        "carbs": 22.0,
+        "fat": 2.0
+      },
+      "per100g": {
+        "calories": 286.046512,
+        "protein": 9.302326,
+        "carbs": 51.162791,
+        "fat": 4.651163
+      }
+    },
+    "crumbs": {
+      "name": "Dry plain bread crumbs",
+      "food_number": 421,
+      "reference_serving_g": 108.0,
+      "reference_values": {
+        "calories": 427.0,
+        "protein": 14.0,
+        "carbs": 78.0,
+        "fat": 6.0
+      },
+      "per100g": {
+        "calories": 395.37037,
+        "protein": 12.962963,
+        "carbs": 72.222222,
+        "fat": 5.555556
+      }
+    },
+    "cream": {
+      "name": "Light cream",
+      "food_number": 87,
+      "reference_serving_g": 240.0,
+      "reference_values": {
+        "calories": 469.0,
+        "protein": 6.0,
+        "carbs": 9.0,
+        "fat": 46.0
+      },
+      "per100g": {
+        "calories": 195.416667,
+        "protein": 2.5,
+        "carbs": 3.75,
+        "fat": 19.166667
+      }
+    },
+    "milk": {
+      "name": "Whole milk",
+      "food_number": 118,
+      "reference_serving_g": 244.0,
+      "reference_values": {
+        "calories": 150.0,
+        "protein": 8.0,
+        "carbs": 11.0,
+        "fat": 8.0
+      },
+      "per100g": {
+        "calories": 61.47541,
+        "protein": 3.278689,
+        "carbs": 4.508197,
+        "fat": 3.278689
+      }
+    },
+    "yogurt": {
+      "name": "Plain whole milk yogurt",
+      "food_number": 138,
+      "reference_serving_g": 227.0,
+      "reference_values": {
+        "calories": 139.0,
+        "protein": 8.0,
+        "carbs": 11.0,
+        "fat": 7.0
+      },
+      "per100g": {
+        "calories": 61.23348,
+        "protein": 3.524229,
+        "carbs": 4.845815,
+        "fat": 3.0837
+      }
+    },
+    "laban": {
+      "name": "Cultured buttermilk (proxy for laban)",
+      "food_number": 122,
+      "reference_serving_g": 245.0,
+      "reference_values": {
+        "calories": 99.0,
+        "protein": 8.0,
+        "carbs": 12.0,
+        "fat": 2.0
+      },
+      "per100g": {
+        "calories": 40.408163,
+        "protein": 3.265306,
+        "carbs": 4.897959,
+        "fat": 0.816327
+      }
+    },
+    "juice": {
+      "name": "Raw orange juice (proxy for unspecified fresh juice)",
+      "food_number": 329,
+      "reference_serving_g": 248.0,
+      "reference_values": {
+        "calories": 112.0,
+        "protein": 2.0,
+        "carbs": 26.0,
+        "fat": 0
+      },
+      "per100g": {
+        "calories": 45.16129,
+        "protein": 0.806452,
+        "carbs": 10.483871,
+        "fat": 0.0
+      }
+    },
+    "apple": {
+      "name": "Peeled raw apple",
+      "food_number": 265,
+      "reference_serving_g": 110.0,
+      "reference_values": {
+        "calories": 63.0,
+        "protein": 0,
+        "carbs": 16.0,
+        "fat": 0
+      },
+      "per100g": {
+        "calories": 57.272727,
+        "protein": 0.0,
+        "carbs": 14.545455,
+        "fat": 0.0
+      }
+    },
+    "raisins": {
+      "name": "Raisins (proxy for dried barberries)",
+      "food_number": 366,
+      "reference_serving_g": 145.0,
+      "reference_values": {
+        "calories": 435.0,
+        "protein": 5.0,
+        "carbs": 115.0,
+        "fat": 1.0
+      },
+      "per100g": {
+        "calories": 300.0,
+        "protein": 3.448276,
+        "carbs": 79.310345,
+        "fat": 0.689655
+      }
+    },
+    "carrot": {
+      "name": "Raw carrots",
+      "food_number": 1080,
+      "reference_serving_g": 110.0,
+      "reference_values": {
+        "calories": 47.0,
+        "protein": 1.0,
+        "carbs": 11.0,
+        "fat": 0
+      },
+      "per100g": {
+        "calories": 42.727273,
+        "protein": 0.909091,
+        "carbs": 10.0,
+        "fat": 0.0
+      }
+    },
+    "cucumber": {
+      "name": "Raw cucumber",
+      "food_number": 1107,
+      "reference_serving_g": 104.0,
+      "reference_values": {
+        "calories": 14.0,
+        "protein": 1.0,
+        "carbs": 3.0,
+        "fat": 0
+      },
+      "per100g": {
+        "calories": 13.461538,
+        "protein": 0.961538,
+        "carbs": 2.884615,
+        "fat": 0.0
+      }
+    },
+    "peas": {
+      "name": "Cooked green peas",
+      "food_number": 1151,
+      "reference_serving_g": 160.0,
+      "reference_values": {
+        "calories": 125.0,
+        "protein": 8.0,
+        "carbs": 23.0,
+        "fat": 0
+      },
+      "per100g": {
+        "calories": 78.125,
+        "protein": 5.0,
+        "carbs": 14.375,
+        "fat": 0.0
+      }
+    },
+    "lentils": {
+      "name": "Cooked lentils",
+      "food_number": 703,
+      "reference_serving_g": 198.0,
+      "reference_values": {
+        "calories": 230.0,
+        "protein": 18.0,
+        "carbs": 40.0,
+        "fat": 1.0
+      },
+      "per100g": {
+        "calories": 116.161616,
+        "protein": 9.090909,
+        "carbs": 20.20202,
+        "fat": 0.505051
+      }
+    },
+    "oil": {
+      "name": "Olive oil",
+      "food_number": 175,
+      "reference_serving_g": 216.0,
+      "reference_values": {
+        "calories": 1909.0,
+        "protein": 0.0,
+        "carbs": 0.0,
+        "fat": 216.0
+      },
+      "per100g": {
+        "calories": 883.796296,
+        "protein": 0.0,
+        "carbs": 0.0,
+        "fat": 100.0
+      }
+    },
+    "butter": {
+      "name": "Butter",
+      "food_number": 151,
+      "reference_serving_g": 113.0,
+      "reference_values": {
+        "calories": 813.0,
+        "protein": 1.0,
+        "carbs": 0,
+        "fat": 92.0
+      },
+      "per100g": {
+        "calories": 719.469027,
+        "protein": 0.884956,
+        "carbs": 0.0,
+        "fat": 81.415929
+      }
+    },
+    "mayo": {
+      "name": "Mayonnaise",
+      "food_number": 197,
+      "reference_serving_g": 14.0,
+      "reference_values": {
+        "calories": 99.0,
+        "protein": 0,
+        "carbs": 0,
+        "fat": 11.0
+      },
+      "per100g": {
+        "calories": 707.142857,
+        "protein": 0.0,
+        "carbs": 0.0,
+        "fat": 78.571429
+      }
+    },
+    "ketchup": {
+      "name": "Ketchup (proxy for sweet barbecue glaze)",
+      "food_number": 1231,
+      "reference_serving_g": 240.0,
+      "reference_values": {
+        "calories": 250.0,
+        "protein": 4.0,
+        "carbs": 65.0,
+        "fat": 1.0
+      },
+      "per100g": {
+        "calories": 104.166667,
+        "protein": 1.666667,
+        "carbs": 27.083333,
+        "fat": 0.416667
+      }
+    },
+    "egg": {
+      "name": "Scrambled egg",
+      "food_number": 149,
+      "reference_serving_g": 61.0,
+      "reference_values": {
+        "calories": 101.0,
+        "protein": 7.0,
+        "carbs": 1.0,
+        "fat": 7.0
+      },
+      "per100g": {
+        "calories": 165.57377,
+        "protein": 11.47541,
+        "carbs": 1.639344,
+        "fat": 11.47541
+      }
+    },
+    "flour": {
+      "name": "All-purpose flour",
+      "food_number": 666,
+      "reference_serving_g": 125.0,
+      "reference_values": {
+        "calories": 455.0,
+        "protein": 13.0,
+        "carbs": 95.0,
+        "fat": 1.0
+      },
+      "per100g": {
+        "calories": 364.0,
+        "protein": 10.4,
+        "carbs": 76.0,
+        "fat": 0.8
+      }
+    },
+    "sugar": {
+      "name": "Granulated sugar",
+      "food_number": 1024,
+      "reference_serving_g": 6.0,
+      "reference_values": {
+        "calories": 23.0,
+        "protein": 0.0,
+        "carbs": 6.0,
+        "fat": 0.0
+      },
+      "per100g": {
+        "calories": 383.333333,
+        "protein": 0.0,
+        "carbs": 100.0,
+        "fat": 0.0
+      }
+    },
+    "pepper": {
+      "name": "Cooked red sweet pepper",
+      "food_number": 1161,
+      "reference_serving_g": 136.0,
+      "reference_values": {
+        "calories": 38.0,
+        "protein": 1.0,
+        "carbs": 9.0,
+        "fat": 0
+      },
+      "per100g": {
+        "calories": 27.941176,
+        "protein": 0.735294,
+        "carbs": 6.617647,
+        "fat": 0.0
+      }
+    },
+    "cabbage": {
+      "name": "Raw red cabbage",
+      "food_number": 1076,
+      "reference_serving_g": 70.0,
+      "reference_values": {
+        "calories": 19.0,
+        "protein": 1.0,
+        "carbs": 4.0,
+        "fat": 0
+      },
+      "per100g": {
+        "calories": 27.142857,
+        "protein": 1.428571,
+        "carbs": 5.714286,
+        "fat": 0.0
+      }
+    },
+    "grapes": {
+      "name": "Raw grapes",
+      "food_number": 307,
+      "reference_serving_g": 160.0,
+      "reference_values": {
+        "calories": 114.0,
+        "protein": 1.0,
+        "carbs": 28.0,
+        "fat": 1.0
+      },
+      "per100g": {
+        "calories": 71.25,
+        "protein": 0.625,
+        "carbs": 17.5,
+        "fat": 0.625
+      }
+    },
+    "melon": {
+      "name": "Cantaloupe",
+      "food_number": 322,
+      "reference_serving_g": 160.0,
+      "reference_values": {
+        "calories": 56.0,
+        "protein": 1.0,
+        "carbs": 13.0,
+        "fat": 0
+      },
+      "per100g": {
+        "calories": 35.0,
+        "protein": 0.625,
+        "carbs": 8.125,
+        "fat": 0.0
+      }
+    },
+    "swiss": {
+      "name": "Swiss cheese",
+      "food_number": 79,
+      "reference_serving_g": 28.0,
+      "reference_values": {
+        "calories": 107.0,
+        "protein": 8.0,
+        "carbs": 1.0,
+        "fat": 8.0
+      },
+      "per100g": {
+        "calories": 382.142857,
+        "protein": 28.571429,
+        "carbs": 3.571429,
+        "fat": 28.571429
+      }
+    },
+    "steak": {
+      "name": "Broiled lean sirloin",
+      "food_number": 748,
+      "reference_serving_g": 85.0,
+      "reference_values": {
+        "calories": 166.0,
+        "protein": 26.0,
+        "carbs": 0.0,
+        "fat": 6.0
+      },
+      "per100g": {
+        "calories": 195.294118,
+        "protein": 30.588235,
+        "carbs": 0.0,
+        "fat": 7.058824
+      }
+    },
+    "bbq": {
+      "name": "Barbecue sauce",
+      "food_number": 935,
+      "reference_serving_g": 16.0,
+      "reference_values": {
+        "calories": 12.0,
+        "protein": 0,
+        "carbs": 2.0,
+        "fat": 0
+      },
+      "per100g": {
+        "calories": 75.0,
+        "protein": 0.0,
+        "carbs": 12.5,
+        "fat": 0.0
+      }
+    }
+  }
+}

@@ -2377,3 +2377,9 @@ th{text-align:start;}
 @media(prefers-reduced-motion:reduce){.school-dish-grid .food-card{transition:none;}}
 
 .selected-meals{margin-block:20px;}.selected-meals summary{font-weight:700;cursor:pointer;}.selected-meals ul{list-style:none;padding:0;margin-top:16px;}.selected-meals li{display:flex;gap:16px;justify-content:space-between;padding-block:12px;border-bottom:1px solid var(--line);}.selected-meals time{flex:0 0 210px;}.selected-meals li span{flex:1;}@media(max-width:600px){.selected-meals li{flex-wrap:wrap;gap:6px;}.selected-meals time{flex-basis:100%;}}
+
+/* Portion estimates stay readable without competing with dish names. */
+.nutrition-estimate-label { font-size: .78rem; font-weight: 700; color: var(--green-dark, #153f33); margin: .6rem 0 .25rem; }
+.nutrition-estimate-note { font-size: .75rem; line-height: 1.45; color: #52665e; margin: .45rem 0; }
+.portion-nutrition + .portion-nutrition { border-top: 1px solid #dce5df; padding-top: .5rem; }
+.portion-nutrition[hidden] { display: none; }

@@ -1,0 +1,827 @@
+{
+  "Arabiatta Chicken Pasta": {
+    "composition_g": {
+      "pasta": 140,
+      "chicken": 65,
+      "tomato": 60,
+      "oil": 5
+    },
+    "portion_g": {
+      "Junior": 270,
+      "Senior": 370
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Baked Chicken Pasta": {
+    "composition_g": {
+      "pasta": 140,
+      "chicken": 65,
+      "tomato": 60,
+      "oil": 5,
+      "mozzarella": 20
+    },
+    "portion_g": {
+      "Junior": 270,
+      "Senior": 370
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Peperonata Pasta": {
+    "composition_g": {
+      "pasta": 140,
+      "chicken": 65,
+      "tomato": 60,
+      "oil": 5,
+      "pepper": 35
+    },
+    "portion_g": {
+      "Junior": 270,
+      "Senior": 370
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Pink Pasta": {
+    "composition_g": {
+      "pasta": 140,
+      "chicken": 65,
+      "tomato": 60,
+      "oil": 5,
+      "cream": 35
+    },
+    "portion_g": {
+      "Junior": 270,
+      "Senior": 370
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Pomodoro Chicken Pasta": {
+    "composition_g": {
+      "pasta": 140,
+      "chicken": 65,
+      "tomato": 80,
+      "oil": 5
+    },
+    "portion_g": {
+      "Junior": 270,
+      "Senior": 370
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Tuscan Chicken Pasta": {
+    "composition_g": {
+      "pasta": 140,
+      "chicken": 65,
+      "tomato": 60,
+      "oil": 5,
+      "cream": 40,
+      "mozzarella": 15,
+      "pepper": 25
+    },
+    "portion_g": {
+      "Junior": 270,
+      "Senior": 370
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "BBQ Beef Burger": {
+    "composition_g": {
+      "bun": 55,
+      "beef": 75,
+      "cucumber": 15,
+      "tomato": 15,
+      "mayo": 8,
+      "bbq": 20
+    },
+    "portion_g": {
+      "Junior": 180,
+      "Senior": 250
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Big Mac Burger": {
+    "composition_g": {
+      "bun": 75,
+      "beef": 95,
+      "cucumber": 15,
+      "tomato": 15,
+      "mayo": 15,
+      "cheddar": 18
+    },
+    "portion_g": {
+      "Junior": 180,
+      "Senior": 250
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Swiss Beef Burger": {
+    "composition_g": {
+      "bun": 55,
+      "beef": 75,
+      "cucumber": 15,
+      "tomato": 15,
+      "mayo": 8,
+      "swiss": 20
+    },
+    "portion_g": {
+      "Junior": 180,
+      "Senior": 250
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Swiss Chicken Burger": {
+    "composition_g": {
+      "bun": 55,
+      "chicken": 75,
+      "cucumber": 15,
+      "tomato": 15,
+      "mayo": 8,
+      "swiss": 20
+    },
+    "portion_g": {
+      "Junior": 180,
+      "Senior": 250
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Sriracha Chicken Burger": {
+    "composition_g": {
+      "bun": 55,
+      "chicken": 75,
+      "cucumber": 15,
+      "tomato": 15,
+      "mayo": 8,
+      "crumbs": 18,
+      "oil": 5,
+      "pepper": 10,
+      "ketchup": 12
+    },
+    "portion_g": {
+      "Junior": 180,
+      "Senior": 250
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Veg. Cheese Burger": {
+    "composition_g": {
+      "bun": 55,
+      "lentils": 65,
+      "peas": 20,
+      "crumbs": 15,
+      "oil": 5,
+      "cheddar": 15,
+      "tomato": 15,
+      "mayo": 8
+    },
+    "portion_g": {
+      "Junior": 190,
+      "Senior": 260
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Beef Kalam Polo": {
+    "composition_g": {
+      "rice": 155,
+      "beef": 70,
+      "tomato": 20,
+      "oil": 6,
+      "cabbage": 45
+    },
+    "portion_g": {
+      "Junior": 280,
+      "Senior": 380
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Beef Kebab & Barberry Rice": {
+    "composition_g": {
+      "rice": 155,
+      "beef": 70,
+      "tomato": 20,
+      "oil": 6,
+      "raisins": 10,
+      "yogurt": 20
+    },
+    "portion_g": {
+      "Junior": 280,
+      "Senior": 380
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Beef Kofta & Saffron Rice": {
+    "composition_g": {
+      "rice": 155,
+      "beef": 70,
+      "tomato": 20,
+      "oil": 6,
+      "crumbs": 10,
+      "yogurt": 20
+    },
+    "portion_g": {
+      "Junior": 280,
+      "Senior": 380
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Butter Chicken & Safforn Rice": {
+    "composition_g": {
+      "rice": 155,
+      "chicken": 70,
+      "tomato": 50,
+      "oil": 6,
+      "cream": 30,
+      "butter": 8
+    },
+    "portion_g": {
+      "Junior": 280,
+      "Senior": 380
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Biryani": {
+    "composition_g": {
+      "rice": 155,
+      "chicken": 70,
+      "tomato": 20,
+      "oil": 6,
+      "yogurt": 25,
+      "pepper": 25
+    },
+    "portion_g": {
+      "Junior": 280,
+      "Senior": 380
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Fried Rice": {
+    "composition_g": {
+      "rice": 155,
+      "chicken": 70,
+      "tomato": 20,
+      "oil": 6,
+      "egg": 30,
+      "peas": 25,
+      "carrot": 20
+    },
+    "portion_g": {
+      "Junior": 280,
+      "Senior": 380
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Kebab & Lentil Rice": {
+    "composition_g": {
+      "rice": 155,
+      "chicken": 70,
+      "tomato": 20,
+      "oil": 6,
+      "lentils": 45,
+      "yogurt": 20
+    },
+    "portion_g": {
+      "Junior": 280,
+      "Senior": 380
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Majboos": {
+    "composition_g": {
+      "rice": 155,
+      "chicken": 70,
+      "tomato": 40,
+      "oil": 6,
+      "pepper": 20
+    },
+    "portion_g": {
+      "Junior": 280,
+      "Senior": 380
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Rice Pilaf": {
+    "composition_g": {
+      "rice": 155,
+      "chicken": 70,
+      "tomato": 20,
+      "oil": 6,
+      "carrot": 30,
+      "peas": 20
+    },
+    "portion_g": {
+      "Junior": 280,
+      "Senior": 380
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Teriyaki Chicken Rice Bowl": {
+    "composition_g": {
+      "rice": 155,
+      "chicken": 70,
+      "tomato": 20,
+      "oil": 6,
+      "sugar": 8,
+      "pepper": 30,
+      "carrot": 20
+    },
+    "portion_g": {
+      "Junior": 280,
+      "Senior": 380
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "BBQ Chicken Bites & Potato": {
+    "composition_g": {
+      "chicken": 80,
+      "potato": 140,
+      "oil": 6,
+      "bbq": 25
+    },
+    "portion_g": {
+      "Junior": 260,
+      "Senior": 360
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Beef Meatballs & Potato Wedges (Baked)": {
+    "composition_g": {
+      "beef": 80,
+      "potato": 140,
+      "oil": 6,
+      "crumbs": 12,
+      "tomato": 25
+    },
+    "portion_g": {
+      "Junior": 260,
+      "Senior": 360
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Beef Patty & Potato Fries (Baked)": {
+    "composition_g": {
+      "beef": 85,
+      "fries": 135,
+      "ketchup": 15
+    },
+    "portion_g": {
+      "Junior": 250,
+      "Senior": 350
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Beef Shepherds Pie": {
+    "composition_g": {
+      "beef": 80,
+      "potato": 140,
+      "oil": 6,
+      "carrot": 25,
+      "peas": 20,
+      "milk": 30,
+      "butter": 5
+    },
+    "portion_g": {
+      "Junior": 260,
+      "Senior": 360
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Meatball & Potato Mash": {
+    "composition_g": {
+      "chicken": 80,
+      "potato": 140,
+      "oil": 6,
+      "crumbs": 12,
+      "milk": 25,
+      "butter": 5
+    },
+    "portion_g": {
+      "Junior": 260,
+      "Senior": 360
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Nuggets & Grilled Potato": {
+    "composition_g": {
+      "chicken": 80,
+      "potato": 140,
+      "oil": 6,
+      "crumbs": 25,
+      "egg": 10
+    },
+    "portion_g": {
+      "Junior": 260,
+      "Senior": 360
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Schnitzel & Potato Mash": {
+    "composition_g": {
+      "chicken": 80,
+      "potato": 140,
+      "oil": 6,
+      "crumbs": 25,
+      "egg": 10,
+      "milk": 25,
+      "butter": 5
+    },
+    "portion_g": {
+      "Junior": 260,
+      "Senior": 360
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Strips & Potato Wedges (Baked)": {
+    "composition_g": {
+      "chicken": 80,
+      "potato": 140,
+      "oil": 6,
+      "crumbs": 25,
+      "egg": 10
+    },
+    "portion_g": {
+      "Junior": 260,
+      "Senior": 360
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Grilled Chicken & Mashed Potato": {
+    "composition_g": {
+      "chicken": 80,
+      "potato": 140,
+      "oil": 6,
+      "milk": 30,
+      "butter": 6
+    },
+    "portion_g": {
+      "Junior": 260,
+      "Senior": 360
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Mini Beef Meatloaf & Mashed Potato": {
+    "composition_g": {
+      "beef": 80,
+      "potato": 140,
+      "oil": 6,
+      "crumbs": 15,
+      "egg": 10,
+      "milk": 25,
+      "butter": 5
+    },
+    "portion_g": {
+      "Junior": 260,
+      "Senior": 360
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Popcorn Chicken & Potato Wedges (Baked)": {
+    "composition_g": {
+      "chicken": 80,
+      "potato": 140,
+      "oil": 8,
+      "crumbs": 30,
+      "egg": 10
+    },
+    "portion_g": {
+      "Junior": 260,
+      "Senior": 360
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Parmesan & Grilled Potato": {
+    "composition_g": {
+      "chicken": 80,
+      "potato": 140,
+      "oil": 6,
+      "mozzarella": 25,
+      "tomato": 35,
+      "crumbs": 15
+    },
+    "portion_g": {
+      "Junior": 260,
+      "Senior": 360
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Crispy Chicken Tenders & Potato Mash": {
+    "composition_g": {
+      "chicken": 80,
+      "potato": 140,
+      "oil": 10,
+      "crumbs": 25,
+      "milk": 25,
+      "butter": 5
+    },
+    "portion_g": {
+      "Junior": 260,
+      "Senior": 360
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Croquettes & Fries (Baked)": {
+    "composition_g": {
+      "chicken": 65,
+      "potato": 45,
+      "crumbs": 20,
+      "egg": 10,
+      "oil": 5,
+      "fries": 120
+    },
+    "portion_g": {
+      "Junior": 260,
+      "Senior": 360
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Bbq Chicken Pizza": {
+    "composition_g": {
+      "bread": 100,
+      "tomato": 40,
+      "mozzarella": 40,
+      "oil": 4,
+      "chicken": 45,
+      "bbq": 20
+    },
+    "portion_g": {
+      "Junior": 180,
+      "Senior": 250
+    },
+    "assumptions": "Cooked white bread is a proxy for baked pizza crust; topping quantities and serving sizes are assumed."
+  },
+  "Chicken Alfredo Pizza": {
+    "composition_g": {
+      "bread": 100,
+      "tomato": 40,
+      "mozzarella": 40,
+      "oil": 4,
+      "chicken": 45,
+      "cream": 30
+    },
+    "portion_g": {
+      "Junior": 180,
+      "Senior": 250
+    },
+    "assumptions": "Cooked white bread is a proxy for baked pizza crust; topping quantities and serving sizes are assumed."
+  },
+  "Margherita Pizza": {
+    "composition_g": {
+      "bread": 100,
+      "tomato": 40,
+      "mozzarella": 40,
+      "oil": 4
+    },
+    "portion_g": {
+      "Junior": 180,
+      "Senior": 250
+    },
+    "assumptions": "Cooked white bread is a proxy for baked pizza crust; topping quantities and serving sizes are assumed."
+  },
+  "Meatball Pizza": {
+    "composition_g": {
+      "bread": 100,
+      "tomato": 40,
+      "mozzarella": 40,
+      "oil": 4,
+      "beef": 45,
+      "crumbs": 6
+    },
+    "portion_g": {
+      "Junior": 180,
+      "Senior": 250
+    },
+    "assumptions": "Cooked white bread is a proxy for baked pizza crust; topping quantities and serving sizes are assumed."
+  },
+  "Pepperoni Pizza": {
+    "composition_g": {
+      "bread": 100,
+      "tomato": 40,
+      "mozzarella": 40,
+      "oil": 10,
+      "beef": 30
+    },
+    "portion_g": {
+      "Junior": 180,
+      "Senior": 250
+    },
+    "assumptions": "Cooked white bread is a proxy for baked pizza crust; topping quantities and serving sizes are assumed. Beef and added oil approximate an unspecified beef pepperoni topping; brand composition is unknown."
+  },
+  "Pizza Pocket": {
+    "composition_g": {
+      "bread": 120,
+      "tomato": 40,
+      "mozzarella": 35,
+      "oil": 4
+    },
+    "portion_g": {
+      "Junior": 180,
+      "Senior": 250
+    },
+    "assumptions": "Cooked white bread is a proxy for baked pizza crust; topping quantities and serving sizes are assumed."
+  },
+  "Veg Pizza Roll-Ups": {
+    "composition_g": {
+      "bread": 100,
+      "tomato": 40,
+      "mozzarella": 40,
+      "oil": 4,
+      "pepper": 30,
+      "carrot": 15
+    },
+    "portion_g": {
+      "Junior": 180,
+      "Senior": 250
+    },
+    "assumptions": "Cooked white bread is a proxy for baked pizza crust; topping quantities and serving sizes are assumed."
+  },
+  "Chicken & Cheese Sandwich": {
+    "composition_g": {
+      "bread": 65,
+      "chicken": 75,
+      "cucumber": 20,
+      "mayo": 8,
+      "cheddar": 20
+    },
+    "portion_g": {
+      "Junior": 190,
+      "Senior": 270
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Shawarma": {
+    "composition_g": {
+      "bread": 65,
+      "chicken": 75,
+      "cucumber": 20,
+      "mayo": 8,
+      "yogurt": 25,
+      "oil": 4
+    },
+    "portion_g": {
+      "Junior": 190,
+      "Senior": 270
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Philly Chicken Sub": {
+    "composition_g": {
+      "bread": 65,
+      "chicken": 75,
+      "cucumber": 20,
+      "mayo": 8,
+      "mozzarella": 20,
+      "pepper": 25
+    },
+    "portion_g": {
+      "Junior": 190,
+      "Senior": 270
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Steak Sandwich": {
+    "composition_g": {
+      "bread": 65,
+      "cucumber": 20,
+      "mayo": 8,
+      "pepper": 25,
+      "steak": 75
+    },
+    "portion_g": {
+      "Junior": 190,
+      "Senior": 270
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Tikka Sandwich": {
+    "composition_g": {
+      "bread": 65,
+      "chicken": 75,
+      "cucumber": 20,
+      "mayo": 8,
+      "yogurt": 25,
+      "tomato": 20
+    },
+    "portion_g": {
+      "Junior": 190,
+      "Senior": 270
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Onigiri": {
+    "composition_g": {
+      "rice": 160,
+      "chicken": 55,
+      "mayo": 8
+    },
+    "portion_g": {
+      "Junior": 230,
+      "Senior": 320
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Rice Balls (Arancini)": {
+    "composition_g": {
+      "rice": 140,
+      "chicken": 55,
+      "mozzarella": 20,
+      "crumbs": 20,
+      "egg": 10,
+      "oil": 7
+    },
+    "portion_g": {
+      "Junior": 250,
+      "Senior": 340
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Chicken Caesar Sushi Rolls": {
+    "composition_g": {
+      "rice": 140,
+      "chicken": 65,
+      "cucumber": 25,
+      "mayo": 15,
+      "mozzarella": 10
+    },
+    "portion_g": {
+      "Junior": 260,
+      "Senior": 350
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Macaroni & Cheese": {
+    "composition_g": {
+      "pasta": 160,
+      "cheddar": 35,
+      "milk": 55,
+      "butter": 5
+    },
+    "portion_g": {
+      "Junior": 260,
+      "Senior": 360
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Spaghetti Meatballs": {
+    "composition_g": {
+      "pasta": 140,
+      "beef": 70,
+      "crumbs": 12,
+      "tomato": 65,
+      "oil": 4
+    },
+    "portion_g": {
+      "Junior": 280,
+      "Senior": 380
+    },
+    "assumptions": "Representative cooked recipe, not a measured kitchen recipe. Portion weights are modelling assumptions."
+  },
+  "Assorted Fruit Cup": {
+    "composition_g": {
+      "apple": 40,
+      "grapes": 30,
+      "melon": 50
+    },
+    "portion_g": {
+      "Junior": 120,
+      "Senior": 160
+    },
+    "assumptions": "Assumed apple, grape and melon mix without syrup or dip; actual mix and serving weights are unknown."
+  },
+  "Assorted Veggie Sticks": {
+    "composition_g": {
+      "carrot": 50,
+      "cucumber": 50,
+      "pepper": 25
+    },
+    "portion_g": {
+      "Junior": 100,
+      "Senior": 150
+    },
+    "assumptions": "Mixed vegetables without dip; actual vegetable mix is unknown."
+  },
+  "Fresh Juice": {
+    "composition_g": {
+      "juice": 100
+    },
+    "portion_g": {
+      "Junior": 180,
+      "Senior": 240
+    },
+    "assumptions": "Unsweetened orange juice proxy; flavour, dilution and added sugar are unknown. Serving expressed in grams, not measured bottle volume."
+  },
+  "Laban": {
+    "composition_g": {
+      "laban": 100
+    },
+    "portion_g": {
+      "Junior": 180,
+      "Senior": 240
+    },
+    "assumptions": "Cultured low-fat buttermilk proxy for an unspecified laban brand. Actual fat level and bottle size are unknown."
+  },
+  "No Drink": {
+    "composition_g": {},
+    "portion_g": {
+      "Junior": 0,
+      "Senior": 0
+    },
+    "assumptions": "No beverage selected; zero beverage contribution."
+  }
+}

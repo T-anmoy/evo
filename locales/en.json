@@ -576,9 +576,9 @@
     "emptyNotificationsBodyWithoutCollection": "Booking confirmations and reminders will show up here."
   },
   "menu": {
-    "eyebrow": "Sample menu",
+    "eyebrow": "Our menu",
     "heading": "Explore the meals",
-    "intro": "Ingredients, sample nutrition and stored dish information, before you book.",
+    "intro": "Explore main courses, sides and drinks, and filter by Junior or Senior menu before you book.",
     "allergenBanner": "Allergen information available per dish",
     "commitment1": "Programme exclusions and dish records are shown separately below.",
     "commitment2": "Dish images and nutrition are reference content in this demo. Confirm current food details before ordering.",
@@ -1037,7 +1037,8 @@
       "staleDraft": "This booking draft was replaced. Return to Meal booking to continue."
     },
     "regularMeal": "Regular Meal",
-    "selectedMeals": "Your selected meals"
+    "selectedMeals": "Your selected meals",
+    "chooseReplacement": "Choose a meal from the updated menu"
   },
   "invoice": {
     "heading": "Invoice",
@@ -1079,7 +1080,6 @@
     "cancel": "Cancel",
     "eyebrow": "School menus",
     "heading": "Explore your school’s menu.",
-    "intro": "Explore each school’s menu. The English School catalogue is sourced from EVO360; other school menus remain illustrative.",
     "change": "Change school",
     "prompt": "Select your school to see its menu",
     "show": "Show menu",
@@ -1100,6 +1100,9 @@
       "Junior": "Junior",
       "Senior": "Senior"
     },
-    "noResults": "No dishes match your search. Try another name or student menu."
+    "noResults": "No dishes match your search. Try another name or student menu.",
+    "estimatedNutrition": "Estimated nutrition",
+    "estimateNote": "Based on an assumed recipe and portion. Actual values may differ.",
+    "assumedPortion": "Assumed portion"
   }
 }

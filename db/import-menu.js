@@ -2,7 +2,8 @@
 const {createHash}=require('node:crypto');
 // Offline, transactional import: startup never depends on the client's server.
 module.exports=function importMenu(sql, snapshot=require('../data/live-menu.json')) {
- const digest=createHash('sha256').update(JSON.stringify(snapshot)).digest('hex');
+ const assignments=require('../data/catalogue-assignments.json');
+ const digest=createHash('sha256').update(JSON.stringify({snapshot,assignments})).digest('hex');
  if(sql.prepare('SELECT digest FROM menu_imports WHERE source=?').get(snapshot.source)?.digest===digest) return;
  sql.transaction(()=>{
   for(const school of snapshot.schools){
@@ -33,6 +34,19 @@ module.exports=function importMenu(sql, snapshot=require('../data/live-menu.json
     sql.prepare('INSERT INTO school_menu_items(school_id,menu_item_id) VALUES(?,?)').run(local.id,id);
    }
   }
+  // Explicit redesign catalogue mappings; source provenance stays on each dish.
+  for(const [name,sourceId] of Object.entries(assignments)) {
+   const source=snapshot.schools.find(s=>s.id===sourceId);
+   if(!source) throw new Error('Missing configured catalogue');
+   const target=sql.prepare('SELECT id FROM schools WHERE name=?').get(name);
+   const origin=sql.prepare('SELECT id FROM schools WHERE name=?').get(source.name);
+   if(!target||!origin) throw new Error('Missing configured school');
+   if(target.id!==origin.id){
+    sql.prepare('DELETE FROM school_menu_items WHERE school_id=?').run(target.id);
+    sql.prepare('INSERT INTO school_menu_items SELECT ?,menu_item_id FROM school_menu_items WHERE school_id=?').run(target.id,origin.id);
+   }
+  }
+  sql.prepare('UPDATE menu_items SET active=0 WHERE source_key IS NULL').run();
   sql.prepare('INSERT INTO menu_imports(source,digest,fetched_at) VALUES(?,?,?) ON CONFLICT(source) DO UPDATE SET digest=excluded.digest,fetched_at=excluded.fetched_at')
    .run(snapshot.source,digest,snapshot.fetchedAt);
  })();

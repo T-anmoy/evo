@@ -27,7 +27,7 @@ The earlier browser-only inspection reported empty Side and Drink tabs premature
 - Public filters operate on those same server-rendered records. Search and audience filters update counts across categories. Without JavaScript, all category sections remain readable. Tab roles, arrow/Home/End navigation and RTL direction are supported.
 - `lib/subscription-routes.js` and `db/subscriptions.js` use the school catalogue for main-meal defaults, posted selections, final payment validation and subsequent changes. Side/drink IDs cannot be submitted as a daily main. Imported mains are available to the existing booking flow.
 - Dish cards use the downloaded source photograph, audience and meal category. The source provides **no ingredients, nutrition or dish allergen data**. Imported dishes do not display the demo's invented values or a misleading zero-calorie label. Legacy SQLite numeric columns still contain default zeros, distinguished by `nutrition_known=0`; rendering honors that flag.
-- Booking history keeps its original dish references. Other schools' existing demo menus are retained and explicitly described as illustrative.
+- Booking history keeps its original dish references. The follow-up account-menu fix replaces the other redesign schools' demo catalogue memberships with explicit mappings in `data/catalogue-assignments.json`; legacy dish records remain available only for historical references. This mapping does not establish school approval or availability on the client's original site.
 
 ## Interface changes
 

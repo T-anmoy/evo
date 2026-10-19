@@ -1,5 +1,7 @@
 'use strict';
 (() => {
+  const schoolForm = document.querySelector('[data-account-school-form]');
+  schoolForm?.querySelector('select').addEventListener('change', () => { if(schoolForm.checkValidity()) schoolForm.requestSubmit(); });
   const dialog = document.getElementById('school-selector');
   if (dialog && typeof dialog.showModal === 'function') {
     let trigger, previousOverflow;
@@ -22,6 +24,11 @@
     const list = component.querySelector('.school-category-tabs');
     if (!list) return;
     const tabs = [...list.querySelectorAll('button')];
+    const preference = matchMedia('(prefers-reduced-motion: reduce)');
+    const panels = tabs.map(tab => document.getElementById(tab.getAttribute('aria-controls')));
+    const clearMotion = () => { if(window.gsap) { gsap.killTweensOf(panels); gsap.set(panels,{clearProps:'opacity,transform'}); } };
+    preference.addEventListener('change', clearMotion);
+    window.addEventListener('pagehide',clearMotion);
     const filters = component.querySelector('.school-menu-filters');
     const search = filters.querySelector('[data-menu-search]');
     const audience = filters.querySelector('[data-menu-audience]');
@@ -36,6 +43,7 @@
         cards.forEach(card => {
           card.hidden = !card.dataset.menuName.toLocaleLowerCase().includes(query) ||
             (audience.value !== '' && !JSON.parse(card.dataset.menuAudiences).includes(audience.value));
+          card.querySelectorAll('[data-nutrition-audience]').forEach(portion => { portion.hidden = audience.value !== '' && portion.dataset.nutritionAudience !== audience.value; });
           if (!card.hidden) count++;
         });
         tab.querySelector('.menu-count').textContent = count;
@@ -49,9 +57,10 @@
       tab.setAttribute('role', 'tab'); tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1;
       panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', tab.id); panel.hidden = !active;
       if (active && focus) tab.focus();
-      if (active && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        panel.getAnimations().forEach(animation => animation.cancel());
-        panel.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0)'}],{duration:240,easing:'ease-out'});
+      if(window.gsap) {
+        gsap.killTweensOf(panel);
+        gsap.set(panel,{clearProps:'opacity,transform'});
+        if(active && !preference.matches) gsap.fromTo(panel,{opacity:0,y:8},{opacity:1,y:0,duration:0.22,ease:'power2.out',overwrite:true,clearProps:'opacity,transform'});
       }
     });
     list.hidden = false; list.setAttribute('role', 'tablist'); select(0);

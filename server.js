@@ -87,6 +87,7 @@ app.use(helmet({
   }
 }));
 app.use(compression()); // gzip text responses — real weight on a throttled mobile connection
+app.get('/vendor/gsap.min.js', (req,res) => res.sendFile(require.resolve('gsap/dist/gsap.min.js')));
 app.use(pinoHttp({ logger, autoLogging: { ignore: (req) => req.url === '/health' } }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public'), {
@@ -873,7 +874,9 @@ app.post('/students', requireAuth, (req, res) => {
 });
 
 app.get('/menu', requireAuth, (req, res) => {
-  res.render('menu', { schoolMenus: [...new Set(db.getStudentsByParent(req.session.parentId).map(s => s.school))].map(name => db.getSchoolByName(name)).filter(Boolean).map(school => ({ school, groups: db.getMenuForSchool(school.id) })), parentId: req.session.parentId });
+  const schools = db.getSchools();
+  const selectedSchool = db.getSchoolBySlug(req.query.school);
+  res.render('menu', { schools, selectedSchool, groups: selectedSchool ? db.getMenuForSchool(selectedSchool.id) : [], parentId: req.session.parentId });
 });
 
 require('./lib/subscription-routes')(app, db, requireAuth);

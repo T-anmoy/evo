@@ -4,7 +4,7 @@ const fs=require('node:fs');const os=require('node:os');const path=require('node
 const file=path.join(os.tmpdir(),`evo-subscriptions-${process.pid}.db`);
 process.env.DATABASE_FILE=file;process.env.SESSION_SECRET='test-only';process.env.LOG_LEVEL='silent';
 const app=require('../server'), db=require('../db'), SQL=require('better-sqlite3');
-const sql=new SQL(file);let server,base,cookie='',csrf='',token='',bookingStudent,priceStudent;
+const sql=new SQL(file);const liveMain=db.getSchoolMenuItems(3).filter(m=>m.category==='main');let server,base,cookie='',csrf='',token='',bookingStudent,priceStudent;
 async function request(route,fields){const res=await fetch(base+route,{method:fields?'POST':'GET',headers:{cookie,'content-type':'application/x-www-form-urlencoded'},body:fields?new URLSearchParams({...fields,_csrf:csrf}):undefined,redirect:'manual'});if(res.headers.get('set-cookie'))cookie=res.headers.get('set-cookie').split(';')[0];const body=await res.text();const c=body.match(/name="_csrf" value="([^"]+)"/);if(c)csrf=c[1];const d=body.match(/name="token" value="([^"]+)"/);if(d)token=d[1];return {status:res.status,body,headers:res.headers,location:res.headers.get('location')};}
 before(async()=>{bookingStudent=db.createStudent({...db.findStudentById(1),civilId:'123450000001'});priceStudent=db.createStudent({...db.findStudentById(2),civilId:'123450000002'});server=app.listen(0);base=`http://localhost:${server.address().port}`;await request('/login');await request('/login',{civilId:'111111111111',password:'demo1234'});await request('/dashboard');});
 after(()=>{server.close();sql.close();for(const suffix of ['','-wal','-shm'])fs.rmSync(file+suffix,{force:true});});
@@ -29,12 +29,12 @@ test('happy path saves daily choices, confirms payment once, and refuses overlap
  const month=page.body.match(/name="month" value="([^"]+)"/)[1];
  const dates=[...page.body.matchAll(/name="meals\[([^\]]+)\]"/g)].map(m=>m[1]);
  assert.ok(dates.length>0);
- const fields={token,month,...Object.fromEntries(dates.map(d=>[`meals[${d}]`,'4']))};
+ const fields={token,month,...Object.fromEntries(dates.map(d=>[`meals[${d}]`,String(liveMain[3].id)]))};
  assert.equal((await request('/booking/meals',fields)).status,302);
  await request('/booking/meals?month='+month);await ready();
  const paid=await request('/booking/pay',{token,totalKWD:'0.001'});assert.equal(paid.status,302,paid.body);assert.match(paid.location,/\/booking\/confirmation\/\d+/);
  const id=Number(paid.location.split('/').pop());const sub=db.getSubscription(id,1);
- assert.equal(sub.total_kwd,dates.length*db.getSchoolDailyRate('Kuwait English School'));assert.ok(db.getSubscriptionMeals(id).every(m=>m.menu_item_id===4));
+ assert.equal(sub.total_kwd,dates.length*db.getSchoolDailyRate('Kuwait English School'));assert.ok(db.getSubscriptionMeals(id).every(m=>m.menu_item_id===liveMain[3].id));
  assert.equal((await request(paid.location)).status,200);
  assert.equal((await request('/booking/pay',{token})).location,paid.location);
  assert.equal(db.getSubscriptions(1).length,before+1);
@@ -58,10 +58,10 @@ test('foreign subscription, confirmation and student cannot be accessed',async()
 test('saved meal changes enforce the cutoff atomically',async()=>{
  const sub=db.getSubscriptions(1).find(s=>s.first_month===require('../lib/subscription').todayInKuwait().slice(0,7));
  const date=db.getSubscriptionMeals(sub.id)[0].date;const {addDays}=require('../lib/subscription');
- db.changeSubscriptionMeals(1,sub.id,sub.first_month,{[date]:'2'},new Date(addDays(date,-3)+'T00:00:00+03:00'));
- assert.equal(db.getSubscriptionMeals(sub.id)[0].menu_item_id,2);
- assert.throws(()=>db.changeSubscriptionMeals(1,sub.id,sub.first_month,{[date]:'2'},new Date(addDays(date,-2)+'T00:00:00+03:00')),{code:'cutoff'});
- assert.equal(db.getSubscriptionMeals(sub.id)[0].menu_item_id,2);
+ db.changeSubscriptionMeals(1,sub.id,sub.first_month,{[date]:String(liveMain[1].id)},new Date(addDays(date,-3)+'T00:00:00+03:00'));
+ assert.equal(db.getSubscriptionMeals(sub.id)[0].menu_item_id,liveMain[1].id);
+ assert.throws(()=>db.changeSubscriptionMeals(1,sub.id,sub.first_month,{[date]:String(liveMain[1].id)},new Date(addDays(date,-2)+'T00:00:00+03:00')),{code:'cutoff'});
+ assert.equal(db.getSubscriptionMeals(sub.id)[0].menu_item_id,liveMain[1].id);
 });
 test('history lists paid subscriptions and invoice PDF has attachment headers',async()=>{
  const sub=db.getSubscriptions(1)[0];const history=await request('/history');assert.equal(history.status,200);assert.match(history.body,/Booking history/);assert.doesNotMatch(history.body,/cancel-booking-form|badge-collected/);
@@ -83,7 +83,7 @@ test('tampered session quote cannot change the charge',async()=>{
 });
 test('daily selection rejects non-meal dates, other months and invalid menu ids',async()=>{
  const student=newStudent();const page=await begin(String(student.id));const month=page.body.match(/name="month" value="([^"]+)"/)[1];
- const dates=[...page.body.matchAll(/name="meals\[([^\]]+)\]"/g)].map(m=>m[1]);const choices=Object.fromEntries(dates.map(d=>[`meals[${d}]`,'1']));
+ const dates=[...page.body.matchAll(/name="meals\[([^\]]+)\]"/g)].map(m=>m[1]);const choices=Object.fromEntries(dates.map(d=>[`meals[${d}]`,String(liveMain[0].id)]));
  for(const extra of [{[`meals[${dates[0]}]`]:'99999'},{'meals[1999-01-01]':'1'},{month:'1999-01'},{[`meals[${dates[0]}]`]:'2abc'}]){
  const r=await request('/booking/meals',{token,month,...choices,...extra});assert.ok([404,422].includes(r.status));}
 });
@@ -92,7 +92,7 @@ test('paid meals change through HTTP before cutoff; locked dates are rejected',a
  const selected=db.getSchoolMenuItems(3).find(m=>m.category==='main').id;
  const changed=await request(`/subscriptions/${id}/meals`,{month:sub.first_month,[`meals[${meal.date}]`]:String(selected)});assert.equal(changed.status,302);assert.equal(db.getSubscriptionMeals(id)[0].menu_item_id,selected);
  const today=require('../lib/subscription').todayInKuwait();const current=db.getSubscriptions(1).find(s=>s.first_month===today.slice(0,7));const locked=db.getSubscriptionMeals(current.id).find(m=>!require('../lib/subscription').canChangeMeal(m.date));
- if(locked){const r=await request(`/subscriptions/${current.id}/meals`,{month:current.first_month,[`meals[${locked.date}]`]:'4'});assert.equal(r.status,422);assert.match(r.body,/cutoff/);}
+ if(locked){const r=await request(`/subscriptions/${current.id}/meals`,{month:current.first_month,[`meals[${locked.date}]`]:String(liveMain[3].id)});assert.equal(r.status,422);assert.match(r.body,/cutoff/);}
 });
 test('real foreign parent records remain private across all routes',async()=>{
  const parent=db.createParent({civilId:'222222222222',name:'Other Parent',email:'other@example.test',phone:'99999999',passwordHash:'unused'});const student=newStudent(parent.id);
@@ -149,19 +149,18 @@ test('new subscriptions are visible in parent and school dashboards',async()=>{
  const originalCookie=cookie;await request('/school-admin/login');await request('/school-admin/login',{email:'admin@kes.evomeals.demo',password:'admin1234'});
  const admin=await request('/school-admin/dashboard');assert.equal(admin.status,200);assert.match(admin.body,/Meals in the next 7 days/);assert.match(admin.body,/Ahmed/);assert.doesNotMatch(admin.body,/Sara|Collected/);cookie=originalCookie;await request('/login');await request('/login',{civilId:'111111111111',password:'demo1234'});await request('/dashboard');
 });
-test('school menu groups are filtered, ordered and omit empty categories',()=>{
- const schools=db.getSchools();assert.equal(schools.length,3);assert.deepEqual(require('../lib/validate').SCHOOLS,schools.map(s=>s.name));
- const groups=schools.map(s=>db.getMenuForSchool(s.id));assert.deepEqual(groups.map(g=>g.map(x=>x.category)),[['main','snack'],['main'],['main','side','drink']]);
- assert.deepEqual(groups[0].flatMap(g=>g.items.map(m=>m.id)),[1,2,4,5]);assert.deepEqual(groups[1].flatMap(g=>g.items.map(m=>m.id)),[2,3,4]);
- const rotation=require('../lib/subscription').defaultMeals([{mealDates:['a','b','c','d']}],db.getSchoolMenuItems(3));assert.equal(Object.values(rotation).length,4);assert.ok(Object.values(rotation).every(id=>db.getSchoolMenuItems(3).some(m=>m.id===id&&m.category==='main')));
- assert.throws(()=>require('../lib/subscription').defaultMeals([{mealDates:['a']}],db.getSchoolMenuItems(3).filter(m=>m.category==='snack')),{code:'noMenu'});
- // Exercise all four categories with reversible fixture edits, without inventing dishes.
- try {
-   sql.prepare("UPDATE menu_items SET category='side' WHERE id=2").run();
-   sql.prepare("UPDATE menu_items SET category='drink' WHERE id=4").run();
-   assert.deepEqual(db.getMenuForSchool(1).map(g=>g.category),['main','side','drink','snack']);
-   assert.deepEqual(db.getMenuForSchool(-1),[]);
- } finally { sql.prepare("UPDATE menu_items SET category='main' WHERE id IN (2,4)").run(); }
+test('every school uses the current catalogue without legacy demo dishes',()=>{
+ const schools=db.getSchools();assert.equal(schools.length,3);
+ const expected=db.getSchoolMenuItems(3).map(m=>m.id);
+ for(const school of schools){
+  assert.deepEqual(db.getSchoolMenuItems(school.id).map(m=>m.id),expected);
+  assert.deepEqual(db.getMenuForSchool(school.id).map(g=>g.category),['main','side','drink']);
+  assert.equal(db.getSchoolMenuItems(school.id).length,58);
+  assert.ok(db.getSchoolMenuItems(school.id).every(m=>m.source_key));
+ }
+ assert.deepEqual(db.getMenuForSchool(-1),[]);
+ assert.ok(db.getMenuItems().every(m=>m.source_key));
+ assert.ok(db.findMenuItem(1),'Historical dishes remain resolvable');
 });
 test('public school selection validates slugs, persists, and defaults to the first child',async()=>{
  const saved=cookie;cookie='';
@@ -173,7 +172,7 @@ test('public school selection validates slugs, persists, and defaults to the fir
   r=await request('/parents?school=the-english-school');assert.match(r.body,/id="school-3-panel-snack"/);
  } finally {cookie=saved;}
  const r=await request('/parents');assert.match(r.body,/id="school-1-panel-main"/);
- const menu=await request('/menu');assert.match(menu.body,/id="school-1-panel-main"/);assert.match(menu.body,/id="school-2-panel-main"/);assert.equal((menu.body.match(/id="school-1-panel-main"/g)||[]).length,1);
+ const menu=await request('/menu?school=kuwait-english-school');assert.match(menu.body,/id="school-1-panel-main"/);assert.doesNotMatch(menu.body,/id="school-2-panel-main"/);assert.equal((menu.body.match(/data-menu-name=/g)||[]).length,58);
 });
 test('marketing removes public pricing and redundant Parents dish sections',async()=>{
  for(const p of ['/','/parents','/schools','/corporate-meals','/about','/how-it-works'])for(const prefix of ['','/ar']){
@@ -326,4 +325,59 @@ test('verified portion nutrition is atomic and shared with public and account me
   assert.equal(db.getMenuItems().find(m=>m.id===item.id).nutrition[0].calories,345);
   const page=await request('/parents?school=the-english-school');assert.match(page.body,/250 g/);assert.match(page.body,/345/);
  }finally{sql.prepare('DELETE FROM menu_portion_nutrition').run();}
+});
+
+test('login menu uses the full catalogue for existing children in every configured school',async()=>{
+ const initial=await request('/menu');assert.equal(initial.status,200);assert.doesNotMatch(initial.body,/data-menu-name=/);
+ const invalid=await request('/menu?school=invalid');assert.doesNotMatch(invalid.body,/data-menu-name=/);
+ for(const school of db.getSchools()){
+  const page=await request('/menu?school='+school.slug);
+  assert.equal((page.body.match(/data-menu-name=/g)||[]).length,58);
+  assert.match(page.body,new RegExp('id="school-'+school.id+'-panel-drink"'));
+  assert.doesNotMatch(page.body,/Balsamic Chicken|Seasonal Fruit Cup|redesign|schoolMenu.intro/);
+ }
+ for(const school of db.getSchools()){
+  const student=db.createStudent({...db.findStudentById(1),school:school.name,civilId:'123456780001'});
+  const meals=await begin(String(student.id));
+  assert.match(meals.body,/Baked Chicken Pasta/);assert.match(meals.body,/Sriracha Chicken Burger/);
+  assert.doesNotMatch(meals.body,/Balsamic Chicken|Seasonal Fruit Cup/);
+ }
+});
+test('new registration can browse the full catalogue before adding a child',async()=>{
+ const saved=cookie;cookie='';
+ try{
+  await request('/register');
+  const registered=await request('/register',{name:'Menu Test Parent',civilId:'777777777777',email:'menu@example.test',phone:'99999999',password:'TestPass123!',confirmPassword:'TestPass123!',agreeTerms:'on'});
+  assert.equal(registered.status,302);
+  const menu=await request('/menu');assert.equal(menu.status,200);assert.equal((menu.body.match(/data-menu-name=/g)||[]).length,0);
+  const selected=await request('/menu?school=the-english-school');assert.equal((selected.body.match(/data-menu-name=/g)||[]).length,58);
+  assert.doesNotMatch(menu.body,/Balsamic Chicken|Seasonal Fruit Cup/);
+  assert.equal((await request('/dashboard')).status,200);assert.equal((await request('/booking')).status,200);
+ }finally{cookie=saved;}
+});
+
+test('all published audience portions have labelled estimates and verified records take priority',async()=>{
+ const items=db.getSchoolMenuItems(3);
+ assert.equal(items.reduce((n,m)=>n+m.nutrition.length,0),107);
+ for(const item of items){
+  assert.deepEqual(item.nutrition.map(p=>p.audience).sort(),JSON.parse(item.audiences).sort());
+  for(const p of item.nutrition){
+   assert.equal(p.estimated,true);
+   assert.ok(p.source_reference.startsWith('https://www.ars.usda.gov/'));
+   for(const key of ['calories','protein','carbs','fat','serving_g'])assert.ok(Number.isFinite(p[key])&&p[key]>=0);
+   assert.ok(p.protein+p.carbs+p.fat<=p.serving_g);
+  }
+ }
+ const pasta=items.find(m=>m.name==='Arabiatta Chicken Pasta').nutrition.find(p=>p.audience==='Junior');
+ // Independent check: 140g pasta + 65g roasted breast + 60g tomato sauce + 5g oil.
+ assert.deepEqual([pasta.serving_g,pasta.calories,pasta.protein,pasta.carbs,pasta.fat],[270,365,28,44,8]);
+ const noDrink=items.find(m=>m.name==='No Drink');assert.ok(noDrink.nutrition.every(p=>p.calories===0&&p.serving_g===0));
+ const page=await request('/menu?school=the-english-school');assert.match(page.body,/Estimated nutrition/);assert.match(page.body,/Assumed portion/);
+ const item=items[0];const {importNutrition}=require('../db/nutrition');
+ try{
+  importNutrition(sql,[{source_key:item.source_key,audience:'Junior',serving_g:250,calories:345,protein:25,carbs:40,fat:10,source_reference:'Test approved recipe',verified_by:'Test reviewer',verified_at:'2026-10-19'}]);
+  const updated=db.getSchoolMenuItems(3).find(m=>m.id===item.id).nutrition;
+  assert.equal(updated.length,2);assert.equal(updated.find(p=>p.audience==='Junior').estimated,undefined);
+  assert.equal(updated.find(p=>p.audience==='Junior').calories,345);assert.equal(updated.find(p=>p.audience==='Senior').estimated,true);
+ }finally{sql.prepare('DELETE FROM menu_portion_nutrition WHERE menu_item_id=?').run(item.id);}
 });

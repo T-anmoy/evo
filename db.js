@@ -71,6 +71,7 @@ migrate(db);
 const schools = require('./db/schools')(db);
 seedIfEmpty();
 require('./db/import-menu')(db);
+require('./db/nutrition-estimates').seedEstimates(db);
 ensureCalendarCoverage();
 const subscriptions = require('./db/subscriptions')(db);
 subscriptions.seedDemoSubscriptions(JSON.parse(fs.readFileSync(SEED_FILE, 'utf8')));

@@ -1,7 +1,12 @@
 'use strict';
 function attachNutrition(sql, items) {
  const portions=sql.prepare('SELECT * FROM menu_portion_nutrition ORDER BY audience').all();
- return items.map(item=>({...item, nutrition:portions.filter(p=>p.menu_item_id===item.id)}));
+ const estimates=sql.prepare('SELECT * FROM menu_nutrition_estimates ORDER BY audience').all();
+ return items.map(item=>{
+  const verified=portions.filter(p=>p.menu_item_id===item.id);
+  const fallback=estimates.filter(p=>p.menu_item_id===item.id && !verified.some(v=>v.audience===p.audience)).map(p=>({...p,estimated:true}));
+  return {...item,nutrition:[...verified,...fallback].sort((a,b)=>a.audience.localeCompare(b.audience))};
+ });
 }
 function importNutrition(sql, rows) {
  if(!Array.isArray(rows)||!rows.length) throw Error('Supply at least one verified nutrition record');

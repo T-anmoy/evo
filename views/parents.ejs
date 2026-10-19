@@ -20,7 +20,7 @@
   </div>
 </section>
 <section class="section" id="school-menu"><div class="wrap">
-  <div class="section-head"><span class="eyebrow"><%= t('schoolMenu.eyebrow') %></span><h2><%= t('schoolMenu.heading') %></h2><p><%= t('schoolMenu.intro') %></p></div>
+  <div class="section-head"><span class="eyebrow"><%= t('schoolMenu.eyebrow') %></span><h2><%= t('schoolMenu.heading') %></h2></div>
   <% if(selectedSchool){ %><div class="school-menu-heading"><h2><bdi><%= selectedSchool.name %></bdi></h2><a href="#school-menu" data-school-selector class="btn btn-outline"><%= t('schoolMenu.change') %></a></div><% } else { %><p><%= t('schoolMenu.prompt') %></p><% } %>
   <form method="GET" action="#school-menu" class="school-inline-form"><div class="field"><label for="school"><%= t('schoolMenu.selectTitle') %></label><select id="school" name="school" required><option value=""><%= t('schoolMenu.selectTitle') %></option><% getSchools().forEach(s=>{ %><option value="<%= s.slug %>" <%= selectedSchool?.id===s.id?'selected':'' %>><%= s.name %></option><% }) %></select></div><button class="btn btn-primary"><%= t('schoolMenu.show') %></button></form>
   <% if(selectedSchool){ %><%- include('partials/school-menu',{school:selectedSchool,groups}) %><% } %>
