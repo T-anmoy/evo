@@ -70,6 +70,7 @@ function ensureCalendarCoverage() {
 migrate(db);
 const schools = require('./db/schools')(db);
 seedIfEmpty();
+require('./db/import-menu')(db);
 ensureCalendarCoverage();
 const subscriptions = require('./db/subscriptions')(db);
 subscriptions.seedDemoSubscriptions(JSON.parse(fs.readFileSync(SEED_FILE, 'utf8')));
@@ -94,6 +95,7 @@ function mapMenuItem(r) {
   if (!r) return undefined;
   return {
     id: r.id, name: r.name, category: r.category, tag: r.tag, calories: r.calories, protein: r.protein,
+    source_key: r.source_key, source_url: r.source_url, source_image: r.source_image, audiences: r.audiences, nutrition_known: r.nutrition_known,
     carbs: r.carbs, fat: r.fat, ingredients: r.ingredients,
     allergenFree: JSON.parse(r.allergen_free || '[]')
   };
@@ -257,7 +259,7 @@ function updateStudent(id, fields) {
 
 // ---------- Menu ----------
 function getMenuItems() {
-  return db.prepare('SELECT * FROM menu_items ORDER BY id').all().map(mapMenuItem);
+  return require('./db/nutrition').attachNutrition(db, db.prepare('SELECT * FROM menu_items WHERE active=1 ORDER BY (source_key IS NULL),id').all().map(mapMenuItem));
 }
 function findMenuItem(id) {
   return mapMenuItem(db.prepare('SELECT * FROM menu_items WHERE id = ?').get(id));

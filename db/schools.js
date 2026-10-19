@@ -5,8 +5,8 @@ module.exports = function schoolStore(sql) {
   const getSchoolByName = name => typeof name === 'string' ? sql.prepare('SELECT * FROM schools WHERE name=? AND active=1').get(name) : undefined;
   const getSchoolDailyRate = name => getSchoolByName(name)?.daily_rate_kwd;
   function getSchoolMenuItems(id) {
-    return sql.prepare('SELECT m.* FROM menu_items m JOIN school_menu_items sm ON sm.menu_item_id=m.id WHERE sm.school_id=? ORDER BY m.id').all(id)
-      .map(m => ({ ...m, allergenFree: JSON.parse(m.allergen_free || '[]') }));
+    return require('./nutrition').attachNutrition(sql, sql.prepare('SELECT m.* FROM menu_items m JOIN school_menu_items sm ON sm.menu_item_id=m.id WHERE sm.school_id=? AND m.active=1 ORDER BY m.id').all(id)
+      .map(m => ({ ...m, allergenFree: JSON.parse(m.allergen_free || '[]') })));
   }
   function getMenuForSchool(id) {
     const items = getSchoolMenuItems(id);

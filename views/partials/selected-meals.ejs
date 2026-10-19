@@ -1,0 +1,4 @@
+<details class="selected-meals card">
+  <summary><%= t('subscription.selectedMeals') %> (<%= selectedMeals.length %>)</summary>
+  <ul><% selectedMeals.forEach(meal=>{ %><li><time datetime="<%= meal.date %>"><%= fmtMealDate(meal.date,locale) %></time><span lang="en" dir="auto"><%= meal.name %></span></li><% }) %></ul>
+</details>

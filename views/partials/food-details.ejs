@@ -1,3 +1,13 @@
+<% if (m.source_key) { %>
+<div class="food-details food-details--source">
+  <p class="menu-audiences"><% JSON.parse(m.audiences || '[]').forEach(audience => { %><span><%= t('schoolMenu.audiences.' + audience) %></span><% }) %></p>
+  <p><%= m.tag %></p>
+  <% (m.nutrition || []).forEach(portion=>{ %><section class="portion-nutrition">
+    <h4><%= t('schoolMenu.audiences.'+portion.audience) %> · <bdi><%= portion.serving_g %> g</bdi></h4>
+    <dl class="food-nutrition"><% [['calories','kcal',''],['protein','protein','g'],['carbs','carbs','g'],['fat','fat','g']].forEach(([field,label,unit])=>{ %><div><dt><%= t('menu.'+label) %></dt><dd><bdi><%= portion[field] %><%= unit %></bdi></dd></div><% }) %></dl>
+  </section><% }) %>
+</div>
+<% } else { %>
 <% const dishExclusions = Array.isArray(m.allergenFree) ? m.allergenFree.filter(k => ['nut','shellfish','sesame','soy'].includes(k)) : []; %>
 <div class="food-details">
   <p class="food-ingredients"><strong><%= t('menu.ingredientsLabel') %></strong> <span lang="en" dir="auto"><%= m.ingredients %></span></p>
@@ -11,3 +21,5 @@
   </p>
   <p class="food-provenance"><%= t('food.dishSource') %></p>
 </div>
+
+<% } %>

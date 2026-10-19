@@ -43,6 +43,7 @@
       </form>
     </div>
   <% } else if (step === 'payment') { %>
+    <%- include('partials/selected-meals',{selectedMeals}) %>
     <div class="card"><h2><%= student.name %></h2><p><%= student.school %></p>
       <%- include('partials/subscription-review', { months: draft.months, totalKWD: draft.totalKWD }) %>
       <fieldset class="field"><legend><%= t('subscription.paymentMethod') %></legend><label><input type="radio" name="method" value="KNET" checked> <%= t('subscription.knet') %></label></fieldset>
@@ -55,6 +56,7 @@
       <form method="POST" action="/booking/pay"><input type="hidden" name="_csrf" value="<%= csrfToken %>"><input type="hidden" name="token" value="<%= draft.token %>"><button class="btn btn-primary"><%= t('subscription.pay') %></button></form>
     </div>
   <% } else if (step === 'confirmation') { %>
+    <%- include('partials/selected-meals',{selectedMeals}) %>
     <div class="card"><div class="alert alert-success" role="status"><%- include('partials/success-icon') %><span><%= t('subscription.confirmed') %></span></div>
       <h2><%= subscription.student_name %></h2><p><%= subscription.school %></p><p><bdi><%= subscription.invoice_number %> · <%= fmtKWD(subscription.total_kwd) %></bdi></p>
       <p class="hint"><%= t('subscription.simulated') %></p>

@@ -775,8 +775,11 @@ app.get('/school-admin/dashboard', requireSchoolAdmin, (req, res) => {
   const todaysMeals = meals.filter(m => m.date === today).length;
   const pendingOrders = meals.filter(m => m.date > today && m.date <= addDays(today,7)).length;
   const trend = Array.from({ length:14 }, (_, i) => { const date=addDays(today,i-13); return { date, count:meals.filter(m=>m.date===date).length }; });
+  const dishCounts = new Map();
+  meals.filter(m=>m.date>=today && m.date<=addDays(today,7)).forEach(meal=>{const key=meal.date+':'+meal.menu_item_id;const row=dishCounts.get(key)||{date:meal.date,name:meal.name,count:0};row.count++;dishCounts.set(key,row);});
+  const mealBreakdown=[...dishCounts.values()].sort((a,b)=>a.date.localeCompare(b.date)||a.name.localeCompare(b.name));
   const recentActivity = subscriptions.sort((a,b)=>b.created_at.localeCompare(a.created_at) || b.id-a.id).slice(0,10);
-  res.render('school-admin-dashboard', { admin, students, activeSubscriptions, todaysMeals, pendingOrders,
+  res.render('school-admin-dashboard', { admin, students, activeSubscriptions, todaysMeals, pendingOrders, mealBreakdown,
     recentActivity, trend, trendMax:Math.max(1,...trend.map(t=>t.count)), parentId:req.session.parentId });
 });
 
@@ -922,12 +925,12 @@ function staffView(req, res, error = null, status = 200) {
   res.status(status).render('staff', {
     bookings, parentId: parent.id,
     success: req.query.success === '1', error, values: req.method === 'POST' ? req.body : {},
-    menuItems: db.getMenuItems(), dailyRateKWD: db.getDailyRate()
+    menuItems: db.getMenuItems().filter(item=>item.category==='main'), dailyRateKWD: db.getDailyRate()
   });
 }
 app.get('/staff', requireAuth, (req, res) => staffView(req, res));
 app.post('/staff', requireAuth, (req, res) => {
-  const error = validateMealInput(req.body, { menuItems: db.getMenuItems(), staff: true, ...bookingWindow() });
+  const error = validateMealInput(req.body, { menuItems: db.getMenuItems().filter(item=>item.category==='main'), staff: true, ...bookingWindow() });
   if (error) return staffView(req, res, res.locals.t('booking.' + error), 422);
   const rate = db.getDailyRate();
   if (!Number.isFinite(rate) || rate <= 0) return staffView(req, res, res.locals.t('booking.errInvalidPrice'), 422);

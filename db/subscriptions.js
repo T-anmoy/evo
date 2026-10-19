@@ -2,7 +2,7 @@ const { calculateSubscription, subscriptionMonths, monthDates, firstBookableMont
   canChangeMeal, nextServiceStart, subscriptionStart, addDays, SubscriptionError } = require('../lib/subscription');
 module.exports = function subscriptionStore(sql) {
   const schools = require('./schools')(sql);
-  const menuFor = name => schools.getSchoolMenuItems(schools.getSchoolByName(name)?.id || -1);
+  const menuFor = name => schools.getSchoolMenuItems(schools.getSchoolByName(name)?.id || -1).filter(item => item.category === 'main');
   const fail = code => { throw new SubscriptionError(code); };
   function getDailyRate() { return sql.prepare("SELECT rate_kwd FROM plans WHERE code = 'single'").get()?.rate_kwd; }
   function getSubscription(id, parentId) {
@@ -31,7 +31,7 @@ module.exports = function subscriptionStore(sql) {
     return { ...calculateSubscription({ count, firstMonth, dailyRate: schools.getSchoolDailyRate(student.school), calendar, bookedMonths, serviceStart }), school: student.school, eligibilityStart };
   }
   function getSubscriptionMeals(id) {
-    return sql.prepare(`SELECT sm.*, mi.name, mi.calories FROM subscription_meals sm JOIN menu_items mi ON mi.id=sm.menu_item_id
+    return sql.prepare(`SELECT sm.*, mi.name, mi.calories, mi.nutrition_known FROM subscription_meals sm JOIN menu_items mi ON mi.id=sm.menu_item_id
       WHERE sm.subscription_id=? ORDER BY date`).all(id);
   }
   function writeSubscription({ studentId, parentId, token, quote, meals, acceptedAt, paidAt = new Date().toISOString() }) {

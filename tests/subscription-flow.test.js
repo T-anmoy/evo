@@ -89,7 +89,8 @@ test('daily selection rejects non-meal dates, other months and invalid menu ids'
 });
 test('paid meals change through HTTP before cutoff; locked dates are rejected',async()=>{
  const student=newStudent();await begin(String(student.id));await ready();const paid=await request('/booking/pay',{token});const id=Number(paid.location.split('/').pop());const sub=db.getSubscription(id,1);const meal=db.getSubscriptionMeals(id)[0];
- const changed=await request(`/subscriptions/${id}/meals`,{month:sub.first_month,[`meals[${meal.date}]`]:'3'});assert.equal(changed.status,302);assert.equal(db.getSubscriptionMeals(id)[0].menu_item_id,3);
+ const selected=db.getSchoolMenuItems(3).find(m=>m.category==='main').id;
+ const changed=await request(`/subscriptions/${id}/meals`,{month:sub.first_month,[`meals[${meal.date}]`]:String(selected)});assert.equal(changed.status,302);assert.equal(db.getSubscriptionMeals(id)[0].menu_item_id,selected);
  const today=require('../lib/subscription').todayInKuwait();const current=db.getSubscriptions(1).find(s=>s.first_month===today.slice(0,7));const locked=db.getSubscriptionMeals(current.id).find(m=>!require('../lib/subscription').canChangeMeal(m.date));
  if(locked){const r=await request(`/subscriptions/${current.id}/meals`,{month:current.first_month,[`meals[${locked.date}]`]:'4'});assert.equal(r.status,422);assert.match(r.body,/cutoff/);}
 });
@@ -150,9 +151,9 @@ test('new subscriptions are visible in parent and school dashboards',async()=>{
 });
 test('school menu groups are filtered, ordered and omit empty categories',()=>{
  const schools=db.getSchools();assert.equal(schools.length,3);assert.deepEqual(require('../lib/validate').SCHOOLS,schools.map(s=>s.name));
- const groups=schools.map(s=>db.getMenuForSchool(s.id));assert.deepEqual(groups.map(g=>g.map(x=>x.category)),[['main','snack'],['main'],['main','snack']]);
+ const groups=schools.map(s=>db.getMenuForSchool(s.id));assert.deepEqual(groups.map(g=>g.map(x=>x.category)),[['main','snack'],['main'],['main','side','drink']]);
  assert.deepEqual(groups[0].flatMap(g=>g.items.map(m=>m.id)),[1,2,4,5]);assert.deepEqual(groups[1].flatMap(g=>g.items.map(m=>m.id)),[2,3,4]);
- const rotation=require('../lib/subscription').defaultMeals([{mealDates:['a','b','c','d']}],db.getSchoolMenuItems(3));assert.deepEqual(Object.values(rotation),[1,3,1,3]);
+ const rotation=require('../lib/subscription').defaultMeals([{mealDates:['a','b','c','d']}],db.getSchoolMenuItems(3));assert.equal(Object.values(rotation).length,4);assert.ok(Object.values(rotation).every(id=>db.getSchoolMenuItems(3).some(m=>m.id===id&&m.category==='main')));
  assert.throws(()=>require('../lib/subscription').defaultMeals([{mealDates:['a']}],db.getSchoolMenuItems(3).filter(m=>m.category==='snack')),{code:'noMenu'});
  // Exercise all four categories with reversible fixture edits, without inventing dishes.
  try {
@@ -166,7 +167,7 @@ test('public school selection validates slugs, persists, and defaults to the fir
  const saved=cookie;cookie='';
  try {
   let r=await request('/parents?school=not-a-school');assert.equal(r.status,200);assert.doesNotMatch(r.body,/class="school-dish-grid"/);
-  r=await request('/parents?school=american-creativity-academy');assert.match(r.body,/id="school-2-panel-main"/);assert.doesNotMatch(r.body,/panel-snack/);
+  r=await request('/parents?school=american-creativity-academy');assert.match(r.body,/id="school-2-panel-main"/);assert.match(r.body,/id="school-2-panel-snack"/);assert.match(r.body,/No Snack options are listed/);
   r=await request('/ar/parents');assert.match(r.body,/id="school-2-panel-main"/);
   r=await request('/parents?school=bad');assert.match(r.body,/id="school-2-panel-main"/);
   r=await request('/parents?school=the-english-school');assert.match(r.body,/id="school-3-panel-snack"/);
@@ -201,8 +202,8 @@ test('crossing the weekly cutoff expires a draft and locks the earlier week',()=
  const rules=require('../lib/subscription'),student=newStudent();const first=rules.subscriptionStart();const now=rules.addDays(first,-3)+'T23:59:59+03:00';const after=rules.addDays(first,-2)+'T00:00:00+03:00';
  const quote=db.quoteSubscription(student.id,1,1,first.slice(0,7),first,rules.nextServiceStart(now));const draft={...quote,studentId:student.id,monthsCount:1,firstMonth:quote.months[0].month,token:'cutoff-expiration',meals:rules.defaultMeals(quote.months,db.getSchoolMenuItems(3)),termsAccepted:true,acceptedAt:now,stage:'knet'};
  assert.throws(()=>db.paySubscription(1,draft,new Date(after)),{code:'expired'});
- const paid=db.paySubscription(1,draft,new Date(now));const date=quote.months[0].mealDates[0];db.changeSubscriptionMeals(1,paid.id,date.slice(0,7),{[date]:'3'},new Date(now));
- assert.throws(()=>db.changeSubscriptionMeals(1,paid.id,date.slice(0,7),{[date]:'1'},new Date(after)),{code:'cutoff'});
+ const paid=db.paySubscription(1,draft,new Date(now));const date=quote.months[0].mealDates[0];const selected=String(db.getSchoolMenuItems(3).find(m=>m.category==='main').id);db.changeSubscriptionMeals(1,paid.id,date.slice(0,7),{[date]:selected},new Date(now));
+ assert.throws(()=>db.changeSubscriptionMeals(1,paid.id,date.slice(0,7),{[date]:selected},new Date(after)),{code:'cutoff'});
 });
 test('month preview and review both roll an empty first window forward',async()=>{
  const rules=require('../lib/subscription'),student=newStudent(),start=rules.subscriptionStart(),end=rules.monthDates(start.slice(0,7)).at(-1);
@@ -225,4 +226,104 @@ test('expired draft returns to a fresh review and requires payment terms again',
  try {assert.equal((await request('/booking/pay',{token})).location,'/booking/review');assert.equal(db.getSubscriptions(1).length,before);
   const review=await request('/booking/review');assert.equal(review.status,200);assert.match(review.body,/href="\/booking\/meals"/);assert.equal((await request('/booking/payment')).location,'/booking/meals');
  } finally { app._router.stack.splice(app._router.stack.indexOf(layer),1); }
+});
+
+test('school menus expose all four categories with localized empty states', async()=>{
+ for(const prefix of ['', '/ar']) {
+  const r=await request(prefix+'/parents?school=the-english-school');
+  assert.equal(r.status,200);
+  for(const category of ['main','side','drink','snack']) {
+   assert.match(r.body,new RegExp('id="school-3-tab-'+category+'"'));
+   assert.match(r.body,new RegExp('id="school-3-panel-'+category+'"'));
+  }
+  assert.match(r.body, prefix ? /لا تتوفر خيارات/ : /No Snack options are listed/);
+  assert.doesNotMatch(r.body,/schoolMenu\.categoryEmpty/);
+ }
+});
+
+test('live catalogue exactly matches every source dish and audience, with local images',()=>{
+ const snapshot=require('../data/live-menu.json');
+ const source=snapshot.schools[0];const items=db.getSchoolMenuItems(3);
+ assert.equal(items.length,58);
+ assert.deepEqual(Object.values(source.categories).map(rows=>rows.length),[97,4,6,0]);
+ for(const [category,rows] of Object.entries(source.categories))for(const row of rows){
+  const item=items.find(m=>m.source_key===`${source.branchId}:${row.m_ItemId}:${row.m_MealCategoryId}`);
+  assert.ok(item);assert.equal(item.name,row.m_ItemName);assert.equal(item.category,category);
+  assert.equal(item.tag,row.m_MealCategory);assert.ok(JSON.parse(item.audiences).includes(row.m_StdCatg));
+  assert.equal(item.nutrition_known,0);assert.equal(item.source_url,snapshot.source);
+  const image=fs.readFileSync(path.join(__dirname,'../public',item.source_image));
+  assert.equal(image.subarray(0,4).toString(),'RIFF');assert.equal(image.subarray(8,12).toString(),'WEBP');
+ }
+ assert.equal(items.reduce((n,item)=>n+JSON.parse(item.audiences).length,0),107);
+});
+test('source import is idempotent, preserves history and rolls back invalid changes',()=>{
+ const importer=require('../db/import-menu');const source=require('../data/live-menu.json');
+ const before=JSON.stringify(db.getSchoolMenuItems(3));const historical=JSON.stringify(sql.prepare('SELECT * FROM subscription_meals').all());
+ importer(sql);assert.equal(JSON.stringify(db.getSchoolMenuItems(3)),before);
+ const updated=structuredClone(source);updated.fetchedAt='2026-10-19T12:00:00.000Z';importer(sql,updated);
+ assert.equal(JSON.stringify(db.getSchoolMenuItems(3)),before);assert.equal(JSON.stringify(sql.prepare('SELECT * FROM subscription_meals').all()),historical);
+ const broken=structuredClone(updated);broken.schools[0].categories.main[0].m_ItemImage='../invalid.png';
+ assert.throws(()=>importer(sql,broken),/Invalid source image/);assert.equal(JSON.stringify(db.getSchoolMenuItems(3)),before);
+ importer(sql,source);
+});
+test('live daily booking offers mains without fabricated calories and rejects sides',async()=>{
+ const student=newStudent();const page=await begin(String(student.id));
+ const items=db.getSchoolMenuItems(3);const side=items.find(m=>m.category==='side');
+ assert.match(page.body,/Arabiatta Chicken Pasta/);assert.doesNotMatch(page.body,/Assorted Fruit Cup|0 kcal/);
+ const month=page.body.match(/name="month" value="([^"]+)"/)[1];
+ const dates=[...page.body.matchAll(/name="meals\[([^\]]+)\]"/g)].map(m=>m[1]);
+ const choices=Object.fromEntries(dates.map(date=>[`meals[${date}]`,String(side.id)]));
+ assert.equal((await request('/booking/meals',{token,month,...choices})).status,422);
+});
+test('booking guide uses exact requested copy and removes the old subtitle',async()=>{
+ const page=await request('/how-it-works');assert.match(page.body,/<h1>Book Monthly Meals in Three Steps<\/h1>/);
+ assert.match(page.body,/<h2>Select the month<\/h2>/);assert.match(page.body,/<h2>Choose your meals<\/h2>/);
+ assert.doesNotMatch(page.body,/The same steps apply|Book a month of meals|Choose your daily meals|Choose your months/);
+});
+
+test('every live menu dish renders on English and Arabic pages without the removed notice',async()=>{
+ const escape=require('ejs').escapeXML;
+ const expected=db.getSchoolMenuItems(3);
+ for(const prefix of ['', '/ar']) {
+  const page=await request(prefix+'/parents?school=the-english-school');
+  assert.equal(page.status,200);
+  assert.equal((page.body.match(/data-menu-name=/g)||[]).length,expected.length);
+  for(const item of expected) {
+   assert.ok(page.body.includes(`data-menu-name="${escape(item.name)}"`),item.name);
+   assert.ok(page.body.includes(`src="${item.source_image}"`),item.source_image);
+  }
+  assert.doesNotMatch(page.body,/Listed on EVO360|Nutrition, ingredients and allergen details have not been supplied|مدرج على EVO360|schoolMenu\.sourceDetails/);
+ }
+});
+
+test('every imported main can be selected, paid, confirmed and reloaded',async()=>{
+ const student=newStudent();await begin(String(student.id),'6');
+ const main=db.getSchoolMenuItems(3).filter(m=>m.category==='main');const expected=new Set();let index=0;
+ const review=await request('/booking/meals');const months=[...review.body.matchAll(/<option value="(\d{4}-\d{2})"/g)].map(m=>m[1]);
+ for(const month of months){
+  const page=await request('/booking/meals?month='+month);const dates=[...page.body.matchAll(/name="meals\[([^\]]+)\]"/g)].map(m=>m[1]);
+  const choices=Object.fromEntries(dates.map(date=>{const item=main[index++%main.length];expected.add(item.id);return [`meals[${date}]`,String(item.id)];}));
+  assert.equal((await request('/booking/meals',{token,month,...choices})).status,302);
+ }
+ assert.equal(expected.size,53);
+ await ready();const payment=await request('/booking/payment');for(const item of main)assert.ok(payment.body.includes(require('ejs').escapeXML(item.name)));
+ await request('/booking/knet');const paid=await request('/booking/pay',{token});assert.equal(paid.status,302);
+ const id=Number(paid.location.split('/').pop());assert.deepEqual(new Set(db.getSubscriptionMeals(id).map(m=>m.menu_item_id)),expected);
+ const confirmation=await request(paid.location);for(const item of main)assert.ok(confirmation.body.includes(require('ejs').escapeXML(item.name)));
+ assert.equal((await request(`/subscriptions/${id}/meals`)).status,200);
+});
+test('verified portion nutrition is atomic and shared with public and account menus',async()=>{
+ const {importNutrition}=require('../db/nutrition');const item=db.getSchoolMenuItems(3)[0];
+ // Explicit test fixture only: never imported into the working database.
+ const record={source_key:item.source_key,audience:'Junior',serving_g:250,calories:345,protein:25,carbs:50,fat:5,source_reference:'test fixture',verified_by:'test',verified_at:'2026-10-19'};
+ assert.throws(()=>importNutrition(sql,[{...record,protein:null}]),/invalid protein/);
+ assert.throws(()=>importNutrition(sql,[record,{...record,audience:'Senior',serving_g:1}]),/exceed/);
+ assert.equal(sql.prepare('SELECT COUNT(*) n FROM menu_portion_nutrition').get().n,0);
+ try{
+  assert.equal(importNutrition(sql,[record]),1);assert.equal(importNutrition(sql,[record]),1);
+  assert.equal(sql.prepare('SELECT COUNT(*) n FROM menu_portion_nutrition').get().n,1);
+  assert.equal(db.getSchoolMenuItems(3)[0].nutrition[0].protein,25);
+  assert.equal(db.getMenuItems().find(m=>m.id===item.id).nutrition[0].calories,345);
+  const page=await request('/parents?school=the-english-school');assert.match(page.body,/250 g/);assert.match(page.body,/345/);
+ }finally{sql.prepare('DELETE FROM menu_portion_nutrition').run();}
 });

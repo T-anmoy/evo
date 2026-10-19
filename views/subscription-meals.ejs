@@ -14,8 +14,8 @@
     <div class="card daily-meals">
       <% meals.forEach(meal=>{ %><div class="field meal-day">
         <label for="meal-<%= meal.date %>"><%= fmtMealDate(meal.date,locale) %></label>
-        <% if(meal.editable){ %><select id="meal-<%= meal.date %>" name="meals[<%= meal.date %>]" required><% menuItems.forEach(item=>{ %><option value="<%= item.id %>" <%= item.id===meal.menu_item_id?'selected':'' %>><%= item.name %> · <%= item.calories %> <%= t('common.kcal') %></option><% }) %></select>
-        <% } else { %><p><%= meal.name %> · <%= meal.calories %> <%= t('common.kcal') %> <span class="hint"><%= t('subscription.locked') %></span></p><% } %>
+        <% if(meal.editable){ %><select id="meal-<%= meal.date %>" name="meals[<%= meal.date %>]" required><% menuItems.forEach(item=>{ %><option value="<%= item.id %>" <%= item.id===meal.menu_item_id?'selected':'' %>><%= item.name %><% if(item.nutrition_known !== 0){ %> · <%= item.calories %> <%= t('common.kcal') %><% } %></option><% }) %></select>
+        <% } else { %><p><%= meal.name %><% if(meal.nutrition_known !== 0){ %> · <%= meal.calories %> <%= t('common.kcal') %><% } %> <span class="hint"><%= t('subscription.locked') %></span></p><% } %>
       </div><% }) %>
       <% if(meals.some(m=>m.editable)){ %><button class="btn btn-primary" type="submit"><%= t('subscription.saveMeals') %></button><% } %>
     </div>

@@ -70,6 +70,10 @@
     </div>
   </div>
 
+  <section class="card selected-meals" style="margin-bottom:24px;">
+    <h2><%= t('schoolAdminDashboard.dishBreakdown') %></h2>
+    <% if(!mealBreakdown.length){ %><p><%= t('schoolAdminDashboard.noScheduledMeals') %></p><% } else { %><ul><% mealBreakdown.forEach(meal=>{ %><li><time datetime="<%= meal.date %>"><%= fmtMealDate(meal.date,locale) %></time><span lang="en" dir="auto"><%= meal.name %></span><strong><%= meal.count %></strong></li><% }) %></ul><% } %>
+  </section>
   <div class="card">
     <h2 class="dash-section-title"><%= t('schoolAdminDashboard.recentActivity') %></h2>
     <% if (recentActivity.length === 0) { %>

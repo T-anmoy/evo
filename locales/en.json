@@ -268,8 +268,8 @@
   "howItWorks": {
     "hero": {
       "eyebrow": "How it works",
-      "heading": "Book a month of meals in three steps.",
-      "lede": "The same steps apply whether you're booking school meals or meals at work."
+      "heading": "Book Monthly Meals in Three Steps",
+      "lede": ""
     },
     "cta": {
       "eyebrow": "Ready when you are",
@@ -277,12 +277,12 @@
       "body": "Explore school meals or meals for your workplace."
     },
     "steps": {
-      "title1": "Choose your months",
-      "body1": "Select Number of months you want to subscribe for. (You are only charged for the working days)",
-      "title2": "Choose your daily meals",
-      "body2": "Select your preferred meal for each day. (Meal selection can also be altered later)",
+      "title1": "Select the month",
+      "body1": "Select your starting month and subscription length. You only pay for working days.",
+      "title2": "Choose your meals",
+      "body2": "Choose your preferred meal for each day. You can update your selections before the weekly cutoff.",
       "title3": "Pay to confirm",
-      "body3": "Accept the payment terms and pay via KNET. Book and change meal selection by Thursday of the Current week to begin meal service from Sunday of the upcoming week."
+      "body3": "Accept the payment terms and pay via KNET to confirm. Book or change your meals by Thursday for service from the following Sunday."
     }
   },
   "featuresSection": {
@@ -337,7 +337,7 @@
       "checklist4": "Digital payments",
       "checklist5": "Notifications",
       "step1Label": "Book",
-      "step1Title": "Choose your months",
+      "step1Title": "Select the month",
       "step1Body": "Choose your child, the number of months, and daily meals.",
       "step2Label": "Pay",
       "step2Title": "Review the total",
@@ -890,7 +890,9 @@
     "statPendingWithoutCollection": "Meals in the next 7 days",
     "colMonths": "Months covered",
     "colMealDays": "Meal days",
-    "colPaid": "Paid on"
+    "colPaid": "Paid on",
+    "dishBreakdown": "Scheduled dishes: today and the next 7 days",
+    "noScheduledMeals": "No meals scheduled in this period."
   },
   "adminNav": {
     "tag": "School Admin",
@@ -908,7 +910,7 @@
   "food": {
     "confidenceTitle": "Food confidence",
     "programmeStatement": "Our meals are free from any kind of Nuts, Shellfish, Sesame & Soy.",
-    "programmeSource": "Programme statement supplied by Evo Meals. Dish records below are separate sample data.",
+    "programmeSource": "Programme statement supplied by Evo Meals. Check individual dish information with the meal provider.",
     "nut": "Nuts",
     "shellfish": "Shellfish",
     "sesame": "Sesame",
@@ -976,9 +978,9 @@
   "subscription": {
     "titles": {
       "list": "Student Meal Booking",
-      "new": "Choose your months",
+      "new": "Select the month",
       "review": "Review subscription",
-      "meals": "Choose your daily meals",
+      "meals": "Choose your meals",
       "terms": "Payment terms",
       "payment": "Payment summary",
       "knet": "KNET payment",
@@ -1034,7 +1036,8 @@
       "cutoff": "One or more meal days are before the next eligible service week. No changes were saved.",
       "staleDraft": "This booking draft was replaced. Return to Meal booking to continue."
     },
-    "regularMeal": "Regular Meal"
+    "regularMeal": "Regular Meal",
+    "selectedMeals": "Your selected meals"
   },
   "invoice": {
     "heading": "Invoice",
@@ -1076,7 +1079,7 @@
     "cancel": "Cancel",
     "eyebrow": "School menus",
     "heading": "Explore your school’s menu.",
-    "intro": "Illustrative menu assignments using existing demo dishes; confirmed school menus are not yet supplied.",
+    "intro": "Explore each school’s menu. The English School catalogue is sourced from EVO360; other school menus remain illustrative.",
     "change": "Change school",
     "prompt": "Select your school to see its menu",
     "show": "Show menu",
@@ -1087,6 +1090,16 @@
       "side": "Side",
       "drink": "Drinks",
       "snack": "Snack"
-    }
+    },
+    "categoryEmpty": "No {category} options are listed for this school yet. Please check back for menu updates.",
+    "search": "Find a dish",
+    "searchPlaceholder": "Search the menu…",
+    "audience": "Student menu",
+    "allAudiences": "All students",
+    "audiences": {
+      "Junior": "Junior",
+      "Senior": "Senior"
+    },
+    "noResults": "No dishes match your search. Try another name or student menu."
   }
 }

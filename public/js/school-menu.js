@@ -22,11 +22,37 @@
     const list = component.querySelector('.school-category-tabs');
     if (!list) return;
     const tabs = [...list.querySelectorAll('button')];
+    const filters = component.querySelector('.school-menu-filters');
+    const search = filters.querySelector('[data-menu-search]');
+    const audience = filters.querySelector('[data-menu-audience]');
+    filters.hidden = false;
+    filters.addEventListener('submit', event => event.preventDefault());
+    const filter = () => {
+      const query = search.value.trim().toLocaleLowerCase();
+      tabs.forEach(tab => {
+        const panel = document.getElementById(tab.getAttribute('aria-controls'));
+        const cards = [...panel.querySelectorAll('[data-menu-name]')];
+        let count = 0;
+        cards.forEach(card => {
+          card.hidden = !card.dataset.menuName.toLocaleLowerCase().includes(query) ||
+            (audience.value !== '' && !JSON.parse(card.dataset.menuAudiences).includes(audience.value));
+          if (!card.hidden) count++;
+        });
+        tab.querySelector('.menu-count').textContent = count;
+        panel.querySelector('.school-filter-empty').hidden = !cards.length || count > 0;
+      });
+    };
+    search.addEventListener('input', filter);
+    audience.addEventListener('change', filter);
     const select = (index, focus = false) => tabs.forEach((tab, i) => {
       const active = i === index, panel = document.getElementById(tab.getAttribute('aria-controls'));
       tab.setAttribute('role', 'tab'); tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1;
       panel.setAttribute('role', 'tabpanel'); panel.setAttribute('aria-labelledby', tab.id); panel.hidden = !active;
       if (active && focus) tab.focus();
+      if (active && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        panel.getAnimations().forEach(animation => animation.cancel());
+        panel.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0)'}],{duration:240,easing:'ease-out'});
+      }
     });
     list.hidden = false; list.setAttribute('role', 'tablist'); select(0);
     tabs.forEach((tab, index) => {

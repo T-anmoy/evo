@@ -2352,6 +2352,7 @@ th{text-align:start;}
 .school-category-tab[aria-selected=true]{background:var(--forest);color:var(--white);}
 .school-category-panel{margin-block:24px;}
 .school-category-panel>h3{margin-bottom:20px;}
+.school-category-empty{padding:24px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--white);color:var(--muted);max-width:680px;}
 .school-dish-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;}
 .school-dish-grid .food-card{min-width:0;}
 .school-dish-grid .food-image img{object-fit:cover;}
@@ -2360,3 +2361,19 @@ th{text-align:start;}
 .school-dish-grid .food-nutrition{grid-template-columns:repeat(2,minmax(0,1fr));}
 @media(max-width:1100px){.school-dish-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media(max-width:600px){.school-dish-grid{grid-template-columns:minmax(0,1fr);}.school-inline-form{align-items:stretch;flex-direction:column;}.school-inline-form .field{max-width:none;}.school-menu-heading h2{font-size:24px;}}
+
+/* Live menu: searchable, responsive catalogue with motion preferences respected. */
+.school-menu-filters{display:flex;gap:16px;align-items:end;margin-block:24px;}
+.school-menu-filters .field{flex:1;margin:0;}
+.school-menu-filters input,.school-menu-filters select{width:100%;min-height:48px;}
+.school-menu-filters[hidden],.school-dish-grid .food-card[hidden],.school-filter-empty[hidden]{display:none;}
+.menu-count{font-size:.75rem;border-radius:99px;padding:2px 7px;background:rgba(128,128,128,.15);font-variant-numeric:tabular-nums;}
+.menu-audiences{display:flex;gap:6px;flex-wrap:wrap;}
+.menu-audiences span{font-size:.8rem;padding:4px 10px;border-radius:99px;background:var(--mint);color:var(--forest);}
+.food-details--source{display:grid;gap:12px;}
+.school-dish-grid .food-card{transition:transform .2s ease,box-shadow .2s ease;}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.school-dish-grid .food-card:hover{transform:translateY(-4px);box-shadow:0 12px 30px rgba(20,60,45,.1);}}
+@media(max-width:600px){.school-menu-filters{flex-direction:column;align-items:stretch;}.school-category-tabs{gap:8px;}.school-category-tab{padding:10px 12px;}}
+@media(prefers-reduced-motion:reduce){.school-dish-grid .food-card{transition:none;}}
+
+.selected-meals{margin-block:20px;}.selected-meals summary{font-weight:700;cursor:pointer;}.selected-meals ul{list-style:none;padding:0;margin-top:16px;}.selected-meals li{display:flex;gap:16px;justify-content:space-between;padding-block:12px;border-bottom:1px solid var(--line);}.selected-meals time{flex:0 0 210px;}.selected-meals li span{flex:1;}@media(max-width:600px){.selected-meals li{flex-wrap:wrap;gap:6px;}.selected-meals time{flex-basis:100%;}}

@@ -10,7 +10,9 @@
 var __slug = dishImageSlug(m);
 var __eager = typeof eager !== 'undefined' && eager;
 %>
-<% if (__slug) { %>
+<% if (m.source_image) { %>
+<img src="<%= m.source_image %>" alt="<%= m.name %>" width="800" height="800" loading="<%= __eager ? 'eager' : 'lazy' %>" decoding="async">
+<% } else if (__slug) { %>
 <picture>
   <source srcset="/images/menu/<%= __slug %>.webp" type="image/webp">
   <img src="/images/menu/<%= __slug %>.png" alt="<%= m.name %>" width="800" height="800" loading="<%= __eager ? 'eager' : 'lazy' %>" decoding="async">
