@@ -6,7 +6,7 @@
       "description": "Explore Evo Meals: school meal information, parent booking and collection records. Demonstration integrations are identified."
     },
     "parents": {
-      "title": "For Parents — Evo Meals",
+      "title": "School Meal — Evo Meals",
       "description": "Explore Evo Meals: school meal information, parent booking and collection records. Demonstration integrations are identified."
     },
     "schools": {
@@ -112,7 +112,7 @@
   },
   "nav": {
     "home": "Home",
-    "forParents": "For Parents",
+    "forParents": "School Meal",
     "forSchools": "For Schools",
     "howItWorks": "How It Works",
     "features": "Features",
@@ -249,7 +249,7 @@
       "q4": "Can I change my daily meals?",
       "a4": "Book and change meal selection by Thursday of the current week to begin meal service from Sunday of the upcoming week.",
       "footnote": "Booking, pricing, and the full parent journey: see {parents}. Platform-wide capabilities: see {features}.",
-      "footnoteParents": "For Parents",
+      "footnoteParents": "School Meal",
       "footnoteFeatures": "Features"
     },
     "finalCta": {
@@ -319,7 +319,7 @@
   },
   "parents": {
     "hero": {
-      "eyebrow": "For Parents",
+      "eyebrow": "School Meal",
       "headline1": "Know what they'll eat.",
       "headline2": "Know when they collect it.",
       "headlineEm": "Every school day.",
@@ -973,7 +973,10 @@
       "range1": "26–100",
       "range2": "101–250",
       "range3": "250+"
-    }
+    },
+    "menuHeading": "Explore the menu",
+    "portions": "Portion options",
+    "allPortions": "All portions"
   },
   "subscription": {
     "titles": {

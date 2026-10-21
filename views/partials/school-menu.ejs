@@ -2,7 +2,7 @@
 <div class="school-menu-component" data-school-tabs>
   <form class="school-menu-filters" role="search" hidden>
     <div class="field"><label for="menu-search-<%= school.id %>"><%= t('schoolMenu.search') %></label><input type="search" id="menu-search-<%= school.id %>" data-menu-search placeholder="<%= t('schoolMenu.searchPlaceholder') %>"></div>
-    <div class="field"><label for="menu-audience-<%= school.id %>"><%= t('schoolMenu.audience') %></label><select id="menu-audience-<%= school.id %>" data-menu-audience><option value=""><%= t('schoolMenu.allAudiences') %></option><% [...new Set(groups.flatMap(g=>g.items.flatMap(m=>JSON.parse(m.audiences || '[]'))))].forEach(audience=>{ %><option value="<%= audience %>"><%= t('schoolMenu.audiences.'+audience) %></option><% }) %></select></div>
+    <div class="field"><label for="menu-audience-<%= school.id %>"><%= t(typeof corporateMenu !== 'undefined' && corporateMenu ? 'corporate.portions' : 'schoolMenu.audience') %></label><select id="menu-audience-<%= school.id %>" data-menu-audience><option value=""><%= t(typeof corporateMenu !== 'undefined' && corporateMenu ? 'corporate.allPortions' : 'schoolMenu.allAudiences') %></option><% [...new Set(groups.flatMap(g=>g.items.flatMap(m=>JSON.parse(m.audiences || '[]'))))].forEach(audience=>{ %><option value="<%= audience %>"><%= t('schoolMenu.audiences.'+audience) %></option><% }) %></select></div>
   </form>
   <% if (!groups.some(group => group.items.length)) { %><p class="card"><%= t('schoolMenu.empty') %></p><% } %>
     <div class="school-category-tabs" aria-label="<%= t('schoolMenu.categoriesLabel') %>" hidden>

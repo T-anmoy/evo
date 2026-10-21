@@ -124,7 +124,7 @@ test('corporate inquiry validates fields, preserves values, and stores its range
  const count=sql.prepare('SELECT COUNT(*) c FROM inquiries').get().c;
  for(const [key,value] of [['organizationName','123'],['contactName','123'],['email','bad'],['phone','bad'],['scaleInfo','500'],['message','short']]){const r=await request('/corporate-meals/inquiry',{...valid,[key]:value});assert.equal(r.status,422);assert.match(r.body,/aria-invalid="true"/);if(key!=='organizationName')assert.match(r.body,/value="Test Company"/);}
  assert.equal(sql.prepare('SELECT COUNT(*) c FROM inquiries').get().c,count);
- const success=await request('/ar/corporate-meals/inquiry',valid);assert.equal(success.location,'/ar/corporate-meals?success=1');const row=sql.prepare('SELECT * FROM inquiries ORDER BY id DESC LIMIT 1').get();assert.equal(row.type,'corporate');assert.equal(row.scale_info,'26–100');
+ const success=await request('/ar/corporate-meals/inquiry',valid);assert.equal(success.location,'/ar/corporate-meals/register?success=1');const row=sql.prepare('SELECT * FROM inquiries ORDER BY id DESC LIMIT 1').get();assert.equal(row.type,'corporate');assert.equal(row.scale_info,'26–100');
 });
 test('class and section lists reject unlisted values and preserve other fields',async()=>{
  const student=newStudent();const valid={id:String(student.id),name:student.name,school:student.school,class:'Grade 3',section:'A',gender:'Male',allergies:''};
@@ -380,4 +380,24 @@ test('all published audience portions have labelled estimates and verified recor
   assert.equal(updated.length,2);assert.equal(updated.find(p=>p.audience==='Junior').estimated,undefined);
   assert.equal(updated.find(p=>p.audience==='Junior').calories,345);assert.equal(updated.find(p=>p.audience==='Senior').estimated,true);
  }finally{sql.prepare('DELETE FROM menu_portion_nutrition WHERE menu_item_id=?').run(item.id);}
+});
+
+test('school guide and corporate registration routes share the expected public flow',async()=>{
+ for(const prefix of ['', '/ar']) {
+  const parents=await request(prefix+'/parents');
+  const guide=await request(prefix+'/how-it-works');
+  assert.equal((parents.body.match(/class="booking-guide-card"/g)||[]).length,3);
+  assert.equal((guide.body.match(/class="booking-guide-card"/g)||[]).length,3);
+  const corporate=await request(prefix+'/corporate-meals');
+  assert.equal(corporate.status,200);
+  assert.match(corporate.body,/corporate-meals\/register/);
+  assert.match(corporate.body,/data-school-tabs/);
+  assert.match(corporate.body,/Assorted Fruit Cup/);
+  assert.match(corporate.body,/Fresh Juice/);
+  assert.doesNotMatch(corporate.body,/id="corporateInquiryForm"/);
+  const register=await request(prefix+'/corporate-meals/register');
+  assert.equal(register.status,200);
+  assert.ok(register.body.includes('action="'+prefix+'/corporate-meals/inquiry"'));
+  assert.doesNotMatch(parents.body,/>For Parents</);
+ }
 });

@@ -20,7 +20,8 @@ test('collection feature flag hides and restores the illustrative flow in both l
         const html = await res.text();
         assert.equal(res.status, 200);
         assert.equal(html.includes('class="collection-example"'), enabled, route);
-        assert.equal(html.includes('journey-attention'), enabled, route);
+        assert.equal(html.includes('journey-attention'), route.endsWith('/parents') ? false : enabled, route);
+        if (route.endsWith('/parents')) assert.equal((html.match(/class="booking-guide-card"/g) || []).length, 3);
       }
     }
   } finally { FEATURES.showCollection = false; }

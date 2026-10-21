@@ -150,7 +150,7 @@ const SESSION_LOCALE_PATH_PREFIXES = [
 // crawler must never be pointed at an hreflang alternate that 404s (e.g.
 // /ar/privacy, which doesn't exist), and a page-with-no-Arabic-route must
 // never claim to have a canonical link to a language variant it doesn't have.
-const BILINGUAL_PAGES = ['/', '/schools', '/parents', '/how-it-works', '/login', '/register', '/forgot-password', '/corporate-meals', '/about', '/contact'];
+const BILINGUAL_PAGES = ['/', '/schools', '/parents', '/how-it-works', '/login', '/register', '/forgot-password', '/corporate-meals', '/corporate-meals/register', '/about', '/contact'];
 
 app.use((req, res, next) => {
   const p = req.path;
@@ -476,7 +476,12 @@ app.get(['/parents', '/ar/parents'], (req, res) => {
 app.get(['/caterers', '/ar/caterers'], (req, res) => res.redirect(301, (req.path.startsWith('/ar') ? '/ar' : '') + '/corporate-meals'));
 
 app.get(['/corporate-meals', '/ar/corporate-meals'], (req, res) => {
-  res.render('corporate-meals', { parentId: req.session.parentId, success: req.query.success || null, errors: null, formData: null });
+  const sourceSchool = db.getSchoolBySlug('the-english-school');
+  res.render('corporate-meals', { parentId: req.session.parentId, groups: sourceSchool ? db.getMenuForSchool(sourceSchool.id) : [] });
+});
+
+app.get(['/corporate-meals/register', '/ar/corporate-meals/register'], (req, res) => {
+  res.render('corporate-register', { parentId: req.session.parentId, success: req.query.success === '1', errors: null, formData: null });
 });
 
 app.post(['/corporate-meals/inquiry', '/ar/corporate-meals/inquiry'], writeFormLimiter, (req, res) => {
@@ -492,7 +497,7 @@ app.post(['/corporate-meals/inquiry', '/ar/corporate-meals/inquiry'], writeFormL
   if (!['1–25','26–100','101–250','250+'].includes(scaleInfo)) errors.scaleInfo = t('corporate.form.errScale');
 
   if (Object.keys(errors).length) {
-    return res.status(422).render('corporate-meals', { parentId: req.session.parentId, success: null, errors, formData: req.body });
+    return res.status(422).render('corporate-register', { parentId: req.session.parentId, success: null, errors, formData: req.body });
   }
 
   db.createInquiry({
@@ -501,7 +506,7 @@ app.post(['/corporate-meals/inquiry', '/ar/corporate-meals/inquiry'], writeFormL
     scaleInfo: (scaleInfo || '').trim(), currentArrangement: '', message: message.trim()
   });
   logger.info({ organizationName }, 'corporate inquiry received');
-  res.redirect((req.path.startsWith('/ar') ? '/ar/corporate-meals' : '/corporate-meals') + '?success=1');
+  res.redirect((req.path.startsWith('/ar') ? '/ar/corporate-meals/register' : '/corporate-meals/register') + '?success=1');
 });
 
 app.get(['/how-it-works', '/ar/how-it-works'], (req, res) => {
