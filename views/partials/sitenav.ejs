@@ -5,7 +5,6 @@
     <a href="<%= p %>/" class="site-logo"><%- include('brand-logo', { variant: 'on-dark' }) %></a>
     <nav class="site-links">
       <a href="<%= p %>/parents" class="<%= active === 'parents' ? 'active' : '' %>" <%= active === 'parents' ? 'aria-current="page"' : '' %>><%= t('nav.forParents') %></a>
-      <a href="<%= p %>/schools" class="<%= active === 'schools' ? 'active' : '' %>" <%= active === 'schools' ? 'aria-current="page"' : '' %>><%= t('nav.forSchools') %></a>
       <a href="<%= p %>/corporate-meals" class="<%= active === 'corporate' ? 'active' : '' %>" <%= active === 'corporate' ? 'aria-current="page"' : '' %>><%= t('nav.corporate') %></a>
       <a href="<%= p %>/how-it-works" class="<%= active === 'how-it-works' ? 'active' : '' %>" <%= active === 'how-it-works' ? 'aria-current="page"' : '' %>><%= t('nav.howItWorks') %></a>
       <a href="<%= p %>/about" class="<%= active === 'about' ? 'active' : '' %>" <%= active === 'about' ? 'aria-current="page"' : '' %>><%= t('nav.about') %></a>
@@ -43,12 +42,10 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
     </a>
     <div class="site-links-mobile-nav">
-      <a href="<%= p === '' ? '/' : p %>" class="<%= active === 'home' ? 'active' : '' %>" <%= active === 'home' ? 'aria-current="page"' : '' %>><%= t('nav.home') %></a>
       <a href="<%= p %>/parents" class="<%= active === 'parents' ? 'active' : '' %>" <%= active === 'parents' ? 'aria-current="page"' : '' %>><%= t('nav.forParents') %></a>
-      <a href="<%= p %>/schools" class="<%= active === 'schools' ? 'active' : '' %>" <%= active === 'schools' ? 'aria-current="page"' : '' %>><%= t('nav.forSchools') %></a>
       <a href="<%= p %>/corporate-meals" class="<%= active === 'corporate' ? 'active' : '' %>" <%= active === 'corporate' ? 'aria-current="page"' : '' %>><%= t('nav.corporate') %></a>
       <a href="<%= p %>/how-it-works" class="<%= active === 'how-it-works' ? 'active' : '' %>" <%= active === 'how-it-works' ? 'aria-current="page"' : '' %>><%= t('nav.howItWorks') %></a>
-      <a href="<%= p %>/about" class="<%= active === 'about' ? 'active' : '' %>" <%= active === 'about' ? 'aria-current="page"' : '' %>><%= t('nav.aboutFull') %></a>
+      <a href="<%= p %>/about" class="<%= active === 'about' ? 'active' : '' %>" <%= active === 'about' ? 'aria-current="page"' : '' %>><%= t('nav.about') %></a>
       <a href="<%= p %>/contact" class="<%= active === 'contact' ? 'active' : '' %>" <%= active === 'contact' ? 'aria-current="page"' : '' %>><%= t('nav.contact') %></a>
     </div>
     <div class="site-links-mobile-actions">

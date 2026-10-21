@@ -2281,6 +2281,13 @@ th{text-align:start;}
 .pricing-single .price-card p{line-height:1.7;margin-bottom:28px;}
 
 /* Booking guide: three balanced cards, using the shared staggered reveal. */
+.school-partner-callout{display:flex;align-items:center;justify-content:space-between;gap:32px;}
+.school-partner-copy{max-width:640px;min-width:0;}
+.school-partner-copy h2{margin-block:12px;}
+.school-partner-copy p{margin:0;color:var(--muted);}
+.school-partner-callout .btn{flex-shrink:0;}
+[dir="ltr"] .school-partner-callout .btn span{transform:rotate(180deg);}
+@media(max-width:600px){.school-partner-callout{flex-direction:column;align-items:stretch;gap:24px;}.school-partner-callout .btn{align-self:flex-start;max-width:100%;}}
 .booking-guide{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;}
 .booking-guide-card{min-width:0;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(24px,3vw,32px);}
 .booking-guide-label{display:block;margin-bottom:24px;}

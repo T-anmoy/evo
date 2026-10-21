@@ -112,7 +112,7 @@
   },
   "nav": {
     "home": "Home",
-    "forParents": "School Meal",
+    "forParents": "School Meals",
     "forSchools": "For Schools",
     "howItWorks": "How It Works",
     "features": "Features",
@@ -283,6 +283,10 @@
       "body2": "Choose your preferred meal for each day. You can update your selections before the weekly cutoff.",
       "title3": "Pay to confirm",
       "body3": "Accept the payment terms and pay via KNET to confirm. Book or change your meals by Thursday for service from the following Sunday."
+    },
+    "schools": {
+      "heading": "Bring Evo Meals to your school.",
+      "body": "Explore our school meal programme and get in touch to discuss meals for your students."
     }
   },
   "featuresSection": {

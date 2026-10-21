@@ -20,6 +20,16 @@
 <section class="section" id="booking-guide"><div class="wrap">
   <%- include('partials/booking-guide') %>
 </div></section>
+<section class="section on-tint" id="for-schools">
+  <div class="wrap school-partner-callout" data-reveal="up">
+    <div class="school-partner-copy">
+      <span class="eyebrow"><%= t('nav.forSchools') %></span>
+      <h2><%= t('howItWorks.schools.heading') %></h2>
+      <p><%= t('howItWorks.schools.body') %></p>
+    </div>
+    <a href="<%= locale === 'ar' ? '/ar/schools' : '/schools' %>" class="btn btn-primary"><%= t('nav.forSchools') %><span aria-hidden="true"> &larr;</span></a>
+  </div>
+</section>
 <%- include('partials/features-section') %>
 
 <section class="cta-band">
