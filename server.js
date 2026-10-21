@@ -629,6 +629,16 @@ app.get(['/login', '/ar/login'], (req, res) => {
 
 app.post(['/login', '/ar/login'], loginLimiter, (req, res) => {
   const { civilId, password } = req.body;
+  if (isValidEmail(civilId)) {
+    const admin = db.findSchoolAdminByEmail(civilId.trim().toLowerCase());
+    if (!admin || !bcrypt.compareSync(password || '', admin.passwordHash)) {
+      return res.render('login', { error: res.locals.t('login.errInvalid'), errors: {}, parentId: null });
+    }
+    return startAuthenticatedSession(req, res, session => {
+      session.schoolAdminId = admin.id;
+      session.locale = req.path.startsWith('/ar') ? 'ar' : 'en';
+    }, '/school-admin/dashboard');
+  }
   // Reject an obviously malformed Civil ID before ever touching the
   // database — the client-side check on this field can always be
   // bypassed by posting directly, so this is the one that actually holds.
@@ -738,7 +748,7 @@ app.post('/logout', (req, res) => {
 
 // ---------- school admin auth (separate, lightweight login) ----------
 function requireSchoolAdmin(req, res, next) {
-  if (!req.session.schoolAdminId) return res.redirect('/school-admin/login');
+  if (!req.session.schoolAdminId) return res.redirect(req.session.locale === 'ar' ? '/ar/login' : '/login');
   next();
 }
 function currentSchoolAdmin(req) {
@@ -746,7 +756,7 @@ function currentSchoolAdmin(req) {
 }
 
 app.get('/school-admin/login', (req, res) => {
-  res.render('school-admin-login', { error: null, errors: {}, parentId: req.session.parentId });
+  res.redirect(req.session.locale === 'ar' ? '/ar/login' : '/login');
 });
 
 app.post('/school-admin/login', loginLimiter, (req, res) => {
@@ -754,12 +764,12 @@ app.post('/school-admin/login', loginLimiter, (req, res) => {
   // Same principle as the parent login's Civil ID check — reject an
   // obviously malformed email before ever querying the database.
   if (!isValidEmail(email)) {
-    return res.render('school-admin-login', { error: null, errors: { email: res.locals.t('schoolAdminLogin.errEmailFormat') }, parentId: req.session.parentId });
+    return res.render('login', { error: null, errors: { email: res.locals.t('schoolAdminLogin.errEmailFormat') }, parentId: req.session.parentId });
   }
   const admin = db.findSchoolAdminByEmail((email || '').trim().toLowerCase());
   if (!admin || !bcrypt.compareSync(password || '', admin.passwordHash)) {
     // Not attributed to one field, same reasoning as parent login.
-    return res.render('school-admin-login', { error: res.locals.t('schoolAdminLogin.errInvalid'), errors: {}, parentId: req.session.parentId });
+    return res.render('login', { error: res.locals.t('schoolAdminLogin.errInvalid'), errors: {}, parentId: req.session.parentId });
   }
   startAuthenticatedSession(req, res, (session) => {
     session.schoolAdminId = admin.id;
@@ -767,7 +777,7 @@ app.post('/school-admin/login', loginLimiter, (req, res) => {
 });
 
 app.post('/school-admin/logout', (req, res) => {
-  const destination = req.session.locale === 'ar' ? '/locale/ar?returnTo=%2Fschool-admin%2Flogin' : '/school-admin/login';
+  const destination = req.session.locale === 'ar' ? '/ar/login' : '/login';
   req.session.destroy(() => res.redirect(destination));
 });
 

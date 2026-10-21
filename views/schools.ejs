@@ -23,21 +23,9 @@
   </div>
 </section>
 
-<section class="section"><div class="wrap operational-layout">
+<section class="section"><div class="wrap">
   <div class="operational-list" data-reveal-group>
     <% for(let i=1;i<=5;i++){ %><div data-reveal="up"><h2><%= t('schools.operations.title'+i) %></h2><p><%= t('schools.operations.body'+i) %></p></div><% } %>
-  </div>
-  <div class="card operational-example" data-reveal="fade">
-    <span class="sample-tag"><%= t('schools.dashboardPreview.productPreview') %></span>
-    <h2><%= t('schools.dashboardPreview.overview') %></h2>
-    <p><%= t('schools.dashboardPreview.intro') %></p>
-    <dl class="record-details">
-      <div><dt><%= t('mealQueue.colStudent') %></dt><dd><bdi>Ahmed A.</bdi></dd></div>
-      <div><dt><%= t('mealQueue.colMeal') %></dt><dd><bdi>Arabiatta Chicken Pasta</bdi></dd></div>
-      <div><dt><%= t('mealQueue.colStatus') %></dt><dd><%- include('partials/example-status',{status:'Upcoming'}) %></dd></div>
-    </dl>
-    <a href="/school-admin/login" class="btn btn-outline"><%= t('meta.schoolAdminLogin.title') %></a>
-    <a class="food-book-link" href="<%= locale === 'ar' ? '/ar/parents' : '/parents' %>"><%= t('schools.parentExperience.cta') %> →</a>
   </div>
 </div></section>
 <section class="section on-tint" id="partner-form">

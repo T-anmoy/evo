@@ -470,19 +470,19 @@
   },
   "login": {
     "title": "Welcome back",
-    "subtitle": "Log in to book meals and manage your children's accounts.",
-    "labelCivilId": "Parent Civil ID",
-    "placeholderCivilId": "e.g. 111111111111",
-    "hintCivilId": "12-digit government-issued ID.",
+    "subtitle": "Log in to manage your meals or school account.",
+    "labelCivilId": "Civil ID or school admin email",
+    "placeholderCivilId": "Civil ID or admin email",
+    "hintCivilId": "Parents: 12-digit Civil ID. School administrators: work email.",
     "labelPassword": "Password",
     "placeholderPassword": "Enter your password",
     "forgotPassword": "Forgot password?",
     "submit": "Log In",
     "noAccount": "Don't have an account?",
     "signUp": "Sign up",
-    "errInvalid": "The Civil ID or password is incorrect.",
-    "errCivilId": "Civil ID should be exactly 12 digits.",
-    "errCivilIdFormat": "Enter a valid Civil ID — exactly 12 digits."
+    "errInvalid": "The login details are incorrect.",
+    "errCivilId": "Enter a valid 12-digit Civil ID or school admin email.",
+    "errCivilIdFormat": "Enter a valid 12-digit Civil ID or school admin email."
   },
   "register": {
     "title": "Create your account",

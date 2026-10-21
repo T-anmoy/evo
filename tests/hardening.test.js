@@ -77,9 +77,9 @@ test('registering also issues a new session identifier', async () => {
 
 test('school admin sign-in issues a new session identifier', async () => {
   cookie = ''; csrf = '';
-  await request('/school-admin/login');
+  await request('/login');
   const before = cookie;
-  const loggedIn = await request('/school-admin/login', { email: 'admin@kes.evomeals.demo', password: 'admin1234' });
+  const loggedIn = await request('/login', { civilId: 'admin@kes.evomeals.demo', password: 'admin1234' });
   assert.equal(loggedIn.status, 302);
   assert.notEqual(cookie, before);
 });
@@ -117,8 +117,8 @@ test('logout is a CSRF-protected POST, not a GET', async () => {
 
 test('school admin logout is also a POST', async () => {
   cookie = ''; csrf = '';
-  await request('/school-admin/login');
-  await request('/school-admin/login', { email: 'admin@kes.evomeals.demo', password: 'admin1234' });
+  await request('/login');
+  await request('/login', { civilId: 'admin@kes.evomeals.demo', password: 'admin1234' });
   await request('/school-admin/dashboard');
   assert.equal((await request('/school-admin/logout')).status, 404);
   assert.equal((await request('/school-admin/dashboard')).status, 200);
